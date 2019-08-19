@@ -7,7 +7,7 @@
                     <div class="detail">
                         <h4>Michael</h4>
                         <p class="m-b-0">Manager</p>
-                        <a href="{{route('app.calendar')}}" title="Events"><i class="zmdi zmdi-calendar"></i></a>
+                        {{-- <a href="{{route('app.calendar')}}" title="Events"><i class="zmdi zmdi-calendar"></i></a>
                         <a href="{{route('app.mail-inbox')}}" title="Inbox"><i class="zmdi zmdi-email"></i></a>
                         <a href="{{route('app.contact-list')}}" title="Contact List"><i class="zmdi zmdi-account-box-phone"></i></a>
                         <div class="row">
@@ -23,7 +23,7 @@
                                 <h6 class="m-b-5">$34M</h6>
                                 <small>Revenue</small>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </li>

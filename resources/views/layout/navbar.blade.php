@@ -7,7 +7,7 @@
                 @else
                     <a href="javascript:void(0);" class="bars"></a>
                 @endif
-                <a class="navbar-brand" href="{{route('dashboard.dashboard')}}"><img src="../assets/images/logo.svg" width="30" alt="sQuare"><span class="m-l-10">sQuare</span></a>
+                <a class="navbar-brand" href="{{route('dashboard.dashboard')}}"><img src="../assets/images/scpwd-logo.png" width="100" alt="sQuare"></a>
             </div>
         </li>
         @if (Request::segment(2) === 'horizontal' )
@@ -22,16 +22,16 @@
         @endif
         <li class="dropdown app_menu"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-apps"></i></a>
             <ul class="dropdown-menu pullDown">
-                <li><a href="{{route('app.mail-inbox')}}"><i class="zmdi zmdi-email m-r-10"></i><span>Mail</span></a></li>
+                {{-- <li><a href="{{route('app.mail-inbox')}}"><i class="zmdi zmdi-email m-r-10"></i><span>Mail</span></a></li>
                 <li><a href="{{route('app.contact-list')}}"><i class="zmdi zmdi-accounts-list m-r-10"></i><span>Contacts</span></a></li>
                 <li><a href="{{route('app.chat')}}"><i class="zmdi zmdi-comment-text m-r-10"></i><span>Chat</span></a></li>
                 <li><a href="{{route('pages.invoices')}}"><i class="zmdi zmdi-arrows m-r-10"></i><span>Invoices</span></a></li>
-                <li><a href="{{route('app.calendar')}}"><i class="zmdi zmdi-calendar-note m-r-10"></i><span>Calendar</span></a></li>
+                <li><a href="{{route('app.calendar')}}"><i class="zmdi zmdi-calendar-note m-r-10"></i><span>Calendar</span></a></li> --}}
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-arrows m-r-10"></i><span>Notes</span></a></li>
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-view-column m-r-10"></i><span>Taskboard</span></a></li>                
             </ul>
         </li>
-        <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
+        {{-- <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
             <span class="label-count">5</span>
             </a>
             <ul class="dropdown-menu pullDown">
@@ -146,11 +146,11 @@
                     <i class="zmdi zmdi-search"></i>
                 </span>
             </div>
-        </li>
+        </li> --}}
         <li class="float-right">  
-            <a href="javascript:void(0);" class="js-right-chat"><i class="zmdi zmdi-comments"></i></a>
+            {{-- <a href="javascript:void(0);" class="js-right-chat"><i class="zmdi zmdi-comments"></i></a>
             <a href="javascript:void(0);" class="js-right-sidebar"><i class="zmdi zmdi-settings"></i></a>
-            <a href="javascript:void(0);" class="btn_overlay hidden-sm-down"><i class="zmdi zmdi-sort-amount-desc"></i></a>
+            <a href="javascript:void(0);" class="btn_overlay hidden-sm-down"><i class="zmdi zmdi-sort-amount-desc"></i></a> --}}
             <a href="{{route('authentication.login')}}" class="mega-menu"><i class="zmdi zmdi-power"></i></a>
         </li>        
     </ul>

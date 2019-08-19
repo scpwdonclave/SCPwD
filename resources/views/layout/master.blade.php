@@ -48,7 +48,7 @@
         <!-- Page Loader -->
         <div class="page-loader-wrapper">
             <div class="loader">
-                <div class="m-t-30"><img class="zmdi-hc-spin" src="../assets/images/logo.svg" width="48" height="48" alt="sQuare"></div>
+                <div class="m-t-30"><img class="zmdi-hc-spin" src="../assets/images/logo.svg" width="48" height="48" alt="SCPwD"></div>
                 <p>Please wait...</p>
             </div>
         </div>
@@ -82,14 +82,14 @@
                             @else
                             <div class="col-lg-6 col-md-6 col-sm-12 text-right">
                         @endif
-                            <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
+                            {{-- <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
                                 <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#706bd1">3,2,6,5,9,8,7,9,5,1,3,5,7,4,6</div>
                                 <small>Page Views</small>
                             </div>
                             <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
                                 <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#f9666e">1,3,5,7,4,6,3,2,6,5,9,8,7,9,5</div>
                                 <small>Visitors</small>
-                            </div>
+                            </div> --}}
                             @if (Request::segment(2) === 'dashboard' )
                                 <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New</button>
                             @endif
