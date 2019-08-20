@@ -39,8 +39,27 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapPartnerRoutes();
+
         //
+    }    
+    
+    /**
+     * Define the "partner" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapPartnerRoutes()
+    {
+        Route::prefix('partner')
+             ->middleware(['web'])
+             ->namespace($this->namespace)
+             ->group(base_path('routes/partner.php'));
     }
+
+
 
     /**
      * Define the "web" routes for the application.

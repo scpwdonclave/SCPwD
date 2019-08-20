@@ -11,8 +11,8 @@
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <title>{{ config('app.name', 'SCPwD') }} {{ ucfirst(config('multiauth.prefix')) }}</title>
+
+    <title>{{ config('app.name', 'SCPwD') }} :: {{ ucfirst(strtok(Route::current()->getName(), '.')) }}</title>
 
     <script src="{{asset('assets/plugins/jquery/jquery-v3.2.1.min.js')}}"></script>
 

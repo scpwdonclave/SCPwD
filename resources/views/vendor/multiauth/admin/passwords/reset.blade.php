@@ -62,19 +62,10 @@
 @extends('custom-logins.app')
 @section('content')
   <div class="wrap-login100 p-l-55 p-r-55 p-t-50 p-b-30">
-        {{-- @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
     <form method="POST" id="form_reset_process" action="{{ route('admin.password.request') }}" class="login100-form">
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
-      <span class="login100-form-title m-b-10">Admin Reset</span>
+      <span class="login100-form-title m-b-10">Admin Password Reset</span>
 
       @if (session('status'))
       <div class="alert alert-success" role="alert">
