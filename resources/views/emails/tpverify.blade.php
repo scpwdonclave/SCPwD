@@ -494,15 +494,14 @@ body{background-color:#fff}.logo a:hover,.logo a:focus{color:#1e2e3b !important}
           
             <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-      <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #363f48;font-size: 32px;line-height: 40px;font-family: Montserrat,DejaVu Sans,Verdana,sans-serif;"><strong>Let&#8217;s get started.</strong></h1><p style="Margin-top: 20px;Margin-bottom: 0;">Hi {{$partner['name']}},</p><p style="Margin-top: 20px;Margin-bottom: 20px;">Welcome to SCPwD. Your Basic Account has been Created. Please Login To SCPwD with your ID: <span style="color:#074ad1"><strong>{{$partner['email']}}</strong></span> &amp; <span style="color:#000000">Password: </span><span style="color:#074ad1"><strong>{{$partner['password']}}</strong></span><span style="color:#000000">&nbsp;</span>and Provide All the Required Details to Complete the Registration process. Thank you.</p>
+      <h1 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #363f48;font-size: 32px;line-height: 40px;font-family: Montserrat,DejaVu Sans,Verdana,sans-serif;"><strong>Let&#8217;s get started.</strong></h1><p style="Margin-top: 20px;Margin-bottom: 0;">Hi {{$partner['name']}},</p><p style="Margin-top: 20px;Margin-bottom: 20px;">Welcome to Skill Council for Persons with Disability (SCPwD). Please log in to the portal using the following credentials:<br ><br >Login ID: <span style="color:#074ad1"><strong>{{$partner['email']}}</strong></span><br>Password: <span style="color:#074ad1"><strong>{{$partner['password']}}</strong></span><br ><br >Once you log in, you are required to complete the form with all the required documents.</p>
     </div>
   </div>
           
             <div style="Margin-left: 20px;Margin-right: 20px;">
     <div class="btn btn--shadow btn--medium" style="Margin-bottom: 20px;text-align: center;">
       <![if !mso]><a style="border-radius: 4px;display: inline-block;font-size: 12px;font-weight: bold;line-height: 22px;padding: 10px 20px 11px 20px;text-align: center;text-decoration: none !important;transition: opacity 0.1s ease-in;color: #ffffff !important;box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);background-color: #363f48;font-family: Karla, Calibri, Geneva, sans-serif;" href="{{ url('partner/login') }}">Complete Account Setup</a><![endif]>
-    <!--[if mso]><p style="line-height:0;margin:0;">&nbsp;</p><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="http://google.com" style="width:181px" arcsize="10%" fillcolor="#363F48" stroke="f"><v:shadow on="t" color="#2B323A" offset="0,2px"></v:shadow><v:textbox style="mso-fit-shape-to-text:t" inset="0px,9px,0px,8px"><center style="font-size:12px;line-height:22px;color:#FFFFFF;font-family:Karla,Calibri,Geneva,sans-serif;font-weight:bold;mso-line-height-rule:exactly;mso-text-raise:4px">Complete Account<br>
-Setup</center></v:textbox></v:roundrect><![endif]--></div>
+    </div>
   </div>
           
             <div style="Margin-left: 20px;Margin-right: 20px;">
@@ -548,9 +547,9 @@ Setup</center></v:textbox></v:roundrect><![endif]--></div>
             <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
       <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #363f48;font-size: 20px;line-height: 28px;font-family: Montserrat,DejaVu Sans,Verdana,sans-serif;"><span style="color:#ffffff"><strong>Account Completion</strong></span></h2><p style="Margin-top: 16px;Margin-bottom: 20px;"><font color="#ffffff">&#8226; Provide All The Necessary&nbsp;Documents</font><br />
-<font color="#ffffff">&#8226; The Documents 'll be Verified By SCPwD</font><br />
-<font color="#ffffff">&#8226; After Verification this Account 'll be Activated&nbsp;</font><br />
-<font color="#ffffff">&#8226; You 'll get Notified Once Account Verified</font></p>
+<font color="#ffffff">&#8226; The Documents will be Verified By SCPwD</font><br />
+<font color="#ffffff">&#8226; After Verification this Account will be Activated&nbsp;</font><br />
+<font color="#ffffff">&#8226; You will get Notified Once Account Verified</font></p>
     </div>
   </div>
           
@@ -591,7 +590,7 @@ Setup</center></v:textbox></v:roundrect><![endif]--></div>
             <div style="Margin-left: 20px;Margin-right: 20px;">
     <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
       <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #363f48;font-size: 20px;line-height: 28px;font-family: Montserrat,DejaVu Sans,Verdana,sans-serif;"><strong>Training Centers</strong></h2><p style="Margin-top: 16px;Margin-bottom: 20px;">&#8226; You can Create Training Centers<br />
-&#8226; All Training Centers 'll be Verified by SCPwD<br >&#8226; You 'll have full control over Training Centers but all modifications to these 'll be re-verified by SCPwD.</p>
+&#8226; All Training Centers will be Verified by SCPwD<br >&#8226; You will have full control over Training Centers but all modifications to these will be re-verified by SCPwD.</p>
     </div>
   </div>
           
@@ -638,32 +637,9 @@ Setup</center></v:textbox></v:roundrect><![endif]--></div>
               <div style="font-size: 12px;line-height: 19px;Margin-top: 20px;">
                 <div>Office Address: 501-City Centre,5th Floor, Gokalpuri, Dwarka, New Delhi, Delhi 110075</div>
               </div>
-              <div style="font-size: 12px;line-height: 19px;Margin-top: 18px;">
-                
-              </div>
               <!--[if mso]>&nbsp;<![endif]-->
             </div>
           </div>
-        <!--[if (mso)|(IE)]></td><td style="width: 200px;" valign="top" class="w160"><![endif]-->
-          <div class="column narrow" style="text-align: left;font-size: 12px;line-height: 19px;color: #363f48;font-family: Karla,Calibri,Geneva,sans-serif;Float: left;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
-              
-            </div>
-          </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-        </div>
-      </div>
-      <div class="layout one-col email-footer" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
-        <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
-        <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-email-footer"><td style="width: 600px;" class="w560"><![endif]-->
-          <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #363f48;font-family: Karla,Calibri,Geneva,sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);">
-            <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
-              <div style="font-size: 12px;line-height: 19px;">
-                <unsubscribe style="text-decoration: underline;">Unsubscribe</unsubscribe>
-              </div>
-            </div>
-          </div>
-        <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
         </div>
       </div>
     </div>
