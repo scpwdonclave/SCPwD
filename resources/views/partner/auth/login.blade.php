@@ -73,7 +73,7 @@
 
 @extends('custom-logins.app')
 @section('content')
-  <div class="wrap-login100 p-l-55 p-r-55 p-t-50 p-b-30">
+  <div class="wrap-login100 p-l-40 p-r-40 p-t-45 p-b-20">
     <form method="POST" id="form_partner_login" action="{{ route('partner.login') }}" class="login100-form">
     
       @csrf  
@@ -106,7 +106,7 @@
           <button type="submit" class="login100-form-btn">Login</button>
         </div>
 
-        <div class="d-flex justify-content-around p-t-57 p-b-20">
+        <div class="d-flex justify-content-around p-t-30 p-b-20">
           <a href="{{ route('partner.register') }}" class="txt2 hov1"> TP Registration </a>
           <a href="{{ route('partner.password.request') }}" class="txt2 hov1"> Forgot Password </a>
         </div>

@@ -30,6 +30,17 @@
         .error {
           color: red;
         }
+
+        /* For Firefox */
+        input[type='number'] {
+            -moz-appearance:textfield;
+        }
+        /* Webkit browsers like Safari and Chrome */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -94,11 +105,17 @@
 
 
 
-<div class="container-login100" style="background-image: url('{{ asset('assets/images/cover.jpg') }}');">
-    @yield('content')
-</div>
+    <div class="container-login100" style="background-image: url('{{ asset('assets/images/cover.jpg') }}');">
+        @yield('content')
+    </div>
 
     {{-- Scripts --}}
+    <script>
+        $(document).on("wheel", "input[type=number]", function (e) {
+            $(this).blur();
+        });
+    </script>
+    
     <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
     <script src="{{ asset('assets/js/main-login.js') }}"></script>
 

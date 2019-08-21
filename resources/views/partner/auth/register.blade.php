@@ -1,4 +1,4 @@
-@extends('partner.layouts.app')
+{{-- @extends('partner.layouts.app')
 
 @section('content')
 <div class="container">
@@ -77,14 +77,6 @@
                             </div>
                         </div>
 
-                        {{-- <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div> --}}
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -98,4 +90,70 @@
         </div>
     </div>
 </div>
+@endsection
+ --}}
+
+@extends('custom-logins.app')
+@section('content')
+  <div class="wrap-login100 p-l-40 p-r-40 p-t-45 p-b-20">
+    <form method="POST" id="form_partner_login" action="{{ route('partner.register') }}" class="login100-form">
+    
+      @csrf  
+      <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
+      <span class="login100-form-title m-b-10">TP Registration</span>
+      
+      <div class="wrap-input100 m-b-5">
+          <div class="form-group">
+              <input type="text" class="input100" name="name" value="{{ old('name') }}" placeholder="Name" required>                                
+          </div>
+        @if ($errors->has('name'))
+        <span class="invalid-feedback" style="display:block" role="alert">
+          <strong>{{ $errors->first('name') }}</strong>
+        </span>
+        @endif
+      </div>
+
+      <div class="wrap-input100 m-b-5">
+          <div class="form-group">
+              <input type="text" class="input100" name="spoc_name" value="{{ old('spoc_name') }}" placeholder="SPOC Name" required>                                
+          </div>
+        @if ($errors->has('spoc_name'))
+        <span class="invalid-feedback" style="display:block" role="alert">
+          <strong>{{ $errors->first('spoc_name') }}</strong>
+        </span>
+        @endif
+      </div>
+      
+      <div class="wrap-input100 m-b-5">
+          <div class="form-group">
+              <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required>                                
+          </div>
+        @if ($errors->has('email'))
+        <span class="invalid-feedback" style="display:block" role="alert">
+          <strong>{{ $errors->first('email') }}</strong>
+        </span>
+        @endif
+      </div>
+
+      <div class="wrap-input100 m-b-5">
+          <div class="form-group">
+              <input type="number" minlength="10" maxlength="10" class="input100" name="mobile" placeholder="Mobile" required>                                
+          </div>
+        @if ($errors->has('mobile'))
+        <span class="invalid-feedback" style="display:block" role="alert">
+          <strong>{{ $errors->first('mobile') }}</strong>
+        </span>
+        @endif
+      </div>
+
+        <div class="container-login100-form-btn">
+          <button type="submit" class="login100-form-btn">Register</button>
+        </div>
+
+        <div class="d-flex justify-content-around p-t-30 p-b-20">
+          <a href="{{ route('partner.login') }}" class="txt2 hov1"> TP Login </a>
+        </div>
+      
+    </form>
+  </div>
 @endsection

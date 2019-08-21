@@ -61,7 +61,7 @@
 
 @extends('custom-logins.app')
 @section('content')
-  <div class="wrap-login100 p-l-55 p-r-55 p-t-50 p-b-30">
+  <div class="wrap-login100 p-l-40 p-r-40 p-t-45 p-b-20">
     <form method="POST" id="form_reset_process" action="{{ route('admin.password.request') }}" class="login100-form">
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
@@ -110,7 +110,7 @@
           <button type="submit" class="login100-form-btn">Reset Password</button>
         </div>
 
-        {{-- <div class="text-center p-t-57 p-b-20">
+        {{-- <div class="text-center p-t-30 p-b-20">
           <a href="{{ route('admin.login') }}" class="txt2 hov1"> Login Here </a>
         </div> --}}
       
