@@ -32,6 +32,6 @@ class TPVerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.welcome')->subject("Training Partner Account Confirmation | SCPwD")->with(['partner' => $this->partner]);
+        return $this->view('emails.tpverify')->subject("Training Partner Account Confirmation | SCPwD")->with(['partner' => $this->partner]);
     }
 }
