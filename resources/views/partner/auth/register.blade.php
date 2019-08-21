@@ -100,8 +100,10 @@
     
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
-      <span class="login100-form-title m-b-10">TP Registration</span>
-      
+      <span class="login100-form-title m-b-10">Training Partner Registration</span>
+        @if(Session::has('message'))
+            <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+        @endif
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
               <input type="text" class="input100" name="name" value="{{ old('name') }}" placeholder="Name" required>                                
@@ -137,7 +139,7 @@
 
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
-              <input type="number" minlength="10" maxlength="10" class="input100" name="mobile" placeholder="Mobile" required>                                
+              <input type="number" minlength="10" maxlength="10" class="input100" name="mobile" value="{{ old('mobile') }}" placeholder="Mobile" required>                                
           </div>
         @if ($errors->has('mobile'))
         <span class="invalid-feedback" style="display:block" role="alert">
@@ -151,7 +153,7 @@
         </div>
 
         <div class="d-flex justify-content-around p-t-30 p-b-20">
-          <a href="{{ route('partner.login') }}" class="txt2 hov1"> TP Login </a>
+          <a href="{{ route('partner.login') }}" class="txt2 hov1"> Training Partner Login </a>
         </div>
       
     </form>

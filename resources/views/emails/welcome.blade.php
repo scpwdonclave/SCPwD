@@ -1,1 +1,1 @@
-Welcome to SCPwD
+Welcome to SCPwD {{$partner['name']}}

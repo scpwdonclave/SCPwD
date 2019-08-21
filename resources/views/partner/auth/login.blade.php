@@ -78,8 +78,10 @@
     
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
-      <span class="login100-form-title m-b-10">TP Login</span>
-      
+      <span class="login100-form-title m-b-10">Training Partner Login</span>
+        @if(Session::has('message'))
+            <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+        @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
               <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required>                                
@@ -106,8 +108,10 @@
           <button type="submit" class="login100-form-btn">Login</button>
         </div>
 
-        <div class="d-flex justify-content-around p-t-30 p-b-20">
-          <a href="{{ route('partner.register') }}" class="txt2 hov1"> TP Registration </a>
+        <div class="d-flex justify-content-around p-t-30">
+          <a href="{{ route('partner.register') }}" class="txt2 hov1"> Training Partner Registration </a>
+        </div>
+        <div class="d-flex justify-content-around p-t-5 p-b-20">
           <a href="{{ route('partner.password.request') }}" class="txt2 hov1"> Forgot Password </a>
         </div>
       

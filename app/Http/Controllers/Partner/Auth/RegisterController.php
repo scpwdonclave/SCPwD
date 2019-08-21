@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\TPVerificationMail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -53,8 +58,20 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'spoc_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:partners',
-            'mobile' => 'required|regex:/[0-9]{10}/',
+            'mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+        
+        Session::flash('message', 'Account Created, Please Check your Mail'); 
+        Session::flash('alert-class', 'alert-success');
+
+        return redirect()->back();
     }
 
     /**
@@ -65,13 +82,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $password = str_random(8);
+        $data['password'] = str_random(8);
         return Partner::create([
             'name' => $data['name'],
             'spoc_name' => $data['spoc_name'],
             'email' => $data['email'],
             'mobile' => $data['mobile'],
-            'password' => Hash::make($password),
+            'password' => Hash::make($data['password']),
+            Mail::to($data['email'])->send(new TPVerificationMail($data))
         ]);
     }
 

@@ -4,7 +4,7 @@
     <form method="POST" id="form_reset_request" action="{{ route('partner.password.email') }}" class="login100-form">
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
-      <span class="login100-form-title m-b-10">TP Password Reset</span>      
+      <span class="login100-form-title m-b-10">Training Partner Password Reset</span>      
       
       @if (session('status'))
       <div class="alert alert-success" role="alert">
