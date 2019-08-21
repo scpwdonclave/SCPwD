@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -50,8 +51,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
+            'spoc_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:partners',
-            'password' => 'required|min:6|confirmed',
+            'mobile' => 'required|regex:/[0-9]{10}/',
         ]);
     }
 
@@ -63,10 +65,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $password = str_random(8);
         return Partner::create([
             'name' => $data['name'],
+            'spoc_name' => $data['spoc_name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'mobile' => $data['mobile'],
+            'password' => Hash::make($password),
         ]);
     }
 

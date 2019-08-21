@@ -16,9 +16,10 @@ class CreatePartnersTable extends Migration
         Schema::create('partners', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('spoc_name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('mobile');
             $table->rememberToken();
             $table->timestamps();
         });
