@@ -5,8 +5,14 @@
                 <div class="user-info">
                     <div class="image"><a href="{{route('pages.profile')}}"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
                     <div class="detail">
-                        <h4>Michael</h4>
-                        <p class="m-b-0">Manager</p>
+                        @auth('admin','partner')
+                            <h4>{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->name}}</h4>
+                            <p class="m-b-0">{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->email}}</p>
+                        @endauth
+                        @guest('admin','partner')
+                            <h4>Shouvik Guest</h4>
+                            <p class="m-b-0">shouvik@test.com</p>
+                        @endguest
                         {{-- <a href="{{route('app.calendar')}}" title="Events"><i class="zmdi zmdi-calendar"></i></a>
                         <a href="{{route('app.mail-inbox')}}" title="Inbox"><i class="zmdi zmdi-email"></i></a>
                         <a href="{{route('app.contact-list')}}" title="Contact List"><i class="zmdi zmdi-account-box-phone"></i></a>
@@ -32,10 +38,13 @@
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('dashboard/dashboard') ? 'active' : null }}"><a href="{{route('dashboard.dashboard')}}">Dashboard 1</a></li>
-                    <li class="{{ Request::is('dashboard/dashboard2') ? 'active' : null }}"><a href="{{route('dashboard.dashboard2')}}">Dashboard 2</a></li>
-                    <li class="{{ Request::is('dashboard/dashboard3') ? 'active' : null }}"><a href="{{route('dashboard.dashboard3')}}">Dashboard 3</a></li>
+                    @guest
+                        <li class="{{ Request::is('dashboard/dashboard2') ? 'active' : null }}"><a href="{{route('dashboard.dashboard2')}}">Dashboard 2</a></li>
+                        <li class="{{ Request::is('dashboard/dashboard3') ? 'active' : null }}"><a href="{{route('dashboard.dashboard3')}}">Dashboard 3</a></li>
+                    @endguest
                 </ul>
             </li>
+            @guest('admin','partner')
             <li class="{{ Request::segment(1) === 'layoutformat' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gamepad"></i><span>Layouts Format</span></a>
                 <ul class="ml-menu">
@@ -184,6 +193,7 @@
                 </ul>
             </li>
             <li class="{{ Request::is('pages/faq') ? 'active' : null }}"><a href="{{route('pages.faq')}}"><i class="zmdi zmdi-circle-o text-success"></i><span>Faqs</span></a></li>
+            @endguest
         </ul>
     </div>
 </aside>

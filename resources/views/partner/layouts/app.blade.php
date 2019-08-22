@@ -1,79 +1,127 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{{ app()->getLocale() }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"> <!-- Favicon-->
+        <title>:: {{ config('app.name') }} :: @yield('title')</title>
+        <meta name="description" content="@yield('meta_description', config('app.name'))">
+        <meta name="author" content="@yield('meta_author', config('app.name'))">
+        @yield('meta')
+        {{-- See https://laravel.com/docs/5.7/blade#stacks for usage --}}
+        @stack('before-styles')
+        <link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+        @stack('after-styles')
+        @if (trim($__env->yieldContent('page-styles')))
+            @yield('page-styles')
+        @endif
 
-    <title>{{ config('app.name', 'Laravel') }} :: Partner</title>
-
-    <!-- Scripts -->
-	<script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-</head>
-<body>
-<div id="app">
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
-
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    <!-- Authentication Links -->
-                    @if (Auth::guard('partner')->guest())
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('partner.login') }}">{{ __('Login') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('partner.register') }}">{{ __('Register') }}</a>
-                        </li>
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::guard('partner')->user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('partner.logout') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('partner.logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
-                </ul>
+        <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/color_skins.css') }}">
+        @stack('after-styles')
+        @if (trim($__env->yieldContent('page-style')))
+            @yield('page-style')
+        @endif
+    </head>    
+    <?php 
+        $setting = !empty($_GET['theme']) ? $_GET['theme'] : '';
+        $theme = "theme-cyan";
+        $menu = "";
+        if ($setting == 'p') {
+            $theme = "theme-purple";
+        } else if ($setting == 'b') {
+            $theme = "theme-blue";
+        } else if ($setting == 'g') {
+            $theme = "theme-green";
+        } else if ($setting == 'o') {
+            $theme = "theme-orange";
+        } else if ($setting == 'bl') {
+            $theme = "theme-blush";
+        } else {
+             $theme = "theme-cyan";
+        }
+    ?>
+    <body class="<?= $theme ?> {{ Request::is('layoutformat/rtl') ? 'rtl' : '' }} {{ Request::is('layoutformat/horizontal') ? 'index2' : '' }} {{ Request::is('layoutformat/smallmenu') ? 'menu_sm' : '' }}">
+        <!-- Page Loader -->
+        <div class="page-loader-wrapper">
+            <div class="loader">
+                <div class="m-t-30"><img class="zmdi-hc-spin" src="../assets/images/logo.svg" width="48" height="48" alt="SCPwD"></div>
+                <p>Please wait...</p>
             </div>
         </div>
-    </nav>
+        <div id="wrapper">
+            @include('layout.overlaymenu')
+            @include('layout.navbar')
+            @if (Request::segment(2) === 'horizontal' )
+                @include('layout.hmenu')
+            @else
+                @include('layout.sidebar')
+            @endif
+            @include('layout.rightchat')
+            @include('layout.rightsidebar')
+            <section class="content">
+                <div class="block-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <h2>@yield('title')</h2>
+                            <ul class="breadcrumb p-l-0 p-b-0">
+                                <li class="breadcrumb-item"><a href="{{route('dashboard.dashboard')}}"><i class="zmdi zmdi-home"></i> sQuare</a></li>
+                                @if (trim($__env->yieldContent('parentPageTitle')))
+                                    <li class="breadcrumb-item">@yield('parentPageTitle')</li>
+                                @endif
+                                @if (trim($__env->yieldContent('title')))
+                                    <li class="breadcrumb-item active">@yield('title')</li>
+                                @endif
+                            </ul>
+                        </div>
+                        @if (Request::segment(2) === 'rtl' )
+                            <div class="col-lg-6 col-md-6 col-sm-12 text-left">
+                            @else
+                            <div class="col-lg-6 col-md-6 col-sm-12 text-right">
+                        @endif
+                            {{-- <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
+                                <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#706bd1">3,2,6,5,9,8,7,9,5,1,3,5,7,4,6</div>
+                                <small>Page Views</small>
+                            </div>
+                            <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
+                                <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#f9666e">1,3,5,7,4,6,3,2,6,5,9,8,7,9,5</div>
+                                <small>Visitors</small>
+                            </div> --}}
+                            @if (Request::segment(2) === 'dashboard' )
+                                <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @yield('content')
+            </section>
+            @if (trim($__env->yieldContent('modal')))
+                @yield('modal')
+            @endif
+        </div>
+        <!-- Scripts -->
+        @stack('before-scripts')
+        <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>    
+        <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
 
-    <main class="py-4">
-        @yield('content')
-    </main>
-</div>
-</body>
+        <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
+        <script>
+            // Wraptheme Website live
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/5c6d4867f324050cfe342c69/default';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+            })();
+        </script>
+        @stack('after-scripts')
+        @if (trim($__env->yieldContent('page-script')))
+            @yield('page-script')
+		@endif
+    </body>
 </html>
