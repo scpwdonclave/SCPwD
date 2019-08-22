@@ -49,6 +49,13 @@ class LoginController extends Controller
         return Auth::guard('partner');
     }
 
+
+    // Overriding credentials() for checking account activation status
+    protected function credentials(Request $request)
+    {        
+        return ['email' => $request->email, 'password' => $request->password, 'status' => 1];
+    }
+
     /**
      * Show the application's login form.
      *
@@ -58,6 +65,7 @@ class LoginController extends Controller
     {
         return view('partner.auth.login');
     }
+
 
     /**
      * Log the user out of the application.
