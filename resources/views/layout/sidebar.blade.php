@@ -5,13 +5,14 @@
                 <div class="user-info">
                     <div class="image"><a href="{{route('pages.profile')}}"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
                     <div class="detail">
-                        @auth('admin','partner')
+                        @auth('partner','admin')
                             <h4>{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->name}}</h4>
                             <p class="m-b-0">{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->email}}</p>
                         @endauth
-                        @guest('admin','partner')
-                            <h4>Shouvik Guest</h4>
-                            <p class="m-b-0">shouvik@test.com</p>
+                        
+                        @guest('partner','admin')
+                            <h4>Guest</h4>
+                            {{-- <p class="m-b-0"></p> --}}
                         @endguest
                         {{-- <a href="{{route('app.calendar')}}" title="Events"><i class="zmdi zmdi-calendar"></i></a>
                         <a href="{{route('app.mail-inbox')}}" title="Inbox"><i class="zmdi zmdi-email"></i></a>
@@ -38,13 +39,13 @@
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('dashboard/dashboard') ? 'active' : null }}"><a href="{{route('dashboard.dashboard')}}">Dashboard 1</a></li>
-                    @guest
+                    @guest('partner','admin')
                         <li class="{{ Request::is('dashboard/dashboard2') ? 'active' : null }}"><a href="{{route('dashboard.dashboard2')}}">Dashboard 2</a></li>
                         <li class="{{ Request::is('dashboard/dashboard3') ? 'active' : null }}"><a href="{{route('dashboard.dashboard3')}}">Dashboard 3</a></li>
                     @endguest
                 </ul>
             </li>
-            @guest('admin','partner')
+            @guest('partner','admin')
             <li class="{{ Request::segment(1) === 'layoutformat' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gamepad"></i><span>Layouts Format</span></a>
                 <ul class="ml-menu">

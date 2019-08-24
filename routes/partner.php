@@ -9,7 +9,9 @@ Route::group(['namespace' => 'Partner'], function() {
     Route::post('logout', 'Auth\LoginController@logout')->name('partner.logout');
 
     // Register
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('partner.register');
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('partner.comp-register');
+    Route::get('/complete_registration', 'HomeController@showCompleteRegistrationForm')->name('partner.register');
+    Route::post('/complete_registration', 'HomeController@submitCompleteRegistrationForm')->name('partner.register');
     Route::post('register', 'Auth\RegisterController@register');
 
     // Passwords
@@ -22,5 +24,6 @@ Route::group(['namespace' => 'Partner'], function() {
     Route::get('email/resend','Auth\VerificationController@resend')->name('partner.verification.resend');
     Route::get('email/verify','Auth\VerificationController@show')->name('partner.verification.notice');
     Route::get('email/verify/{id}','Auth\VerificationController@verify')->name('partner.verification.verify');
+
 
 });

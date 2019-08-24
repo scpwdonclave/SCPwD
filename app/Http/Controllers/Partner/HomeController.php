@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Http\Requests\TPFormValidation;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 
 class HomeController extends Controller
 {
@@ -28,4 +31,14 @@ class HomeController extends Controller
         return view('partner.home');
     }
 
+    /* View The Complete Registrattion Form */
+    public function showCompleteRegistrationForm(){
+        return view('partner.completeregistration');
+    }
+
+    /* Submit Complete Registration Form Data */
+    public function submitCompleteRegistrationForm(Request $request){
+        dd($request);
+        //    return 'Form Validated';
+    }
 }

@@ -151,7 +151,7 @@
             {{-- <a href="javascript:void(0);" class="js-right-chat"><i class="zmdi zmdi-comments"></i></a>
             <a href="javascript:void(0);" class="js-right-sidebar"><i class="zmdi zmdi-settings"></i></a>
             <a href="javascript:void(0);" class="btn_overlay hidden-sm-down"><i class="zmdi zmdi-sort-amount-desc"></i></a> --}}
-            @auth('admin','partner')
+            @auth('partner','admin')
                 <a class="mega-menu" href="{{strtok(Route::current()->getName(), '.')}}/logout" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
                     <i class="zmdi zmdi-power"></i>
