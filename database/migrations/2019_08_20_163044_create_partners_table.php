@@ -15,11 +15,11 @@ class CreatePartnersTable extends Migration
     {
         Schema::create('partners', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
             $table->string('spoc_name');
-            $table->string('email')->unique();
+            $table->string('spoc_email')->unique();
             $table->string('password');
-            $table->string('mobile');
+            $table->string('spoc_mobile');
+            $table->string('incorp_cert');
             $table->boolean('status')->default(1);
             $table->boolean('complete_profile')->default(0);
             $table->rememberToken();
