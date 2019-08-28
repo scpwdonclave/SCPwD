@@ -96,7 +96,7 @@
 @extends('custom-logins.app')
 @section('content')
   <div class="wrap-login100 p-l-40 p-r-40 p-t-45 p-b-20">
-    <form method="POST" id="form_partner_login" action="{{ route('partner.register') }}" class="login100-form">
+    <form method="POST" id="form_partner_login" action="{{ route('partner.register') }}" class="login100-form" enctype="multipart/form-data">
     
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
@@ -104,17 +104,6 @@
         @if(Session::has('message'))
             <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
         @endif
-      <div class="wrap-input100 m-b-5">
-          <div class="form-group">
-              <input type="text" class="input100" name="name" value="{{ old('name') }}" placeholder="Name" required>                                
-          </div>
-        @if ($errors->has('name'))
-        <span class="invalid-feedback" style="display:block" role="alert">
-          <strong>{{ $errors->first('name') }}</strong>
-        </span>
-        @endif
-      </div>
-
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
               <input type="text" class="input100" name="spoc_name" value="{{ old('spoc_name') }}" placeholder="SPOC Name" required>                                
@@ -128,22 +117,35 @@
       
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
-              <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required>                                
+              <input type="email" class="input100" name="spoc_email" value="{{ old('spoc_email') }}" placeholder="SPOC Email" required>                                
           </div>
-        @if ($errors->has('email'))
+        @if ($errors->has('spoc_email'))
         <span class="invalid-feedback" style="display:block" role="alert">
-          <strong>{{ $errors->first('email') }}</strong>
+          <strong>{{ $errors->first('spoc_email') }}</strong>
         </span>
         @endif
       </div>
 
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
-              <input type="number" minlength="10" maxlength="10" class="input100" name="mobile" value="{{ old('mobile') }}" placeholder="Mobile" required>                                
+              <input type="number" minlength="10" maxlength="10" class="input100" name="spoc_mobile" value="{{ old('spoc_mobile') }}" placeholder="SPOC Mobile" required>                                
           </div>
-        @if ($errors->has('mobile'))
+        @if ($errors->has('spoc_mobile'))
         <span class="invalid-feedback" style="display:block" role="alert">
-          <strong>{{ $errors->first('mobile') }}</strong>
+          <strong>{{ $errors->first('spoc_mobile') }}</strong>
+        </span>
+        @endif
+      </div>
+      
+      <div class="wrap-input100 m-b-5">
+          <div class="form-group">
+              <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certifiate</label>                                                            
+              <input id="incorp_cert" type="file" class="input100" name="incorp_cert" required>
+              <span id="incorp_cert_error"  style="color:red;"></span>                                                            
+          </div>
+        @if ($errors->has('incorp_cert'))
+        <span class="invalid-feedback" style="display:block" role="alert">
+          <strong>{{ $errors->first('incorp_cert') }}</strong>
         </span>
         @endif
       </div>
@@ -158,4 +160,37 @@
       
     </form>
   </div>
+@endsection
+
+@section('page-script')
+
+<script>
+    $(function(){
+        /* Start File Type Validation for jpg,jpeg,png,pdf */         
+        
+            var _URL = window.URL || window.webkitURL;
+            $("[type='file']").change(function(e) {
+                
+            var image, file;
+            for (var i = this.files.length - 1; i >= 0; i--) {
+            if ((file = this.files[i])) {
+                    image = new Image();
+                    var fileType = file["type"];
+                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ];
+                    if ($.inArray(fileType, ValidImageTypes) < 0) {
+                        $("#"+e.currentTarget.id).val('');
+                        $("#" + e.currentTarget.id + "_error").text('Supported jpg, jpeg, png, pdf, docs, xls, xlsx');
+                    } else {
+                        $("#" + e.currentTarget.id + "_error").text('');
+                    }
+                    image.src = _URL.createObjectURL(file);
+                }
+            }
+            });
+        
+        /* End File Type Validation for jpg,jpeg,png,pdf */
+
+    });
+</script>
+
 @endsection

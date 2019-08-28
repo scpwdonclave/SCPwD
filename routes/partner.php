@@ -1,7 +1,9 @@
 <?php
 
 Route::group(['namespace' => 'Partner'], function() {
-    Route::get('/', 'HomeController@index')->name('partner.dashboard');
+    
+    Route::get('/', function () { return redirect('/partner/dashboard'); });
+    Route::get('/dashboard', 'HomeController@index')->name('partner.dashboard');
 
     // Login
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('partner.login');
@@ -9,9 +11,9 @@ Route::group(['namespace' => 'Partner'], function() {
     Route::post('logout', 'Auth\LoginController@logout')->name('partner.logout');
 
     // Register
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('partner.comp-register');
-    Route::get('/complete_registration', 'HomeController@showCompleteRegistrationForm')->name('partner.register');
-    Route::post('/complete_registration', 'HomeController@submitCompleteRegistrationForm')->name('partner.register');
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('partner.register');
+    Route::get('/complete_registration', 'HomeController@showCompleteRegistrationForm')->name('partner.comp-register');
+    Route::post('/complete_registration', 'HomeController@submitCompleteRegistrationForm')->name('partner.comp-register');
     Route::post('register', 'Auth\RegisterController@register');
 
     // Passwords

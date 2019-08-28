@@ -12,7 +12,7 @@
 */
 
 
-Route::get('/', function () { return redirect('dashboard/dashboard'); });
+Route::get('/', function () { return redirect('admin'); });
 
 /* Dashboard */
 Route::get('dashboard', function () { return redirect('dashboard/dashboard'); });
@@ -139,3 +139,9 @@ Route::get('pages/pricing', 'PagesController@pricing')->name('pages.pricing');
 Route::get('pages/invoices', 'PagesController@invoices')->name('pages.invoices');
 Route::get('pages/search-results', 'PagesController@searchResults')->name('pages.search-results');
 Route::get('pages/faq', 'PagesController@faq')->name('pages.faq');
+
+
+// Admin Section Custom Routes
+Route::group(['prefix'=>'admin'], function(){
+    Route::GET('/partners', 'AdminPartnerController@partners')->name('admin.partners');
+});

@@ -1,7 +1,7 @@
 <div class="menu-container">
     <div class="menu">
         <ul class="pullDown">
-            <li><a href="{{route('dashboard.dashboard')}}">Dashboard</a></li>
+            <li><a href="{{route(strtok(Route::current()->getName(), '.').'.dashboard')}}">Dashboard</a></li>
             <li><a href="javascript:void(0)">Layouts</a>
                 <ul class="pullDown">                    
                     <li class="{{ Request::is('layoutformat/rtl') ? 'active' : null }}"><a href="{{route('layoutformat.rtl')}}">RTL Layouts</a></li>

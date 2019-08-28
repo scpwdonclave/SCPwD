@@ -10,7 +10,7 @@
         <div class="col-lg-3 col-sm-6">
             <div class="card">
                 <div class="body">
-                    <h3 class="m-b-0 number count-to" data-from="0" data-to="1600" data-speed="2000" data-fresh-interval="700">1600 <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                    <h3 class="m-b-0 number count-to" data-from="0" data-to="1600" data-speed="2000" data-fresh-interval="700">1600<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <p class="text-muted">New Feedbacks</p>
                     <div class="progress">
                         <div class="progress-bar l-blush" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>

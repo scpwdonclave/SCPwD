@@ -1,9 +1,12 @@
 <?php
 
-    Route::GET('/home', 'AdminController@index')->name('admin.home');
+    Route::get('/', function () { return redirect('/admin/dashboard'); });
+    Route::get('/home', function () { return redirect('/admin/dashboard'); });
+    Route::GET('/dashboard', 'AdminController@index')->name('admin.home');
+    Route::GET('/dashboard', 'AdminController@index')->name('admin.dashboard');
     // Login and Logout
     Route::GET('/', 'LoginController@showLoginForm')->name('admin.login');
-    Route::POST('/', 'LoginController@login');
+    Route::POST('/', 'LoginController@login'); 
     Route::POST('/logout', 'LoginController@logout')->name('admin.logout');
 
     // Password Resets

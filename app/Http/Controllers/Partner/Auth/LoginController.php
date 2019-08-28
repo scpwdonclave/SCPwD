@@ -53,7 +53,7 @@ class LoginController extends Controller
     // Overriding credentials() for checking account activation status
     protected function credentials(Request $request)
     {        
-        return ['email' => $request->email, 'password' => $request->password, 'status' => 1];
+        return ['spoc_email' => $request->email, 'password' => $request->password, 'status' => 1];
     }
 
     /**

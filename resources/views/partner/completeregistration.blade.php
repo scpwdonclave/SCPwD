@@ -42,7 +42,19 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_complete_registration" method="POST" action="{{ route('partner.register') }}">
+                    <div class="row d-flex justify-content-around">
+                        <div class="col-sm-3">
+                            <p>Name : <h6>{{ $partner->name }}</h6></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p>Email : <h6>{{ $partner->email }}</h6></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p>Phone : <h6>{{ $partner->mobile }}</h6></p>
+                        </div>
+
+                    </div>
+                    <form id="form_complete_registration" method="POST" action="{{ route('partner.comp-register') }}">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-primary">
@@ -188,7 +200,7 @@
                                                 <div class="col-sm-4">
                                                     <label for="spoc_name">SPOC Name</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name" value="{{ old('spoc_name') }}" name="spoc_name">
+                                                        <input type="text" class="form-control" placeholder="Name" value="{{ $partner->spoc_name }}" name="spoc_name">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -698,4 +710,4 @@
     /* End Additional Methods for Validating PAN & GST  */
 
 </script>
-@stop
+@endsection

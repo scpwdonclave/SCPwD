@@ -79,12 +79,15 @@
       @csrf  
       <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
       <span class="login100-form-title m-b-10">Training Partner Login</span>
+      @if(Session::has('message'))
+        <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+      @endif
         @if(Session::has('message'))
             <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
         @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
-              <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required>                                
+              <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>                                
           </div>
         @if ($errors->has('email'))
         <span class="invalid-feedback" style="display:block" role="alert">

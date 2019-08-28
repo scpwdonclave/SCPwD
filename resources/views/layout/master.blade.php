@@ -67,7 +67,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <h2>@yield('title')</h2>
                             <ul class="breadcrumb p-l-0 p-b-0">
-                                <li class="breadcrumb-item"><a href="{{route('dashboard.dashboard')}}"><i class="zmdi zmdi-home"></i> sQuare</a></li>
+                                <li class="breadcrumb-item"><a href="{{route(strtok(Route::current()->getName(), '.').'.dashboard')}}"><i class="zmdi zmdi-home"></i> SCPwD</a></li>
                                 @if (trim($__env->yieldContent('parentPageTitle')))
                                     <li class="breadcrumb-item">@yield('parentPageTitle')</li>
                                 @endif

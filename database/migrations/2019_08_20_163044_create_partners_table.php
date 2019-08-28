@@ -21,6 +21,7 @@ class CreatePartnersTable extends Migration
             $table->string('password');
             $table->string('mobile');
             $table->boolean('status')->default(1);
+            $table->boolean('complete_profile')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

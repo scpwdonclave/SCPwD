@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Partner;
 use App\Http\Requests\TPFormValidation;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Partner;
+use Auth;
 
 
 class HomeController extends Controller
@@ -28,12 +30,12 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('partner.home');
+        return (Auth::guard('partner')->user()->complete_profile) ? view('partner.home')->with('partner',Auth::guard('partner')->user()) : redirect(route('partner.comp-register'));
     }
-
+    
     /* View The Complete Registrattion Form */
     public function showCompleteRegistrationForm(){
-        return view('partner.completeregistration');
+        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard')) : view('partner.completeregistration')->with('partner',Auth::guard('partner')->user());
     }
 
     /* Submit Complete Registration Form Data */

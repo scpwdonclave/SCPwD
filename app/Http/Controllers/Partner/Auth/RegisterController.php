@@ -55,10 +55,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
             'spoc_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:partners',
-            'mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
+            'spoc_email' => 'required|email|max:255|unique:partners',
+            'spoc_mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
+            'incorp_cert' => 'required|mimes:jpeg,jpg,png,docx,xlsx,xls,pdf'
         ]);
     }
 
@@ -83,13 +83,14 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $data['password'] = str_random(8);
+        $path = $data['incorp_cert']->store('reg_files');
         return Partner::create([
-            'name' => $data['name'],
             'spoc_name' => $data['spoc_name'],
-            'email' => $data['email'],
-            'mobile' => $data['mobile'],
+            'spoc_email' => $data['spoc_email'],
+            'spoc_mobile' => $data['spoc_mobile'],
+            'incorp_cert' => $path,
             'password' => Hash::make($data['password']),
-            Mail::to($data['email'])->send(new TPVerificationMail($data))
+            Mail::to($data['spoc_email'])->send(new TPVerificationMail($data))
         ]);
     }
 

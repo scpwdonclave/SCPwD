@@ -3,58 +3,41 @@
         <ul class="list">
             <li>
                 <div class="user-info">
-                    <div class="image"><a href="{{route('pages.profile')}}"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
+                    <div class="image"><a href="#" onclick="return false;"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
                     <div class="detail">
-                        @auth('partner','admin')
-                            <h4>{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->name}}</h4>
-                            <p class="m-b-0">{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->email}}</p>
-                        @endauth
-                        
-                        @guest('partner','admin')
-                            <h4>Guest</h4>
-                            {{-- <p class="m-b-0"></p> --}}
-                        @endguest
-                        {{-- <a href="{{route('app.calendar')}}" title="Events"><i class="zmdi zmdi-calendar"></i></a>
-                        <a href="{{route('app.mail-inbox')}}" title="Inbox"><i class="zmdi zmdi-email"></i></a>
-                        <a href="{{route('app.contact-list')}}" title="Contact List"><i class="zmdi zmdi-account-box-phone"></i></a>
-                        <div class="row">
-                            <div class="col-4 p-r-0">
-                                <h6 class="m-b-5">852</h6>
-                                <small>Sales</small>
-                            </div>
-                            <div class="col-4 p-l-0 p-r-0">
-                                <h6 class="m-b-5">513</h6>
-                                <small>Order</small>
-                            </div>
-                            <div class="col-4 p-l-0">
-                                <h6 class="m-b-5">$34M</h6>
-                                <small>Revenue</small>
-                            </div>
-                        </div> --}}
+                        <h4>{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->name}}</h4>
+                        <p class="m-b-0">{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->email}}</p>
                     </div>
                 </div>
             </li>
             <li class="header">MAIN</li>
-            <li class="{{ Request::segment(1) === 'dashboard' ? 'active open' : null }}">
+            <li class="{{ Request::segment(2) === 'dashboard' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
-                    <li class="{{ Request::is('dashboard/dashboard') ? 'active' : null }}"><a href="{{route('dashboard.dashboard')}}">Dashboard 1</a></li>
-                    @guest('partner','admin')
-                        <li class="{{ Request::is('dashboard/dashboard2') ? 'active' : null }}"><a href="{{route('dashboard.dashboard2')}}">Dashboard 2</a></li>
-                        <li class="{{ Request::is('dashboard/dashboard3') ? 'active' : null }}"><a href="{{route('dashboard.dashboard3')}}">Dashboard 3</a></li>
-                    @endguest
+                    <li class="{{ Request::segment(2) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard')}}">Dashboard</a></li>
+                   
                 </ul>
             </li>
-            @guest('partner','admin')
-            <li class="{{ Request::segment(1) === 'layoutformat' ? 'active open' : null }}">
-                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gamepad"></i><span>Layouts Format</span></a>
-                <ul class="ml-menu">
-                    <li class="{{ Request::is('layoutformat/rtl') ? 'active' : null }}"><a href="{{route('layoutformat.rtl')}}">RTL Layouts</a></li>
-                    <li class="{{ Request::is('layoutformat/horizontal') ? 'active' : null }}"><a href="{{route('layoutformat.horizontal')}}">Horizontal Menu</a></li>
-                    <li class="{{ Request::is('layoutformat/smallmenu') ? 'active' : null }}"><a href="{{route('layoutformat.smallmenu')}}">Small leftmenu</a></li>
-                </ul>
-            </li>
-            <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
+            @auth('admin')
+                @if (Request::segment(1) === 'admin')
+                <li class="{{ Request::segment(2) === 'partners' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gamepad"></i><span>Training Partners</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/partners') ? 'active' : null }}"><a href="{{route('admin.partners')}}">Partners</a></li>
+                    </ul>
+                </li> 
+                @endif
+            @endauth
+
+            @auth('partner')
+                @if (Request::segment(1) === 'partner')
+                    @if (!$partner->complete_profile)
+                        <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}">Registration</a></li>
+                    @endif
+                @endif
+            @endauth
+            
+            {{-- <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>App</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('app/mail-compose') ? 'active' : null }}"><a href="{{route('app.mail-compose')}}">Mail Compose</a></li>
@@ -193,8 +176,7 @@
                     <li class="{{ Request::is('pages/search-results') ? 'active' : null }}"><a href="{{route('pages.search-results')}}">Search Results</a></li>
                 </ul>
             </li>
-            <li class="{{ Request::is('pages/faq') ? 'active' : null }}"><a href="{{route('pages.faq')}}"><i class="zmdi zmdi-circle-o text-success"></i><span>Faqs</span></a></li>
-            @endguest
+            <li class="{{ Request::is('pages/faq') ? 'active' : null }}"><a href="{{route('pages.faq')}}"><i class="zmdi zmdi-circle-o text-success"></i><span>Faqs</span></a></li> --}}
         </ul>
     </div>
 </aside>
