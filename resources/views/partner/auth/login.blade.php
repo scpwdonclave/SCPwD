@@ -87,11 +87,11 @@
         @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
-              <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>                                
+              <input type="text" class="input100" name="tp_id" value="{{ old('tp_id') }}" placeholder="User ID" required autofocus>                                
           </div>
-        @if ($errors->has('email'))
+        @if ($errors->has('tp_id'))
         <span class="invalid-feedback" style="display:block" role="alert">
-          <strong>{{ $errors->first('email') }}</strong>
+          <strong>{{ $errors->first('tp_id') }}</strong>
         </span>
         @endif
       </div>

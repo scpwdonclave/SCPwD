@@ -1,7 +1,7 @@
 <?php
 
-    Route::get('/', function () { return redirect('/admin/dashboard'); });
-    Route::get('/home', function () { return redirect('/admin/dashboard'); });
+    // Route::get('/', function () { return redirect('/admin/dashboard'); });
+    // Route::get('/home', function () { return redirect('/admin/dashboard'); });
     Route::GET('/dashboard', 'AdminController@index')->name('admin.home');
     Route::GET('/dashboard', 'AdminController@index')->name('admin.dashboard');
     // Login and Logout
@@ -39,6 +39,6 @@
     Route::get('/role/{role}/edit', 'RoleController@edit')->name('admin.role.edit');
     Route::patch('/role/{role}', 'RoleController@update')->name('admin.role.update');
 
-    Route::fallback(function () {
-        return abort(404);
-    });
+    // Route::fallback(function () {
+    //     return abort(404);
+    // });

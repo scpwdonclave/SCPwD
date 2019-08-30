@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Requests\TPFormValidation;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Partner;
+use Alert;
 use Auth;
 
 
@@ -35,12 +39,101 @@ class HomeController extends Controller
     
     /* View The Complete Registrattion Form */
     public function showCompleteRegistrationForm(){
-        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard')) : view('partner.completeregistration')->with('partner',Auth::guard('partner')->user());
+        $parliaments = DB::table('parliament')->get();
+        $data = [
+            'partner'  => Auth::guard('partner')->user(),
+            'parliaments'   => DB::table('parliament')->get(),
+        ];
+        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard')) : view('partner.completeregistration')->with($data);
     }
 
     /* Submit Complete Registration Form Data */
-    public function submitCompleteRegistrationForm(Request $request){
-        dd($request);
-        //    return 'Form Validated';
+    public function submitCompleteRegistrationForm(TPFormValidation $request){
+        $initial_year = (Carbon::now()->format('m') <= 3)?(Carbon::now()->format('Y')-1):Carbon::now()->format('Y');
+
+        $partner = Auth::guard('partner')->user();
+        $partner->org_name = $request->org_name;
+        $partner->org_type = $request->org_type;
+        $partner->estab_year = $request->estab_year;
+        $partner->landline = $request->landline;
+
+        $partner->website = $request->website;
+        $partner->ceo_name = $request->ceo_name;
+        $partner->ceo_email = $request->ceo_email;
+        $partner->ceo_mobile = $request->ceo_mobile;
+        $partner->signatory_name = $request->signatory_name;
+        $partner->signatory_email = $request->signatory_email;
+        $partner->signatory_mobile = $request->signatory_mobile;
+        $partner->org_address = $request->org_address;
+        $partner->landmark = $request->landmark;
+        $partner->addr_proof = $request->addr_proof;
+        
+        if ($request->addr_proof == 'Incorportaion Certificate') {
+            /* Linking, Already Uploaded */
+            $partner->addr_doc = $partner->incorp_doc;
+        } else {
+            // Upload Code
+            $gstfilepath = Storage::disk('myDisk')->put('/partners', $request['incorp_doc']);
+            $partner->addr_doc = $gstfilepath;
+        }
+        
+        
+        $partner->city = $request->city;
+        $partner->block = $request->block;
+        $partner->pin = $request->pin;
+        $partner->state = $request->state;
+        $partner->district = $request->district;
+        $partner->parliament = $request->parliament;
+        $partner->pan = $request->pan;
+        //Upload Code
+        $partner->pan_doc = Storage::disk('myDisk')->put('/partners', $request['pan_doc']);
+        $partner->gst = $request->gst;
+        
+        if ($request->addr_proof == 'GST Registration Certificate') {
+            $partner->gst_doc = $gstfilepath;
+        } else {
+            // Upload Code
+            $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);
+        }
+        
+        if ($request->hasFile('ca1_doc')) {
+            // Upload Code
+            $partner->ca1_doc = Storage::disk('myDisk')->put('/partners', $request['ca1_doc']);
+            $partner->ca1_year = $initial_year.'-'.++$initial_year;
+        }
+        if ($request->hasFile('ca2_doc')) {
+            // Upload Code
+            $partner->ca2_doc = Storage::disk('myDisk')->put('/partners', $request['ca2_doc']);
+            $partner->ca2_year = $initial_year.'-'.++$initial_year;
+        }
+        if ($request->hasFile('ca3_doc')) {
+            // Upload Code
+            $partner->ca3_doc = Storage::disk('myDisk')->put('/partners', $request['ca3_doc']);
+            $partner->ca3_year = $initial_year.'-'.++$initial_year;
+        }
+        if ($request->hasFile('ca4_doc')) {
+            // Upload Code
+            $partner->ca4_doc = Storage::disk('myDisk')->put('/partners', $request['ca4_doc']);
+            $partner->ca4_year = $initial_year.'-'.++$initial_year;
+        }
+
+        $partner->offer = $request->offer;
+        $partner->offer_date = $request->offer_date;
+        // Upload Code
+        $partner->offer_doc = Storage::disk('myDisk')->put('/partners', $request['offer_doc']);;
+        
+        $partner->sanction = $request->sanction;
+        $partner->sanction_date = $request->sanction_date;
+        // Upload Code
+        $partner->sanction_doc = Storage::disk('myDisk')->put('/partners', $request['sanction_doc']);;
+
+        // Flag Section
+        $partner->complete_profile = 1;
+        $partner->pending_verify = 1;
+
+        $partner->save();
+        alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Reject</span> you will get Notified by your Email", 'Job Done')->html()->autoclose(4000);
+        return redirect()->back();
     }
+
 }

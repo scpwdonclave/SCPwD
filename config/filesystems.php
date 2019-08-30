@@ -64,6 +64,13 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'myDisk' => [
+            'driver' => 'local',
+            'root' => storage_path('app/files'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'private',
+        ],
+
     ],
 
 ];

@@ -119,6 +119,9 @@
             s0.parentNode.insertBefore(s1,s0);
             })();
         </script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- Include this after the sweet alert js file -->
+        @include('sweet::alert')
         @stack('after-scripts')
         @if (trim($__env->yieldContent('page-script')))
             @yield('page-script')

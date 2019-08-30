@@ -140,8 +140,8 @@ Route::get('pages/invoices', 'PagesController@invoices')->name('pages.invoices')
 Route::get('pages/search-results', 'PagesController@searchResults')->name('pages.search-results');
 Route::get('pages/faq', 'PagesController@faq')->name('pages.faq');
 
-
 // Admin Section Custom Routes
 Route::group(['prefix'=>'admin'], function(){
     Route::GET('/partners', 'AdminPartnerController@partners')->name('admin.partners');
 });
+

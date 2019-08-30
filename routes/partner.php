@@ -28,4 +28,6 @@ Route::group(['namespace' => 'Partner'], function() {
     Route::get('email/verify/{id}','Auth\VerificationController@verify')->name('partner.verification.verify');
 
 
+    /* File Access */
+    Route::get('files/{filename}', 'FileController@partnerFiles')->name('files.partner-file');
 });

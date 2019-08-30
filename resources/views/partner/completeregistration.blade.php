@@ -18,6 +18,7 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 
 
 
@@ -44,17 +45,17 @@
                 <div class="body">
                     <div class="row d-flex justify-content-around">
                         <div class="col-sm-3">
-                            <p>Name : <h6>{{ $partner->name }}</h6></p>
+                            <p>SPOC Name : <h6>{{ $partner->spoc_name }}</h6></p>
                         </div>
                         <div class="col-sm-3">
-                            <p>Email : <h6>{{ $partner->email }}</h6></p>
+                            <p>SPOC Email : <h6>{{ $partner->spoc_email }}</h6></p>
                         </div>
                         <div class="col-sm-3">
-                            <p>Phone : <h6>{{ $partner->mobile }}</h6></p>
+                            <p>SPOC Phone : <h6>{{ $partner->spoc_mobile }}</h6></p>
                         </div>
 
                     </div>
-                    <form id="form_complete_registration" method="POST" action="{{ route('partner.comp-register') }}">
+                    <form id="form_complete_registration" method="POST" action="{{ route('partner.comp-register') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-primary">
@@ -65,15 +66,15 @@
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
-                                                    <label for="organization">Oganization Name *</label>
+                                                    <label for="org_name">Oganization Name *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name of the Organization" value="{{ old('organization') }}" name="organization" required>
+                                                        <input type="text" class="form-control" placeholder="Name of the Organization" value="{{ old('org_name') }}" name="org_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="organization_type">Oganization Type</label>
+                                                    <label for="org_type">Oganization Type</label>
                                                     <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="organization_type" data-show-subtext="true" data-dropup-auto='false' required>
+                                                        <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false' required>
                                                             <option>Type 1</option>
                                                             <option>Type 2</option>
                                                             <option>Type 3</option>
@@ -82,9 +83,9 @@
                                                 </div>
                                             
                                                 <div class="col-sm-3">
-                                                    <label for="establishment">Establishment Year *</label>
+                                                    <label for="estab_year">Establishment Year *</label>
                                                     <div class="form-group form-float year_picker">
-                                                         <input type="text" class="form-control" placeholder="Year of Establishment" value="{{ old('establishment') }}" name="establishment" required>
+                                                         <input type="text" class="form-control" placeholder="Year of Establishment" value="{{ old('estab_year') }}" name="estab_year" required>
                                                     </div>
                                                 </div>
                                                 
@@ -136,7 +137,7 @@
                                                 <div class="col-sm-4">
                                                     <label for="ceo_mobile">CEO/MD/Head's Mobile Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="number" min="0" minlength="10" maxlength="10" class="form-control" placeholder="Mobile" value="{{ old('ceo_mobile') }}" name="ceo_mobile">
+                                                        <input type="text" class="form-control" placeholder="Mobile" value="{{ old('ceo_mobile') }}" name="ceo_mobile">
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,9 +167,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sinatory_email">Authorized Signatory Email Address (as per Ministry)</label>
+                                                    <label for="signatory_email">Authorized Signatory Email Address (as per Ministry)</label>
                                                     <div class="form-group form-float">
-                                                        <input type="email" class="form-control" placeholder="Email" value="{{ old('sinatory_email') }}" name="sinatory_email">
+                                                        <input type="email" class="form-control" placeholder="Email" value="{{ old('signatory_email') }}" name="signatory_email">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -192,30 +193,103 @@
 
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingFour">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">SPOC Info</a> </h4>
+                                        <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Address of The Organization</a> </h4>
                                     </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
+                                    <div id="collapseFour" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label for="spoc_name">SPOC Name</label>
+                                                <div class="col-sm-6">
+                                                    <label for="org_address">Address of the Organization *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name" value="{{ $partner->spoc_name }}" name="spoc_name">
+                                                        <input type="text" class="form-control" placeholder="Organization Address" value="{{ old('org_address') }}" name="org_address" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="spoc_email">SPOC Email Address</label>
+                                                <div class="col-sm-6">
+                                                    <label for="landmark">Nearby Landmark *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="email" class="form-control" placeholder="Email" value="{{ old('spoc_email') }}" name="spoc_email">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="spoc_mobile">SPOC Mobile Number</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Mobile" value="{{ old('spoc_mobile') }}" name="spoc_mobile">
+                                                        <input type="text" class="form-control" placeholder="Landmark" value="{{ old('landmark') }}" name="landmark" required>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-6">
+                                                    <label for="addr_proof">Address Proof *</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="addr_proof" onchange="checkaddress();" data-show-subtext="true" data-dropup-auto='false' required>
+                                                            <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
+                                                            <option value="Incorportaion Certificate">Incorportaion Certificate</option>
+                                                            <option value="GST Registration Certificate">GST Registration Certificate</option>
+                                                            <option value="Telephone Bill (BSNL/MTNL)">Telephone Bill (BSNL/MTNL)</option>
+                                                            <option value="Electricity Bill">Electricity Bill</option>
+                                                            <option value="Bank Statement">Bank Statement</option>
+                                                            <option value="Incometax Certificate">Incometax Certificate</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Address Proof Document *</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="row d-flex justify-content-center">
+                                                            <span id="addr_doc2" for="addr_doc" style="color:blue;"></span>
+                                                        </div>
+                                                        <input id="addr_doc" type="file" class="form-control" name="addr_doc" required>
+                                                        <span id="addr_doc_error" style="color:red;"></span>                                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <label for="state">State/Union Territory *</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="state" data-show-subtext="true" data-dropup-auto='false' required>
+                                                            <option>Type 1</option>
+                                                            <option>Type 2</option>
+                                                            <option>Type 3</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="district">District *</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="district" data-show-subtext="true" data-dropup-auto='false' required>
+                                                            <option>Type 1</option>
+                                                            <option>Type 2</option>
+                                                            <option>Type 3</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="parliament">Parliament Constituency *</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" required>
+                                                            @foreach ($parliaments as $parliament)
+                                                                <option value="{{$parliament->id}}" data-subtext="{{ $parliament->state_ut }}">{{ $parliament->constituency }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-4">
+                                                    <label for="city">City/Town/Village *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="City/Town/Village" value="{{ old('city') }}" name="city" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="block">Tehsil/Mandal/Block *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="Tehsil/Mandal/Block" value="{{ old('block') }}" name="block" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="pin">PIN code *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="PIN Code" value="{{ old('pin') }}" name="pin" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <button type="button" onclick="validatedata('collapseFour,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
@@ -227,154 +301,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingFive">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseFive" onclick="return false" aria-expanded="true" aria-controls="collapseFive">Address of The Organization</a> </h4>
+                                        <h4 class="panel-title"> <a role="button" href="#collapseFive" onclick="return false" aria-expanded="true" aria-controls="collapseFive">Financial Information</a> </h4>
                                     </div>
                                     <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-sm-3">
-                                                    <label for="organization_adddress">Address of the Organization*</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Organization Address *" value="{{ old('organization_adddress') }}" name="organization_adddress" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="landmark">Nearby Landmark *</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Landmark" value="{{ old('landmark') }}" name="landmark" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="city">City/Town/Village *</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="City/Town/Village" value="{{ old('city') }}" name="city" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="pin">Pincode *</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Pin Code" value="{{ old('pin') }}" name="pin" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="state">State/Union Territory *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="state" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="district">District *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="district" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="block">Tehsil/Mandal/Block *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="block" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="constituency">Parliament Constituency *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="constituency" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-3">
-                                                    <label for="city">Address Proof *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="address" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label for="address_doc">Address Proof Document *</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="address_doc" type="file" class="form-control" name="address_doc" required>
-                                                        <span id="address_doc_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-3">
-                                                    <label for="incorp_cert">Incorportaion Certificate *</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="incorp_cert" type="file" class="form-control" name="incorp_cert" required>
-                                                        <span id="incorp_cert_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="tel_elec_doc">Telephone/Electricity *</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="tel_elec_doc" type="file" class="form-control" name="tel_elec_doc" required>
-                                                        <span id="tel_elec_doc_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label for="bank_doc">Bank Statement *</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="bank_doc" type="file" class="form-control" name="bank_doc" required>
-                                                        <span id="bank_doc_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
-                                                    <label for="income_cert">Incometax Certificate *</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="income_cert" type="file" class="form-control" name="income_cert" required>
-                                                        <span id="income_cert_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="rent_doc">Rent/ Lease Agreement</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="rent_doc" type="file" class="form-control" name="rent_doc">
-                                                        <span id="rent_doc_error"  style="color:red;"></span>                                                            
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <button type="button" onclick="validatedata('collapseFive,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                                </div>
-                                                <div class="col-sm-6 text-right">
-                                                    <button type="button" onclick="validatedata('collapseFive,collapseSix');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading" role="tab" id="headingSix">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseSix" onclick="return false" aria-expanded="true" aria-controls="collapseSix">Financial Information</a> </h4>
-                                    </div>
-                                    <div id="collapseSix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSix" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-sm-5">
@@ -422,15 +353,13 @@
                                                         <span id="pan_doc_error"  style="color:red;"></span>                                                            
                                                     </div>
                                                 </div>
-                                            {{-- </div>
-                                            <div class="row d-flex justify-content-center"> --}}
                                                 <div class="col-sm-3">
                                                     <label for="gst">GST Account Number</label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="GST Number" onkeyup="this.value = this.value.toUpperCase();" value="{{ old('gst') }}" name="gst">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div id="gst_doc_id" class="col-sm-3">
                                                     <label for="gst_doc">GST Registration Certificate</label>
                                                     <div class="form-group form-float">
                                                         <input id="gst_doc" type="file" class="form-control" name="gst_doc">
@@ -441,10 +370,10 @@
                                             
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <button type="button" onclick="validatedata('collapseSix,collapseFive');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                                    <button type="button" onclick="validatedata('collapseFive,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                                 </div>
                                                 <div class="col-sm-6 text-right">
-                                                    <button type="button" onclick="validatedata('collapseSix,collapseSeven');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                                    <button type="button" onclick="validatedata('collapseFive,collapseSix');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -452,56 +381,56 @@
                                 </div>
 
                                 <div class="panel panel-primary">
-                                    <div class="panel-heading" role="tab" id="headingSeven">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseSeven" onclick="return false" aria-expanded="true" aria-controls="collapseSeven">Authorized Signatory Info</a> </h4>
+                                    <div class="panel-heading" role="tab" id="headingSix">
+                                        <h4 class="panel-title"> <a role="button" href="#collapseSix" onclick="return false" aria-expanded="true" aria-controls="collapseSix">Personal Information</a> </h4>
                                     </div>
-                                    <div id="collapseSeven" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSeven" data-parent="#accordion">
+                                    <div id="collapseSix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSix" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label for="offer_latter">Offer Latter *</label>
+                                                    <label for="offer">Offer Latter *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Offer Latter Number" value="{{ old('offer_latter') }}" name="offer_latter" required>
+                                                        <input type="text" class="form-control" placeholder="Offer Latter Number" value="{{ old('offer') }}" name="offer" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="offer_approval">Offer LetterApproval Date *</label>
+                                                    <label for="offer_date">Offer LetterApproval Date *</label>
                                                     <div class="form-group form-float date_picker">
-                                                        <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('offer_approval') }}" name="offer_approval" required>
+                                                        <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('offer_date') }}" name="offer_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="offer_latter_doc">Offer Latter File *</label>
+                                                    <label for="offer_doc">Offer Latter File *</label>
                                                     <div class="form-group form-float">
-                                                        <input id="offer_latter_doc" type="file" class="form-control" name="offer_latter_doc" required>
-                                                        <span id="offer_latter_doc_error"  style="color:red;"></span>                                                            
+                                                        <input id="offer_doc" type="file" class="form-control" name="offer_doc" required>
+                                                        <span id="offer_doc_error"  style="color:red;"></span>                                                            
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label for="sanction_letter">Sanction Letter *</label>
+                                                    <label for="sanction">Sanction Letter *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Sanction Latter Number" value="{{ old('sanction_letter') }}" name="sanction_letter" required>
+                                                        <input type="text" class="form-control" placeholder="Sanction Latter Number" value="{{ old('sanction') }}" name="sanction" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sanction_approval">Sanction Letter Approval Date *</label>
+                                                    <label for="sanction_date">Sanction Letter Approval Date *</label>
                                                     <div class="form-group form-float date_picker">
-                                                        <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('sanction_approval') }}" name="sanction_approval" required>
+                                                        <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('sanction_date') }}" name="sanction_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="sanction_letter_doc">Sanction Letter File *</label>
+                                                    <label for="sanction_doc">Sanction Letter File *</label>
                                                     <div class="form-group form-float">
-                                                        <input id="sanction_letter_doc" type="file" class="form-control" name="sanction_letter_doc" required>
-                                                        <span id="sanction_letter_doc_error"  style="color:red;"></span>                                                            
+                                                        <input id="sanction_doc" type="file" class="form-control" name="sanction_doc" required>
+                                                        <span id="sanction_doc_error"  style="color:red;"></span>                                                            
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <button id="last_prev_btn" type="button" onclick="validatedata('collapseSeven,collapseSix');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                                    <button id="last_prev_btn" type="button" onclick="validatedata('collapseSix,collapseFive');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group text-center">
@@ -635,6 +564,33 @@
         
     /* End Making Sure That the Terms & Condition is Accepted */
 
+
+    /* Checking Address Proof Type */
+        
+        function checkaddress(){
+            if ($('select[name=addr_proof]').val() === 'Incorportaion Certificate') {
+                $('#addr_doc_error').slideUp('slow');
+                $('#addr_doc').slideUp('slow', function(){
+                    $('#addr_doc-error').text('');
+                    $('#addr_doc2').hide().html('We Have Your Incorporation Certificate').fadeIn('slow');
+                });
+
+            } else {
+                $('#addr_doc2').fadeOut('slow').html('');
+                $('#addr_doc').slideDown('slow');
+                $('#addr_doc_error').slideDown('slow');
+                $('#addr_doc_error').html(''); 
+            }
+
+            if ($('select[name=addr_proof]').val() === 'GST Registration Certificate') {
+                $('#gst_doc_id').hide();
+            } else {
+                $('#gst_doc_id').show();
+            }
+        }
+
+    /* End Checking Address Proof Type */
+
 </script>
 
 
@@ -652,6 +608,7 @@
 
 <script src="{{asset('assets/js/pages/forms/form-wizard.js')}}"></script>
 <script src="{{asset('assets/js/pages/common/notifications.js')}}"></script>
+<script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
 
 
@@ -697,12 +654,23 @@
             {
                 return this.optional(element) || /^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
             }, "Please enter a valid Email");
+        jQuery.validator.addMethod("pin", function(value, element)
+            {
+                return this.optional(element) || /^(\d{6})$/.test(value);
+            }, "Please enter a valid PIN Code");
+        jQuery.validator.addMethod("mobile", function(value, element)
+            {
+                return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+            }, "Please enter a valid Mobile Number");
 
         jQuery("#form_complete_registration").validate({
             rules: {
                 "pan": {pan: true},
                 "gst": {gst: true},
                 "website": {website: true},
+                "pin": {pin: true},
+                "ceo_mobile": {mobile: true},
+                "signatory_mobile": {mobile: true},
                 "[type=email]": {website: true}
             },
         });

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePartnersTable extends Migration
+class CreateRejectedPartnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,22 @@ class CreatePartnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('partners', function (Blueprint $table) {
+        Schema::create('rejected_partners', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tp_id');
             
             /* Basic Registration */
             $table->string('spoc_name');
-            $table->string('spoc_email')->unique();
-            $table->string('spoc_mobile')->unique();
+            $table->string('spoc_email');
+            $table->string('spoc_mobile');
             $table->string('password');
             $table->string('incorp_doc');
             /* End Basic Registration */
 
             /* Full Registration */
             /* General Details */
-            $table->string('org_name')->default('No Data');
-            $table->string('org_type')->default('No Data');
-            $table->string('estab_year')->default('No Data');
+            $table->string('org_name');
+            $table->string('org_type');
+            $table->string('estab_year');
             $table->string('landline')->nullable();
             $table->string('website')->nullable();
             /* End General Details */
@@ -47,21 +46,21 @@ class CreatePartnersTable extends Migration
             /* End Authorized Signatory Info */
 
             /* Address of the Organization */
-            $table->text('org_address')->default('No Data');
-            $table->text('landmark')->default('No Data');
-            $table->string('addr_proof')->default('No Data');
-            $table->string('addr_doc')->default('No Data');
-            $table->string('city')->default('No Data');
-            $table->string('block')->default('No Data');
-            $table->string('pin')->default('No Data');
-            $table->string('state')->default('No Data');
-            $table->string('district')->default('No Data');
-            $table->string('parliament')->default('No Data');
+            $table->text('org_address');
+            $table->text('landmark');
+            $table->string('addr_proof');
+            $table->string('addr_doc');
+            $table->string('city');
+            $table->string('block');
+            $table->string('pin');
+            $table->string('state');
+            $table->string('district');
+            $table->string('parliament');
             /* End Address of the Organization */
 
             /* Financial Information */
-            $table->string('pan')->default('No Data');
-            $table->string('pan_doc')->default('No Data');
+            $table->string('pan');
+            $table->string('pan_doc');
             $table->string('gst')->nullable();
             $table->string('gst_doc')->nullable();
             $table->string('ca1_doc')->nullable();
@@ -75,19 +74,17 @@ class CreatePartnersTable extends Migration
             /* End Financial Information */
 
             /* Proposal Informatoin */
-            $table->string('offer')->default('No Data');
-            $table->string('offer_date')->default('No Data');
-            $table->string('offer_doc')->default('No Data');
-            $table->string('sanction')->default('No Data');
-            $table->string('sanction_date')->default('No Data');
-            $table->string('sanction_doc')->default('No Data');
+            $table->string('offer');
+            $table->string('offer_date');
+            $table->string('offer_doc');
+            $table->string('sanction');
+            $table->string('sanction_date');
+            $table->string('sanction_doc');
             /* End Proposal Informatoin */
             /* End Full Registration */
             
             /* Flag Secion */
-            $table->boolean('status')->default(1)->comment = 'Active or Deactive';
-            $table->boolean('complete_profile')->default(0)->comment = 'Profile is Completed';
-            $table->boolean('pending_verify')->nullable()->comment = 'Completed Profile Verification';
+            $table->text('reason')->comment = 'Reason of Rejection';
             /* End Flag Secion */
             
             $table->rememberToken();
@@ -102,6 +99,6 @@ class CreatePartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('rejected_partners');
     }
 }

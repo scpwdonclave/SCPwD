@@ -49,11 +49,17 @@ class LoginController extends Controller
         return Auth::guard('partner');
     }
 
+    /* Overriding default username() */
+    public function username()
+    {
+        return 'tp_id';
+    }
 
-    // Overriding credentials() for checking account activation status
+
+    /* Overriding credentials() for checking account activation status */
     protected function credentials(Request $request)
     {        
-        return ['spoc_email' => $request->email, 'password' => $request->password, 'status' => 1];
+        return ['tp_id' => $request->tp_id, 'password' => $request->password, 'status' => 1];
     }
 
     /**

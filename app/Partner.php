@@ -17,7 +17,7 @@ class Partner extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'spoc_name', 'spoc_email', 'spoc_mobile', 'password', 'incorp_cert'
+        'tp_id', 'spoc_name', 'spoc_email', 'spoc_mobile', 'password', 'incorp_doc'
     ];
 
     /**

@@ -140,12 +140,12 @@
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
               <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certifiate</label>                                                            
-              <input id="incorp_cert" type="file" class="input100" name="incorp_cert" required>
+              <input id="incorp_doc" type="file" class="input100" name="incorp_doc" required>
               <span id="incorp_cert_error"  style="color:red;"></span>                                                            
           </div>
-        @if ($errors->has('incorp_cert'))
+        @if ($errors->has('incorp_doc'))
         <span class="invalid-feedback" style="display:block" role="alert">
-          <strong>{{ $errors->first('incorp_cert') }}</strong>
+          <strong>{{ $errors->first('incorp_doc') }}</strong>
         </span>
         @endif
       </div>

@@ -5,8 +5,17 @@
                 <div class="user-info">
                     <div class="image"><a href="#" onclick="return false;"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
                     <div class="detail">
-                        <h4>{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->name}}</h4>
-                        <p class="m-b-0">{{Auth::guard(strtok(Route::current()->getName(), '.'))->user()->email}}</p>
+                        @switch(Request::segment(1))
+                            @case('admin')
+                                <h4>{{Auth::guard('admin')->user()->name}}</h4>
+                                <p class="m-b-0">{{Auth::guard('admin')->user()->email}}</p>
+                                @break
+                             @case('partner')
+                                <h4>{{Auth::guard('partner')->user()->spoc_name}}</h4>
+                                <p class="m-b-0">{{Auth::guard('partner')->user()->tp_id}}</p>
+                                @break
+                            @default
+                        @endswitch
                     </div>
                 </div>
             </li>

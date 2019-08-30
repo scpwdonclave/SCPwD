@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\TPVerificationMail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class RegisterController extends Controller
             'spoc_name' => 'required|max:255',
             'spoc_email' => 'required|email|max:255|unique:partners',
             'spoc_mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
-            'incorp_cert' => 'required|mimes:jpeg,jpg,png,docx,xlsx,xls,pdf'
+            'incorp_doc' => 'required|mimes:jpeg,jpg,png,docx,xlsx,xls,pdf'
         ]);
     }
 
@@ -83,14 +84,16 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $data['password'] = str_random(8);
-        $path = $data['incorp_cert']->store('reg_files');
+
+        $path = Storage::disk('myDisk')->put('/partners', $data['incorp_doc']);
         return Partner::create([
             'spoc_name' => $data['spoc_name'],
+            'tp_id' => $data['spoc_email'],
             'spoc_email' => $data['spoc_email'],
             'spoc_mobile' => $data['spoc_mobile'],
-            'incorp_cert' => $path,
+            'incorp_doc' => $path,
             'password' => Hash::make($data['password']),
-            Mail::to($data['spoc_email'])->send(new TPVerificationMail($data))
+            // Mail::to($data['spoc_email'])->send(new TPVerificationMail($data))
         ]);
     }
 
