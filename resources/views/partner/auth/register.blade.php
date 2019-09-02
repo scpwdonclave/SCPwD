@@ -141,7 +141,7 @@
           <div class="form-group">
               <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certifiate</label>                                                            
               <input id="incorp_doc" type="file" class="input100" name="incorp_doc" required>
-              <span id="incorp_cert_error"  style="color:red;"></span>                                                            
+              <span id="incorp_doc_error"  style="color:red;"></span>                                                            
           </div>
         @if ($errors->has('incorp_doc'))
         <span class="invalid-feedback" style="display:block" role="alert">

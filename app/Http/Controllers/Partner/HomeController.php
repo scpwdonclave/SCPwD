@@ -120,12 +120,12 @@ class HomeController extends Controller
         $partner->offer = $request->offer;
         $partner->offer_date = $request->offer_date;
         // Upload Code
-        $partner->offer_doc = Storage::disk('myDisk')->put('/partners', $request['offer_doc']);;
+        $partner->offer_doc = Storage::disk('myDisk')->put('/partners', $request['offer_doc']);
         
         $partner->sanction = $request->sanction;
         $partner->sanction_date = $request->sanction_date;
         // Upload Code
-        $partner->sanction_doc = Storage::disk('myDisk')->put('/partners', $request['sanction_doc']);;
+        $partner->sanction_doc = Storage::disk('myDisk')->put('/partners', $request['sanction_doc']);
 
         // Flag Section
         $partner->complete_profile = 1;
