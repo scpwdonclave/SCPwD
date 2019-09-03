@@ -72,8 +72,7 @@ class HomeController extends Controller
             /* Linking, Already Uploaded */
             $partner->addr_doc = $partner->incorp_doc;
         } else {
-            // Upload Code
-            $gstfilepath = Storage::disk('myDisk')->put('/partners', $request['incorp_doc']);
+            $gstfilepath = Storage::disk('myDisk')->put('/partners', $request['addr_doc']);
             $partner->addr_doc = $gstfilepath;
         }
         
@@ -85,55 +84,62 @@ class HomeController extends Controller
         $partner->district = $request->district;
         $partner->parliament = $request->parliament;
         $partner->pan = $request->pan;
-        //Upload Code
         $partner->pan_doc = Storage::disk('myDisk')->put('/partners', $request['pan_doc']);
         $partner->gst = $request->gst;
         
         if ($request->addr_proof == 'GST Registration Certificate') {
             $partner->gst_doc = $gstfilepath;
         } else {
-            // Upload Code
             $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);
         }
         
         if ($request->hasFile('ca1_doc')) {
-            // Upload Code
             $partner->ca1_doc = Storage::disk('myDisk')->put('/partners', $request['ca1_doc']);
             $partner->ca1_year = $initial_year.'-'.++$initial_year;
         }
         if ($request->hasFile('ca2_doc')) {
-            // Upload Code
             $partner->ca2_doc = Storage::disk('myDisk')->put('/partners', $request['ca2_doc']);
             $partner->ca2_year = $initial_year.'-'.++$initial_year;
         }
         if ($request->hasFile('ca3_doc')) {
-            // Upload Code
             $partner->ca3_doc = Storage::disk('myDisk')->put('/partners', $request['ca3_doc']);
             $partner->ca3_year = $initial_year.'-'.++$initial_year;
         }
         if ($request->hasFile('ca4_doc')) {
-            // Upload Code
             $partner->ca4_doc = Storage::disk('myDisk')->put('/partners', $request['ca4_doc']);
             $partner->ca4_year = $initial_year.'-'.++$initial_year;
         }
 
         $partner->offer = $request->offer;
         $partner->offer_date = $request->offer_date;
-        // Upload Code
         $partner->offer_doc = Storage::disk('myDisk')->put('/partners', $request['offer_doc']);
         
         $partner->sanction = $request->sanction;
         $partner->sanction_date = $request->sanction_date;
-        // Upload Code
         $partner->sanction_doc = Storage::disk('myDisk')->put('/partners', $request['sanction_doc']);
 
-        // Flag Section
+        /* Flag Section */
         $partner->complete_profile = 1;
         $partner->pending_verify = 1;
 
         $partner->save();
-        alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Reject</span> you will get Notified by your Email", 'Job Done')->html()->autoclose(4000);
-        return redirect()->back();
+        alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Reject</span> you will get Notified by your Email", 'Job Done')->html()->autoclose(8000);
+        return redirect(route('partner.dashboard'));
+    }
+
+    public function profile(){
+        $partner = Auth::guard('partner')->user();
+        return view('partner.profile')->with(compact('partner'));
+    }
+
+    public function profile_update(Request $request){
+        $request->validate([
+            'spoc_name' => 'required',
+            'spoc_email' => 'required|email|unique:partners,spoc_email,'.Auth::guard('partner')->user()->id,
+            'spoc_mobile' => 'required|numeric',
+        ]);
+
+        return 'Data Validated Need To Update The Profile with Given Data';
     }
 
 }

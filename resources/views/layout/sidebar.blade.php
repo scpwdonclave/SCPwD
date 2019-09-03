@@ -3,7 +3,10 @@
         <ul class="list">
             <li>
                 <div class="user-info">
-                    <div class="image"><a href="#" onclick="return false;"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
+                    @php
+                        $url = (Request::segment(1) === 'partner') ? route('partner.profile') : '#';
+                    @endphp
+                    <div class="image"><a href='{{$url}}'><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
                     <div class="detail">
                         @switch(Request::segment(1))
                             @case('admin')

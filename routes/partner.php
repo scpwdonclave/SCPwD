@@ -29,5 +29,9 @@ Route::group(['namespace' => 'Partner'], function() {
 
 
     /* File Access */
-    Route::get('files/{filename}', 'FileController@partnerFiles')->name('files.partner-file');
+    Route::get('files/{action}/{filename}', 'FileController@partnerFiles')->where('action', 'view|download')->name('files.partner-file');
+
+    /* Custom URLs */
+    Route::get('profile', 'HomeController@profile')->name('partner.profile');
+    Route::post('profile', 'HomeController@profile_update')->name('partner.profile');
 });

@@ -128,7 +128,7 @@
 
       <div class="wrap-input100 m-b-5">
           <div class="form-group">
-              <input type="number" minlength="10" maxlength="10" class="input100" name="spoc_mobile" value="{{ old('spoc_mobile') }}" placeholder="SPOC Mobile" required>                                
+              <input type="number" class="input100" name="spoc_mobile" value="{{ old('spoc_mobile') }}" placeholder="SPOC Mobile" required>                                
           </div>
         @if ($errors->has('spoc_mobile'))
         <span class="invalid-feedback" style="display:block" role="alert">

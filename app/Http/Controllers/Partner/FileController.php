@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
-use Auth;
+use Auth; 
 
 class FileController extends Controller
 {
@@ -25,16 +25,22 @@ class FileController extends Controller
         }
     }
 
-    public function partnerFiles($file)
+    protected function viewThis($file){
+        try {
+            return response()->file(storage_path("app/files/partners/{$file}"));
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
+
+    public function partnerFiles($action, $file)
     {
-            if (Auth::guard('admin')->check()) {
-                return $this->downloadThis($file);
-            } else {
-                if (basename(Auth::guard('partner')->user()->incorp_doc) === $file) {
-                    return $this->downloadThis($file);
-                } else {
-                    return 'Unauthorized Access';
-                }
-            }
+        if ($action === 'view' && Auth::guard('admin')->check()) {
+            return $this->viewThis($file);
+        } elseif ($action === 'download' && Auth::guard('admin')->check()) {
+            return $this->downloadThis($file);
+        } else {
+            return 'Unauthorized Access Or File Not Found On Server';
+        }
     }
 }

@@ -599,7 +599,6 @@
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
 <script src="{{asset('assets/js/pages/partner/jquery.repeatable.js')}}"></script>
-<script src="{{asset('assets/js/pages/partner/complete-registration.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 
@@ -634,48 +633,23 @@
         
     });
 
+
+    /* Custom Valiadtions */
     
-
-    /* Additional Methods for Validating PAN & GST  */
     
-        jQuery.validator.addMethod("pan", function(value, element)
-            {
-                return this.optional(element) || /^[A-Z]{5}\d{4}[A-Z]{1}$/.test(value);
-            }, "Please enter a valid PAN");
-        jQuery.validator.addMethod("gst", function(value, element)
-            {
-                return this.optional(element) || /^([0-9]{2}[A-Z]{4}([A-Z]{1}|[0-9]{1})[0-9]{4}[A-Z]{1}([A-Z]|[0-9]){3}){0,15}$/.test(value);
-            }, "Please enter a valid GST Number");
-        jQuery.validator.addMethod("website", function(value, element)
-            {
-                return this.optional(element) || /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/.test(value);
-            }, "Please enter a valid Website url");
-        jQuery.validator.addMethod("email", function(value, element)
-            {
-                return this.optional(element) || /^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(value);
-            }, "Please enter a valid Email");
-        jQuery.validator.addMethod("pin", function(value, element)
-            {
-                return this.optional(element) || /^(\d{6})$/.test(value);
-            }, "Please enter a valid PIN Code");
-        jQuery.validator.addMethod("mobile", function(value, element)
-            {
-                return this.optional(element) || /^[6-9]\d{9}$/.test(value);
-            }, "Please enter a valid Mobile Number");
-
-        jQuery("#form_complete_registration").validate({
-            rules: {
-                "pan": {pan: true},
-                "gst": {gst: true},
-                "website": {website: true},
-                "pin": {pin: true},
-                "ceo_mobile": {mobile: true},
-                "signatory_mobile": {mobile: true},
-                "[type=email]": {website: true}
-            },
-        });
-
-    /* End Additional Methods for Validating PAN & GST  */
-
+    jQuery("#form_complete_registration").validate({
+        rules: {
+        pan: { pan: true },
+        gst: { gst: true },
+        website: { website: true },
+        pin: { pin: true },
+        ceo_mobile: { mobile: true },
+        signatory_mobile: { mobile: true },
+        "[type=email]": { email: true }
+        }
+    });
+    
+    /* End Custom Valiadtions */
+    
 </script>
 @endsection
