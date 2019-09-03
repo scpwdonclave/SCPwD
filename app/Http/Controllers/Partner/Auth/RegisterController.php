@@ -93,7 +93,7 @@ class RegisterController extends Controller
             'spoc_mobile' => $data['spoc_mobile'],
             'incorp_doc' => $path,
             'password' => Hash::make($data['password']),
-            // Mail::to($data['spoc_email'])->send(new TPVerificationMail($data))
+            Mail::to($data['spoc_email'])->send(new TPVerificationMail($data))
         ]);
     }
 

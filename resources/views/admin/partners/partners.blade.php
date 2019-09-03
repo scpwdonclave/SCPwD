@@ -23,185 +23,48 @@
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
+                                <th>#</th>
+                                <th>Spoc Name</th>
+                                <th>Spoc Email</th>
+                                <th>Spoc Mobile</th>
+                                <th style="width:20px;">Incorp. Document</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data as $key=>$item)
+                                
                             <tr data-status="approved">
-                                <td>1</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar1.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>jacob</td>
-                                <td>jacob@gnail.com</td>
-                                <td width="250px">
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-green" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" style="width: 87%;"></div>
-                                    </div>
+                            <td>{{$key+1}}</td>
+                            <td>{{$item->spoc_name}}</td>
+                                <td>{{$item->spoc_email}}</td>
+                                <td>{{$item->spoc_mobile}}</td>
+                                <td class="text-center">
+                                        <a class="btn-icon-mini" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
                                 </td>
                                 <td><span class="badge badge-success">Approved</span></td>
                             </tr>
-                            <tr data-status="suspended">
-                                <td>2</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar2.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>charlotte</td>
-                                <td>a.charlotte@gnail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-amber" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;"></div>
+                            <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            {{-- <div class="modal-header">
+                                                <h4 class="title" id="largeModalLabel">Modal title</h4>
+                                            </div> --}}
+                                            <div class="modal-body embed-responsive embed-responsive-16by9">
+                                                    <iframe class="embed-responsive-item" src="{{route('files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen>
+                                                </iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{{route('files.partner-file',['action'=>'download','filename'=>basename($item->incorp_doc)])}}" download="{{substr($item->incorp_doc,8)}}" class="btn btn-default btn-round waves-effect">Download</a>
+                                                <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td><span class="badge badge-warning">Suspended</span></td>
-                            </tr>
-                            <tr data-status="blocked">
-                                <td>3</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar3.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>grayson</td>
-                                <td>grayson@yahoo.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-coral" role="progressbar" aria-valuenow="16" aria-valuemin="0" aria-valuemax="100" style="width: 16%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-danger">Blocked</span></td>
-                            </tr>
-                            <tr data-status="approved">
-                                <td>4</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar4.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>jacob</td>
-                                <td>jacob@gnail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-green" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width: 67%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success">Approved</span></td>
-                            </tr>
-                            <tr data-status="approved">
-                                <td>5</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar5.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>amelia</td>
-                                <td>amelia@gnail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-green" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-success">Approved</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>6</td>
-                                <td><div class="media-object"><img src="../assets/images/xs/avatar6.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100" style="width:32%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>7</td>
-                                <td><div class="media-object "><img src="../assets/images/xs/avatar7.jpg" alt="" width="35" class="rounded-circle"></div></td>
-                                <td>michael</td>
-                                <td>michael@gmail.com</td>
-                                <td>
-                                    <div class="progress progress-xs">
-                                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-info">Pending</span></td>
-                            </tr>
+                                </div>
+                            @endforeach
+                           
                         </tbody>
-                        <tfoot>
+                        {{-- <tfoot>
                             <tr>
                                 <th>Name</th>
                                 <th>Position</th>
@@ -210,7 +73,7 @@
                                 <th>Start date</th>
                                 <th>Salary</th>
                             </tr>
-                        </tfoot>
+                        </tfoot> --}}
                     </table>
                     </div>
             </div>
