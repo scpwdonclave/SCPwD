@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Partner;
 
 
 class AdminPartnerController extends Controller
@@ -27,6 +28,8 @@ class AdminPartnerController extends Controller
     }
 
     public function partners(){
-        return view('admin.partners.partners');
+
+        $data=Partner::all();
+        return view('admin.partners.partners')->with(compact('data'));
     }
 }

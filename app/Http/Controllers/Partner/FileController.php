@@ -19,7 +19,7 @@ class FileController extends Controller
 
     protected function downloadThis($file){
         try {
-            return response()->download(storage_path("app/files/partners/{$file}"));
+            return response()->file(storage_path("app/files/partners/{$file}"));
         } catch (Exception $e) {
             return abort(404);
         }
