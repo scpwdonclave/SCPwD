@@ -1,21 +1,10 @@
 @extends('partner.layouts.app')
 @section('title', 'Profile')
 @section('page-style')
-<link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/animate-css/animate.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/jquery-steps/jquery.steps.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-
-
-
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 @stop
 @section('content')
 <div class="container-fluid home">
@@ -57,9 +46,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-around">
-                            <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>  UPDATE</button>
-                        </div>
+                        @can('partner-update', Auth::shouldUse('partner'))
+                            @can('partner-update-pending', Auth::shouldUse('partner'))
+                                <div class="row d-flex justify-content-around">
+                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>  UPDATE</button>
+                                </div>
+                            @endcan
+                            @cannot('partner-update-pending', Auth::shouldUse('partner'))
+                            <div class="d-flex justify-content-center p-t-30">
+                                <h6>You Can Again Update These Details Once your Last Update Request get Verified</h6>
+                                {{-- <h6>Your Update Request has been Submitted, Waiting for Response from Admin</h6> --}}
+                            </div>
+                            @endcannot
+                        @endcan
+                        @cannot('partner-update', Auth::shouldUse('partner'))
+                            <div class="d-flex justify-content-center p-t-30">
+                                <h6>You Can Update These Details Once your Account get Verified</h6>
+                            </div>
+                        @endcannot
+                        {{-- {{Auth::shouldUse('partner')->complete_profile}} --}}
                     </form>
                 </div>
             </div>

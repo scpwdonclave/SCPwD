@@ -107,6 +107,8 @@
         <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
 
         <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
+        <script src="{{ asset('assets/js/application-common.js') }}"></script>
+
         <script>
             // Wraptheme Website live
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

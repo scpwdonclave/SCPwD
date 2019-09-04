@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -14,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Partner' => 'App\Policies\PartnerPolicy',
     ];
 
     /**
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('partner-update', 'App\Policies\PartnerPolicy@PartnerUpdate');
+        Gate::define('partner-update-pending', 'App\Policies\PartnerPolicy@PartnerUpdatePending');
     }
 }

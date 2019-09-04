@@ -40,7 +40,7 @@ class FileController extends Controller
         } elseif ($action === 'download' && Auth::guard('admin')->check()) {
             return $this->downloadThis($file);
         } else {
-            return 'Unauthorized Access Or File Not Found On Server';
+            return 'Unauthorized Access Or File is Not Found On Server';
         }
     }
 }

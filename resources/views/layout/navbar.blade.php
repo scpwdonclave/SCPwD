@@ -31,122 +31,33 @@
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-view-column m-r-10"></i><span>Taskboard</span></a></li>                
             </ul>
         </li>
-        {{-- <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
-            <span class="label-count">5</span>
+        <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
+            <span id="label-count" class="label-count"></span>
             </a>
             <ul class="dropdown-menu pullDown">
-                <li class="header">New Message</li>
                 <li class="body">
-                    <ul class="menu list-unstyled">
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="media">
-                                    <img class="media-object" src="../assets/images/xs/avatar5.jpg" alt="">
-                                    <div class="media-body">
-                                        <span class="name">Alexander <span class="time">13min ago</span></span>
-                                        <span class="message">Meeting with Shawn at Stark Tower by 8 o'clock.</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="media">
-                                    <img class="media-object" src="../assets/images/xs/avatar6.jpg" alt="">
-                                    <div class="media-body">
-                                        <span class="name">Grayson <span class="time">22min ago</span></span>
-                                        <span class="message">You have 5 unread emails in your inbox.</span>                                        
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="media">
-                                    <img class="media-object" src="../assets/images/xs/avatar3.jpg" alt="">
-                                    <div class="media-body">
-                                        <span class="name">Sophia <span class="time">31min ago</span></span>
-                                        <span class="message">OrderPlaced: You received a new oder from Tina.</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>                
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="media">
-                                    <img class="media-object" src="../assets/images/xs/avatar4.jpg" alt="">
-                                    <div class="media-body">
-                                        <span class="name">Isabella <span class="time">35min ago</span></span>
-                                        <span class="message">Lara added a comment in Blazing Saddles.</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
+                    @auth('partner')
+                        @if (Request::segment(1) === 'partner')
+                            @if (!Auth::guard('partner')->user()->complete_profile)
+                            <li class="header">New Registration</li>
+                            <ul class="menu list-unstyled">
+                                <li class="countli">
+                                    <a href="javascript:void(0);">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <span class="name">Activate your Account</span>
+                                                <span class="message">Kindly Complete your Full Registration to gain Full Access.</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul> 
+                            @endif
+                        @endif
+                    @endauth
                 </li>
-                <li class="footer"> <a href="javascript:void(0);">View All</a> </li>
             </ul>
         </li>
-        <li class="dropdown task"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-flag"></i>
-            <span class="label-count">3</span>
-            </a>
-            <ul class="dropdown-menu pullDown">
-                <li class="header">Project</li>
-                <li class="body">
-                    <ul class="menu tasks list-unstyled">
-                        <li>
-                            <a href="javascript:void(0);">
-                                <span class="text-muted">Clockwork Orange <span class="float-right">29%</span></span>
-                                <div class="progress">
-                                    <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="29" aria-valuemin="0" aria-valuemax="100" style="width: 29%;"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <span class="text-muted">Blazing Saddles <span class="float-right">78%</span></span>
-                                <div class="progress">
-                                    <div class="progress-bar l-slategray" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" style="width: 78%;"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <span class="text-muted">Project Archimedes <span class="float-right">45%</span></span>
-                                <div class="progress">
-                                    <div class="progress-bar l-parpl" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <span class="text-muted">Eisenhower X <span class="float-right">68%</span></span>
-                                <div class="progress">
-                                    <div class="progress-bar l-coral" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <span class="text-muted">Oreo Admin Templates <span class="float-right">21%</span></span>
-                                <div class="progress">
-                                    <div class="progress-bar l-amber" role="progressbar" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100" style="width: 21%;"></div>
-                                </div>
-                            </a>
-                        </li>                        
-                    </ul>
-                </li>
-                <li class="footer"><a href="javascript:void(0);">View All</a></li>
-            </ul>
-        </li>        
-        <li class="search_bar hidden-sm-down">
-            <div class="input-group">                
-                <input type="text" class="form-control" placeholder="Search...">
-                <span class="input-group-addon">
-                    <i class="zmdi zmdi-search"></i>
-                </span>
-            </div>
-        </li> --}}
         <li class="float-right">  
             <a class="mega-menu" href="{{strtok(Route::current()->getName(), '.')}}/logout" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

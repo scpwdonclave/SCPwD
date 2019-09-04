@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Requests\TPFormValidation;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -133,13 +134,36 @@ class HomeController extends Controller
     }
 
     public function profile_update(Request $request){
-        $request->validate([
-            'spoc_name' => 'required',
-            'spoc_email' => 'required|email|unique:partners,spoc_email,'.Auth::guard('partner')->user()->id,
-            'spoc_mobile' => 'required|numeric',
-        ]);
 
-        return 'Data Validated Need To Update The Profile with Given Data';
+
+        if (Gate::allows('partner-update', Auth::shouldUse('partner'))) {
+
+            $user = Auth::guard('partner')->user();
+            if ($user->spoc_name == $request->spoc_name && $user->spoc_email == $request->spoc_email && $user->spoc_mobile == $request->spoc_mobile) {
+                alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
+                return redirect()->back();
+            } else {
+                $request->validate([
+                    'spoc_name' => 'required',
+                    'spoc_email' => 'required|email|unique:partners,spoc_email,'.Auth::guard('partner')->user()->id,
+                    'spoc_mobile' => 'required|numeric',
+                ]);
+        
+                DB::table('partner_update')->insertTs(
+                    ['tp_id' => Auth::guard('partner')->user()->tp_id, 'spoc_name' => $request->spoc_name, 'spoc_email' => $request->spoc_email, 'spoc_mobile' => $request->spoc_mobile]
+                );
+
+                alert()->success('Your Update request has been sent,<br> It will reflect as soon as Admin Verify it, You will get notified.','Request Received')->html()->autoclose('8000');
+                return redirect()->back();
+                // return 'Data Validated Need To Update The Profile with Given Data';
+            }
+
+        } else {
+            return abort(403);
+        }
+
+
+        
     }
 
 }
