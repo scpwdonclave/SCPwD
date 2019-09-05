@@ -122,14 +122,14 @@
                     <h6>Recent Activity</h6>
                     <div class="streamline b-accent">
                         <div class="sl-item">
-                            <img class="user rounded-circle" src="../assets/images/xs/avatar4.jpg" alt="">
+                            <img class="user rounded-circle" src="{{asset('assets/images/xs/avatar4.jpg')}}" alt="">
                             <div class="sl-content">
                                 <h5 class="m-b-0">Admin Birthday</h5>
                                 <small>Jan 21 <a href="javascript:void(0);" class="text-info">Sophia</a>.</small>
                             </div>
                         </div>
                         <div class="sl-item">
-                            <img class="user rounded-circle" src="../assets/images/xs/avatar5.jpg" alt="">
+                            <img class="user rounded-circle" src="{{asset('assets/images/xs/avatar5.jpg')}}" alt="">
                             <div class="sl-content">
                                 <h5 class="m-b-0">Add New Contact</h5>
                                 <small>30min ago <a href="javascript:void(0);">Alexander</a>.</small>
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                         <div class="sl-item">
-                            <img class="user rounded-circle" src="../assets/images/xs/avatar6.jpg" alt="">
+                            <img class="user rounded-circle" src="{{asset('assets/images/xs/avatar6.jpg')}}" alt="">
                             <div class="sl-content">
                                 <h5 class="m-b-0">Code Change</h5>
                                 <small>Today <a href="javascript:void(0);">Grayson</a>.</small>
@@ -146,7 +146,7 @@
                             </div>
                         </div>
                         <div class="sl-item">
-                            <img class="user rounded-circle" src="../assets/images/xs/avatar7.jpg" alt="">
+                            <img class="user rounded-circle" src="{{asset('assets/images/xs/avatar7.jpg')}}" alt="">
                             <div class="sl-content">
                                 <h5 class="m-b-0">New Email</h5>
                                 <small>45min ago <a href="javascript:void(0);" class="text-info">Fidel Tonn</a>.</small>
