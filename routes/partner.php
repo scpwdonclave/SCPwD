@@ -34,4 +34,6 @@ Route::group(['namespace' => 'Partner'], function() {
     /* Custom URLs */
     Route::get('profile', 'HomeController@profile')->name('partner.profile');
     Route::post('profile', 'HomeController@profile_update')->name('partner.profile');
+
+
 });

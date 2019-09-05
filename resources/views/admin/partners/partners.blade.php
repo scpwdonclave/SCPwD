@@ -9,7 +9,7 @@
 {{-- DATA Tables --}}
 
 <div class="row clearfix">
-    <div class="col-lg-12">
+    <div class="col-md-12 col-lg-8">
         <div class="card">
             <div class="header">
                 <h2><strong>Training Partners</strong> Record </h2>
@@ -28,13 +28,14 @@
                                 <th>Spoc Email</th>
                                 <th>Spoc Mobile</th>
                                 <th style="width:20px;">Incorp. Document</th>
-                                <th>Details</th>
+                                <th>Status</th>
+                                <th>View</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $key=>$item)
                                 
-                            <tr data-status="approved">
+                            <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->spoc_name}}</td>
                                 <td>{{$item->spoc_email}}</td>
@@ -42,14 +43,23 @@
                                 <td class="text-center">
                                         <a class="btn-icon-mini" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
                                 </td>
-                                <td><span class="badge badge-success">Approved</span></td>
+                            @if ($item->status==1 && $item->complete_profile==1 && $item->pending_verify==0)
+                            <td><span class="badge badge-success">Approved</span></td>
+                            <td ><a class="badge bg-green margin-0" href="{{route('admin.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            @elseif($item->status==1 && $item->complete_profile==1 && $item->pending_verify==1)
+                            <td><span class="badge badge-info">Pending</span></td>
+                            <td ><a class="badge bg-green margin-0" href="{{route('admin.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            @elseif($item->status==1 && $item->complete_profile==0 && $item->pending_verify==null)
+                            <td><span class="badge badge-warning">First Instance</span></td>
+                            <td>&nbsp;</td>
+
+                            @endif
+                                
                             </tr>
                             <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
-                                            {{-- <div class="modal-header">
-                                                <h4 class="title" id="largeModalLabel">Modal title</h4>
-                                            </div> --}}
+                                            
                                             <div class="modal-body embed-responsive embed-responsive-16by9">
                                                     <iframe class="embed-responsive-item" src="{{route('files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen>
                                                 </iframe>
@@ -79,7 +89,34 @@
             </div>
         </div>
     </div>
-</div>
+    <div class="col-md-12 col-lg-4">
+            <div class="card activities">
+                    <div class="header">
+                        <h2><strong>Order</strong></h2>
+                    </div>
+                    <div class="body">
+                        <ul class="list-unstyled activity">
+                       
+                            <li>
+                                
+                                <a href="javascript:void(0);">
+                                    <i class="zmdi zmdi-tag bg-blush"></i>
+                                    <div class="info">
+                                    <h4>Sayan Saha</h4>                    
+                                    <small><strong>Email: </strong>sayan@gmail.com</small> <br>
+                                    <small><strong>Phone: </strong>9854785423</small><br>
+                                    <button  class="btn btn-success btn-sm" style="align:right;" >Accept</button>    
+                                    <button  class="btn btn-danger btn-sm" style="align:right;" >Reject</button>    
+                                </div>
+                                   
+                                </a>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </div>
 
 {{-- End DATA Tables --}}
 

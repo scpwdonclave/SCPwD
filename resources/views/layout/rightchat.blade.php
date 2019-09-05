@@ -57,15 +57,15 @@
     </div>    
     <div class="chat_list">
         <ul class="list-unstyled clearfix">
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar1.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar2.jpg" class="rounded-circle" alt=""></a></li>
-            <li class="active"><a href="javascript:void(0);"><img src="../assets/images/xs/avatar3.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar4.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar5.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar6.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar7.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar8.jpg" class="rounded-circle" alt=""></a></li>
-            <li><a href="javascript:void(0);"><img src="../assets/images/xs/avatar9.jpg" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar1.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar2.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li class="active"><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar3.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar4.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar5.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar6.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar7.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar8.jpg')}}" class="rounded-circle" alt=""></a></li>
+            <li><a href="javascript:void(0);"><img src="{{asset('assets/images/xs/avatar9.jpg')}}" class="rounded-circle" alt=""></a></li>
         </ul>
     </div>
 </aside>

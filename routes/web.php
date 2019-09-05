@@ -143,5 +143,9 @@ Route::get('pages/faq', 'PagesController@faq')->name('pages.faq');
 // Admin Section Custom Routes
 Route::group(['prefix'=>'admin'], function(){
     Route::GET('/partners', 'AdminPartnerController@partners')->name('admin.partners');
+     /* Admin Verify Partner */
+     Route::get('/partner-verify/{id}', 'AdminPartnerController@partnerVerify')->name('admin.partner.verify');
+     Route::get('partner-accept/{id}', 'AdminPartnerController@partnerAccept')->name('accept.partner');
+     Route::post('partner-reject', 'AdminPartnerController@partnerReject')->name('reject.partner');
 });
 
