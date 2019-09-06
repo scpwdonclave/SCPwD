@@ -24,6 +24,19 @@
         @if (trim($__env->yieldContent('page-style')))
             @yield('page-style')
         @endif
+        <script>
+            function dismiss(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('api.dismiss')}}",
+                    data: {'dismiss':true,id:id},
+                    success: function(data) {
+                        $('#notification_'+id).remove();
+                        countlevel();
+                    }
+                });
+            }
+        </script>
     </head>    
     <?php 
         $setting = !empty($_GET['theme']) ? $_GET['theme'] : '';
@@ -101,18 +114,9 @@
 
         <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
         <script src="{{ asset('assets/js/application-common.js') }}"></script>
-        {{-- <script>
-            // Wraptheme Website live
-            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-            (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/5c6d4867f324050cfe342c69/default';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-            })();
-        </script> --}}
+        
+
+
         <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
         <!-- Include this after the sweet alert js file -->
         @include('sweet::alert')

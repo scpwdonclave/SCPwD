@@ -37,18 +37,27 @@
             <ul class="dropdown-menu pullDown">
                 <li class="body">
                         @php
-                            $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
+                        if (Auth::guard(Request::segment(1))->check()) {
+                            switch (Request::segment(1)) {
+                                case 'admin':
+                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
+                                    break;
+                                case 'partner':
+                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('partner')->user()->id]])->orderBy('created_at', 'desc')->get();
+                                    break;                                
+                            }
+                        }
                         @endphp
                         @if (count($notifications))
-                        <li class="header">Notifcations</li>
+                        <li id="notification_header" class="header">Notifcations</li>
                             <ul class="menu list-unstyled">
-                                @foreach ($notifications as $notificaton)
-                                    <li class="countli">
+                                @foreach ($notifications as $notification)
+                                    <li id="notification_{{$notification->id}}" class="countli">
                                         <a href="javascript:void(0);">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <span class="name">{{$notificaton->title}}</span>
-                                                    <span class="message">{!!$notificaton->message!!}</span>
+                                                    <span class="name">{{$notification->title}}<span class="time" onclick="dismiss('{{$notification->id}}');" style="color:red">DISMISS</span></span>
+                                                    <span class="message">{!!$notification->message!!}</span>
                                                 </div>
                                             </div>
                                         </a>

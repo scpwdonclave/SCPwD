@@ -1,11 +1,16 @@
 /* Count Notification */
-
-$(function() {
+function countlevel() {
   if ($(".countli").length) {
     $("#label-count").html($(".countli").length);
   } else {
-    $("#label-count").html();
+    $("#label-count").html("");
+    $("#notification_header").remove();
   }
+  // console.log($(".countli").length);
+}
+
+$(function() {
+  countlevel();
 });
 
 /* End Count Notification */

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\Notification;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::middleware('api')->post('/dismiss', function(Request $request) {
+    $notification = Notification::find($request->id);
+    $notification->read = 1;
+    $notification->save();
+    return response()->json(['status' => 'done'],200);
+})->name('api.dismiss');
