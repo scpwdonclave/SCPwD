@@ -52,15 +52,8 @@
             </div>
         </div>
         <div id="wrapper">
-            @include('layout.overlaymenu')
             @include('layout.navbar')
-            @if (Request::segment(2) === 'horizontal' )
-                @include('layout.hmenu')
-            @else
-                @include('layout.sidebar')
-            @endif
-            @include('layout.rightchat')
-            @include('layout.rightsidebar')
+            @include('layout.sidebar')
             <section class="content">
                 <div class="block-header">
                     <div class="row">
@@ -108,7 +101,7 @@
 
         <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
         <script src="{{ asset('assets/js/application-common.js') }}"></script>
-        <script>
+        {{-- <script>
             // Wraptheme Website live
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
             (function(){
@@ -119,8 +112,8 @@
             s1.setAttribute('crossorigin','*');
             s0.parentNode.insertBefore(s1,s0);
             })();
-        </script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        </script> --}}
+        <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
         <!-- Include this after the sweet alert js file -->
         @include('sweet::alert')
         @stack('after-scripts')

@@ -1,4 +1,4 @@
-@extends('partner.layouts.app')
+@extends('layout.master')
 @section('title', 'Dashboard')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>

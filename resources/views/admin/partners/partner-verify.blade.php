@@ -38,7 +38,7 @@
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">SPOC Email </small>
-                                            <p>{{$partnerData->spoc_email}}</p>
+                                            <p>{{$partnerData->email}}</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
@@ -160,7 +160,7 @@
                                             <small class="text-muted">Address Proof</small>
                                             <p>{{$partnerData->addr_proof}}
                                                 &nbsp;&nbsp;
-                                            <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->addr_doc)])}}" download="{{basename($partnerData->addr_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                            <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->addr_doc)])}}" download="{{basename($partnerData->addr_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             <hr>
                                     </div>
@@ -216,7 +216,7 @@
                                             <small class="text-muted">1 Pager CA Certificate of</small>
                                             <p>{{$partnerData->ca1_year}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca1_doc)])}}" download="{{basename($partnerData->ca1_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca1_doc)])}}" download="{{basename($partnerData->ca1_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     
                                             </p>
                                             <hr>
@@ -227,7 +227,7 @@
                                             <small class="text-muted">1 Pager CA Certificate of</small>
                                             <p>{{$partnerData->ca2_year}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca2_doc)])}}" download="{{basename($partnerData->ca2_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca2_doc)])}}" download="{{basename($partnerData->ca2_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             <hr>
                                     </div>  
@@ -237,7 +237,7 @@
                                             <small class="text-muted">1 Pager CA Certificate of</small>
                                             <p>{{$partnerData->ca3_year}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca3_doc)])}}" download="{{basename($partnerData->ca3_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca3_doc)])}}" download="{{basename($partnerData->ca3_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     
                                             </p>
                                             <hr>
@@ -248,7 +248,7 @@
                                         <small class="text-muted">1 Pager CA Certificate of</small>
                                         <p>{{$partnerData->ca4_year}}
                                                 &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca4_doc)])}}" download="{{basename($partnerData->ca4_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->ca4_doc)])}}" download="{{basename($partnerData->ca4_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                 
                                         </p>
                                         <hr>
@@ -260,7 +260,7 @@
                                                 <small class="text-muted">PAN Number</small>
                                                 <p>{{$partnerData->pan}}
                                                         &nbsp;&nbsp;
-                                                        <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->pan_doc)])}}" download="{{basename($partnerData->pan_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                        <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->pan_doc)])}}" download="{{basename($partnerData->pan_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                 </p>
                                                 <hr>
                                         </div>
@@ -269,7 +269,7 @@
                                             <small class="text-muted">GST Account Number</small>
                                             <p>{{$partnerData->gst}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->gst_doc)])}}" download="{{basename($partnerData->gst_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->gst_doc)])}}" download="{{basename($partnerData->gst_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     
                                             </p>
                                             <hr>
@@ -289,7 +289,7 @@
                                             <small class="text-muted">Offer Latter </small>
                                             <p>{{$partnerData->offer}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->offer_doc)])}}" download="{{basename($partnerData->offer_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->offer_doc)])}}" download="{{basename($partnerData->offer_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             <hr>
                                     </div>
@@ -305,7 +305,7 @@
                                             <small class="text-muted">Sanction Letter</small>
                                             <p>{{$partnerData->sanction}}
                                                     &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('files.partner-file',['action'=>'download','filename'=>basename($partnerData->sanction_doc)])}}" download="{{basename($partnerData->sanction_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->sanction_doc)])}}" download="{{basename($partnerData->sanction_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             <hr>
                                     </div>
@@ -322,7 +322,7 @@
                     </ul>
                     @if ($partnerData->pending_verify==1)
                     <div class="text-center" >
-                    <button class="btn btn-success" onclick="location.href='{{route('accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Accept</button>
+                    <button class="btn btn-success" onclick="location.href='{{route('admin.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Accept</button>
                     <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                     </div>
                     @endif
@@ -354,7 +354,7 @@ function showPromptMessage() {
     console.log(note);
         $.ajax({
         type: "POST",
-        url: "{{route('reject.partner')}}",
+        url: "{{route('admin.reject.partner')}}",
         data: {_token,id,note},
         success: function(data) {
            // console.log(data);
@@ -375,8 +375,7 @@ function showPromptMessage() {
     
         }
     });
-        // var a="hello";
-        // location.href="{{route('reject.partner','klkl')}}";
+        
     });
 }
 </script>

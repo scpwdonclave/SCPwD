@@ -7,7 +7,7 @@
                 @else
                     <a href="javascript:void(0);" class="bars"></a>
                 @endif
-                <a class="navbar-brand" href="{{route(strtok(Route::current()->getName(), '.').'.dashboard')}}"><img src="{{asset('assets/images/scpwd-logo.png')}}" width="100" alt="sQuare"></a>
+                <a class="navbar-brand" href="{{route(strtok(Route::current()->getName(), '.').'.dashboard')}}"><img src="{{asset('assets/images/scpwd-logo.png')}}" width="100" alt="SCPwD"></a>
             </div>
         </li>
         @if (Request::segment(2) === 'horizontal' )
@@ -36,25 +36,26 @@
             </a>
             <ul class="dropdown-menu pullDown">
                 <li class="body">
-                    @auth('partner')
-                        @if (Request::segment(1) === 'partner')
-                            @if (!Auth::guard('partner')->user()->complete_profile)
-                            <li class="header">New Registration</li>
+                        @php
+                            $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
+                        @endphp
+                        @if (count($notifications))
+                        <li class="header">Notifcations</li>
                             <ul class="menu list-unstyled">
-                                <li class="countli">
-                                    <a href="javascript:void(0);">
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <span class="name">Activate your Account</span>
-                                                <span class="message">Kindly Complete your Full Registration to gain Full Access.</span>
+                                @foreach ($notifications as $notificaton)
+                                    <li class="countli">
+                                        <a href="javascript:void(0);">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <span class="name">{{$notificaton->title}}</span>
+                                                    <span class="message">{!!$notificaton->message!!}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul> 
-                            @endif
+                                        </a>
+                                    </li>
+                                @endforeach
+                           </ul> 
                         @endif
-                    @endauth
                 </li>
             </ul>
         </li>

@@ -1,4 +1,4 @@
-@extends('partner.layouts.app')
+@extends('layout.master')
 @section('title', 'Finish Registration')
 @section('page-style')
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
@@ -48,7 +48,7 @@
                             <p>SPOC Name : <h6>{{ $partner->spoc_name }}</h6></p>
                         </div>
                         <div class="col-sm-3">
-                            <p>SPOC Email : <h6>{{ $partner->spoc_email }}</h6></p>
+                            <p>SPOC Email : <h6>{{ $partner->email }}</h6></p>
                         </div>
                         <div class="col-sm-3">
                             <p>SPOC Phone : <h6>{{ $partner->spoc_mobile }}</h6></p>
@@ -195,7 +195,7 @@
                                     <div class="panel-heading" role="tab" id="headingFour">
                                         <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Address of The Organization</a> </h4>
                                     </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
+                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
@@ -388,19 +388,19 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label for="offer">Offer Latter *</label>
+                                                    <label for="offer">Offer Letter *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Offer Latter Number" value="{{ old('offer') }}" name="offer" required>
+                                                        <input type="text" class="form-control" placeholder="Offer Letter Number" value="{{ old('offer') }}" name="offer" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="offer_date">Offer LetterApproval Date *</label>
+                                                    <label for="offer_date">Offer Letter Approval Date *</label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('offer_date') }}" name="offer_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="offer_doc">Offer Latter File *</label>
+                                                    <label for="offer_doc">Offer Letter File *</label>
                                                     <div class="form-group form-float">
                                                         <input id="offer_doc" type="file" class="form-control" name="offer_doc" required>
                                                         <span id="offer_doc_error"  style="color:red;"></span>                                                            
@@ -411,7 +411,7 @@
                                                 <div class="col-sm-4">
                                                     <label for="sanction">Sanction Letter *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Sanction Latter Number" value="{{ old('sanction') }}" name="sanction" required>
+                                                        <input type="text" class="form-control" placeholder="Sanction Letter Number" value="{{ old('sanction') }}" name="sanction" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">

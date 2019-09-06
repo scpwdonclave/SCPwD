@@ -41,25 +41,10 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapPartnerRoutes();
 
+        $this->mapAdminRoutes();
+
         //
-    }    
-    
-    /**
-     * Define the "partner" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapPartnerRoutes()
-    {
-        Route::prefix('partner')
-             ->middleware(['web'])
-             ->namespace($this->namespace)
-             ->group(base_path('routes/partner.php'));
     }
-
-
 
     /**
      * Define the "web" routes for the application.
@@ -88,5 +73,29 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    protected function mapAdminRoutes()
+    {
+    Route::group([
+        'middleware' => ['web', 'admin:admin'],
+        'prefix' => 'admin',
+        'as' => 'admin.',
+        'namespace' => $this->namespace,
+        ], function ($router) {
+        require base_path('routes/admin.php');
+        });
+    }
+
+    protected function mapPartnerRoutes()
+    {
+    Route::group([
+        'middleware' => ['web', 'partner:partner'],
+        'prefix' => 'partner',
+        'as' => 'partner.',
+        'namespace' => $this->namespace,
+        ], function ($router) {
+        require base_path('routes/partner.php');
+        });
     }
 }

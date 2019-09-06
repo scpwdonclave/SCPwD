@@ -165,7 +165,6 @@ return [
         /*
          * Package Service Providers...
          */
-        OwenIt\Auditing\AuditingServiceProvider::class,
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
 
         /*
@@ -176,7 +175,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\QueryBuilderMacroProvider::class,
 
     ],
 

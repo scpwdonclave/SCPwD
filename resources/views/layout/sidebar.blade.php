@@ -6,7 +6,7 @@
                     @php
                         $url = (Request::segment(1) === 'partner') ? route('partner.profile') : '#';
                     @endphp
-                    <div class="image"><a href='{{$url}}'><img src="{{asset('assets/images/profile_av.jpg')}}" alt="User"></a></div>
+                    <div class="image"><a href='{{$url}}'><img src="{{asset('assets/images/avater.png')}}" alt="User"></a></div>
                     <div class="detail">
                         @switch(Request::segment(1))
                             @case('admin')
@@ -48,6 +48,9 @@
                     @endif
                 @endif
             @endauth
+            
+
+
             
             {{-- <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>App</span></a>

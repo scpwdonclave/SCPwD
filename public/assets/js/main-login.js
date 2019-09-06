@@ -2,7 +2,7 @@ $(function($) {
   $("form[id^='form_']").validate({
     rules: {
       spoc_mobile: { mobile: true },
-      spoc_email: { email: true }
+      email: { email: true }
     }
   });
 

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
 @stop
 @section('content')
 {{-- DATA Tables --}}
@@ -38,7 +39,7 @@
                             <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->spoc_name}}</td>
-                                <td>{{$item->spoc_email}}</td>
+                                <td>{{$item->email}}</td>
                                 <td>{{$item->spoc_mobile}}</td>
                                 <td class="text-center">
                                         <a class="btn-icon-mini" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
@@ -61,11 +62,11 @@
                                         <div class="modal-content">
                                             
                                             <div class="modal-body embed-responsive embed-responsive-16by9">
-                                                    <iframe class="embed-responsive-item" src="{{route('files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen>
+                                                    <iframe class="embed-responsive-item" src="{{route('partner.files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen>
                                                 </iframe>
                                             </div>
                                             <div class="modal-footer">
-                                                <a href="{{route('files.partner-file',['action'=>'download','filename'=>basename($item->incorp_doc)])}}" download="{{substr($item->incorp_doc,8)}}" class="btn btn-default btn-round waves-effect">Download</a>
+                                                <a href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($item->incorp_doc)])}}" download="{{substr($item->incorp_doc,8)}}" class="btn btn-default btn-round waves-effect">Download</a>
                                                 <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
                                             </div>
                                         </div>
@@ -92,27 +93,94 @@
     <div class="col-md-12 col-lg-4">
             <div class="card activities">
                     <div class="header">
-                        <h2><strong>Order</strong></h2>
+                        <h2><strong>Training Partner Update</strong> Request</h2>
                     </div>
                     <div class="body">
+                            @if(!$tp_updt_req->isEmpty())
                         <ul class="list-unstyled activity">
-                       
-                            <li>
+                       @foreach ($tp_updt_req as $item)
+                       <li>
+                            <a href="javascript:void(0);">
+                                <i class="zmdi zmdi-tag bg-blush"></i>
+                                <div class="info">
+                                <h4>{{$item->uname}}</h4>                    
+                                <small><strong>Email: </strong>{{$item->uemail}}</small> <br>
+                                <small><strong>Phone: </strong>{{$item->umobile}}</small><br>
                                 
-                                <a href="javascript:void(0);">
-                                    <i class="zmdi zmdi-tag bg-blush"></i>
-                                    <div class="info">
-                                    <h4>Sayan Saha</h4>                    
-                                    <small><strong>Email: </strong>sayan@gmail.com</small> <br>
-                                    <small><strong>Phone: </strong>9854785423</small><br>
-                                    <button  class="btn btn-success btn-sm" style="align:right;" >Accept</button>    
-                                    <button  class="btn btn-danger btn-sm" style="align:right;" >Reject</button>    
+                                <button  class="btn btn-sm" style="align:right;" onclick="location.href='#smallModal{{$item->id}}'" data-toggle="modal" data-target="#smallModal{{$item->id}}" >show</button>    
+                                <button  class="btn btn-success btn-sm" style="align:right;" onclick="location.href='{{route('admin.accept.tp-updt-req',['id' =>$item->id,'tp_id'=>$item->tp_id])}}'" >Accept</button>    
+                                <button  class="btn btn-danger btn-sm" style="align:right;"  onclick="showPromptMessage({{$item->id}});" >Reject</button>    
+                                
+                            </div>
+                               
+                            </a>
+                        </li>
+                        <div class="modal fade" id="smallModal{{$item->id}}" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        
+                                            <div class="modal-body">
+                                                    <div class="table-responsive">
+                                                            <table class="table table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Old Data</th>
+                                                                        <th>New data</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="font-weight:bold">Name</td>
+                                                                        @if ($item->pname==$item->uname)
+                                                                        <td>{{$item->pname}}</td>
+                                                                        <td>{{$item->uname}}</td>
+                                                                        @else
+                                                                        <td style="color:firebrick">{{$item->pname}}</td>
+                                                                        <td style="color:green">{{$item->uname}}</td>
+                                                                        @endif
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="font-weight:bold">Email</td>
+                                                                        @if ($item->pemail==$item->uemail)
+                                                                        <td>{{$item->pemail}}</td>
+                                                                        <td>{{$item->uemail}}</td>
+                                                                        @else
+                                                                        <td style="color:firebrick">{{$item->pemail}}</td>
+                                                                        <td style="color:green">{{$item->uemail}}</td>
+                                                                        @endif
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="font-weight:bold">Phone</td>
+                                                                        @if ($item->pmobile==$item->umobile)
+                                                                        <td>{{$item->pmobile}}</td>
+                                                                        <td>{{$item->umobile}}</td>
+                                                                        @else
+                                                                        <td style="color:firebrick">{{$item->pmobile}}</td>
+                                                                        <td style="color:green">{{$item->umobile}}</td>
+                                                                        @endif
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                            </div>
+                                        <div class="modal-footer">
+                                            
+                                            <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                   
-                                </a>
-                            </li>
-                           
+                            </div>
+                       @endforeach
                         </ul>
+                        @else 
+                        <div class="body text-center">
+                            <div class="not_found">
+                                <i class="zmdi zmdi-mood-bad zmdi-hc-4x"></i>
+                                <h4 class="m-b-0">No pending record found.</h4>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
         </div>
@@ -144,6 +212,53 @@
         });
     });
 </script>
+<script>
+        function showPromptMessage(f) {
+            swal({
+                title: "An input!",
+                text: "Write something interesting:",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "Write something"
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!"); return false
+                }
+                var id=f;
+                //console.log(id);
+                
+                var note=inputValue;
+                let _token = $("input[name='_token']").val();
+            //console.log(note);
+                $.ajax({
+                type: "POST",
+                url: "{{route('admin.reject.tp-updt-req')}}",
+                data: {_token,id,note},
+                success: function(data) {
+                   // console.log(data);
+                   swal({
+                title: "Deleted",
+                text: "Record Deleted",
+                type:"success",
+                //timer: 2000,
+                showConfirmButton: true
+            },function(isConfirm){
+        
+                if (isConfirm){
+                //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
+                window.location="{{route('admin.partners')}}";
+        
+                } 
+                });
+            
+                }
+            });
+            });
+        }
+        </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -151,4 +266,5 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
+<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @stop

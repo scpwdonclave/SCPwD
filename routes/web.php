@@ -140,12 +140,39 @@ Route::get('pages/invoices', 'PagesController@invoices')->name('pages.invoices')
 Route::get('pages/search-results', 'PagesController@searchResults')->name('pages.search-results');
 Route::get('pages/faq', 'PagesController@faq')->name('pages.faq');
 
-// Admin Section Custom Routes
-Route::group(['prefix'=>'admin'], function(){
-    Route::GET('/partners', 'AdminPartnerController@partners')->name('admin.partners');
-     /* Admin Verify Partner */
-     Route::get('/partner-verify/{id}', 'AdminPartnerController@partnerVerify')->name('admin.partner.verify');
-     Route::get('partner-accept/{id}', 'AdminPartnerController@partnerAccept')->name('accept.partner');
-     Route::post('partner-reject', 'AdminPartnerController@partnerReject')->name('reject.partner');
-});
+/* Admin Routes */
+Route::group(['prefix' => 'admin'], function () {
+  Route::get('/', function () { return redirect('admin/login'); });
+  Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('admin.login');
+  Route::post('/login', 'AdminAuth\LoginController@login');
+  Route::post('/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+  
+  Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('admin.register');
+  Route::post('/register', 'AdminAuth\RegisterController@register');
+  
+  Route::get('/password', function () { return redirect('admin/password/reset'); });
+  Route::post('/password/email', 'AdminAuth\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
+  Route::get('/password/reset', 'AdminAuth\ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
+  Route::post('/password/reset', 'AdminAuth\ResetPasswordController@reset');
+  Route::get('/password/reset/{token}', 'AdminAuth\ResetPasswordController@showResetForm')->name('admin.password.reset');
 
+});
+/* End Admin Routes */
+
+/* Partner Routes */
+Route::group(['prefix' => 'partner'], function () {
+  Route::get('/', function () { return redirect('partner/login'); });
+  Route::get('/login', 'PartnerAuth\LoginController@showLoginForm')->name('partner.login');
+  Route::post('/login', 'PartnerAuth\LoginController@login');
+  Route::post('/logout', 'PartnerAuth\LoginController@logout')->name('partner.logout');
+
+  Route::get('/register', 'PartnerAuth\RegisterController@showRegistrationForm')->name('partner.register');
+  Route::post('/register', 'PartnerAuth\RegisterController@register');
+
+  Route::get('/password', function () { return redirect('partner/password/reset'); });
+  Route::post('/password/email', 'PartnerAuth\ForgotPasswordController@sendResetLinkEmail')->name('partner.password.email');
+  Route::get('/password/reset', 'PartnerAuth\ForgotPasswordController@showLinkRequestForm')->name('partner.password.request');
+  Route::post('/password/reset', 'PartnerAuth\ResetPasswordController@reset');
+  Route::get('/password/reset/{token}', 'PartnerAuth\ResetPasswordController@showResetForm')->name('partner.password.reset');
+});
+/* End Partner Routes */

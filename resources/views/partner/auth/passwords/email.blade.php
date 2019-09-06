@@ -13,7 +13,7 @@
       @endif
         <div class="wrap-input100 m-b-20">
             <div class="form-group">
-                <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required>                                
+                <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="SPOC Email" required>                                
             </div>
           @if ($errors->has('email'))
           <span class="invalid-feedback" style="display:block" role="alert">

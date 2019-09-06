@@ -51,9 +51,5 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
-$app->register(OwenIt\Auditing\AuditingServiceProvider::class);
-// $app->withFacades();
-// $app->withEloquent();
-
 
 return $app;

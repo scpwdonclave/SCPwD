@@ -1,4 +1,4 @@
-@extends('partner.layouts.app')
+@extends('layout.master')
 @section('title', 'Profile')
 @section('page-style')
 <!-- Custom Css -->
@@ -34,9 +34,9 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label for="spoc_email">SPOC Email</label>
+                                <label for="email">SPOC Email</label>
                                 <div class="form-group form-float">
-                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ $partner->spoc_email }}" name="spoc_email" required>
+                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ $partner->email }}" name="email" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -87,7 +87,7 @@
         $("#form_profile").validate({
             rules: {
                 "spoc_mobile": {mobile: true},
-                "spoc_email": {email: true}
+                "email": {email: true}
             },
         });
 

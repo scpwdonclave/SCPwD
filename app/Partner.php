@@ -2,8 +2,7 @@
 
 namespace App;
 
-use App\Notifications\Partner\PartnerResetPassword;
-use App\Notifications\Partner\PartnerVerifyEmail;
+use App\Notifications\PartnerResetPassword;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -17,7 +16,7 @@ class Partner extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'tp_id', 'spoc_name', 'spoc_email', 'spoc_mobile', 'password', 'incorp_doc'
+        'tp_id', 'spoc_name', 'email', 'spoc_mobile', 'password', 'incorp_doc'
     ];
 
     /**
@@ -30,15 +29,6 @@ class Partner extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    /**
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -48,15 +38,4 @@ class Partner extends Authenticatable
     {
         $this->notify(new PartnerResetPassword($token));
     }
-
-    /**
-     * Send the email verification notification.
-     *
-     * @return void
-     */
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new PartnerVerifyEmail);
-    }
-
 }

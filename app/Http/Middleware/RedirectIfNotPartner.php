@@ -7,22 +7,20 @@ use Illuminate\Support\Facades\Auth;
 
 class RedirectIfNotPartner
 {
+	/**
+	 * Handle an incoming request.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Closure  $next
+	 * @param  string|null  $guard
+	 * @return mixed
+	 */
+	public function handle($request, Closure $next, $guard = 'partner')
+	{
+	    if (!Auth::guard($guard)->check()) {
+			return redirect()->route('partner.login');			
+	    }
 
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
-     * @return mixed
-     */
-    public function handle($request, Closure $next, $guard = 'partner')
-    {
-        if (!Auth::guard($guard)->check()) {
-            return redirect('partner/login');
-        }
-
-        return $next($request);
-    }
-
+	    return $next($request);
+	}
 }

@@ -16,12 +16,8 @@ class TPVerificationMail extends Mailable
      *
      * @return void
      */
-
-    protected $partner;
-    
     public function __construct(array $partner)
     {
-        // dd($partner);
         $this->partner = $partner;
     }
 
