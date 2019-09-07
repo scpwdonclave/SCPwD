@@ -252,7 +252,7 @@
         
                 if (isConfirm){
                 //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
-                window.location="{{route('admin.partners')}}";
+                window.location="{{route('admin.tp.partners')}}";
         
                 } 
                 });
