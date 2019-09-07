@@ -106,7 +106,6 @@ class AdminHomeController extends Controller
                 ['spoc_name' => $partnerData->spoc_name	,
                 'spoc_mobile' => $partnerData->spoc_mobile,	
                 'email' => $partnerData->email,	 
-                'password'=> $partnerData->password,
                 'incorp_doc'=> $partnerData->incorp_doc,	
                 'org_name'=> $partnerData->org_name,	
                 'org_type'=> $partnerData->org_type,	

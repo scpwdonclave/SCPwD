@@ -20,7 +20,6 @@ class CreateRejectedPartnersTable extends Migration
             $table->string('spoc_name');
             $table->string('email');
             $table->string('spoc_mobile');
-            $table->string('password');
             $table->string('incorp_doc');
             /* End Basic Registration */
 
