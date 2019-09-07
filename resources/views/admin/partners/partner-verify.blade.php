@@ -337,6 +337,7 @@ function showPromptMessage() {
         showCancelButton: true,
         closeOnConfirm: false,
         animation: "slide-from-top",
+        showLoaderOnConfirm: true,
         inputPlaceholder: "Write something"
     }, function (inputValue) {
         if (inputValue === false) return false;
