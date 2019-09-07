@@ -168,16 +168,11 @@
                                 </div>
                                 <div class="row">
                                         <div class="col-sm-4">
-                                                <small class="text-muted">State/Union Territory</small>
-                                                <p>{{$partnerData->state}}</p>
+                                                <small class="text-muted">State/Union Territory - District</small>
+                                                <p>{{$partnerData->state_district}}</p>
                                                 <hr>
                                         </div>
                                     
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">District</small>
-                                                <p>{{$partnerData->district}}</p>
-                                                <hr>
-                                        </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Parliament Constituency</small>
                                                 <p>{{$partnerData->parliament}}</p>

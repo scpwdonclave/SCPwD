@@ -26,8 +26,7 @@
             <li class="{{ Request::segment(2) === 'dashboard' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
-                    <li class="{{ Request::segment(2) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard')}}">Dashboard</a></li>
-                   
+                    <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
                 </ul>
             </li>
             @auth('admin')
@@ -44,15 +43,21 @@
             @auth('partner')
                 @if (Request::segment(1) === 'partner')
                     @if (!$partner->complete_profile)
-                        <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}">Registration</a></li>
+                        <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
                     @endif
+                    <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
+                        <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-pin"></i><span>Training Centers</span></a>
+                        <ul class="ml-menu">
+                            <li class="{{ Request::is('partner/training_centers/centers') ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
+                        </ul>
+                    </li>
                 @endif
             @endauth
             
 
 
             
-            {{-- <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
+            <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>App</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('app/mail-compose') ? 'active' : null }}"><a href="{{route('app.mail-compose')}}">Mail Compose</a></li>
@@ -63,7 +68,7 @@
                     <li class="{{ Request::is('app/taskboard') ? 'active' : null }}"><a href="{{route('app.taskboard')}}">TaskBoard</a></li>
                 </ul>
             </li>
-            <li class="{{ Request::segment(1) === 'file-manager' ? 'active open' : null }}">
+            {{-- <li class="{{ Request::segment(1) === 'file-manager' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-file"></i><span>File Manager</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('file-manager/dashboard') ? 'active' : null }}"><a href="{{route('file-manager.dashboard')}}">Dashboard</a></li>

@@ -47,7 +47,12 @@ class AdminHomeController extends Controller
     public function partnerVerify($id){
 
         $partnerData=Partner::findOrFail($id);
-        return view('admin.partners.partner-verify')->with(compact('partnerData'));
+        if ($partnerData->complete_profile) {
+            return view('admin.partners.partner-verify')->with(compact('partnerData'));
+        } else {
+            return redirect()->route('admin.partners');
+        }
+        
     }
     public function partnerAccept($id){
         $partner_id = Crypt::decrypt($id); 
@@ -107,8 +112,7 @@ class AdminHomeController extends Controller
                 'city'=> $partnerData->city,	
                 'block'=> $partnerData->block,	
                 'pin'=> $partnerData->pin,	
-                'state'=> $partnerData->state,	
-                'district'=> $partnerData->district,	
+                'state_district'=> $partnerData->state_district,	
                 'parliament'=> $partnerData->parliament,	
                 'pan'=> $partnerData->pan,	
                 'pan_doc'=> $partnerData->pan_doc,	

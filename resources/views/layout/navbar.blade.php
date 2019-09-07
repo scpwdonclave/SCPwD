@@ -7,7 +7,7 @@
                 @else
                     <a href="javascript:void(0);" class="bars"></a>
                 @endif
-                <a class="navbar-brand" href="{{route(strtok(Route::current()->getName(), '.').'.dashboard')}}"><img src="{{asset('assets/images/scpwd-logo.png')}}" width="100" alt="SCPwD"></a>
+                <a class="navbar-brand" href="{{route(Request::segment(1).'.dashboard.dashboard')}}"><img src="{{asset('assets/images/scpwd-logo.png')}}" width="100" alt="SCPwD"></a>
             </div>
         </li>
         @if (Request::segment(2) === 'horizontal' )

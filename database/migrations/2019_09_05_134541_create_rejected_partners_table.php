@@ -53,8 +53,7 @@ class CreateRejectedPartnersTable extends Migration
             $table->string('city');
             $table->string('block');
             $table->string('pin');
-            $table->string('state');
-            $table->string('district');
+            $table->string('state_district');
             $table->string('parliament');
             /* End Address of the Organization */
 

@@ -18,7 +18,7 @@ class RedirectIfPartner
 	public function handle($request, Closure $next, $guard = 'partner')
 	{
 	    if (Auth::guard($guard)->check()) {
-			return redirect()->route('partner.dashboard');			
+			return redirect()->route('partner.dashboard.dashboard');			
 	    }
 
 	    return $next($request);

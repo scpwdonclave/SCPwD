@@ -9,7 +9,7 @@
 {{-- <link rel="stylesheet" href="{{asset('assets/css/spinner.css')}}"> --}}
 {{-- <link rel="stylesheet" href="{{asset('assets/css/slider_button.css')}}"> --}}
 {{-- <link href="{{asset('vendor/bootstrap-datetimepicker.css')}}" rel="stylesheet"> --}}
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}">
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}"> --}}
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-steps/jquery.steps.css')}}">
 
 
@@ -195,7 +195,7 @@
                                     <div class="panel-heading" role="tab" id="headingFour">
                                         <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Address of The Organization</a> </h4>
                                     </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
+                                    <div id="collapseFour" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
@@ -237,28 +237,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <label for="state">State/Union Territory *</label>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-5">
+                                                    <label for="state">State/Union Territory - District *</label>
                                                     <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="state" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
+                                                        <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
+                                                            @foreach ($states as $state)
+                                                                <option value="{{$state->id}}" data-subtext="{{ $state->state }}">{{ $state->district }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="district">District *</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="district" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-5">
                                                     <label for="parliament">Parliament Constituency *</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" required>
@@ -599,7 +589,7 @@
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
 <script src="{{asset('assets/js/pages/partner/jquery.repeatable.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 
 <script src="{{asset('assets/plugins/jquery-steps/jquery.steps.js')}}"></script>

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Partner;
+use App\Notification;
 use Alert;
 use Auth;
 
@@ -36,12 +37,14 @@ class PartnerHomeController extends Controller
     
     /* View The Complete Registrattion Form */
     public function showCompleteRegistrationForm(){
-        $parliaments = DB::table('parliament')->get();
+        // $parliaments = DB::table('parliament')->get();
+        // $states = DB::table('state_district')->get();
         $data = [
             'partner'  => Auth::guard('partner')->user(),
             'parliaments'   => DB::table('parliament')->get(),
+            'states'   => DB::table('state_district')->get(),
         ];
-        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard')) : view('partner.completeregistration')->with($data);
+        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard.dashboard')) : view('partner.completeregistration')->with($data);
     }
 
     /* Submit Complete Registration Form Data */
@@ -77,8 +80,7 @@ class PartnerHomeController extends Controller
         $partner->city = $request->city;
         $partner->block = $request->block;
         $partner->pin = $request->pin;
-        $partner->state = $request->state;
-        $partner->district = $request->district;
+        $partner->state_district = $request->state_district;
         $partner->parliament = $request->parliament;
         $partner->pan = $request->pan;
         $partner->pan_doc = Storage::disk('myDisk')->put('/partners', $request['pan_doc']);
@@ -120,8 +122,18 @@ class PartnerHomeController extends Controller
         $partner->pending_verify = 1;
 
         $partner->save();
+        
+        /* For Admin */
+        $notification = new Notification;
+        $notification->rel_id = 1;
+        $notification->rel_with = 'admin';
+        $notification->title = 'New Registration';
+        $notification->message = "<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";
+        $notification->save();
+        
+
         alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Reject</span> you will get Notified by your Email", 'Job Done')->html()->autoclose(8000);
-        return redirect(route('partner.dashboard'));
+        return redirect(route('partner.dashboard.dashboard'));
     }
 
     public function profile(){
@@ -149,6 +161,14 @@ class PartnerHomeController extends Controller
                     ['tp_id' => Auth::guard('partner')->user()->tp_id, 'spoc_name' => $request->spoc_name, 'email' => $request->email, 'spoc_mobile' => $request->spoc_mobile, 'created_at' => Carbon::now()]
                 );
 
+                /* For Admin */
+                $notification = new Notification;
+                $notification->rel_id = 1;
+                $notification->rel_with = 'admin';
+                $notification->title = 'Update Requested';
+                $notification->message = "<span style='color:blue;'>".Auth::guard('partner')->user()->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";
+                $notification->save();
+
                 alert()->success('Your Update request has been sent,<br> It will reflect as soon as Admin Verify it, You will get notified.','Request Received')->html()->autoclose('8000');
                 return redirect()->back();
                 // return 'Data Validated Need To Update The Profile with Given Data';
@@ -157,8 +177,9 @@ class PartnerHomeController extends Controller
         } else {
             return abort(403);
         }
+    }
 
-
-        
+    public function centers(){
+        return view('partner.centers')->with('partner',Auth::guard('partner')->user());
     }
 }

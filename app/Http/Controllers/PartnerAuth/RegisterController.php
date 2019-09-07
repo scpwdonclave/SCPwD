@@ -79,13 +79,6 @@ class RegisterController extends Controller
         $notification->title = 'Activate your Account';
         $notification->message = 'Kindly Complete your Full Registration to gain Full Access.';
         $notification->save();
-        /* For Admin */
-        $notification = new Notification;
-        $notification->rel_id = 1;
-        $notification->rel_with = 'admin';
-        $notification->title = 'New Registration';
-        $notification->message = "<span style='color:blue;'>".$user->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";
-        $notification->save();
         /* End Updating Notification */
         
         Session::flash('message', 'Account Created, Please Check your Mail'); 

@@ -53,8 +53,7 @@ class CreatePartnersTable extends Migration
             $table->string('city')->default('No Data');
             $table->string('block')->default('No Data');
             $table->string('pin')->default('No Data');
-            $table->string('state')->default('No Data');
-            $table->string('district')->default('No Data');
+            $table->string('state_district')->default('No Data');
             $table->string('parliament')->default('No Data');
             /* End Address of the Organization */
 

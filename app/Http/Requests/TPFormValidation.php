@@ -52,8 +52,7 @@ class TPFormValidation extends FormRequest
             'city' => 'required',
             'block' => 'required',
             'pin' => 'required|numeric|digits:6',
-            'state' => 'required',
-            'district' => 'required',
+            'state_district' => 'required',
             'parliament' => 'required',
             /* End Address of the Organization */
 
