@@ -104,12 +104,12 @@
                                 <i class="zmdi zmdi-tag bg-blush"></i>
                                 <div class="info">
                                 <h4>{{$item->uname}}</h4>                    
-                                <small><strong>Email: </strong>{{$item->uemail}}</small> <br>
+                                <small><strong>Email: </strong>{{$item->uemail}},{{$item->tp_id}}</small> <br>
                                 <small><strong>Phone: </strong>{{$item->umobile}}</small><br>
                                 
                                 <button  class="btn btn-sm" style="align:right;" onclick="location.href='#smallModal{{$item->id}}'" data-toggle="modal" data-target="#smallModal{{$item->id}}" >show</button>    
                                 <button  class="btn btn-success btn-sm" style="align:right;" onclick="location.href='{{route('admin.accept.tp-updt-req',['id' =>$item->id,'tp_id'=>$item->tp_id])}}'" >Accept</button>    
-                                <button  class="btn btn-danger btn-sm" style="align:right;"  onclick="showPromptMessage({{$item->id}});" >Reject</button>    
+                                <button  class="btn btn-danger btn-sm" style="align:right;"  onclick="showPromptMessage({{$item->id}},'{{$item->tp_id}}');" >Reject</button>    
                                 
                             </div>
                                
@@ -213,13 +213,16 @@
     });
 </script>
 <script>
-        function showPromptMessage(f) {
+        function showPromptMessage(f,t) {
+                // d = f.split(',');
+                console.log(t);
             swal({
                 title: "An input!",
                 text: "Write something interesting:",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
+                showLoaderOnConfirm: true,
                 animation: "slide-from-top",
                 inputPlaceholder: "Write something"
             }, function (inputValue) {
@@ -228,7 +231,7 @@
                     swal.showInputError("You need to write something!"); return false
                 }
                 var id=f;
-                //console.log(id);
+                var tpid=t;
                 
                 var note=inputValue;
                 let _token = $("input[name='_token']").val();
@@ -236,7 +239,7 @@
                 $.ajax({
                 type: "POST",
                 url: "{{route('admin.reject.tp-updt-req')}}",
-                data: {_token,id,note},
+                data: {_token,id,tpid,note},
                 success: function(data) {
                    // console.log(data);
                    swal({

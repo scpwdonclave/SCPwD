@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\TPConfirmationMail;
+use App\Mail\TPUpdateAccept;
+use App\Mail\TPUpdateReject;
+use App\Mail\TPRejectMail;
 use App\Partner;
+use App\Notification;
 use Mail;
 use Carbon\Carbon;
 use DB;
@@ -73,6 +77,16 @@ class AdminHomeController extends Controller
         $partner->tp_id=$new_tpid;
         $partner->pending_verify=0;
         $partner->save();
+        
+        /* Notification For Partner */
+        $notification = new Notification;
+        $notification->rel_id = $partner->id;
+        $notification->rel_with = 'partner';
+        $notification->title = 'Account Activated';
+        $notification->message = "Your Profile has been <span style='color:blue;'>Approved</span>.";
+        $notification->save();
+        /* End Notification For Partner */
+        
         Mail::to($partner['email'])->send(new TPConfirmationMail($partner));
         alert()->success('Partner Accepted', 'Done')->autoclose(2000);
         return Redirect()->back();
@@ -86,7 +100,7 @@ class AdminHomeController extends Controller
                
                 ['spoc_name' => $partnerData->spoc_name	,
                 'spoc_mobile' => $partnerData->spoc_mobile,	
-                'email' => $partnerData->email,	
+                'email' => $partnerData->email,	 
                 'password'=> $partnerData->password,
                 'incorp_doc'=> $partnerData->incorp_doc,	
                 'org_name'=> $partnerData->org_name,	
@@ -134,33 +148,61 @@ class AdminHomeController extends Controller
                 'updated_at' => Carbon::now()
                 ]
             );
+            $data = $partnerData;
+            $data['note'] = $request->note;
+            $partnerData->delete();
 
-            //$partnerData->delete();
+            Mail::to($data->email)->send(new TPRejectMail($data));
            
         });
-
         return response()->json(['status' => 'done'],200);
         
        
     }
     public function partnerUpdateAccept($id,$tpid){
        $updt= DB::table('partner_update')->where([['id','=',$id],['tp_id','=',$tpid]])->first();
+       $updated_partner= DB::table('partners')->where('tp_id','=',$tpid)->first();
        if(!$updt) abort(404);
     
        DB::table('partner_update')
        ->where('id', $id)->update(['action' => 1,'approve'=>1,'created_at' => Carbon::now(),
        'updated_at' => Carbon::now()]);
        DB::table('partners')
-       ->where('tp_id', $tpid)->update(['spoc_name' => $updt->spoc_name,'email'=>$updt->email,'spoc_mobile'=>$updt->spoc_mobile,'updated_at' => Carbon::now()]);
-
+       ->where('tp_id', $tpid)
+       ->update(['spoc_name' => $updt->spoc_name,'email'=>$updt->email,'spoc_mobile'=>$updt->spoc_mobile,'updated_at' => Carbon::now()]);
+      
+       /* Notification For Partner */
+       $notification = new Notification;
+       $notification->rel_id = $updated_partner->id;
+       $notification->rel_with = 'partner';
+       $notification->title = 'Account Updated';
+       $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
+       $notification->save();
+       /* End Notification For Partner */
+       
+       Mail::to($updt->email)->send(new TPUpdateAccept($updt));
       alert()->success('Partner Accepted', 'Done')->autoclose(2000);
       return Redirect()->back();
 
         
     }
     public function partnerUpdateReject(Request $request){
+
+        $updated_partner= DB::table('partners')->where('tp_id','=',$request->tpid)->first();
         DB::table('partner_update')
         ->where('id',$request->id)->update(['action' => 1,'approve'=>0,'comment'=>$request->note,'updated_at' => Carbon::now()]);
+        
+         /* Notification For Partner */
+       $notification = new Notification;
+       $notification->rel_id = $updated_partner->id;
+       $notification->rel_with = 'partner';
+       $notification->title = 'Account Update Request Cancel';
+       $notification->message = "Your Profile update request has been <span style='color:blue;'>Rejected</span>.";
+       $notification->save();
+       /* End Notification For Partner */
+         $updated_partner->note = $request->note;
+       Mail::to($updated_partner->email)->send(new TPUpdateReject($updated_partner));
+
         return response()->json(['status' => 'done'],200);
     }
 }
