@@ -56,7 +56,7 @@
             
 
 
-            
+{{--             
             <li class="{{ Request::segment(1) === 'app' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>App</span></a>
                 <ul class="ml-menu">
@@ -67,7 +67,7 @@
                     <li class="{{ Request::is('app/contact-list') ? 'active' : null }}"><a href="{{route('app.contact-list')}}">Contact list</a></li>
                     <li class="{{ Request::is('app/taskboard') ? 'active' : null }}"><a href="{{route('app.taskboard')}}">TaskBoard</a></li>
                 </ul>
-            </li>
+            </li> --}}
             {{-- <li class="{{ Request::segment(1) === 'file-manager' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-file"></i><span>File Manager</span></a>
                 <ul class="ml-menu">

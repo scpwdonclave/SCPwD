@@ -317,7 +317,7 @@
                     </ul>
                     @if ($partnerData->pending_verify==1)
                     <div class="text-center" >
-                    <button class="btn btn-success" onclick="location.href='{{route('admin.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Accept</button>
+                    <button class="btn btn-success" onclick="location.href='{{route('admin.training_partner.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Accept</button>
                     <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                     </div>
                     @endif

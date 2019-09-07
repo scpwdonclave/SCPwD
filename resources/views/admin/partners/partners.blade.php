@@ -46,10 +46,10 @@
                                 </td>
                             @if ($item->status==1 && $item->complete_profile==1 && $item->pending_verify==0)
                             <td><span class="badge badge-success">Approved</span></td>
-                            <td ><a class="badge bg-green margin-0" href="{{route('admin.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
                             @elseif($item->status==1 && $item->complete_profile==1 && $item->pending_verify==1)
                             <td><span class="badge badge-info">Pending</span></td>
-                            <td ><a class="badge bg-green margin-0" href="{{route('admin.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
                             @elseif($item->status==1 && $item->complete_profile==0 && $item->pending_verify==null)
                             <td><span class="badge badge-warning">First Instance</span></td>
                             <td>&nbsp;</td>
