@@ -20,7 +20,7 @@ class PartnerPolicy
         //
     }
 
-    public function PartnerUpdate($user){
+    public function PartnerProfileVerified($user){
         if (!$user->pending_verify && $user->complete_profile) {
             return true;
         } else {

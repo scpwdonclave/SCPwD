@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Alert;
+
 
 class LoginController extends Controller
 {
@@ -69,6 +71,19 @@ class LoginController extends Controller
     {
         return view('partner.auth.login');
     }
+
+
+    /* Overring Login for sending sweetalert */
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        return $this->authenticated($request, $this->guard()->user())
+                ?: ((!$this->guard()->user()->complete_profile)? redirect(route('partner.dashboard.dashboard'))->with('info', 'Kindly Complete Your Registration to gain Full Access'):redirect($this->redirectTo));
+    }
+    /* End Overring Login for sending sweetalert */
 
     /**
      * Get the guard to be used during authentication.

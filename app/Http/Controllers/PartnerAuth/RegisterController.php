@@ -60,7 +60,7 @@ class RegisterController extends Controller
             'spoc_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:partners',
             'spoc_mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
-            'incorp_doc' => 'required|mimes:jpeg,jpg,png,docx,xlsx,xls,pdf'
+            'incorp_doc' => 'required|mimes:jpeg,jpg,png,pdf'
         ]);
     }
 

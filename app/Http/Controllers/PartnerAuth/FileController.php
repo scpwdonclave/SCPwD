@@ -10,11 +10,13 @@ use Auth;
 
 class FileController extends Controller
 {
-    protected $redirectTo = '/partner';    
+    // protected $redirectTo = '/partner';    
 
     public function __construct()
     {
-        $this->middleware('auth:admin,partner');
+        // $this->middleware('admin');
+        // $this->middleware('partner');
+        $this->middleware('admin');
     }
 
     protected function downloadThis($file){
@@ -35,12 +37,10 @@ class FileController extends Controller
 
     public function partnerFiles($action, $file)
     {
-        if ($action === 'view' && Auth::guard('admin')->check()) {
+        if ($action === 'view') {
             return $this->viewThis($file);
-        } elseif ($action === 'download' && Auth::guard('admin')->check()) {
+        } elseif ($action === 'download') {
             return $this->downloadThis($file);
-        } else {
-            return 'Unauthorized Access Or File is Not Found On Server';
         }
     }
 }

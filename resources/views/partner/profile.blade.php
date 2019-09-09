@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        @can('partner-update', Auth::shouldUse('partner'))
+                        @can('partner-profile-verified', Auth::shouldUse('partner'))
                             @can('partner-update-pending', Auth::shouldUse('partner'))
                                 <div class="row d-flex justify-content-around">
                                     <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>  UPDATE</button>
@@ -59,7 +59,7 @@
                             </div>
                             @endcannot
                         @endcan
-                        @cannot('partner-update', Auth::shouldUse('partner'))
+                        @cannot('partner-profile-verified', Auth::shouldUse('partner'))
                             <div class="d-flex justify-content-center p-t-30">
                                 <h6>You Can Update These Details Once your Account get Verified</h6>
                             </div>

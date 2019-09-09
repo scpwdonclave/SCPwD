@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('partner-update', 'App\Policies\PartnerPolicy@PartnerUpdate');
+        Gate::define('partner-profile-verified', 'App\Policies\PartnerPolicy@PartnerProfileVerified');
         Gate::define('partner-update-pending', 'App\Policies\PartnerPolicy@PartnerUpdatePending');
     }
 }

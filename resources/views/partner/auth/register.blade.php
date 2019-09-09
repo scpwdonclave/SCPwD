@@ -81,10 +81,10 @@
              if ((file = this.files[i])) {
                      image = new Image();
                      var fileType = file["type"];
-                     var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ];
+                     var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
                      if ($.inArray(fileType, ValidImageTypes) < 0) {
                          $("#"+e.currentTarget.id).val('');
-                         $("#" + e.currentTarget.id + "_error").text('Supported jpg, jpeg, png, pdf, docs, xls, xlsx');
+                         $("#" + e.currentTarget.id + "_error").text('Supported jpg, jpeg, png, pdf');
                      } else {
                          $("#" + e.currentTarget.id + "_error").text('');
                      }

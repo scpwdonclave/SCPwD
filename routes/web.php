@@ -176,3 +176,6 @@ Route::group(['prefix' => 'partner'], function () {
   Route::get('/password/reset/{token}', 'PartnerAuth\ResetPasswordController@showResetForm')->name('partner.password.reset');
 });
 /* End Partner Routes */
+
+/* File Access */
+Route::get('partner/files/{action}/{filename}', 'PartnerAuth\FileController@partnerFiles')->where('action', 'view|download')->name('partner.files.partner-file');
