@@ -95,9 +95,10 @@
                                 <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#f9666e">1,3,5,7,4,6,3,2,6,5,9,8,7,9,5</div>
                                 <small>Visitors</small>
                             </div> --}}
-                            @if (Request::segment(2) === 'dashboard' )
+                            {{-- @if (Request::segment(3) === 'job_roles' )
+                                <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New Sector</button>
                                 <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New</button>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                 </div>

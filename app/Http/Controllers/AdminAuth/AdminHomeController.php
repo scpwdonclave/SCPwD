@@ -10,6 +10,8 @@ use App\Mail\TPUpdateAccept;
 use App\Mail\TPUpdateReject;
 use App\Mail\TPRejectMail;
 use App\Partner;
+use App\Disability;
+use App\Sector;
 use App\Notification;
 use Mail;
 use Carbon\Carbon;
@@ -28,6 +30,11 @@ class AdminHomeController extends Controller
      * @return void
      */
 
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     protected function guard()
     {
         return Auth::guard('admin');
@@ -36,6 +43,40 @@ class AdminHomeController extends Controller
     public function dashboard(){
         return view('admin.home');
     }
+
+    public function disability(){
+        $disabilities = Disability::all();
+        return view('admin.dashboard.disability')->with(compact('disabilities'));
+    }
+
+    
+    public function disability_action(Request $request){
+        
+        if ($request->has('disability')) {
+            return $this->dispatchNow(new \App\Jobs\AddDisability($request));
+        } else if ($request->has('name')) {
+            return $this->dispatchNow(new \App\Jobs\UpdateDisability($request));
+        }
+        return abort(404);
+        // return response()->view('authentication.page404');
+    }
+    
+    public function job_roles(){
+
+        $sectors = Sector::all();
+        $disabilities = Disability::all();        
+        return view('admin.dashboard.jobroles')->with(compact('sectors','disabilities'));
+    }
+    
+    public function job_roles_action(Request $request){
+        if ($request->has('sector')) {
+            return $this->dispatchNow(new \App\Jobs\AddSector($request));
+        } else if ($request->has('name')) {
+            return $this->dispatchNow(new \App\Jobs\RemoveSector($request));
+        }
+        dd($request);
+    }
+
 
     public function partners(){
 

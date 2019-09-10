@@ -10,12 +10,8 @@ use Auth;
 
 class FileController extends Controller
 {
-    // protected $redirectTo = '/partner';    
-
     public function __construct()
     {
-        // $this->middleware('admin');
-        // $this->middleware('partner');
         $this->middleware('admin');
     }
 

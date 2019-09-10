@@ -80,8 +80,15 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        return $this->authenticated($request, $this->guard()->user())
-                ?: ((!$this->guard()->user()->complete_profile)? redirect(route('partner.dashboard.dashboard'))->with('info', 'Kindly Complete Your Registration to gain Full Access'):redirect($this->redirectTo));
+        if (!$this->authenticated($request, $this->guard()->user())) {
+            if (!$this->guard()->user()->complete_profile) {
+                alert()->info("Kindly Complete Your Registration to gain Full <span style='font-weight:bold;color:blue'>Access</span>", 'Complete your profile')->html()->autoclose(6000); 
+                return redirect(route('partner.dashboard.dashboard'));
+            } else {
+                return redirect(route('partner.dashboard.dashboard'));
+            }
+        }
+        
     }
     /* End Overring Login for sending sweetalert */
 

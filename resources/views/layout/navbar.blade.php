@@ -68,6 +68,11 @@
                 </li>
             </ul>
         </li>
+        <li>
+            <div class="navbar-header">
+                <div class="row"><h6>SCPwD</h6>:A Management Portal for SCPwD</div>
+            </div>
+        </li>
         <li class="float-right">  
             <a class="mega-menu" href="{{strtok(Route::current()->getName(), '.')}}/logout" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
