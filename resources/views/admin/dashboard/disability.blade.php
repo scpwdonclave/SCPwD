@@ -4,6 +4,14 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<style>
+.table td {
+    padding: .10rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+</style>
 @stop
 @section('parentPageTitle', 'Dashboard')
 @section('content')

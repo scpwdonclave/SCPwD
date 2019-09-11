@@ -36,9 +36,15 @@
             @auth('admin')
                 @if (Request::segment(1) === 'admin')
                 <li class="{{ Request::segment(2) === 'training_partners' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gamepad"></i><span>Training Partners</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-box"></i><span>Training Partners</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/training_partners/partners') ? 'active' : null }}"><a href="{{route('admin.tp.partners')}}">Partners</a></li>
+                    </ul>
+                </li> 
+                <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-calendar"></i><span>Training Centers</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
                     </ul>
                 </li> 
                 @endif

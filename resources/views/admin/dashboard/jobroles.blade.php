@@ -6,11 +6,33 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-
+<style>
+.table td {
+    padding: .10rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+</style>
 @stop
 @section('parentPageTitle', 'Dashboard')
 @section('content')
 <div class="container-fluid">
+    <div class="row">
+        @if ($errors->any())
+            <div class="card">
+                <div class="body">
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
     <div class="row clearfix">
             <div class="col-lg-4">
                 <div class="card">
@@ -44,6 +66,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Sectors</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -52,7 +75,9 @@
                                     <tr style="height:5px !important">
                                     <td>{{$key+1}}</td>
                                     <td>{{$sector->sector}}</td>
-                                        <td class="text-center"> <form id="removesector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                    {{-- <td class="text-center"> <form id="removesector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td> --}}
+                                    <td class="text-center"><span class="badge badge-{{($sector->status)?'success':'danger'}}">{{($sector->status)?'Active':'Inactive'}}</span></td>
+                                    <td class="text-center"> <form id="updateform_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-{{($sector->status)?'danger':'primary'}} waves-effect btn-sm">{{($sector->status)?'Disable':'Enable'}}</button></form></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -68,13 +93,13 @@
                         <button id="btn_roles" onclick="showform(1)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Role</button>                       
                 </div>
                 <div class="body">
-                    <form style="display:none" id="form_roles" action="{{route('admin.dashboard.disability_action')}}" method="post">
+                    <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-around">
                             <div class="col-sm-5">
-                                <label for="role_sector">Sector *</label>
+                                <label for="sector_id">Sector *</label>
                                 <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="role_sector" data-show-subtext="true" data-dropup-auto='false' required>
+                                    <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='false' required>
                                         @foreach ($sectors as $sector)
                                             <option value="{{$sector->id}}">{{$sector->sector}}</option>
                                         @endforeach
@@ -95,29 +120,29 @@
 
                         <div class="row d-flex-justify-content-center">
                             <div class="col-sm-4">
-                                <label for="role_name">Job Role *</label>
+                                <label for="job_role">Job Role *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('role_name') }}" name="role_name" required>
-                                    @if ($errors->has('role_name'))
-                                        <span style="color:red">{{$errors->first('role_name')}}</span>
+                                    <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
+                                    @if ($errors->has('job_role'))
+                                        <span style="color:red">{{$errors->first('job_role')}}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label for="role_qp">QP Code *</label>
+                                <label for="qp_code">QP Code *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="QP Code" value="{{ old('role_qp') }}" name="role_qp" required>
-                                    @if ($errors->has('role_qp'))
-                                        <span style="color:red">{{$errors->first('role_qp')}}</span>
+                                    <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
+                                    @if ($errors->has('qp_code'))
+                                        <span style="color:red">{{$errors->first('qp_code')}}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label for="role_nsqf">NSQF Level *</label>
+                                <label for="nsqf_level">NSQF Level *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('role_nsqf') }}" name="role_nsqf" required>
-                                    @if ($errors->has('role_nsqf'))
-                                        <span style="color:red">{{$errors->first('role_nsqf')}}</span>
+                                    <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
+                                    @if ($errors->has('nsqf_level'))
+                                        <span style="color:red">{{$errors->first('nsqf_level')}}</span>
                                     @endif
                                 </div>
                             </div>
@@ -131,23 +156,36 @@
                         <table id="disability_table" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Initials</th>
-                                    <th>Disability</th>
-                                    <th>Status</th>
+                                    <th>Sector</th>
+                                    <th>Job Role</th>
+                                    <th>QP Code</th>
+                                    <th>NSQF</th>
+                                    <th>Disabilities</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($disabilities as $key=>$disability)
+                                @php
+                                    $item1='';
+                                @endphp
+                                @foreach ($jobroles as $key=>$jobrole)
                                 <tr style="height:5px !important">
-                                <td>{{$key+1}}</td>
-                                <td>{{$disability->initials}}</td>
-                                    <td>{{$disability->disability}}</td>
-                                    <td class="text-center"><span class="badge badge-{{($disability->status)?'success':'danger'}}">{{($disability->status)?'Active':'Inactive'}}</span></td>
-                                    <td class="text-center"> <form id="updateform_{{$disability->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$disability->id.','.$disability->disability}}"><button type="submit" class="btn btn-round btn-{{($disability->status)?'danger':'primary'}} waves-effect">{{($disability->status)?'Disable':'Enable'}}</button></form></td>
+                                    <td>{{$jobrole->sector->sector}}</td>
+                                    <td>{{$jobrole->job_role}}</td>
+                                    <td>{{$jobrole->qp_code}}</td>
+                                    <td>{{$jobrole->nsqf_level}}</td>
+                                    @foreach ($jobrole->disabilities as $item)
+                                        @php
+                                            $item1 = $item->initials.', '.$item1;
+                                        @endphp
+                                    @endforeach
+                                    <td>{{$item1}}</td>
+                                    <td class="text-center"> <form id="removeform_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></button></form></td>
                                 </tr>
-                                @endforeach --}}
+                                @php
+                                    $item1='';
+                                @endphp
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

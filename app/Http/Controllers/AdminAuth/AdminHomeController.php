@@ -10,6 +10,7 @@ use App\Mail\TPUpdateAccept;
 use App\Mail\TPUpdateReject;
 use App\Mail\TPRejectMail;
 use App\Partner;
+use App\JobRole;
 use App\Disability;
 use App\Sector;
 use App\Notification;
@@ -51,7 +52,6 @@ class AdminHomeController extends Controller
 
     
     public function disability_action(Request $request){
-        
         if ($request->has('disability')) {
             return $this->dispatchNow(new \App\Jobs\AddDisability($request));
         } else if ($request->has('name')) {
@@ -64,8 +64,9 @@ class AdminHomeController extends Controller
     public function job_roles(){
 
         $sectors = Sector::all();
-        $disabilities = Disability::all();        
-        return view('admin.dashboard.jobroles')->with(compact('sectors','disabilities'));
+        $disabilities = Disability::where('status',1)->get();
+        $jobroles = JobRole::all();
+        return view('admin.dashboard.jobroles')->with(compact('sectors','disabilities','jobroles'));
     }
     
     public function job_roles_action(Request $request){
@@ -73,6 +74,8 @@ class AdminHomeController extends Controller
             return $this->dispatchNow(new \App\Jobs\AddSector($request));
         } else if ($request->has('name')) {
             return $this->dispatchNow(new \App\Jobs\RemoveSector($request));
+        } else if ($request->has('sector_id')) {
+            return $this->dispatchNow(new \App\Jobs\AddJobRole($request));
         }
         dd($request);
     }
