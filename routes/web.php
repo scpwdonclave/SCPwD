@@ -177,5 +177,20 @@ Route::group(['prefix' => 'partner'], function () {
 });
 /* End Partner Routes */
 
+/* Center Routes */
+Route::group(['prefix' => 'center'], function () {
+  Route::get('/', function () { return redirect('center/login'); });
+  Route::get('/login', 'CenterAuth\LoginController@showLoginForm')->name('center.login');
+  Route::post('/login', 'CenterAuth\LoginController@login');
+  Route::post('/logout', 'CenterAuth\LoginController@logout')->name('center.logout');
+
+  Route::get('/password', function () { return redirect('center/password/reset'); });
+  Route::post('/password/email', 'CenterAuth\ForgotPasswordController@sendResetLinkEmail')->name('center.password.email');
+  Route::get('/password/reset', 'CenterAuth\ForgotPasswordController@showLinkRequestForm')->name('center.password.request');
+  Route::post('/password/reset', 'CenterAuth\ResetPasswordController@reset');
+  Route::get('/password/reset/{token}', 'CenterAuth\ResetPasswordController@showResetForm')->name('center.password.reset');
+});
+/* End Center Routes */
+
 /* File Access */
 Route::get('partner/files/{action}/{filename}', 'PartnerAuth\FileController@partnerFiles')->where('action', 'view|download')->name('partner.files.partner-file');

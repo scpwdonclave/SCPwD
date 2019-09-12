@@ -14,7 +14,7 @@ class CreatePartnersTable extends Migration
     {
         Schema::create('partners', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tp_id');
+            $table->string('tp_id')->unique();
             
             /* Basic Registration */
             $table->string('spoc_name');

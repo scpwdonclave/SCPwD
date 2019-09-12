@@ -17,6 +17,10 @@
                                 <h4>{{Auth::guard('partner')->user()->spoc_name}}</h4>
                                 <p class="m-b-0">{{Auth::guard('partner')->user()->tp_id}}</p>
                                 @break
+                             @case('center')
+                                <h4>{{Auth::guard('center')->user()->spoc_name}}</h4>
+                                <p class="m-b-0">{{Auth::guard('center')->user()->tc_id}}</p>
+                                @break
                             @default
                         @endswitch
                     </div>

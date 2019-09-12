@@ -36,6 +36,11 @@ return [
     */
 
     'guards' => [
+        'center' => [
+            'driver' => 'session',
+            'provider' => 'centers',
+        ],
+
         'partner' => [
             'driver' => 'session',
             'provider' => 'partners',
@@ -76,6 +81,11 @@ return [
     */
 
     'providers' => [
+        'centers' => [
+            'driver' => 'eloquent',
+            'model' => App\Center::class,
+        ],
+
         'partners' => [
             'driver' => 'eloquent',
             'model' => App\Partner::class,
@@ -113,6 +123,12 @@ return [
     */
 
     'passwords' => [
+        'centers' => [
+            'provider' => 'centers',
+            'table' => 'center_password_resets',
+            'expire' => 60,
+        ],
+
         'partners' => [
             'provider' => 'partners',
             'table' => 'partner_password_resets',

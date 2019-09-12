@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapCenterRoutes();
+
         $this->mapPartnerRoutes();
 
         $this->mapAdminRoutes();
@@ -96,6 +98,18 @@ class RouteServiceProvider extends ServiceProvider
         'namespace' => $this->namespace,
         ], function ($router) {
         require base_path('routes/partner.php');
+        });
+    }
+
+    protected function mapCenterRoutes()
+    {
+    Route::group([
+        'middleware' => ['web', 'center:center'],
+        'prefix' => 'center',
+        'as' => 'center.',
+        'namespace' => $this->namespace,
+        ], function ($router) {
+        require base_path('routes/center.php');
         });
     }
 }
