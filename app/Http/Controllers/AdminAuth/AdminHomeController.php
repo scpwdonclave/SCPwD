@@ -98,13 +98,28 @@ class AdminHomeController extends Controller
 
     public function partners(){
 
-        $data=Partner::all();
+        $data=Partner::all(); 
         $tp_updt_req=DB::table('partner_update as p_updt')
                         ->join('partners as p','p.tp_id','=','p_updt.tp_id')
                         ->select('p_updt.id as id','p_updt.tp_id as tp_id','p_updt.spoc_name as uname','p_updt.email as uemail','p_updt.spoc_mobile as umobile',
                         'p.spoc_name as pname','p.email as pemail','p.spoc_mobile as pmobile')
                         ->where('p_updt.action',0)->get();
         return view('admin.partners.partners')->with(compact('data','tp_updt_req'));
+    }
+
+    public function partnerDeactive($id){
+        $partnerData=Partner::findOrFail($id);
+        $partnerData->status=0;
+        $partnerData->save();
+        alert()->success('Partner Deactivated', 'Done')->autoclose(2000);
+        return Redirect()->back();
+    }
+    public function partnerActive($id){
+        $partnerData=Partner::findOrFail($id);
+        $partnerData->status=1;
+        $partnerData->save();
+        alert()->success('Partner Activated', 'Done')->autoclose(2000);
+        return Redirect()->back();
     }
     
     public function partnerVerify($id){
