@@ -8,10 +8,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
-use App\Disability;
+use App\Expository;
 
 
-class UpdateDisability implements ShouldQueue
+class UpdateExpository implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,13 +37,13 @@ class UpdateDisability implements ShouldQueue
             'name' => 'required',
         ]);
         
-        $disability = Disability::find($request->id);
-        if ($disability) {
-            $disability->status = !$disability->status;
-            $disability->save();
+        $expository = Expository::find($request->id);
+        if ($expository) {
+            $expository->status = !$expository->status;
+            $expository->save();
             return response()->json(array('type' => 'success', 'message' => "Status has been Updated of <br><span style='font-weight:bold;color:blue'>$request->name</span>"),200);
         } else {
-            return response()->json(array('type' => 'error', 'message' => "<span style='font-weight:bold;color:red'>$request->name</span> Disability is not Found"),200);
+            return response()->json(array('type' => 'error', 'message' => "<span style='font-weight:bold;color:red'>$request->name</span> Expository is not Found"),200);
         }
 
     }

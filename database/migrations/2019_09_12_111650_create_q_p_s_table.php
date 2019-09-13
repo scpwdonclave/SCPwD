@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDisabilitiesTable extends Migration
+class CreateQPSTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateDisabilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('disabilities', function (Blueprint $table) {
+        Schema::create('q_p_s', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('disability')->unique();
-            $table->string('initials')->unique();
-            $table->boolean('status')->default(1);
+            $table->string('qp_name');
+            $table->string('qp_code');
+            $table->string('nsqf_level');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateDisabilitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('disabilities');
+        Schema::dropIfExists('q_p_s');
     }
 }

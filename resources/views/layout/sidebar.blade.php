@@ -32,7 +32,6 @@
                 <ul class="ml-menu">
                     <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
                     @auth('admin')
-                        <li class="{{ Request::segment(3) === 'disabilities' ? 'active' : null }}"><a href="{{route('admin.dashboard.disability')}}">Disability</a></li>
                         <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route('admin.dashboard.jobroles')}}">Job Roles</a></li>
                     @endauth
                 </ul>

@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
-use App\JobRole;
+use DB;
 
 class AddJobRole implements ShouldQueue
 {
@@ -31,24 +31,28 @@ class AddJobRole implements ShouldQueue
      */
     public function handle(Request $request)
     {
+        // dd($request);
         $request->validate([
-            'sector_id' => 'required',
-            'job_role' => 'required|unique:job_roles',
-            'qp_code' => 'required|unique:job_roles',
-            'nsqf_level' => 'required|numeric',
-            'role_disability' => 'array|required'
+            'sector_role' => 'required|numeric',
+            'qp_role' => 'required|numeric',
+            'expository_role' => 'required|array',
         ]);
+
+        foreach ($request->expository_role as $role) {
+            $count = DB::table('expo_qp_sector')->select('*')->where([['sector_id', '=', $request->sector_role],['qp_id', '=',$request->qp_role],['expo_id', '=',$role]])->count();
+            if ($count > 0) {
+                alert()->error('Oparation Aborted, Please Provide Unique Combinations','Duplicate Entry')->html()->autoclose('4000');
+                return redirect()->back();
+            }
+        }
         
-        $jobrole = new JobRole;
-        $jobrole->sector_id = $request->sector_id;
-        $jobrole->job_role = $request->job_role;
-        $jobrole->qp_code = $request->qp_code;
-        $jobrole->nsqf_level = $request->nsqf_level;
-        $jobrole->save();
+        foreach ($request->expository_role as $role) {
+            DB::table('expo_qp_sector')->insert([
+                ['sector_id' => $request->sector_role, 'qp_id' => $request->qp_role, 'expo_id' => $role],
+            ]);
+        }
 
-        $jobrole->disabilities()->sync($request->role_disability);
-
-        alert()->success('Job Role <span style="color:blue">'.$jobrole->job_role.'</span> has been Created Successfully','New Entry')->html()->autoclose('4000');
+        alert()->success('Job Role(s) <span style="color:blue">Added</span> Successfully','New Entry')->html()->autoclose('4000');
         return redirect()->back();
     }
 }

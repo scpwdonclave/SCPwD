@@ -62,7 +62,7 @@
                             <div class="col-sm-12">
                                 <label for="disability">Disability *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="Disability Name" value="{{ old('disability') }}" name="disability" required>
+                                    <input type="text" class="form-control" placeholder="Disability Name (E0** Initial will be added automatically)" value="{{ old('disability') }}" name="disability" required>
                                     @if ($errors->has('disability'))
                                         <span style="color:red">{{$errors->first('disability')}}</span>
                                     @endif

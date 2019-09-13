@@ -8,9 +8,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
-use App\Disability;
+use App\QP;
 
-class AddDisability implements ShouldQueue
+class AddQP implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class AddDisability implements ShouldQueue
      */
     public function __construct()
     {
-    
+        //
     }
 
     /**
@@ -32,16 +32,19 @@ class AddDisability implements ShouldQueue
     public function handle(Request $request)
     {
         $request->validate([
-            'disability' => 'required|unique:disabilities',
-            'initials' => 'required|unique:disabilities',
+            'qp_name' => 'required|unique:q_p_s',
+            'qp_code' => 'required|unique:q_p_s',
+            'nsqf_level' => 'required|numeric',
         ]);
-        
-        $disability = new Disability;
-        $disability->disability = ucwords(strtolower($request->disability));
-        $disability->initials = strtoupper($request->initials);
-        $disability->save();
 
-        alert()->success('Disability <span style="color:blue">Added</span> Successfully','New Entry')->html()->autoclose('4000');
+        $qp = new QP;
+        $qp->qp_name = $request->qp_name;
+        $qp->qp_code = $request->qp_code;
+        $qp->nsqf_level = $request->nsqf_level;
+        $qp->save();
+
+        alert()->success('QP Record <span style="color:blue">'.$request->qp_name.'</span> has been Created Successfully','New Entry')->html()->autoclose('4000');
         return redirect()->back();
+
     }
 }

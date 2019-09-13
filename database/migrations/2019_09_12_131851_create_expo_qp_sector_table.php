@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobRolesTable extends Migration
+class CreateExpoQpSectorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateJobRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_roles', function (Blueprint $table) {
+        Schema::create('expo_qp_sector', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('sector_id');
-            $table->string('job_role');
-            $table->string('qp_code');
-            $table->string('nsqf_level');
+            $table->unsignedBigInteger('qp_id');
+            $table->unsignedBigInteger('expo_id');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateJobRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_roles');
+        Schema::dropIfExists('expo_qp_sector');
     }
 }

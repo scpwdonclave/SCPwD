@@ -10,8 +10,8 @@ use App\Mail\TPUpdateAccept;
 use App\Mail\TPUpdateReject;
 use App\Mail\TPRejectMail;
 use App\Partner;
-use App\JobRole;
-use App\Disability;
+use App\QP;
+use App\Expository;
 use App\Sector;
 use App\Notification;
 use Mail;
@@ -45,17 +45,17 @@ class AdminHomeController extends Controller
         return view('admin.home');
     }
 
-    public function disability(){
-        $disabilities = Disability::all();
-        return view('admin.dashboard.disability')->with(compact('disabilities'));
+    public function expository(){
+        $expositories = Expository::all();
+        return view('admin.dashboard.expository')->with(compact('expositories'));
     }
 
     
-    public function disability_action(Request $request){
-        if ($request->has('disability')) {
-            return $this->dispatchNow(new \App\Jobs\AddDisability($request));
+    public function expository_action(Request $request){
+        if ($request->has('expository')) {
+            return $this->dispatchNow(new \App\Jobs\AddExpository($request));
         } else if ($request->has('name')) {
-            return $this->dispatchNow(new \App\Jobs\UpdateDisability($request));
+            return $this->dispatchNow(new \App\Jobs\UpdateExpository($request));
         }
         return abort(404);
         // return response()->view('authentication.page404');
@@ -64,20 +64,31 @@ class AdminHomeController extends Controller
     public function job_roles(){
 
         $sectors = Sector::all();
-        $disabilities = Disability::where('status',1)->get();
-        $jobroles = JobRole::all();
-        return view('admin.dashboard.jobroles')->with(compact('sectors','disabilities','jobroles'));
+        $expositories = Expository::all();
+        $qps = QP::all();
+        // $expos = DB::table('expo_qp_sector')->get();
+
+        $expos = DB::table('expo_qp_sector')
+        ->join('expositories', 'expositories.id', '=', 'expo_qp_sector.expo_id')
+        ->join('q_p_s', 'q_p_s.id', '=', 'expo_qp_sector.qp_id')
+        ->join('sectors', 'sectors.id', '=', 'expo_qp_sector.sector_id')
+        ->select('expo_qp_sector.id as id','expositories.expository as expository', 'q_p_s.qp_name as qp', 'q_p_s.nsqf_level as nsqf', 'sectors.sector as sector')
+        ->get();
+
+        return view('admin.dashboard.jobroles')->with(compact('sectors','expositories','qps','expos'));
     }
     
     public function job_roles_action(Request $request){
-        if ($request->has('sector')) {
+        if ($request->has('qp_name')) {
+            return $this->dispatchNow(new \App\Jobs\AddQP($request));
+        } else if ($request->has('expository')) {
+            return $this->dispatchNow(new \App\Jobs\AddExpository($request));
+        } else if ($request->has('sector')) {
             return $this->dispatchNow(new \App\Jobs\AddSector($request));
-        } else if ($request->has('name')) {
-            return $this->dispatchNow(new \App\Jobs\RemoveSector($request));
-        } else if ($request->has('sector_id')) {
+        } else if ($request->has('sector_role')) {
             return $this->dispatchNow(new \App\Jobs\AddJobRole($request));
         }
-        dd($request);
+        // dd($request);
     }
 
 

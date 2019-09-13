@@ -34,103 +34,28 @@
         @endif
     </div>
     <div class="row clearfix">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="header d-flex justify-content-between">
-                        <h2><strong>Manage</strong> Sector</h2>
-                        <button id="btn_sector" onclick="showform(0)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Sector</button>                       
-                    </div>
-                    <div class="body">
-                        <form style="display:none" id="form_sector" action="{{route('admin.dashboard.jobroles')}}" method="post">
-                            @csrf
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label for="sector">Sector *</label>
-                                    <div class="form-group form-float year_picker">
-                                        <input type="text" class="form-control" placeholder="Sector Name" value="{{ old('sector') }}" name="sector" required>
-                                        @if ($errors->has('sector'))
-                                            <span style="color:red">{{$errors->first('sector')}}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        
-                            <div class="row d-flex justify-content-center">
-                                <button class="btn btn-round btn-primary" type="submit">ADD</button>
-                            </div>
-                        </form>
-
-                        <div id="table_sector" class="table-responsive">
-                            <table id="job_table" class="table table-bordered table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Sectors</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($sectors as $key=>$sector)
-                                    <tr style="height:5px !important">
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$sector->sector}}</td>
-                                    {{-- <td class="text-center"> <form id="removesector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td> --}}
-                                    <td class="text-center"><span class="badge badge-{{($sector->status)?'success':'danger'}}">{{($sector->status)?'Active':'Inactive'}}</span></td>
-                                    <td class="text-center"> <form id="updateform_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-{{($sector->status)?'danger':'primary'}} waves-effect btn-sm">{{($sector->status)?'Disable':'Enable'}}</button></form></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="col-lg-8">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                        <h2><strong>Manage</strong> Roles</h2>                        
-                        <button id="btn_roles" onclick="showform(1)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Role</button>                       
+                    <h2><strong>Manage</strong> QP Section</h2>
+                    <button id="btn_qp" onclick="showform(1)" class="btn btn-primary btn-sm btn-round waves-effect">Add New QP Record</button>                       
                 </div>
                 <div class="body">
-                    <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
+                    <form style="display:none" id="form_qp" action="{{route('admin.dashboard.jobroles')}}" method="post">
                         @csrf
-                        <div class="row d-flex justify-content-around">
-                            <div class="col-sm-5">
-                                <label for="sector_id">Sector *</label>
-                                <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='false' required>
-                                        @foreach ($sectors as $sector)
-                                            <option value="{{$sector->id}}">{{$sector->sector}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <label for="role_disability">Disability *</label>
-                                <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="role_disability[]" multiple data-show-subtext="true" data-dropup-auto='false' required>
-                                        @foreach ($disabilities as $disability)
-                                            <option value="{{$disability->id}}" data-subtext="({{ $disability->disability }})">{{$disability->initials}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row d-flex-justify-content-center">
+                        <div class="row">
                             <div class="col-sm-4">
-                                <label for="job_role">Job Role *</label>
-                                <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
-                                    @if ($errors->has('job_role'))
-                                        <span style="color:red">{{$errors->first('job_role')}}</span>
+                                <label for="qp_name">QP Name *</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="QP Name" value="{{ old('qp_name') }}" name="qp_name" required>
+                                    @if ($errors->has('qp_name'))
+                                        <span style="color:red">{{$errors->first('qp_name')}}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="qp_code">QP Code *</label>
-                                <div class="form-group form-float year_picker">
+                                <div class="form-group form-float">
                                     <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
                                     @if ($errors->has('qp_code'))
                                         <span style="color:red">{{$errors->first('qp_code')}}</span>
@@ -139,8 +64,8 @@
                             </div>
                             <div class="col-sm-4">
                                 <label for="nsqf_level">NSQF Level *</label>
-                                <div class="form-group form-float year_picker">
-                                    <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
                                     @if ($errors->has('nsqf_level'))
                                         <span style="color:red">{{$errors->first('nsqf_level')}}</span>
                                     @endif
@@ -152,39 +77,27 @@
                             <button class="btn btn-round btn-primary" type="submit">ADD</button>
                         </div>
                     </form>
-                    <div id="table_roles" class="table-responsive">
-                        <table id="disability_table" class="table table-bordered table-striped table-hover">
+
+                    <div id="table_qp" class="table-responsive">
+                        <table id="job_table" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Sector</th>
-                                    <th>Job Role</th>
+                                    <th>#</th>
+                                    <th>QP Name</th>
                                     <th>QP Code</th>
                                     <th>NSQF</th>
-                                    <th>Disabilities</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $item1='';
-                                @endphp
-                                @foreach ($jobroles as $key=>$jobrole)
+                                @foreach ($qps as $key=>$qp)
                                 <tr style="height:5px !important">
-                                    <td>{{$jobrole->sector->sector}}</td>
-                                    <td>{{$jobrole->job_role}}</td>
-                                    <td>{{$jobrole->qp_code}}</td>
-                                    <td>{{$jobrole->nsqf_level}}</td>
-                                    @foreach ($jobrole->disabilities as $item)
-                                        @php
-                                            $item1 = $item->initials.', '.$item1;
-                                        @endphp
-                                    @endforeach
-                                    <td>{{$item1}}</td>
-                                    <td class="text-center"> <form id="removeform_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></button></form></td>
+                                <td>{{$key+1}}</td>
+                                <td>{{$qp->qp_name}}</td>
+                                <td>{{$qp->qp_code}}</td>
+                                <td>{{$qp->nsqf_level}}</td>
+                                <td class="text-center"> <form id="qp_removeform_{{$qp->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$qp->id.','.$qp->qp_name}}"><button type="submit" class="btn btn-danger btn-round waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td>
                                 </tr>
-                                @php
-                                    $item1='';
-                                @endphp
                                 @endforeach
                             </tbody>
                         </table>
@@ -192,7 +105,192 @@
                 </div>
             </div>
         </div>
-        
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                        <h2><strong>Manage</strong> Expositories</h2>                        
+                        <button id="btn_expository" onclick="showform(2)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Expository</button>                       
+                </div>
+                <div class="body">
+                    <form style="display:none" id="form_expository" action="{{route('admin.dashboard.jobroles')}}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="expository">Expository *</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Expository Name" value="{{ old('expository') }}" name="expository" required>
+                                    @if ($errors->has('expository'))
+                                    <span style="color:red">{{$errors->first('expository')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="initials">Initials *</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Expository Initials" value="{{ old('initials') }}" name="initials" required>
+                                    @if ($errors->has('initials'))
+                                    <span style="color:red">{{$errors->first('initials')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row d-flex justify-content-center">
+                            <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                        </div>
+                    </form>
+                    <div id="table_expository" class="table-responsive">
+                        <table id="expository_table" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Expository</th>
+                                    <th>Initials</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @foreach ($expositories as $key=>$expository)
+                                    <tr style="height:5px !important">
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$expository->expository}}</td>
+                                    <td>{{$expository->initials}}</td>
+                                    <td class="text-center"> <form id="expository_removeform_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-danger btn-round waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                    </tr>
+                                    @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>Manage</strong> Sector</h2>
+                    <button id="btn_sector" onclick="showform(0)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Sector</button>                       
+                </div>
+                <div class="body">
+                    <form style="display:none" id="form_sector" action="{{route('admin.dashboard.jobroles')}}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="sector">Sector *</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Sector Name" value="{{ old('sector') }}" name="sector" required>
+                                    @if ($errors->has('sector'))
+                                        <span style="color:red">{{$errors->first('sector')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row d-flex justify-content-center">
+                            <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                        </div>
+                    </form>
+
+                    <div id="table_sector" class="table-responsive">
+                        <table id="job_table" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sectors</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($sectors as $key=>$sector)
+                                <tr style="height:5px !important">
+                                <td>{{$key+1}}</td>
+                                <td>{{$sector->sector}}</td>
+                                <td class="text-center"> <form id="sector_removeform_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-danger btn-round waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>Manage</strong> Roles</h2>
+                    <button id="btn_role" onclick="showform(3)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Role</button>                       
+                </div>
+                <div class="body">
+                    <form style="display:none" id="form_role" action="{{route('admin.dashboard.jobroles')}}" method="post">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="sector_role">Sector *</label>
+                                <div class="form-group form-float">
+                                    <select name="sector_role" class="form-control show-tick" data-live-search="true" required >
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{ $sector->id }}">{{$sector->sector}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="qp_role">QP Details *</label>
+                                <div class="form-group form-float">
+                                    <select name="qp_role" class="form-control show-tick" data-live-search="true" required >
+                                        @foreach ($qps as $qp)
+                                            <option value="{{ $qp->id }}" data-subtext="{{$qp->qp_code.' | '.$qp->nsqf_level}}">{{$qp->qp_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <div class="col-sm-6">
+                                <label for="expository_role">Expository *</label>
+                                <div class="form-group form-float">
+                                    <select name="expository_role[]" class="form-control show-tick" data-live-search="true" required multiple>
+                                        @foreach ($expositories as $expository)
+                                            <option value="{{ $expository->id }}" data-subtext="{{$expository->expository}}">{{$expository->initials}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>   
+                        </div>
+                    
+                        <div class="row d-flex justify-content-center">
+                            <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                        </div>
+                    </form>
+
+                    <div id="table_role" class="table-responsive">
+                        <table id="job_table" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sector</th>
+                                    <th>QP Details</th>
+                                    <th>NSQF Level</th>
+                                    <th>Expository</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($expos as $expo)
+                                <tr style="height:5px !important">
+                                    <td>{{$expo->sector}}</td>
+                                    <td>{{$expo->qp}}</td>
+                                    <td>{{$expo->nsqf}}</td>
+                                    <td>{{$expo->expository}}</td>
+                                    <td class="text-center"> <form id="sector_removeform_{{$expo->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expo->id.','.$expo->sector}}"><button type="submit" class="btn btn-danger btn-round waves-effect btn-sm"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @stop
@@ -200,7 +298,7 @@
 
 <script>
 
-    $('form[id^=removesector_]').submit(function(e){
+    $('form[id^=sector_removeform_]').submit(function(e){
         e.preventDefault();
         var data = e.currentTarget.data.value.split(',');
         var _token = e.currentTarget._token.value;
@@ -260,28 +358,56 @@
     
     $("table[id*='_table']").attr('data-page-length',5);
     function showform(v){
-        if (v) {
-            $('#form_roles').toggle('slide');
-            if ($('#btn_roles').text() == 'Add New Role') {
-                $('#btn_roles').text('View Roles Table');
-            } else {
-                $('#btn_roles').text('Add New Role');
-            }
-            $('#table_roles').toggle('slide');
-
-        } else {
-            $('#form_sector').toggle('slide');
-            if ($('#btn_sector').text() == 'Add New Sector') {
-                $('#btn_sector').text('View Sectors Table');
-            } else {
-                $('#btn_sector').text('Add New Sector');
-            }
-            $('#table_sector').toggle('slide');
-        }
+        switch (v) {
+            case 0:
+                $('#form_sector').toggle('slide');
+                if ($('#btn_sector').text() == 'Add New Sector') {
+                    $('#btn_sector').text('View Sectors Table');
+                } else {
+                    $('#btn_sector').text('Add New Sector');
+                }
+                $('#table_sector').toggle('slide');
+                break;
+            case 1:
+                $('#form_qp').toggle('slide');
+                if ($('#btn_qp').text() == 'Add New QP Record') {
+                    $('#btn_qp').text('View QP Table');
+                } else {
+                    $('#btn_qp').text('Add New QP Record');
+                }
+                $('#table_qp').toggle('slide');
+                break;
+            case 2:
+                $('#form_expository').toggle('slide');
+                if ($('#btn_expository').text() == 'Add New Expository') {
+                    $('#btn_expository').text('View Expository Table');
+                } else {
+                    $('#btn_expository').text('Add New Expository');
+                }
+                $('#table_expository').toggle('slide');
+                break;
+            case 3:
+                $('#form_role').toggle('slide');
+                if ($('#btn_role').text() == 'Add New Role') {
+                    $('#btn_role').text('View Role Table');
+                } else {
+                    $('#btn_role').text('Add New Role');
+                }
+                $('#table_role').toggle('slide');
+                break;
         
+            default:
+                break;
+        }
     }
 
 
+    /* Creating Initials for Expository */
+    $('[name=expository]').on('change', function(e){
+        var matches = e.currentTarget.value.match(/\b(\w)/g);
+        $('[name=initials]').val(matches.join('').toUpperCase());        
+    });
+    /* End Creating Initials for Expository */
 
 
 </script>
