@@ -4,8 +4,9 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Center;
 
-class AdminCenterController extends Controller
+class AdminCenterController extends Controller 
 {
     public function __construct()
     {
@@ -18,6 +19,8 @@ class AdminCenterController extends Controller
     }
 
     public function centers(){
-        return view('admin.centers.centers');
+
+        $data=Center::all();
+        return view('admin.centers.centers')->with(compact('data'));
     }
 }
