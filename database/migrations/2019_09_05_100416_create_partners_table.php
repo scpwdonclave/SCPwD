@@ -72,7 +72,7 @@ class CreatePartnersTable extends Migration
             $table->string('ca4_year')->nullable();
             /* End Financial Information */
 
-            /* Proposal Informatoin */
+            /* Proposal Informatoin */ 
             $table->string('offer')->default('No Data');
             $table->string('offer_date')->default('No Data');
             $table->string('offer_doc')->default('No Data');

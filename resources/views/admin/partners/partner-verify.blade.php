@@ -97,18 +97,18 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                             <small class="text-muted">CEO/MD/Head's Name</small>
-                                            <p>{{$partnerData->ceo_name}}</p>
+                                            <p>{{$partnerData->ceo_name}}&nbsp;</p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">CEO/MD/Head's Email Address</small>
-                                            <p>{{$partnerData->ceo_email}}</p>
+                                            <p>{{$partnerData->ceo_email}}&nbsp;</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
                                             <small class="text-muted">CEO/MD/Head's Mobile Number</small>
-                                            <p>{{$partnerData->ceo_mobile}}</p>
+                                            <p>{{$partnerData->ceo_mobile}}&nbsp;</p>
                                             <hr>
                                     </div>
                                     
@@ -122,18 +122,18 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                             <small class="text-muted">Authorized Signatory Name</small>
-                                            <p>{{$partnerData->signatory_name}}</p>
+                                            <p>{{$partnerData->signatory_name}}&nbsp;</p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">Authorized Signatory Email Address</small>
-                                            <p>{{$partnerData->signatory_email}}</p>
+                                            <p>{{$partnerData->signatory_email}}&nbsp;</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
                                             <small class="text-muted">Authorized Signatory Mobile Number</small>
-                                            <p>{{$partnerData->signatory_mobile}}</p>
+                                            <p>{{$partnerData->signatory_mobile}}&nbsp;</p>
                                             <hr>
                                     </div>
                                     
@@ -147,13 +147,13 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                             <small class="text-muted">Address of the Organization</small>
-                                            <p>{{$partnerData->org_address}}</p>
+                                            <p>{{$partnerData->org_address}}&nbsp;</p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">Nearby Landmark</small>
-                                            <p>{{$partnerData->landmark}}</p>
+                                            <p>{{$partnerData->landmark}}&nbsp;</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
@@ -281,7 +281,7 @@
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                            <small class="text-muted">Offer Latter </small>
+                                            <small class="text-muted">Offer Letter </small>
                                             <p>{{$partnerData->offer}}
                                                     &nbsp;&nbsp;
                                                     <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->offer_doc)])}}" download="{{basename($partnerData->offer_doc)}}"><i class="zmdi zmdi-download"></i></a>

@@ -16,10 +16,10 @@
                 <h2><strong>Training Partners</strong> Record </h2>
             </div>
             <div class="body">
-                <button type="button" class="btn  btn-simple btn-sm btn-default btn-filter" data-target="all">All</button>
+                {{-- <button type="button" class="btn  btn-simple btn-sm btn-default btn-filter" data-target="all">All</button>
                 <button type="button" class="btn  btn-simple btn-sm btn-success btn-filter" data-target="approved">Active</button>
                 <button type="button" class="btn  btn-simple btn-sm btn-warning btn-filter" data-target="suspended">Suspended</button>
-                <button type="button" class="btn  btn-simple btn-sm btn-info btn-filter" data-target="pending">Pending</button>
+                <button type="button" class="btn  btn-simple btn-sm btn-info btn-filter" data-target="pending">Pending</button> --}}
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
@@ -31,30 +31,43 @@
                                 <th style="width:20px;">Incorp. Document</th>
                                 <th>Status</th>
                                 <th>View</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $key=>$item)
                                 
                             <tr>
-                            <td>{{$key+1}}</td>
+                            @if ($item->status==1)
+                            <td><i class="zmdi zmdi-circle text-success"></i></td>
+                            @elseif ($item->status==0)
+                            <td><i class="zmdi zmdi-circle text-danger"></i></td>
+                            @endif
                             <td>{{$item->spoc_name}}</td>
                                 <td>{{$item->email}}</td>
                                 <td>{{$item->spoc_mobile}}</td>
                                 <td class="text-center">
-                                        <a class="btn-icon-mini" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
+                                    <a class="btn btn-primary btn-round" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
                                 </td>
                             @if ($item->status==1 && $item->complete_profile==1 && $item->pending_verify==0)
                             <td><span class="badge badge-success">Approved</span></td>
                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
                             @elseif($item->status==1 && $item->complete_profile==1 && $item->pending_verify==1)
                             <td><span class="badge badge-info">Pending</span></td>
                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                            <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
                             @elseif($item->status==1 && $item->complete_profile==0 && $item->pending_verify==null)
                             <td><span class="badge badge-warning">First Instance</span></td>
                             <td>&nbsp;</td>
-
+                            <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
+                            @elseif($item->status==0)
+                            <td><span class="badge badge-danger">Deactive</span></td>
+                            <td>&nbsp;</td>
+                            <td><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.active',['id'=>$item->id])}}" >Active</a></td>
+                            
                             @endif
+
                                 
                             </tr>
                             <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">
@@ -62,7 +75,7 @@
                                         <div class="modal-content">
                                             
                                             <div class="modal-body embed-responsive embed-responsive-16by9">
-                                                    <iframe class="embed-responsive-item" src="{{route('partner.files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen>
+                                                    <iframe class="embed-responsive-item" src="{{route('partner.files.partner-file',['action'=>'view','filename'=>basename($item->incorp_doc)])}}" allowfullscreen runat="server">
                                                 </iframe>
                                             </div>
                                             <div class="modal-footer">
