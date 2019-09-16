@@ -47,7 +47,7 @@
                                 <td>{{$item->email}}</td>
                                 <td>{{$item->spoc_mobile}}</td>
                                 <td class="text-center">
-                                    <a class="btn btn-primary btn-round" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
+                                    <a class="" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
                                 </td>
                             @if ($item->status==1 && $item->complete_profile==1 && $item->pending_verify==0)
                             <td><span class="badge badge-success">Approved</span></td>
