@@ -28,7 +28,6 @@
                                 <th>Spoc Name</th>
                                 <th>Spoc Email</th>
                                 <th>Spoc Mobile</th>
-                                <th style="width:20px;">Incorp. Document</th>
                                 <th>Status</th>
                                 <th>View</th>
                                 <th>Action</th>
@@ -46,20 +45,14 @@
                             <td>{{$item->spoc_name}}</td>
                                 <td>{{$item->email}}</td>
                                 <td>{{$item->spoc_mobile}}</td>
-                                <td class="text-center">
-                                    <a class="" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
-                                </td>
-                            @if ($item->status==1 && $item->complete_profile==1 && $item->pending_verify==0)
+                               
+                            @if ($item->status==1 && $item->pending_verify==0)
                             <td><span class="badge badge-success">Approved</span></td>
-                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
-                            <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
-                            @elseif($item->status==1 && $item->complete_profile==1 && $item->pending_verify==1)
+                            <td ><a class="badge bg-green margin-0" href="{{route('admin.tc.center.verify',['id'=>$item->id])}}" >View</a></td>
+                            <td><a class="badge bg-red margin-0" href="{{route('admin.tc.center.deactive',['id'=>$item->id])}}" >Deactive</a></td>
+                            @elseif($item->status==1 && $item->pending_verify==1)
                             <td><span class="badge badge-info">Pending</span></td>
                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
-                            <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
-                            @elseif($item->status==1 && $item->complete_profile==0 && $item->pending_verify==null)
-                            <td><span class="badge badge-warning">First Instance</span></td>
-                            <td>&nbsp;</td>
                             <td><a class="badge bg-red margin-0" href="{{route('admin.training_partner.partner.deactive',['id'=>$item->id])}}" >Deactive</a></td>
                             @elseif($item->status==0)
                             <td><span class="badge badge-danger">Deactive</span></td>
@@ -70,7 +63,7 @@
 
                                 
                             </tr>
-                            <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">
+                            {{-- <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             
@@ -84,7 +77,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             @endforeach
                            
                         </tbody>

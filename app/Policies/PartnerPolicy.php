@@ -30,7 +30,7 @@ class PartnerPolicy
 
     public function PartnerUpdatePending($user){
         
-        if ($this->PartnerUpdate($user)) {
+        if ($this->PartnerProfileVerified($user)) {
             $tp_id = $user->tp_id;
             $partner = DB::table('partner_update')->where('tp_id', '=', $tp_id)->latest('id')->first();
             if ($partner) {

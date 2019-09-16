@@ -10,7 +10,7 @@
 {{-- DATA Tables --}}
 
 <div class="row clearfix">
-    <div class="col-md-12 col-lg-8">
+    <div class="col-md-12 col-lg-9">
         <div class="card">
             <div class="header">
                 <h2><strong>Training Partners</strong> Record </h2>
@@ -103,7 +103,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 col-lg-4">
+    <div class="col-md-12 col-lg-3">
             <div class="card activities">
                     <div class="header">
                         <h2><strong>Training Partner Update</strong> Request</h2>
