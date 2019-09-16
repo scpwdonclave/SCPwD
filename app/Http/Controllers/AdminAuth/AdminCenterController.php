@@ -12,6 +12,11 @@ class AdminCenterController extends Controller
         $this->middleware('admin');
     }
 
+    protected function guard()
+    {
+        return Auth::guard('admin');
+    }
+
     public function centers(){
         return view('admin.centers.centers');
     }

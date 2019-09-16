@@ -52,7 +52,6 @@ class PartnerHomeController extends Controller
 
         if (!Auth::guard('partner')->user()->can('partner-profile-verified')) {
             $initial_year = (Carbon::now()->format('m') <= 3)?(Carbon::now()->format('Y')-1):Carbon::now()->format('Y');
-
             $partner = Auth::guard('partner')->user();
             $partner->org_name = $request->org_name;
             $partner->org_type = $request->org_type;
@@ -91,7 +90,9 @@ class PartnerHomeController extends Controller
             if ($request->addr_proof == 'GST Registration Certificate') {
                 $partner->gst_doc = $gstfilepath;
             } else {
-                $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);
+                if ($request->hasFile('gst_doc')) {
+                    $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);
+                }
             }
             
             if ($request->hasFile('ca1_doc')) {
