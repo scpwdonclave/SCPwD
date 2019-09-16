@@ -2,8 +2,6 @@
 
 Route::get('dashboard', function () { return redirect(route('admin.dashboard.dashboard')); });
 Route::get('dashboard/dashboard', 'AdminAuth\AdminHomeController@dashboard')->name('dashboard.dashboard');
-Route::get('dashboard/disabilities', 'AdminAuth\AdminHomeController@disability')->name('dashboard.disability');
-Route::post('dashboard/disabilities', 'AdminAuth\AdminHomeController@disability_action')->name('dashboard.disability_action');
 Route::get('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles')->name('dashboard.jobroles');
 Route::post('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles_action')->name('dashboard.jobroles');
 /* Admin Verify Partner */

@@ -11,11 +11,11 @@ use App\Mail\TPUpdateReject;
 use App\Mail\TPRejectMail;
 use App\Partner;
 use App\JobRole;
-use App\Disability;
+use App\Expository;
 use App\Sector;
 use App\Notification;
-use Mail;
 use Carbon\Carbon;
+use Mail;
 use DB;
 use Crypt;
 
@@ -45,39 +45,54 @@ class AdminHomeController extends Controller
         return view('admin.home');
     }
 
-    public function disability(){
-        $disabilities = Disability::all();
-        return view('admin.dashboard.disability')->with(compact('disabilities'));
-    }
+    // public function expository(){
+    //     $expositories = Expository::all();
+    //     return view('admin.dashboard.expository')->with(compact('expositories'));
+    // }
 
     
-    public function disability_action(Request $request){
-        if ($request->has('disability')) {
-            return $this->dispatchNow(new \App\Jobs\AddDisability($request));
-        } else if ($request->has('name')) {
-            return $this->dispatchNow(new \App\Jobs\UpdateDisability($request));
-        }
-        return abort(404);
-        // return response()->view('authentication.page404');
-    }
+    // public function expository_action(Request $request){
+    //     if ($request->has('expository')) {
+    //         return $this->dispatchNow(new \App\Jobs\AddExpository($request));
+    //     } else if ($request->has('name')) {
+    //         return $this->dispatchNow(new \App\Jobs\UpdateExpository($request));
+    //     }
+    //     return abort(404);
+    //     // return response()->view('authentication.page404');
+    // }
     
     public function job_roles(){
 
         $sectors = Sector::all();
-        $disabilities = Disability::where('status',1)->get();
+        $expositories = Expository::all();
         $jobroles = JobRole::all();
-        return view('admin.dashboard.jobroles')->with(compact('sectors','disabilities','jobroles'));
+        return view('admin.dashboard.jobroles')->with(compact('sectors','expositories','jobroles'));
     }
     
     public function job_roles_action(Request $request){
         if ($request->has('sector')) {
             return $this->dispatchNow(new \App\Jobs\AddSector($request));
-        } else if ($request->has('name')) {
-            return $this->dispatchNow(new \App\Jobs\RemoveSector($request));
         } else if ($request->has('sector_id')) {
             return $this->dispatchNow(new \App\Jobs\AddJobRole($request));
+        } else if ($request->has('expository')) {
+            return $this->dispatchNow(new \App\Jobs\AddExpository($request));
+        } else if ($request->has('section')) {
+            switch ($request->section) {
+                case 'Sector':
+                    return $this->dispatchNow(new \App\Jobs\RemoveSector($request));
+                break;
+                case 'Expository':
+                    return $this->dispatchNow(new \App\Jobs\RemoveExpository($request));
+                break;
+                case 'JobRole':
+                    return $this->dispatchNow(new \App\Jobs\RemoveJobRole($request));
+                break;    
+                default:
+                    return abort(404);
+                    break;
+            }
         }
-        dd($request);
+        return abort(404);
     }
 
 

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Disability extends Model
+class Expository extends Model
 {
-    public function jobrole(){
+    public function job_roles(){
         return $this->belongsToMany('App\JobRole')->withTimestamps();
     }
 }

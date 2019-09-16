@@ -36,7 +36,7 @@ class AddJobRole implements ShouldQueue
             'job_role' => 'required|unique:job_roles',
             'qp_code' => 'required|unique:job_roles',
             'nsqf_level' => 'required|numeric',
-            'role_disability' => 'array|required'
+            'role_expository' => 'array|required'
         ]);
         
         $jobrole = new JobRole;
@@ -46,7 +46,7 @@ class AddJobRole implements ShouldQueue
         $jobrole->nsqf_level = $request->nsqf_level;
         $jobrole->save();
 
-        $jobrole->disabilities()->sync($request->role_disability);
+        $jobrole->expositories()->sync($request->role_expository);
 
         alert()->success('Job Role <span style="color:blue">'.$jobrole->job_role.'</span> has been Created Successfully','New Entry')->html()->autoclose('4000');
         return redirect()->back();

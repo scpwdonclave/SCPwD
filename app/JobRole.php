@@ -10,7 +10,7 @@ class JobRole extends Model
         return $this->belongsTo('App\Sector');
     }
 
-    public function disabilities(){
-        return $this->belongsToMany('App\Disability')->withTimestamps();
+    public function expositories(){
+        return $this->belongsToMany('App\Expository')->withTimestamps();
     }
 }

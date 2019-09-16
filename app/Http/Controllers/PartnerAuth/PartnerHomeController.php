@@ -48,7 +48,7 @@ class PartnerHomeController extends Controller
     /* Submit Complete Registration Form Data */
     public function submitCompleteRegistrationForm(TPFormValidation $request){
 
-        $this->authorize('partner-profile-verified', Auth::guard('partner')->user());
+        // $this->authorize('partner-profile-verified', Auth::guard('partner')->user());
 
         if (!Auth::guard('partner')->user()->can('partner-profile-verified')) {
             $initial_year = (Carbon::now()->format('m') <= 3)?(Carbon::now()->format('Y')-1):Carbon::now()->format('Y');

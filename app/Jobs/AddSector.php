@@ -7,7 +7,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Sector;
 
@@ -32,18 +31,9 @@ class AddSector implements ShouldQueue
      */
     public function handle(Request $request)
     {
-
-        $valid = Validator::make($request->all(), [
-            'sector' => [
-                'required',
-                'unique:sectors'
-            ],
+        $request->validate([
+            'sector' => 'required|unique:sectors',
         ]);
-    
-        if ($valid->fails()) {
-            alert()->error('<span style="color:blue">'.$request->sector.'</span> Sector Already exists in Database','Dupicate Entry')->html()->autoclose('4000');
-            return redirect()->back();    
-        }
         
         $sector = new Sector;
         $sector->sector = $request->sector;
