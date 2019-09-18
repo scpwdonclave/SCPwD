@@ -30,6 +30,15 @@ class PartnerHomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('partner');
+    }
+
+    protected function guard()
+    {
+        return Auth::guard('partner');
+    }
 
     public function index() {
         return view('partner.home')->with('partner',Auth::guard('partner')->user());
@@ -188,7 +197,4 @@ class PartnerHomeController extends Controller
         }
     }
 
-    public function centers(){
-        return view('partner.centers')->with('partner',Auth::guard('partner')->user());
-    }
 }

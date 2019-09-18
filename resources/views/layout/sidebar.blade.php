@@ -62,6 +62,7 @@
                         <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-pin"></i><span>Training Centers</span></a>
                         <ul class="ml-menu">
                             <li class="{{ Request::is('partner/training_centers/centers') ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
+                            <li class="{{ Request::is('partner/training_centers/trainers') ? 'active' : null }}"><a href="{{route('partner.tc.trainers')}}">Trainers</a></li>
                         </ul>
                     </li>
                 @endif

@@ -73,7 +73,7 @@
         </li>
         <li>
             <div class="navbar-header">
-                <div class="row"><h6>SCPwD</h6>:A Management Portal for SCPwD</div>
+                <div class="row"><h6>SCPwD</h6>:Partner Management Portal</div>
             </div>
         </li>
         <li class="float-right">  

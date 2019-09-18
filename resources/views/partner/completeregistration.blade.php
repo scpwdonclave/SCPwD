@@ -4,16 +4,7 @@
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/animate-css/animate.css')}}">
-
-{{-- <link rel="stylesheet" href="{{asset('assets/css/monthpicker.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/spinner.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/slider_button.css')}}"> --}}
-{{-- <link href="{{asset('vendor/bootstrap-datetimepicker.css')}}" rel="stylesheet"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}"> --}}
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-steps/jquery.steps.css')}}">
-
-
-{{-- <link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css"> --}}
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
@@ -195,7 +186,7 @@
                                     <div class="panel-heading" role="tab" id="headingFour">
                                         <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Address of The Organization</a> </h4>
                                     </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
+                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
@@ -516,7 +507,7 @@
                 }
             });
 
-            if (true) {
+            if (tag) {
 
                     $('#'+div[0]).collapse('hide');
                     $('#'+div[0]).on('hidden.bs.collapse', function () {
@@ -547,7 +538,6 @@
 
                 } else {
                     showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
-                    console.log('Not Checked');
                 }
             }
         });

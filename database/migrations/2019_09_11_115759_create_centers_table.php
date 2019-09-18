@@ -14,8 +14,9 @@ class CreateCentersTable extends Migration
     {
         Schema::create('centers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('trp_id');
+            $table->unsignedBigInteger('tp_id');
             $table->string('tc_id')->unique()->nullable();
+            
             $table->string('spoc_name');
             $table->string('email')->unique();
             $table->string('spoc_mobile')->unique();
@@ -34,22 +35,23 @@ class CreateCentersTable extends Migration
             $table->string('addr_proof');
             $table->string('addr_doc');
 
-            $table->string('job_role');
+            // $table->string('job_role');
 
             $table->string('center_front_view')->nullable();
             $table->string('center_back_view')->nullable();
             $table->string('center_right_view')->nullable();
             $table->string('center_left_view')->nullable();
-            $table->string('class_room_1')->nullable();
-            $table->string('lab_room_1')->nullable();
-            $table->string('equipment_1')->nullable();
-            $table->string('washroom_1')->nullable();
+            // $table->string('class_room_1')->nullable();
+            // $table->string('lab_room_1')->nullable();
+            // $table->string('equipment_1')->nullable();
+            // $table->string('washroom_1')->nullable();
             $table->string('biomertic')->nullable();
             $table->string('drinking')->nullable();
             $table->string('saftey')->nullable();
             
             
             $table->boolean('status')->default(1);
+            $table->boolean('verified')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

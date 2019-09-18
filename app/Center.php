@@ -38,4 +38,8 @@ class Center extends Authenticatable
     {
         $this->notify(new CenterResetPassword($token));
     }
+
+    public function center_docs(){
+        return $this->hasMany('App\CenterDoc');
+    }
 }
