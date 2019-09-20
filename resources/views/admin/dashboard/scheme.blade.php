@@ -1,7 +1,8 @@
 @extends('layout.master')
-@section('title', 'Disabilities')
+@section('title', 'Schemes')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <style>
@@ -20,28 +21,26 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Disability</strong> Section</h2>                        
+                    <h2><strong>Scheme</strong> Section</h2>                        
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="disability_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Initials</th>
-                                    <th>Disability</th>
-                                    <th>Status</th>
+                                    <th>Scheme</th>
+                                    <th>Year</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($disabilities as $key=>$disability)
+                                @foreach ($schemes as $key=>$scheme)
                                 <tr style="height:5px !important">
                                 <td>{{$key+1}}</td>
-                                <td>{{$disability->initials}}</td>
-                                    <td>{{$disability->disability}}</td>
-                                    <td class="text-center"><span class="badge badge-{{($disability->status)?'success':'danger'}}">{{($disability->status)?'Active':'Inactive'}}</span></td>
-                                    <td class="text-center"> <form id="updateform_{{$disability->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$disability->id.','.$disability->disability}}"><button type="submit" class="btn btn-round btn-{{($disability->status)?'danger':'primary'}} waves-effect">{{($disability->status)?'Disable':'Enable'}}</button></form></td>
+                                <td>{{$scheme->scheme}}</td>
+                                <td>{{$scheme->year}}</td>
+                                <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-round btn-primary btn-sm waves-effect"><i class="zmdi zmdi-edit"></i></button></form></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -53,18 +52,18 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Add</strong> Disability</h2>                        
+                    <h2><strong>Add</strong> Scheme</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_disability" action="{{route('admin.dashboard.disability_action')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="disability">Disability *</label>
-                                <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="Disability Name" value="{{ old('disability') }}" name="disability" required>
-                                    @if ($errors->has('disability'))
-                                        <span style="color:red">{{$errors->first('disability')}}</span>
+                                <label for="scheme">Scheme *</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Scheme Name" value="{{ old('scheme') }}" name="scheme" required>
+                                    @if ($errors->has('scheme'))
+                                        <span style="color:red">{{$errors->first('scheme')}}</span>
                                     @endif
                                 </div>
                             </div>
@@ -72,12 +71,10 @@
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="initial">Initials *</label>
-                                <div class="form-group form-float year_picker">
-                                    <input type="text" class="form-control" placeholder="Disability Initials" value="{{ old('initials') }}" name="initials" required>
-                                    @if ($errors->has('initials'))
-                                        <span style="color:red">{{$errors->first('initials')}}</span>
-                                    @endif
+                                <label for="year">Year *</label>
+                                <div class="form-group form-float">
+                                    <select id="year" class="form-control show-tick" data-live-search="true" name="year" data-dropup-auto='false' required>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -94,25 +91,25 @@
 @section('page-script')
 
 <script>
-    $('[name=disability]').on('change', function(e){
-        var matches = e.currentTarget.value.match(/\b(\w)/g);
-        $('[name=initials]').val(matches.join('').toUpperCase());        
-    });
-
-    $('form[id^=updateform_]').submit(function(e){
+    $('form[id^=editform_]').submit(function(e){
         e.preventDefault();
         var data = e.currentTarget.data.value.split(',');
         var _token = e.currentTarget._token.value;
-        var dataString = {_token:_token, id:data[0], name:data[1]};
         var confirmatonText = document.createElement("div");
-        confirmatonText.innerHTML = "You are about to Update the Status of <br><span style='font-weight:bold; color:blue;'>"+ data[1] +"</span>";
+        confirmatonText.innerHTML = "You are about to Remove <br><span style='font-weight:bold; color:blue;'>"+ data[1] +"</span><br>Scheme";
         swal({
-            title: "Are you Sure ?",
-            content: confirmatonText,
+            text: "Please Provide Updated Scheme Name",
+            content: {
+                element: "input",
+                attributes: {
+                    value: data[1],
+                    type: "text",
+                },
+            },
             icon: "info",
             buttons: true,
             buttons: {
-                    cancel: "Not Now",
+                    cancel: "Cencel",
                     confirm: {
                         text: "Confirm Update",
                         closeModal: false
@@ -120,10 +117,11 @@
                 },
             closeModal: false,
             closeOnEsc: false,
-        }).then(function(isConfirm){
-            if (isConfirm) {
+        }).then(function(val){
+            var dataString = {_token:_token, id:data[0], name:data[1], value:val};
+            if (val) {
                 $.ajax({
-                    url: "{{ route('admin.dashboard.disability_action') }}",
+                    url: "{{ route('admin.dashboard.scheme_action') }}",
                     method: "POST",
                     data: dataString,
                     success: function(data){
@@ -147,9 +145,22 @@
         
     });
 
+    $('#scheme_table').attr('data-page-length',5);
 
-    
-    $('#disability_table').attr('data-page-length',5);
+
+    /* Add Finantial Year Items to Scheme Year */
+    $(function(){
+        var now = new Date();
+        var value;
+        var initial_year = (now.getMonth() > 2) ? now.getFullYear() : (now.getFullYear()-1);
+        for (let i = 2016; i <= (initial_year+1); i++) {
+            value = i+'-'+((i+1)%100);
+            $('#year').append('<option value="' + value + '">' + value + '</option>');
+            $('#year').selectpicker('refresh');
+        }
+    });
+    /* End Add Finantial Year Items to Scheme Year */
+
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

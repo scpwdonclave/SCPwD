@@ -49,6 +49,6 @@ class RemoveSector implements ShouldQueue
         
         } else {
             return response()->json(array('type' => 'error', 'message' => "<span style='font-weight:bold;color:red'>$request->name</span> Sector is not Found"),200);
-        }      
+        }
     }
 }

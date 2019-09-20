@@ -4,6 +4,8 @@ Route::get('dashboard', function () { return redirect(route('admin.dashboard.das
 Route::get('dashboard/dashboard', 'AdminAuth\AdminHomeController@dashboard')->name('dashboard.dashboard');
 Route::get('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles')->name('dashboard.jobroles');
 Route::post('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles_action')->name('dashboard.jobroles');
+Route::get('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme')->name('dashboard.scheme');
+Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->name('dashboard.scheme_action');
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });
 Route::get('training_partners/partners', 'AdminAuth\AdminPartnerController@partners')->name('tp.partners');

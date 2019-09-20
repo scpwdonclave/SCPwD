@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\JobRole;
 use App\Expository;
 use App\Sector;
+use App\Scheme;
 
 class AdminHomeController extends Controller
 {
@@ -66,6 +67,20 @@ class AdminHomeController extends Controller
             }
         }
         return abort(404);
+    }
+
+
+    public function scheme(){
+        $schemes = Scheme::all();
+        return view('admin.dashboard.scheme')->with(compact('schemes'));
+    }
+
+    public function scheme_action(Request $request){
+        if ($request->has('scheme')) {
+            return $this->dispatchNow(new \App\Jobs\AddScheme($request));
+        } else if ($request->has('name')) {
+            return $this->dispatchNow(new \App\Jobs\UpdateScheme($request));
+        }
     }
 
 }
