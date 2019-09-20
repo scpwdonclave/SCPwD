@@ -31,8 +31,13 @@
                     url: "{{route('api.dismiss')}}",
                     data: {'dismiss':true,id:id},
                     success: function(data) {
-                        $('#notification_'+id).remove();
-                        countlevel();
+                        if (data.status === 'all') {
+                            $('li[id^=notification_]').remove();
+                            countlevel();
+                        } else {
+                            $('#notification_'+id).remove();
+                            countlevel();
+                        }
                     }
                 });
             }

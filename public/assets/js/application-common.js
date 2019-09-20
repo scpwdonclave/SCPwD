@@ -6,7 +6,6 @@ function countlevel() {
     $("#label-count").html("");
     $("#notification_header").remove();
   }
-  // console.log($(".countli").length);
 }
 
 $(function() {

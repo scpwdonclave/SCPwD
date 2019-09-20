@@ -52,7 +52,7 @@
                         }
                         @endphp
                         @if (count($notifications))
-                        <li id="notification_header" class="header">Notifcations</li>
+                        <li id="notification_header" class="header d-flex justify-content-between">Notifcations<span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">DISMISS ALL</span></li>
                             <ul class="menu list-unstyled">
                                 @foreach ($notifications as $notification)
                                     <li id="notification_{{$notification->id}}" class="countli">
