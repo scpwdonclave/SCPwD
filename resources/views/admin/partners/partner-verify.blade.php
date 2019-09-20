@@ -46,6 +46,14 @@
                                             <p>{{$partnerData->spoc_mobile}}</p>
                                             <hr>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Incorp. Document</small>
+                                        <p>Document
+                                            &nbsp;&nbsp;
+                                        <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($partnerData->incorp_doc)])}}" download="{{basename($partnerData->incorp_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                        </p>
+                                        <hr>
+                                </div>
                                   
                                 </div>
                             </div>

@@ -13,6 +13,8 @@ use App\Mail\TPRejectMail;
 use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
+use App\PartnerJobrole;
+use App\Sector;
 use Crypt;
 use Mail;
 use DB;
@@ -21,7 +23,7 @@ class AdminPartnerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware(['admin','prevent-back-history']);
     }
 
     protected function guard()
@@ -31,21 +33,26 @@ class AdminPartnerController extends Controller
 
 
     public function partners(){
-        $data=Partner::all();
-        $tp_updt_req=DB::table('partner_update as p_updt')
-                        ->join('partners as p','p.tp_id','=','p_updt.tp_id')
-                        ->select('p_updt.id as id','p_updt.tp_id as tp_id','p_updt.spoc_name as uname','p_updt.email as uemail','p_updt.spoc_mobile as umobile',
-                        'p.spoc_name as pname','p.email as pemail','p.spoc_mobile as pmobile')
-                        ->where('p_updt.action',0)->get();
-        return view('admin.partners.partners')->with(compact('data','tp_updt_req'));
+        $data=Partner::where([['pending_verify','=',0]])->get();
+       
+        return view('admin.partners.partners')->with(compact('data'));
     }
 
-    public function partnerDeactive($id){
-        $partnerData=Partner::findOrFail($id);
+    public function pendingpartners(){
+        $data=Partner::where('pending_verify','=',1)
+        ->orWhere('pending_verify','=',null)
+        ->get();
+
+        return view('admin.partners.pending-partners')->with(compact('data'));
+    }
+
+    public function partnerDeactive(Request $request){
+        $partnerData=Partner::findOrFail($request->id);
         $partnerData->status=0;
         $partnerData->save();
-        alert()->success('Partner Deactivated', 'Done')->autoclose(2000);
-        return Redirect()->back();
+        return response()->json(['status' => 'done'],200);
+        //alert()->success('Partner Deactivated', 'Done')->autoclose(2000);
+        //return Redirect()->back();
     }
     public function partnerActive($id){
         $partnerData=Partner::findOrFail($id);
@@ -305,9 +312,9 @@ class AdminPartnerController extends Controller
             }
             $partner->save();
 
-             /* For Admin */
+             /* For partner */
              $notification = new Notification;
-             $notification->rel_id = 1;
+             $notification->rel_id = $partner->id;
              $notification->rel_with = 'partner';
              $notification->title = 'Partner Update';
              $notification->message = "<span style='color:blue;'>".$partner->spoc_name."</span> your profile has been Updated";
@@ -317,5 +324,75 @@ class AdminPartnerController extends Controller
              return Redirect()->back();
 
 
+    }
+
+    public function partnerTarget($id){
+        // $data=DB::table('orders')
+        // ->join('customers','orders.customer_id','=','customers.cust_id')
+        // ->select('orders.id','orders.order_date','orders.order_no','orders.order_date','orders.total_amount','customers.customer_display_name')
+        // ->get();
+
+
+
+        $partner_id = Crypt::decrypt($id);
+       $partner= Partner::findOrFail($partner_id);
+       $tp_job=DB::table('partner_jobroles AS p')
+        ->join('sectors AS s','p.sector_id','=','s.id')
+        ->join('job_roles AS r','p.jobrole_id','=','r.id')
+        ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role')
+        ->where('p.tp_id',$partner->tp_id)->get();
+        $sectors=Sector::all();
+        
+        return view('admin.partners.partner-target')->with(compact('sectors','partner','tp_job'));
+    }
+
+    public function fetchJobrole(Request $request){
+
+        $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get();
+        return response()->json(['jobroles' => $jobroles],200); 
+    }
+
+    public function jobTarget(Request $request){
+        $data=PartnerJobrole::where([['tp_id','=',$request->tp_id],
+                                    ['scheme_id','=',$request->scheme2],
+                                    ['sector_id','=',$request->sector2],
+                                    ['jobrole_id','=',$request->jobrole2]])->get();
+        if(count($data)>0){
+            alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
+        return Redirect()->back();
+        }else{
+        $partnerjob = new PartnerJobrole;
+        $partnerjob->tp_id=$request->tp_id;
+        $partnerjob->scheme_id=$request->scheme2;
+        $partnerjob->sector_id=$request->sector2;
+        $partnerjob->jobrole_id=$request->jobrole2;
+        $partnerjob->target=$request->target;
+        $partnerjob->save();
+
+        $notification = new Notification;
+        $notification->rel_id =$request->tpid;
+        $notification->rel_with = 'partner';
+        $notification->title = 'Partner Job Target';
+        $notification->message = "Job target has been Updated";
+        $notification->save();
+
+        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Assign</span>", 'Job Done')->html()->autoclose(2000);
+        return Redirect()->back();
+        }
+    }
+
+    public function jobroleDeactive(Request $request){
+        $partnerJob=PartnerJobrole::findOrFail($request->id);
+        $partnerJob->status=0;
+        $partnerJob->save();
+        return response()->json(['status' => 'done'],200);
+    }
+
+    public function jobroleActive($id){
+        $partnerJob=PartnerJobrole::findOrFail($id);
+        $partnerJob->status=1;
+        $partnerJob->save();
+        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
+        return Redirect()->back();
     }
 }
