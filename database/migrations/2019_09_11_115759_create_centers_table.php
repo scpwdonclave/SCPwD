@@ -50,8 +50,7 @@ class CreateCentersTable extends Migration
             $table->string('saftey')->nullable();
             
             
-            $table->boolean('status')->default(1);
-            $table->boolean('verified')->default(0);
+            $table->boolean('status')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -48,7 +48,7 @@ class PartnerCenterController extends Controller
             'partner'  => Auth::guard('partner')->user(),
             'parliaments'   => DB::table('parliament')->get(),
             'states'   => DB::table('state_district')->get(),
-            'centers'   => Center::where('tp_id', Auth::guard('partner')->user()->id)->get()
+            // 'centers'   => Center::where('tp_id', Auth::guard('partner')->user()->id)->get()
         ];
         return view('partner.centers.addcenter')->with($data);
     }

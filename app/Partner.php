@@ -38,4 +38,8 @@ class Partner extends Authenticatable
     {
         $this->notify(new PartnerResetPassword($token));
     }
+
+    public function partner_jobroles(){
+        return $this->hasMany('App\PartnerJobrole', 'tp_id');
+    }
 }

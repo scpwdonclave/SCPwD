@@ -178,7 +178,7 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="panel panel-primary">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingThree">
                                     <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Job Role Section</a> </h4>
                                 </div>
@@ -191,7 +191,7 @@
                                                 <button type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-4 text-center">
-                                                <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add Experience</button>
+                                                <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -199,13 +199,13 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
 
                             <div class="panel panel-primary">
-                                <div class="panel-heading" role="tab" id="headingThree">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Upload Section</a> </h4>
+                                <div class="panel-heading" role="tab" id="headingFour">
+                                    <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Upload Section</a> </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
@@ -238,32 +238,38 @@
                                             </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-6">
                                                 <label>Class Room(s)</label>
                                                 <div class="form-group form-float">
                                                     <input id="class" type="file" class="form-control" name="class_room[]" multiple>
+                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
                                                     <span id="class_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-6">
                                                 <label>Lab Room(s)</label>
                                                 <div class="form-group form-float">
                                                     <input id="lab" type="file" class="form-control" name="lab_room[]" multiple>
+                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
                                                     <span id="lab_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
+                                        </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-6">
                                                 <label>Equipment Room(s)</label>
                                                 <div class="form-group form-float">
                                                     <input id="equipment" type="file" class="form-control" name="equipment_room[]" multiple>
+                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
                                                     <span id="equipment_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-6">
                                                 <label>Washroom(s)</label>
                                                 <div class="form-group form-float">
                                                     <input id="wash" type="file" class="form-control" name="wash_room[]" multiple>
-                                                    <span id="wash_error" style="color:red;"></span>                                                            
+                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
+                                                    <span id="wash_error" style="color:red;"></span>                                                          
                                                 </div>
                                             </div>
                                         </div>
@@ -292,7 +298,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <button id="last_prev_btn" type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                                <button id="last_prev_btn" type="button" onclick="validatedata('collapseFour,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group text-center">
@@ -473,6 +479,15 @@
 
 
 
+/* Fetch SelectPicker Data */
+
+    function fetchdata(){
+        console.log({{Auth::guard('partner')->user()->id}});
+        
+    }
+
+/* End Fetch SelectPicker Data */
+
 
 
 
@@ -480,20 +495,22 @@
 
 
     /* Repeatable Section for JobRole */
-    // $(function() {
-    //         $("form .repeatable-container").repeatable({
-    //         template: "#jobroleform",
-    //         max: 5,
-    //         afterAdd: function(id){
-    //             var temp = id[0].id.split('_');
-    //             var last = temp[temp.length - 1];
-    //             console.log(id);
-    //             $('.jobrole').selectpicker();
-    //             // filevalidate();
-    //         }
-    //         });
+    $(function() {
+            $("form .repeatable-container").repeatable({
+            template: "#jobroleform",
+            max: 5,
+            afterAdd: function(id){
+                var temp = id[0].id.split('_');
+                var last = temp[temp.length - 1];
+                // console.log(id);
+                $('.jobrole').selectpicker();
+                /* Fetch SelectPicker Data */
+                    fetchdata();
+                /* End Fetch SelectPicker Data */
+            }
+            });
             
-    //     });
+        });
     /* End Repeatable Section for JobRole */
 
 </script>
@@ -501,20 +518,15 @@
 
 {{-- ADD EMPLOYEE EXPERIENCE FUNCTION BODY (DYNAMIC) --}}
 
-{{-- <script type="text/template" id="jobroleform">
+<script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
             <div class="col-sm-5">
                 <label for="jobrole[{?}]">Job Roles - Sectors *</label>
                 <div class="form-group form-float">
                     <select class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
-                        <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
                         <option value="Incorportaion Certificate">Incorportaion Certificate</option>
-                        <option value="GST Registration Certificate">GST Registration Certificate</option>
-                        <option value="Telephone Bill (BSNL/MTNL)">Telephone Bill (BSNL/MTNL)</option>
-                        <option value="Electricity Bill">Electricity Bill</option>
-                        <option value="Bank Statement">Bank Statement</option>
-                        <option value="Incometax Certificate">Incometax Certificate</option>
+                        
                     </select>
                 </div>
             </div>
@@ -529,7 +541,7 @@
             <button type="button" class="btn btn-danger delete"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>            
         </div>
     </div>
-</script> --}}
+</script>
 
 {{-- ADD Employee Experience Function Call --}}
 
@@ -537,7 +549,7 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
-{{-- <script src="{{asset('assets/js/jquery.repeatable.js')}}"></script> --}}
+<script src="{{asset('assets/js/jquery.repeatable.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
