@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Partner;
 use App\PartnerJobrole;
 use App\Sector;
+use App\Scheme;
 use Crypt;
 use Mail;
 use DB;
@@ -339,11 +340,15 @@ class AdminPartnerController extends Controller
        $tp_job=DB::table('partner_jobroles AS p')
         ->join('sectors AS s','p.sector_id','=','s.id')
         ->join('job_roles AS r','p.jobrole_id','=','r.id')
-        ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role')
+        ->join('schemes AS sc','p.scheme_id','=','sc.id')
+        ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role','sc.scheme')
         ->where('p.tp_id',$partner->tp_id)->get();
         $sectors=Sector::all();
+        $schemes=Scheme::all();
+        // $selected_job=DB::table('job_roles')
+        //                 ->where('sector_id',$partner->tp_id)
         
-        return view('admin.partners.partner-target')->with(compact('sectors','partner','tp_job'));
+        return view('admin.partners.partner-target')->with(compact('sectors','partner','tp_job','schemes'));
     }
 
     public function fetchJobrole(Request $request){
@@ -352,6 +357,15 @@ class AdminPartnerController extends Controller
         return response()->json(['jobroles' => $jobroles],200); 
     }
 
+    public function fetchPrvData(Request $request){
+
+        $data=DB::table('partner_jobroles')->where('id','=',$request->e_id)->first();
+        $job=DB::table('job_roles')->where('sector_id','=',$data->sector_id)->get();
+        $sectors=Sector::all();
+        $schemes=Scheme::all();
+        return response()->json(['sectors' => $sectors,'data'=>$data,'job'=>$job,'schemes'=>$schemes],200); 
+    }
+    //Job Submit
     public function jobTarget(Request $request){
         $data=PartnerJobrole::where([['tp_id','=',$request->tp_id],
                                     ['scheme_id','=',$request->scheme2],
@@ -377,6 +391,36 @@ class AdminPartnerController extends Controller
         $notification->save();
 
         alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Assign</span>", 'Job Done')->html()->autoclose(2000);
+        return Redirect()->back();
+        }
+    }
+    public function jobTargetUpdate(Request $request){
+       
+        $data=PartnerJobrole::where([
+                                    ['scheme_id','=',$request->scheme2_u],
+                                    ['sector_id','=',$request->sector2_u],
+                                    ['jobrole_id','=',$request->jobrole2_u],
+                                    ['target','=',$request->target_u]])->get();
+        if(count($data)>0){
+            alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
+        return Redirect()->back();
+        }else{
+        $partnerjob =PartnerJobrole::findOrFail($request->p_job_id) ;
+       
+        $partnerjob->scheme_id=$request->scheme2_u;
+        $partnerjob->sector_id=$request->sector2_u;
+        $partnerjob->jobrole_id=$request->jobrole2_u;
+        $partnerjob->target=$request->target_u;
+        $partnerjob->save();
+
+        $notification = new Notification;
+        $notification->rel_id =$request->tpid2;
+        $notification->rel_with = 'partner';
+        $notification->title = 'Partner Job Target';
+        $notification->message = "Job target has been Updated";
+        $notification->save();
+
+        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(2000);
         return Redirect()->back();
         }
     }

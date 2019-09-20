@@ -21,7 +21,9 @@ Route::get('training_partners/partners-active/{id}', 'AdminAuth\AdminPartnerCont
 Route::post('training_partners/partners-comp-details-update', 'AdminAuth\AdminPartnerController@partnerDetailsUpdate')->name('training_partner.comp-details-update');
 Route::get('training_partners/partner-target/{id}', 'AdminAuth\AdminPartnerController@partnerTarget')->name('training_partner.partner.target');
 Route::post('training_partners/fetch-jobrole', 'AdminAuth\AdminPartnerController@fetchJobrole')->name('tp.fetch-jobrole');
+Route::post('training_partners/fetch-prvdata', 'AdminAuth\AdminPartnerController@fetchPrvData')->name('tp.fetch-prvdata');
 Route::post('training_partners/partner-jobtarget', 'AdminAuth\AdminPartnerController@jobTarget')->name('tp.partner.jobtarget');
+Route::post('training_partners/partner-jobtarget-update', 'AdminAuth\AdminPartnerController@jobTargetUpdate')->name('tp.partner.jobtarget.update');
 Route::post('training_partners/partner-jobrole-Deactive', 'AdminAuth\AdminPartnerController@jobroleDeactive')->name('tp.partner.jobrole.deactive');
 Route::get('training_partners/partner-jobrole-Active/{id}', 'AdminAuth\AdminPartnerController@jobroleActive')->name('tp.partner.jobrole.active');
 
