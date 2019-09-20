@@ -62,6 +62,10 @@ class TCFormValiadtion extends FormRequest
             /* End File Pickers */
         ];
 
-        return $rules;
+        if ($this->attributes->has('checkredundancy')) {
+            return true;
+        } else {
+            return $rules;
+        }
     }
 }

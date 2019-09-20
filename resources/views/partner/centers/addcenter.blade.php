@@ -48,15 +48,16 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="spoc_mobile">SPOC Mobile *</label>
+                                                <label for="mobile">SPOC Mobile *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('spoc_mobile') }}" name="spoc_mobile" required>
+                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                    <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">SPOC Email *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" onchange="checkmail('email')" name="email" required>
+                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
@@ -210,28 +211,28 @@
                                             <div class="col-sm-3">
                                                 <label>Center Front View</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="center_front_view">
+                                                    <input id="center_front_view" type="file" class="form-control" name="center_front_view">
                                                     <span id="center_front_view_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Center Back View</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="center_back_view">
+                                                    <input id="center_back_view" type="file" class="form-control" name="center_back_view">
                                                     <span id="center_back_view_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Center Right View</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="center_right_view">
+                                                    <input id="center_right_view" type="file" class="form-control" name="center_right_view">
                                                     <span id="center_right_view_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Center Left View</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="center_left_view">
+                                                    <input id="center_left_view" type="file" class="form-control" name="center_left_view">
                                                     <span id="center_left_view_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
@@ -240,28 +241,28 @@
                                             <div class="col-sm-3">
                                                 <label>Class Room(s)</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="class_room[]" multiple>
+                                                    <input id="class" type="file" class="form-control" name="class_room[]" multiple>
                                                     <span id="class_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Lab Room(s)</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="lab_room[]" multiple>
+                                                    <input id="lab" type="file" class="form-control" name="lab_room[]" multiple>
                                                     <span id="lab_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Equipment Room(s)</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="equipment_room[]" multiple>
+                                                    <input id="equipment" type="file" class="form-control" name="equipment_room[]" multiple>
                                                     <span id="equipment_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Washroom(s)</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="wash_room[]" multiple>
+                                                    <input id="wash" type="file" class="form-control" name="wash_room[]" multiple>
                                                     <span id="wash_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
@@ -270,22 +271,22 @@
                                             <div class="col-sm-3">
                                                 <label>Biometric System</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="bio_room">
-                                                    <span id="class_error" style="color:red;"></span>                                                            
+                                                    <input id="bio" type="file" class="form-control" name="bio_room">
+                                                    <span id="bio_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Drinking Facility</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="drink_room">
-                                                    <span id="lab_error" style="color:red;"></span>                                                            
+                                                    <input id="drink" type="file" class="form-control" name="drink_room">
+                                                    <span id="drink_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Saftey</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" class="form-control" name="saftey">
-                                                    <span id="equipment_error" style="color:red;"></span>                                                            
+                                                    <input id="safety" type="file" class="form-control" name="saftey">
+                                                    <span id="safety_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                         </div>
@@ -335,9 +336,13 @@
 
     /* Duplicate Email Checking */
     var dup_email_tag = true;
-    function checkmail(val){
+    var dup_mobile_tag = true;
+    function checkduplicacy(val){
+        var _token = $('[name=_token]').val();
+        // console.log('Token :'+ _token);
+         
         let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val};
+        let dataString = { checkredundancy : value, section: val, _token: _token};
         $.ajax({
             url: "{{ route('partner.tc.addcenter') }}",
             method: "POST",
@@ -345,14 +350,23 @@
             success: function(data){
                 if (data.success) {
                     $('#'+val+'_error').html('');
-                    dup_email_tag = true;                        
+                    if (val == 'email') {
+                        dup_email_tag = true;
+                    } else {
+                        dup_mobile_tag = true;
+                    } 
                 } else {
                     $('#'+val+'_error').html(val+' already exists');
-                    dup_email_tag = false;                        
+                    if (val == 'email') {
+                        dup_email_tag = false;                        
+                    } else {
+                        dup_mobile_tag = false;
+                    } 
                 }
             },
             error:function(data){
                 $('#'+val+'_error').html(val+' already exists');
+                dup_email_tag = false;
                 dup_email_tag = false;
             } 
         });
@@ -407,6 +421,58 @@
         });
         
     /* End Making Sure That the Terms & Condition is Accepted */
+
+
+
+        $(function(){
+
+            var _URL = window.URL || window.webkitURL;
+                $("[type='file']").change(function(e) {
+
+                    var image, file;
+
+                    // var l = this.files.length;
+                    // if (l>6 || l<2) {
+                    // alert('You Have To select atleast 2 images ( max limit is 6)');
+                    // $("#file").val('');
+                    // }
+
+                for (var i = this.files.length - 1; i >= 0; i--) {
+
+                    if ((file = this.files[i])) {
+
+                        size = file.size/1024/1024;
+                        size = Math.round(size * 100) / 100
+
+                        image = new Image();
+                        var fileType = file["type"];
+                        var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
+                        if ($.inArray(fileType, ValidImageTypes) < 0) {
+                            // invalid file type code goes here.
+                            $("#"+e.currentTarget.id).val('');
+                            $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
+                        } else {
+                            $("#" + e.currentTarget.id + "_error").text('');
+                        }
+
+                        image.onload = function() {
+                            if (size > 1.5) {
+                                $("#"+e.currentTarget.id).val('');
+                                $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
+                            } else {
+                                $("#" + e.currentTarget.id + "_error").text('');
+                            }
+                        };
+
+                        image.src = _URL.createObjectURL(file);
+                        }
+                    }
+
+                });
+            });
+
+
+
 
 
 
@@ -512,7 +578,7 @@ $(function () {
 jQuery("#form_center").validate({
         rules: {
         pin: { pin: true },
-        spoc_mobile: { mobile: true },
+        mobile: { mobile: true },
         "[type=email]": { email: true }
         }
     });

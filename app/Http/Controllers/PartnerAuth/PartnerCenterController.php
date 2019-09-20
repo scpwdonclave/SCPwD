@@ -54,8 +54,59 @@ class PartnerCenterController extends Controller
     }
 
     public function submit_addcenter_form(Request $request){
-        dd($request);
+        if ($request->has('checkredundancy')) {
+            if (Center::where($request->section,$request->checkredundancy)->first()) {
+                return response()->json(['success' => false], 200);
+            } else {
+                return response()->json(['success' => true], 200);
+            }
+        } else {
+            dd($request);
+            $data=DB::table('centers')
+            ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
+            ->where("tc_id", "LIKE", "TC%")->get();
+            $year = date('Y');
+            if (count($data) > 0) {
+                $priceprod = array();
+                    foreach ($data as $key=>$data) {
+                        $priceprod[$key]=$data->tc_id;
+                    }
+                    $lastid= max($priceprod);
+                
+                    $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001';
+                //dd($new_TCid);
+            } else {
+                $new_tcid = 'TC'.$year.'000001';
+            }
+        
+
+            $center = new Center;
+            $center->tp_id = Auth::guard('partner')->user()->id;
+            $center->tc_id = $new_tcid;
+            $center->spoc_name = $request->spoc_name;
+            $center->email = $requesemailame;
+            $center->mobile = $request->mobile;
+            $center->center_name = $request->center_name;
+            $center->center_address = $request->center_address;
+            $center->landmark = $request->landmark;
+            $center->state_district = $request->state_district;
+            $center->city = $request->city;
+            $center->block = $request->block;
+            $center->parliament = $request->parliament;
+            $center->pin = $request->pin;
+            $center->addr_proof = $request->addr_proof;
+            $center->addr_doc = $request->addr_doc;
+            $center->center_front_view = $request->center_front_view;
+            $center->center_back_view = $request->center_back_view;
+            $center->center_right_view = $request->center_right_view;
+            $center->center_left_view = $request->center_left_view;
+            $center->biometric = $request->bio_room;
+            $center->drinking = $request->drink_room;
+            $center->safety = $request->safety_room;
+
+
+
+        }
+
     }
-
-
 }

@@ -19,7 +19,7 @@ class CreateCentersTable extends Migration
             
             $table->string('spoc_name');
             $table->string('email')->unique();
-            $table->string('spoc_mobile')->unique();
+            $table->string('mobile')->unique();
             $table->string('password')->nullable();
 
             $table->string('center_name');
@@ -45,7 +45,7 @@ class CreateCentersTable extends Migration
             // $table->string('lab_room_1')->nullable();
             // $table->string('equipment_1')->nullable();
             // $table->string('washroom_1')->nullable();
-            $table->string('biomertic')->nullable();
+            $table->string('biometric')->nullable();
             $table->string('drinking')->nullable();
             $table->string('saftey')->nullable();
             
