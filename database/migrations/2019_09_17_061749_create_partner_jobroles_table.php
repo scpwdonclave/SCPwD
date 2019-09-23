@@ -20,7 +20,7 @@ class CreatePartnerJobrolesTable extends Migration
             $table->unsignedBigInteger('sector_id');
             $table->unsignedBigInteger('jobrole_id');
             $table->string('target');
-            $table->boolean('assigned')->default(0);
+            $table->string('assigned')->default(0);
             $table->boolean('status')->default(1);
             $table->timestamps();
         });
