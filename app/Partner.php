@@ -42,4 +42,8 @@ class Partner extends Authenticatable
     public function partner_jobroles(){
         return $this->hasMany('App\PartnerJobrole', 'tp_id');
     }
+    
+    public function centers(){
+        return $this->hasMany('App\Center', 'tp_id');
+    }
 }
