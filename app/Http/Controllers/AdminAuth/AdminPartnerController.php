@@ -376,7 +376,7 @@ class AdminPartnerController extends Controller
         return Redirect()->back();
         }else{
         $partnerjob = new PartnerJobrole;
-        $partnerjob->tp_id=$request->tp_id;
+        $partnerjob->tp_id=$request->tpid;
         $partnerjob->scheme_id=$request->scheme2;
         $partnerjob->sector_id=$request->sector2;
         $partnerjob->jobrole_id=$request->jobrole2;

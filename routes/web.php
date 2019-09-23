@@ -194,3 +194,4 @@ Route::group(['prefix' => 'center'], function () {
 
 /* File Access */
 Route::get('partner/files/{action}/{filename}', 'PartnerAuth\FileController@partnerFiles')->where('action', 'view|download')->name('partner.files.partner-file');
+Route::get('center/files/{action}/{filename}', 'CenterAuth\FileController@centerFiles')->where('action', 'view|download')->name('center.files.center-file');

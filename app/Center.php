@@ -42,4 +42,8 @@ class Center extends Authenticatable
     public function center_docs(){
         return $this->hasMany('App\CenterDoc');
     }
+
+    public function partner(){
+        return $this->belongsTo('App\Partner', 'tp_id');
+    }
 }
