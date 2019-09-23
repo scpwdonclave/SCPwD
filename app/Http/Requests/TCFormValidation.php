@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TCFormValiadtion extends FormRequest
+class TCFormValidation extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,20 +26,29 @@ class TCFormValiadtion extends FormRequest
         $rules = [
             'spoc_name' => 'required',
             'email' => 'required|email|unique:centers',
-            'spoc_mobile' => 'required|regex:/[0-9]{10}/|unique:partners',
+            'mobile' => 'required|regex:/[0-9]{10}/|unique:centers',
 
             /* Address of the Organization */
-            'org_name' => 'nullable',
-            'org_address' => 'required',
+            'center_name' => 'nullable',
+            'center_address' => 'required',
             'landmark' => 'required',
             'addr_proof' => 'required',
             'addr_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             'city' => 'required',
             'block' => 'required',
             'pin' => 'required|numeric|digits:6',
-            'state_district' => 'required',
+            'state_district' => 'required|numeric',
             'parliament' => 'required',
             /* End Address of the Organization */
+
+            /* JOB Roles */
+            "jobrole" => 'required|array',
+            'jobrole.*' => 'required|distinct',
+
+            "target" => 'required|array',
+            'target.*' => 'required|numeric',
+
+            /* End JOB Roles */
 
             /* File Pickers */
             'addr_doc' => 'required|mimes:jpeg,jpg,png,pdf',
@@ -47,9 +56,9 @@ class TCFormValiadtion extends FormRequest
             'center_back_view' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'center_right_view' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'center_left_view' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            'bio_room' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            'drink_room' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            'saftey' => 'nullable|mimes:jpeg,jpg,png,pdf',
+            'bio' => 'nullable|mimes:jpeg,jpg,png,pdf',
+            'drink' => 'nullable|mimes:jpeg,jpg,png,pdf',
+            'safety' => 'nullable|mimes:jpeg,jpg,png,pdf',
             
             "class_room" => 'nullable|array',
             'class_room.*' => 'nullable|distinct|mimes:jpeg,jpg,png,pdf',
@@ -62,10 +71,6 @@ class TCFormValiadtion extends FormRequest
             /* End File Pickers */
         ];
 
-        if ($this->attributes->has('checkredundancy')) {
-            return true;
-        } else {
-            return $rules;
-        }
+        return $rules;
     }
 }

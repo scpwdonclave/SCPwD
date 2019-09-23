@@ -30,6 +30,15 @@
                     <h2><strong>Add</strong> New Training Center</h2>
                    <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.centers')}}">My Training Centers</a>                      
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="body">
                     <form id="form_center" method="POST" action="{{ route('partner.tc.addcenter') }}" enctype="multipart/form-data">
                         @csrf
@@ -184,7 +193,28 @@
                                 </div>
                                 <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
-                                        
+                                        <div class="card body field-group" id="form_id_new">
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-8">
+                                                    <label for="jobrole[new]">Scheme - Sectors - Job Roles *</label>
+                                                    <div class="form-group form-float">
+                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" data-dropup-auto='false' required>
+                                                            @foreach ($partner->partner_jobroles as $job)
+                                                                @if ($job->status)
+                                                                    <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="target[new]">Target *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="number" id="target_new" min="0" class="form-control" placeholder="Target" name="target[new]" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="repeatable-container"></div>
                                         <div class="row">
                                             <div class="col-sm-4">
@@ -277,21 +307,21 @@
                                             <div class="col-sm-3">
                                                 <label>Biometric System</label>
                                                 <div class="form-group form-float">
-                                                    <input id="bio" type="file" class="form-control" name="bio_room">
+                                                    <input id="bio" type="file" class="form-control" name="bio">
                                                     <span id="bio_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label>Drinking Facility</label>
                                                 <div class="form-group form-float">
-                                                    <input id="drink" type="file" class="form-control" name="drink_room">
+                                                    <input id="drink" type="file" class="form-control" name="drink">
                                                     <span id="drink_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label>Saftey</label>
+                                                <label>Safety</label>
                                                 <div class="form-group form-float">
-                                                    <input id="safety" type="file" class="form-control" name="saftey">
+                                                    <input id="safety" type="file" class="form-control" name="safety">
                                                     <span id="safety_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
@@ -350,7 +380,7 @@
         let value = $('[name='+val+']').val();
         let dataString = { checkredundancy : value, section: val, _token: _token};
         $.ajax({
-            url: "{{ route('partner.tc.addcenter') }}",
+            url: "{{ route('partner.tc.addcenter.api') }}",
             method: "POST",
             data: dataString,
             success: function(data){
@@ -381,24 +411,83 @@
 
     /* Validation of Each Sections */
 
+    function checkIfDuplicateExists(w){
+        return new Set(w).size !== w.length 
+    }
+
     function validatedata(divs){
             div = divs.split(',');
             let tag = true;
             var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
             fields.forEach(function (field) {
             if (!$("[name='"+ field.name +"']").valid()) {
-                tag = false;
-                return false;
+                    tag = false;
+                    return false;
                 }
             });
+            
+            if (div[0] == 'collapseThree' && tag) {
+                var array = [];
+                var arrayValues = [];
+                var ajaxresponse = true;
+                $('select[id^=jobrole_]').each(function (){
+                    array.push(this.value);
+                    var temp = this.id.split('_');
+                    var last = temp[temp.length - 1];
+                    arrayValues.push($('#target_'+last).val());
+                });
+                
+                
+                if (checkIfDuplicateExists(array)) {
+                    swal('','Please Select Unique Job Roles','info');
+                    return false;
+                } else {
+                    ajaxreqst = true;
+                    var _token = $('[name=_token]').val();
+                    var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
+                    $.ajax({
+                        url: "{{ route('partner.tc.addcenter.api') }}",
+                        method: "POST",
+                        data: dataValidate,
+                        success: function(data){
+                            if (!data.success) {
+                                swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
+                                ajaxresponse = false;
+                                return true;
+                            } else {
+                                ajaxresponse = true;
+                                return true;
+                            }
+                            
+                        },
+                        error: function(){
+                            swal('Abort','Something went Wrong','error');
+                            ajaxresponse = false;
+                            return false;
+                        }
+                    }).done(function(){
+                        if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
+                            $('#'+div[0]).collapse('hide');
+                            $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                $('#'+div[1]).collapse('show');
+                            });
+                        }
 
-            if (true) {
-
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
                     });
+                }
+                // console.log($('select[id^=jobrole_]')[0].value);
+                
+            } else {
+                if (tag && dup_email_tag && dup_mobile_tag) {
+                        $('#'+div[0]).collapse('hide');
+                        $('#'+div[0]).on('hidden.bs.collapse', function () {
+                            $('#'+div[1]).collapse('show');
+                        });
+                    }
             }
+
+            
+
         }
 
     /* End Validation of Each Sections */
@@ -477,35 +566,65 @@
                 });
             });
 
+/* Job Role Changes */
+    // function role_changed(v){
+        // console.log(v.id);
+        
+        // console.log($('.jobroleclass').length);
+        // for (let i = 0; i < ($('.jobrole').length/2); i++) {
+        //     // const element = $('.jobrole')[i];
+        //     console.log('hi');
+            
+            
+        // }
+        
+    // }
+/* End Job Role Changes */
+
+
+
 
 
 /* Fetch SelectPicker Data */
 
-    function fetchdata(){
-        console.log({{Auth::guard('partner')->user()->id}});
+    // function fetchdata(id){
         
-    }
+    //     var temp = id[0].id.split('_');
+    //     var last = temp[temp.length - 1];
+    //     if (last === 'new0') {
+    //         var $options = $("#jobrole_new > option").not('option:selected').sort().clone();
+    //         $('#jobrole_'+last).append($options);
+    //         $('#jobrole_'+last).selectpicker('refresh');
+    //     } else {
+    //         console.log(Number(last.substr(-1)) - 1);
+    //         var $options = $("#jobrole_new"+(Number(last.substr(-1)) - 1)+" > option").not('option:selected').sort().clone();
+    //         $('#jobrole_'+last).append($options);
+    //         $('#jobrole_'+last).selectpicker('refresh');
+    //         //  Number(last.substr(-1)) - 1;
+    //         // fetchid = ''
+    //     }
+
+
+    // }
 
 /* End Fetch SelectPicker Data */
-
-
-
-
-
-
 
     /* Repeatable Section for JobRole */
     $(function() {
             $("form .repeatable-container").repeatable({
             template: "#jobroleform",
-            max: 5,
+            max: {{count($partner->partner_jobroles)-1}},
             afterAdd: function(id){
+                // console.log(id);
+                
                 var temp = id[0].id.split('_');
                 var last = temp[temp.length - 1];
                 // console.log(id);
                 $('.jobrole').selectpicker();
                 /* Fetch SelectPicker Data */
-                    fetchdata();
+                var $options = $("#jobrole_new > option").sort().clone();
+                $('#jobrole_'+last).append($options);
+                $('#jobrole_'+last).selectpicker('refresh');
                 /* End Fetch SelectPicker Data */
             }
             });
@@ -516,24 +635,23 @@
 </script>
 
 
-{{-- ADD EMPLOYEE EXPERIENCE FUNCTION BODY (DYNAMIC) --}}
+{{-- Add More FUNCTION BODY (DYNAMIC) --}}
 
 <script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-5">
-                <label for="jobrole[{?}]">Job Roles - Sectors *</label>
+            <div class="col-sm-8">
+                <label for="jobrole[{?}]">Scheme - Sectors - Job Roles *</label>
                 <div class="form-group form-float">
-                    <select class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
-                        <option value="Incorportaion Certificate">Incorportaion Certificate</option>
+                    <select id="jobrole_{?}" class="form-control show-tick jobroleclass" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
                         
                     </select>
                 </div>
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <label for="target[{?}]">Target *</label>
                 <div class="form-group form-float">
-                    <input type="text" class="form-control" placeholder="Target" name="target[{?}]" required>
+                    <input id="target_{?}" type="number" min="0" class="form-control" placeholder="Target" name="target[{?}]" required>
                 </div>
             </div>
         </div>
@@ -543,7 +661,8 @@
     </div>
 </script>
 
-{{-- ADD Employee Experience Function Call --}}
+{{-- Add More Function Call --}}
+
 
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

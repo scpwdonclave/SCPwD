@@ -40,32 +40,25 @@
                                             </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($tp_job as $key=>$item)
+                                            @foreach ($partner->partner_jobroles as $key=>$job)
                                             <tr>
                                                 <td>{{$key+1}}</td>
                                                
-                                                <td>{{$item->scheme}}</td>
-                                                <td>{{$item->sector}}</td>
-                                                <td>{{$item->job_role}}</td>
-                                                <td>{{$item->target}}</td>
-                                                <td>{{$item->target}}</td>
-                                                <td>{{$item->target}}</td>
-                                                @if($item->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$item->id])}}" >Activate</a></td>
-                                                <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
+                                                <td>{{$job->scheme->scheme}}</td>
+                                                <td>{{$job->sector->sector}}</td>
+                                                <td>{{$job->jobrole->job_role}}</td>
+                                                <td>{{$job->target}}</td>
+                                                <td>{{$job->target}}</td>
+                                                <td>{{$job->target}}</td>
+                                                @if($job->status)
+                                                    <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})" >Deactivate</a></td>
+                                                    <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
                                                 @else
-                                                <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})" >Deactivate</a></td>
-                                                <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$item->id}})"  >Edit</a></td>
+                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
+                                                    <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
                                                 @endif
                                              </tr>
-
-                                             {{-- start each Modal edit --}}
-                                             
-                                             {{-- End each Modal edit --}}
-                                           
                                             @endforeach
-
-                                            {{-- ====================== --}}
                                            
                                                 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
                                                     <div class="modal-dialog modal-lg" role="document">

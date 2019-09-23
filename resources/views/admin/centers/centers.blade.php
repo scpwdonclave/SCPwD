@@ -44,7 +44,7 @@
                             @endif
                             <td>{{$item->spoc_name}}</td>
                                 <td>{{$item->email}}</td>
-                                <td>{{$item->spoc_mobile}}</td>
+                                <td>{{$item->mobile}}</td>
                                
                             @if ($item->status==1 && $item->pending_verify==0)
                             <td><span class="badge badge-success">Approved</span></td>

@@ -46,4 +46,13 @@ class PartnerPolicy
             return false;
         }
     }
+
+    public function PartnerHasJobRole($user){
+        if (count($user->partner_jobroles)) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
 }

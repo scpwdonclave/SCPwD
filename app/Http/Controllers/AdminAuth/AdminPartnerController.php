@@ -336,17 +336,15 @@ class AdminPartnerController extends Controller
 
 
         $partner_id = Crypt::decrypt($id);
-       $partner= Partner::findOrFail($partner_id);
-       $tp_job=DB::table('partner_jobroles AS p')
-        ->join('sectors AS s','p.sector_id','=','s.id')
-        ->join('job_roles AS r','p.jobrole_id','=','r.id')
-        ->join('schemes AS sc','p.scheme_id','=','sc.id')
-        ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role','sc.scheme')
-        ->where('p.tp_id',$partner->tp_id)->get();
+        $partner= Partner::findOrFail($partner_id);
+        // $tp_job=DB::table('partner_jobroles AS p')
+        //     ->join('sectors AS s','p.sector_id','=','s.id')
+        //     ->join('job_roles AS r','p.jobrole_id','=','r.id')
+        //     ->join('schemes AS sc','p.scheme_id','=','sc.id')
+        //     ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role','sc.scheme')
+        //     ->where('p.tp_id',$partner->tp_id)->get();
         $sectors=Sector::all();
         $schemes=Scheme::all();
-        // $selected_job=DB::table('job_roles')
-        //                 ->where('sector_id',$partner->tp_id)
         
         return view('admin.partners.partner-target')->with(compact('sectors','partner','tp_job','schemes'));
     }

@@ -22,7 +22,7 @@ class CreateCentersTable extends Migration
             $table->string('mobile')->unique();
             $table->string('password')->nullable();
 
-            $table->string('center_name');
+            $table->string('center_name')->nullable();
             $table->text('center_address');
             $table->text('landmark');
            
@@ -47,10 +47,11 @@ class CreateCentersTable extends Migration
             // $table->string('washroom_1')->nullable();
             $table->string('biometric')->nullable();
             $table->string('drinking')->nullable();
-            $table->string('saftey')->nullable();
+            $table->string('safety')->nullable();
             
             
             $table->boolean('status')->default(0);
+            $table->boolean('verified')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

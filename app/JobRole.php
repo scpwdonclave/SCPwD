@@ -13,4 +13,8 @@ class JobRole extends Model
     public function expositories(){
         return $this->belongsToMany('App\Expository')->withTimestamps();
     }
+
+    public function partners(){
+        return $this->hasMany('App\PartnerJobrole', 'jobrole_id');
+    }
 }

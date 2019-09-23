@@ -208,7 +208,6 @@
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="addr_proof" onchange="checkaddress();" data-show-subtext="true" data-dropup-auto='false' required>
                                                             <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
-                                                            <option value="Incorportaion Certificate">Incorportaion Certificate</option>
                                                             <option value="GST Registration Certificate">GST Registration Certificate</option>
                                                             <option value="Telephone Bill (BSNL/MTNL)">Telephone Bill (BSNL/MTNL)</option>
                                                             <option value="Electricity Bill">Electricity Bill</option>
@@ -220,9 +219,6 @@
                                                 <div class="col-sm-6">
                                                     <label>Address Proof Document *</label>
                                                     <div class="form-group form-float">
-                                                        <div class="row d-flex justify-content-center">
-                                                            <span id="addr_doc2" for="addr_doc" style="color:blue;"></span>
-                                                        </div>
                                                         <input id="addr_doc" type="file" class="form-control" name="addr_doc" required>
                                                         <span id="addr_doc_error" style="color:red;"></span>                                                            
                                                     </div>
@@ -548,19 +544,19 @@
     /* Checking Address Proof Type */
         
         function checkaddress(){
-            if ($('select[name=addr_proof]').val() === 'Incorportaion Certificate') {
-                $('#addr_doc_error').slideUp('slow');
-                $('#addr_doc').slideUp('slow', function(){
-                    $('#addr_doc-error').text('');
-                    $('#addr_doc2').hide().html('We Have Your Incorporation Certificate').fadeIn('slow');
-                });
+            // if ($('select[name=addr_proof]').val() === 'Incorportaion Certificate') {
+            //     $('#addr_doc_error').slideUp('slow');
+            //     $('#addr_doc').slideUp('slow', function(){
+            //         $('#addr_doc-error').text('');
+            //         $('#addr_doc2').hide().html('We Have Your Incorporation Certificate').fadeIn('slow');
+            //     });
 
-            } else {
-                $('#addr_doc2').fadeOut('slow').html('');
-                $('#addr_doc').slideDown('slow');
-                $('#addr_doc_error').slideDown('slow');
-                $('#addr_doc_error').html(''); 
-            }
+            // } else {
+            //     $('#addr_doc2').fadeOut('slow').html('');
+            //     $('#addr_doc').slideDown('slow');
+            //     $('#addr_doc_error').slideDown('slow');
+            //     $('#addr_doc_error').html(''); 
+            // }
 
             if ($('select[name=addr_proof]').val() === 'GST Registration Certificate') {
                 $('#gst_doc_id').hide();

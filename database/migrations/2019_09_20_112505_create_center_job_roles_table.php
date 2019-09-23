@@ -15,6 +15,12 @@ class CreateCenterJobRolesTable extends Migration
     {
         Schema::create('center_job_roles', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('tp_id');
+            $table->unsignedBigInteger('tc_id');
+            $table->unsignedBigInteger('tp_job_id');
+            $table->string('target');
+            $table->boolean('enrolled')->default(0);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

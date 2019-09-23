@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>My</strong> Centers</h2>
-                    @can('partner-profile-verified', Auth::shouldUse('partner'))
+                    @can('partner-has-jobrole', Auth::shouldUse('partner'))
                         <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.addcenter')}}">Add New Training Center</a>                      
                     @endcan
                 </div>
@@ -39,9 +39,9 @@
                                 <td><i class="zmdi zmdi-circle text-{{$center->status?'success':'danger'}}"></td>
                                 <td>{{$center->spoc_name}}</td>
                                 <td>{{$center->email}}</td>
-                                <td>{{$center->spoc_mobile}}</td>
-                                <td>{{$center->verified?'Verified':'Not Verified'}}</td>
-                                <td>hi</td>
+                                <td>{{$center->mobile}}</td>
+                                <td class="text-{{$center->verified?'primary':'danger'}}">{{$center->verified?'Verified':'Not Verified'}}</td>
+                                <td><button class="btn btn-primary btn-round waves-effect">Button</button></td>
                                 </tr>
                                 @endforeach
                                
@@ -49,8 +49,8 @@
                         </table>
                     </div> 
                     <div class="text-center">
-                        @cannot('partner-profile-verified', Auth::shouldUse('partner'))
-                            <h6>You Can Add New Training Centers Once Your Account get Verified</h6>
+                        @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
+                            <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
                         @endcannot
                     </div>  
                 </div>

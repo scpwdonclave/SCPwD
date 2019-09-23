@@ -28,5 +28,6 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('partner-profile-verified', 'App\Policies\PartnerPolicy@PartnerProfileVerified');
         Gate::define('partner-update-pending', 'App\Policies\PartnerPolicy@PartnerUpdatePending');
+        Gate::define('partner-has-jobrole', 'App\Policies\PartnerPolicy@PartnerHasJobRole');
     }
 }
