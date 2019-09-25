@@ -14,8 +14,8 @@ class CenterHomeController extends Controller
     }
 
     public function profile(){
-        $user = Auth::guard('center')->user();
-        return view('common.profile')->with(compact('user'));
+        $center = Auth::guard('center')->user();
+        return view('common.profile')->with(compact('center'));
     }
 
     public function jobroles(){

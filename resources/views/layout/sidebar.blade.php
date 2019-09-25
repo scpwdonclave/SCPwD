@@ -57,7 +57,7 @@
 
             @auth('partner')
                 @if (Request::segment(1) === 'partner')
-                    @if (!$user->complete_profile)
+                    @if (!$partner->complete_profile)
                         <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
                     @endif
                     <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">

@@ -41,6 +41,7 @@ class PartnerCenterController extends Controller
         $data = [
             'partner' => Auth::guard('partner')->user(),
             'centerData' => Center::where('tp_id',Auth::guard('partner')->user()->id)->findOrFail($id),
+            'tc_target' => CenterJobRole::where('tc_id',$id)->get(),
             'state_district' => DB::table('centers AS c')
                 ->join('state_district AS s','c.state_district','=','s.id')
                 ->join('parliament AS p','c.parliament','=','p.id')

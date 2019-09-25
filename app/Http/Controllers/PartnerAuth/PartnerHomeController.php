@@ -178,8 +178,8 @@ class PartnerHomeController extends Controller
     }
 
     public function profile(){
-        $user = Auth::guard('partner')->user();
-        return view('common.profile')->with(compact('user'));
+        $partner = Auth::guard('partner')->user();
+        return view('common.profile')->with(compact('partner'));
     }
 
     public function profile_update(Request $request){
