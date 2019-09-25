@@ -40,7 +40,7 @@ class Center extends Authenticatable
     }
 
     public function center_docs(){
-        return $this->hasMany('App\CenterDoc');
+        return $this->hasMany('App\CenterDoc', 'tc_id');
     }
 
     public function partner(){

@@ -30,19 +30,19 @@
                             <div class="col-sm-4">
                                 <label for="spoc_name">SPOC Name</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="SPOC Name" value="{{ $partner->spoc_name }}" name="spoc_name" required>
+                                    <input type="text" class="form-control" placeholder="SPOC Name" value="{{ $user->spoc_name }}" name="spoc_name" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="email">SPOC Email</label>
                                 <div class="form-group form-float">
-                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ $partner->email }}" name="email" required>
+                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ $user->email }}" name="email" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="spoc_mobile">SPOC Phone</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ $partner->spoc_mobile }}" name="spoc_mobile" required>
+                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ $user->spoc_mobile }}" name="spoc_mobile" required>
                                 </div>
                             </div>
                         </div>

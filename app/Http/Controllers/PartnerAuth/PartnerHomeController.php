@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\CenterJobRole;
+use App\PartnerJobrole;
+use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
-use App\Notification;
 use Alert;
 use Auth;
 
@@ -43,6 +45,27 @@ class PartnerHomeController extends Controller
     public function index() {
         return view('partner.home')->with('partner',Auth::guard('partner')->user());
     }
+
+    public function jobroles(){
+        $data = [
+            'partner' => Auth::guard('partner')->user(),
+            'jobroles' => PartnerJobrole::where('tp_id',Auth::guard('partner')->user()->id)->get()
+        ];
+        return view('common.jobroles')->with($data);
+    }
+
+    public function viewjobrole($id){
+
+        $partner_job = PartnerJobrole::where('tp_id',Auth::guard('partner')->user()->id)->findOrFail($id);
+        $data = [
+            'partner' => Auth::guard('partner')->user(),
+            'schemesectorjobrole' => $partner_job->scheme->scheme.'/'.$partner_job->sector->sector.'/'.$partner_job->jobrole->job_role,
+            'centers' => CenterJobRole::where('tp_job_id', $partner_job->id)->get()
+        ];
+        return view('partner.viewjobrole')->with($data);
+    }
+
+
     
     /* View The Complete Registrattion Form */
     public function showCompleteRegistrationForm(){
@@ -155,8 +178,8 @@ class PartnerHomeController extends Controller
     }
 
     public function profile(){
-        $partner = Auth::guard('partner')->user();
-        return view('partner.profile')->with(compact('partner'));
+        $user = Auth::guard('partner')->user();
+        return view('common.profile')->with(compact('user'));
     }
 
     public function profile_update(Request $request){

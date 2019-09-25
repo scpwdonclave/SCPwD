@@ -87,13 +87,13 @@
                                 <div class="row">
                                         <div class="col-sm-6">
                                                 <small class="text-muted">State/Union Territory - District</small>
-                                                <p>{{$tcdata->state}} ({{$tcdata->district}})</p>
+                                                <p>{{$state_district->state}} ({{$state_district->district}})</p>
                                                 <hr>
                                         </div>
                                     
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Parliament Constituency</small>
-                                                <p>{{$tcdata->constituency}}</p>
+                                                <p>{{$state_district->constituency}}</p>
                                                 <hr>
                                         </div>
                                     </div>
@@ -188,9 +188,12 @@
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Class Room</a> <span>Images</span></h2>
                                 <div class="row">
-                                    @foreach ($classroom as $classroom)
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($classroom->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                        <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($classroom->doc)])}}" download="{{basename($classroom->doc)}}">Download</a></div>
+                                    @foreach ($centerData->center_docs as $docs)
+                                        @if ($docs->room === 'class')
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -201,9 +204,12 @@
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Lab Room</a> <span>Images</span></h2>
                                 <div class="row">
-                                    @foreach ($lab as $lab)
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($lab->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                        <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($lab->doc)])}}" download="{{basename($lab->doc)}}">Download</a></div>
+                                    @foreach ($centerData->center_docs as $docs)
+                                        @if ($docs->room === 'lab')
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -214,9 +220,12 @@
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Equipments Room</a> <span>Images</span></h2>
                                 <div class="row">
-                                    @foreach ($equip as $equip)
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($equip->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                        <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($equip->doc)])}}" download="{{basename($equip->doc)}}">Download</a></div>
+                                    @foreach ($centerData->center_docs as $docs)
+                                        @if ($docs->room === 'equip')
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -227,9 +236,12 @@
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Wash Room</a> <span>Images</span></h2>
                                 <div class="row">
-                                    @foreach ($wash as $wash)
-                                    <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($wash->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                        <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($wash->doc)])}}" download="{{basename($wash->doc)}}">Download</a></div>
+                                    @foreach ($centerData->center_docs as $docs)
+                                        @if ($docs->room === 'wash')
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($wash->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($wash->doc)])}}" download="{{basename($wash->doc)}}">Download</a>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -239,17 +251,16 @@
                         
                         
                     </ul>
-                    <div class="text-center" >
-                        {{-- @can('partner-profile-verified', Auth::shouldUse('partner'))
-                        @endcan --}}
-                        @if ($centerData->status==0 && $centerData->verified==0)
-                        <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.verify',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Accept</button>
-                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                        @elseif ( $centerData->verified==1)
-                        <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                         
-                    
-                    @endif
-                </div>
+                    @auth('admin')
+                        <div class="text-center" >
+                            @if ($centerData->status==0 && $centerData->verified==0)
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.verify',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Accept</button>
+                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                            @elseif ( $centerData->verified==1)
+                                <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                         
+                            @endif
+                        </div>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -257,53 +268,55 @@
 </div>
 @stop
 @section('page-script')
-<script>
-function showPromptMessage() {
-    swal({
-        title: "An input!",
-        text: "Write something interesting:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write something"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id={{$centerData->id}};
-        var note=inputValue;
-        let _token = $("input[name='_token']").val();
-    console.log(note);
-    console.log(id);
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.tc.reject.center')}}",
-        data: {_token,id,note},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deleted",
-        text: "Record Deleted",
-        type:"success",
-        //timer: 2000,
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-        //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
-        window.location="{{route('admin.tc.centers')}}";
-
-        } 
-        });
-    
-        }
-    });
+@auth('admin')
+    <script>
+        function showPromptMessage() {
+            swal({
+                title: "An input!",
+                text: "Write something interesting:",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                showLoaderOnConfirm: true,
+                inputPlaceholder: "Write something"
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!"); return false
+                }
+                var id={{$centerData->id}};
+                var note=inputValue;
+                let _token = $("input[name='_token']").val();
+            console.log(note);
+            console.log(id);
+                $.ajax({
+                type: "POST",
+                url: "{{route('admin.tc.reject.center')}}",
+                data: {_token,id,note},
+                success: function(data) {
+                    // console.log(data);
+                    swal({
+                title: "Deleted",
+                text: "Record Deleted",
+                type:"success",
+                //timer: 2000,
+                showConfirmButton: true
+            },function(isConfirm){
         
-    });
-}
-</script>
+                if (isConfirm){
+                //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
+                window.location="{{route('admin.tc.centers')}}";
+        
+                } 
+                });
+            
+                }
+            });
+                
+            });
+        }
+    </script>
+@endauth
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @stop

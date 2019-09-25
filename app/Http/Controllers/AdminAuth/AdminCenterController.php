@@ -37,17 +37,11 @@ class AdminCenterController extends Controller
     public function centerView($id){
 
         $centerData=Center::findOrFail($id);
-        $tcdata=DB::table('centers AS c')
+        $state_district=DB::table('centers AS c')
         ->join('state_district AS s','c.state_district','=','s.id')
         ->join('parliament AS p','c.parliament','=','p.id')
         ->where('c.id',$id)->first();
-
-        $classroom=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','class']])->get();
-        $lab=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','lab']])->get();
-        $equip=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','equip']])->get();
-        $wash=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','wash']])->get();
-        
-            return view('admin.centers.center-verify')->with(compact('centerData','tcdata','classroom','lab','equip','wash'));
+        return view('common.view-center')->with(compact('centerData','state_district'));
         
     }
     public function centerAccept($id){
@@ -80,16 +74,16 @@ class AdminCenterController extends Controller
 
          /* Notification For Partner */
          $notification = new Notification;
-         $notification->rel_id = $center->id;
-         $notification->rel_with = 'center';
-         $notification->title = 'Account Activated';
-         $notification->message = "Your Profile has been <span style='color:blue;'>Approved</span>.";
+         $notification->rel_id = $center->tp_id;
+         $notification->rel_with = 'partner';
+         $notification->title = 'Training Center Account Activated';
+         $notification->message = "Training Center (ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
          $notification->save();
          /* End Notification For Partner */
          $center['password']=$center_password;
          Mail::to($center['email'])->send(new TCConfirmationMail($center));
 
-         alert()->success('Center Accepted', 'Done')->autoclose(2000);
+         alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
          return Redirect()->back();
 
     }

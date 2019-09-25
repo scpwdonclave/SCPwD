@@ -30,17 +30,24 @@ class PartnerCenterController extends Controller
     }
 
     public function centers(){
-        // $data = [
-        //     'partner'  => Auth::guard('partner')->user(),
-        //     'parliaments'   => DB::table('parliament')->get(),
-        //     'states'   => DB::table('state_district')->get(),
-        //     'centers'   => Center::where('tp_id', Auth::guard('partner')->user()->id)->get()
-        // ];
-        
+
         $partner = Auth::guard('partner')->user();
         $centers = Center::where('tp_id', $partner->id)->get();
 
         return view('partner.centers.centers')->with(compact('centers','partner'));
+    }
+
+    public function viewcenter($id){
+        $data = [
+            'partner' => Auth::guard('partner')->user(),
+            'centerData' => Center::where('tp_id',Auth::guard('partner')->user()->id)->findOrFail($id),
+            'state_district' => DB::table('centers AS c')
+                ->join('state_district AS s','c.state_district','=','s.id')
+                ->join('parliament AS p','c.parliament','=','p.id')
+                ->where('c.id',$id)->first()
+        ];
+        return view('common.view-center')->with($data);
+
     }
 
     public function trainers(){

@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Centers')
+@section('title', 'Job Role Details')
 @section('page-style')
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
@@ -14,21 +14,22 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>My</strong> Centers</h2>
-                    @can('partner-has-jobrole', Auth::shouldUse('partner'))
-                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.addcenter')}}">Add New Training Center</a>                      
-                    @endcan
+                    <h2><strong>My</strong> Job Role Details</h2>
+                </div>
+                <div class="row d-flex justify-content-center text-center">
+                    <h6>Training Centers Under<br><span style="color:blue">{{$schemesectorjobrole}}</span><br>Job Role</h6>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>SPOC Name</th>
-                                    <th>SPOC Email</th>
-                                    <th>SPOC Mobile</th>
-                                    <th>Verified</th>
+                                    <th>TC ID</th>
+                                    <th>Name</th>
+                                    <th>Center</th>
+                                    <th>Target</th>
+                                    <th>Enrolled</th>
+                                    <th>Achieved</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -36,24 +37,19 @@
                                 @foreach ($centers as $center)
                                     
                                 <tr>
-                                <td><i class="zmdi zmdi-circle text-{{$center->status?'success':'danger'}}"></td>
-                                {{-- <td></td> --}}
-                                <td>{{$center->spoc_name}}</td>
-                                <td>{{$center->email}}</td>
-                                <td>{{$center->mobile}}</td>
-                                <td class="text-{{$center->verified?'success':'danger'}}">{{$center->verified?'Verified':'Not Verified'}}</td>
-                                <td class="text-center"><a href="{{route('partner.tc.center.view',$center->id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td>
+                                <td>{{$center->center->tc_id}}</td>
+                                <td>{{$center->center->spoc_name}}</td>
+                                <td>{{$center->center->center_name}}</td>
+                                <td>{{$center->target}}</td>
+                                <td>{{$center->enrolled}}</td>
+                                <td>{{$center->enrolled}}</td>
+                                <td class="text-center"> <a href="{{route('partner.tc.center.view',$center->tc_id)}}"><button class="btn btn-primary btn-sm">View</button></a></td>
                                 </tr>
                                 @endforeach
                                
                             </tbody>
                         </table>
                     </div> 
-                    <div class="text-center">
-                        @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
-                            <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
-                        @endcannot
-                    </div>  
                 </div>
             </div>
         </div>

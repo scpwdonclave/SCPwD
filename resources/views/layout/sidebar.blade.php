@@ -4,7 +4,7 @@
             <li>
                 <div class="user-info">
                     @php
-                        $url = (Request::segment(1) === 'partner') ? route('partner.profile') : '#';
+                        $url = (Request::segment(1) === 'admin') ? '#' : route(Request::segment(1).'.profile');
                     @endphp
                     <div class="image"><a href='{{$url}}'><img src="{{asset('assets/images/avater.png')}}" alt="User"></a></div>
                     <div class="detail">
@@ -31,8 +31,8 @@
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
+                    <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.jobroles')}}">Job Roles</a></li>
                     @auth('admin')
-                        <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route('admin.dashboard.jobroles')}}">Job Roles</a></li>
                         <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
                     @endauth
                 </ul>
@@ -57,7 +57,7 @@
 
             @auth('partner')
                 @if (Request::segment(1) === 'partner')
-                    @if (!$partner->complete_profile)
+                    @if (!$user->complete_profile)
                         <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
                     @endif
                     <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
