@@ -2,6 +2,7 @@
 @section('title', 'Center')
 {{-- @section('parentPageTitle', 'Partners-verify') --}}
 @section('page-style')
+<link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
 @stop
@@ -255,6 +256,55 @@
         </div>
     </div>
 </div>
+
+{{-- =================== --}}
+<div class="container-fluid">
+    <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Center</strong> Job Target</h2>
+                       
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <thead>
+                                        <tr>
+                                        <th>#</th>
+                                        <th>Scheme</th>
+                                        <th>Sector</th>
+                                        <th>Job Role</th>
+                                        <th>Target Allocated</th>
+                                        <th>Student Enroll</th>
+                                        <th>Target Achieve</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach ($tc_target as $key=>$target)
+                                            
+                                        <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$target->partnerjobrole->scheme->scheme}}</td>
+                                        <td>{{$target->partnerjobrole->sector->sector}}</td>
+                                        <td>{{$target->partnerjobrole->jobrole->job_role}}</td>
+                                        <td>{{$target->target}}</td>
+                                        <td>{{$target->enrolled}}</td>
+                                       <td>0</td>
+                                        </tr>
+                                      
+                                        @endforeach
+                                       
+                                    </tbody>
+                            </table>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{{-- =================== --}}
 @stop
 @section('page-script')
 <script>
@@ -306,4 +356,11 @@ function showPromptMessage() {
 }
 </script>
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
+<script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 @stop

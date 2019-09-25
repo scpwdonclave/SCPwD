@@ -26,6 +26,7 @@
                                             <th>Spoc Name</th>
                                             <th>Spoc Email</th>
                                             <th>Spoc Mobile</th>
+                                            <th>View</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -40,6 +41,13 @@
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',['id'=>$item->id])}}" >View</a></td>
+                                            @if($item->status==1 && $item->ind_status==1)
+                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
+                                            @elseif($item->ind_status==0)
+                                            <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
+                                            @elseif($item->status==0)
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                            @endif
                                             </tr>
                                           
                                             @endforeach
@@ -60,7 +68,7 @@ function showCancelMessage(f) {
     var id=f;
     swal({
         title: "Are you sure?",
-        text: "Partner will not be able to Access!",
+        text: "Center will not be able to Access!",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
@@ -72,20 +80,20 @@ function showCancelMessage(f) {
         if (isConfirm) {
             $.ajax({
                 type: "POST",
-                url: "{{route('admin.training_partner.partner.deactive')}}",
+                url: "{{route('admin.tc.center.deactive')}}",
                 data:{_token,id},
                 success: function(data) {
                    
                    swal({
                 title: "Done",
-                text: "Partner Deactivated",
+                text: "Center Deactivated",
                 type:"success",
                 
             },function(isConfirm){
         
                 if (isConfirm){
                
-                window.location="{{route('admin.tp.partners')}}";
+                window.location="{{route('admin.tc.centers')}}";
         
                 } 
                 });

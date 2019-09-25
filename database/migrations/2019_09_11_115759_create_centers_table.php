@@ -51,6 +51,7 @@ class CreateCentersTable extends Migration
             
             
             $table->boolean('status')->default(0);
+            $table->boolean('ind_status')->default(0);
             $table->boolean('verified')->default(0);
             $table->rememberToken();
             $table->timestamps();

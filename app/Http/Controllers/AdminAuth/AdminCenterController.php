@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notification;
 use App\Center;
 use App\CenterDoc;
+use App\CenterJobRole;
 use App\Mail\TCRejectMail;
 use App\Mail\TCConfirmationMail;
 use Crypt;
@@ -42,12 +43,14 @@ class AdminCenterController extends Controller
         ->join('parliament AS p','c.parliament','=','p.id')
         ->where('c.id',$id)->first();
 
+        $tc_target=CenterJobRole::where([['tc_id','=',$id]])->get();
+
         $classroom=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','class']])->get();
         $lab=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','lab']])->get();
         $equip=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','equip']])->get();
         $wash=DB::table('center_docs')->where([['tc_id','=',$id],['room','=','wash']])->get();
         
-            return view('admin.centers.center-verify')->with(compact('centerData','tcdata','classroom','lab','equip','wash'));
+            return view('admin.centers.center-verify')->with(compact('centerData','tcdata','tc_target','classroom','lab','equip','wash'));
         
     }
     public function centerAccept($id){
@@ -75,6 +78,7 @@ class AdminCenterController extends Controller
         $center->tc_id=$new_tcid;
         $center->password=Hash::make($center_password);
         $center->status=1;
+        $center->ind_status=1;
         $center->verified=1;
         $center->save();
 
@@ -244,6 +248,33 @@ class AdminCenterController extends Controller
 
             $center->save();
             alert()->success('Center Details Updated', 'Done')->autoclose(2000);
+            return Redirect()->back();
+    }
+
+    public function centerDeactive(Request $request){
+        $center=Center::findOrFail($request->id);
+        $center->status=0;
+        $center->save();
+
+        foreach ($center->trainers as $trainer) {
+            $trainer->ind_status = 0;
+            $trainer->save();
+        }
+
+        return response()->json(['status' => 'done'],200);
+    }
+    public function centerActive($id){
+        $id=Crypt::decrypt($id);
+        $center=Center::findOrFail($id);
+        $center->status=1;
+        $center->save();
+
+        foreach ($center->trainers as $trainer) {
+            $trainer->ind_status =1;
+            $trainer->save();
+        }
+
+        alert()->success('Center Activated', 'Done')->autoclose(2000);
             return Redirect()->back();
     }
 }
