@@ -113,7 +113,7 @@
                                                                                 </div>
                                                     
                                                                             </form>
-                                                                            <button class="btn btn-raised btn-primary btn-round waves-effect" type="submit" form="form2" >SUBMIT</button>
+                                                                            <button class="btn btn-raised btn-primary btn-round waves-effect" type="submit" form="form2" >UPDATE</button>
                                                                 
                                                             </div>
                                                             <div class="modal-footer">

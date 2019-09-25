@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notification;
 use App\Center;
 use App\CenterDoc;
+use App\CenterJobRole;
 use App\Mail\TCRejectMail;
 use App\Mail\TCConfirmationMail;
 use Crypt;
@@ -41,7 +42,8 @@ class AdminCenterController extends Controller
         ->join('state_district AS s','c.state_district','=','s.id')
         ->join('parliament AS p','c.parliament','=','p.id')
         ->where('c.id',$id)->first();
-        return view('common.view-center')->with(compact('centerData','state_district'));
+        $tc_target=CenterJobRole::where('tc_id',$id)->get();
+        return view('common.view-center')->with(compact('centerData','state_district', 'tc_target'));
         
     }
     public function centerAccept($id){
@@ -69,6 +71,7 @@ class AdminCenterController extends Controller
         $center->tc_id=$new_tcid;
         $center->password=Hash::make($center_password);
         $center->status=1;
+        $center->ind_status=1;
         $center->verified=1;
         $center->save();
 
@@ -238,6 +241,33 @@ class AdminCenterController extends Controller
 
             $center->save();
             alert()->success('Center Details Updated', 'Done')->autoclose(2000);
+            return Redirect()->back();
+    }
+
+    public function centerDeactive(Request $request){
+        $center=Center::findOrFail($request->id);
+        $center->status=0;
+        $center->save();
+
+        foreach ($center->trainers as $trainer) {
+            $trainer->ind_status = 0;
+            $trainer->save();
+        }
+
+        return response()->json(['status' => 'done'],200);
+    }
+    public function centerActive($id){
+        $id=Crypt::decrypt($id);
+        $center=Center::findOrFail($id);
+        $center->status=1;
+        $center->save();
+
+        foreach ($center->trainers as $trainer) {
+            $trainer->ind_status =1;
+            $trainer->save();
+        }
+
+        alert()->success('Center Activated', 'Done')->autoclose(2000);
             return Redirect()->back();
     }
 }

@@ -46,4 +46,7 @@ class Partner extends Authenticatable
     public function centers(){
         return $this->hasMany('App\Center', 'tp_id');
     }
+    public function trainers(){
+        return $this->hasMany('App\Trainer', 'tp_id');
+    }
 }

@@ -13,6 +13,7 @@ use App\Mail\TPRejectMail;
 use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
+use App\Center;
 use App\PartnerJobrole;
 use App\Sector;
 use App\Scheme;
@@ -50,15 +51,33 @@ class AdminPartnerController extends Controller
     public function partnerDeactive(Request $request){
         $partnerData=Partner::findOrFail($request->id);
         $partnerData->status=0;
+        $partnerData->ind_status=0;
         $partnerData->save();
+
+        foreach ($partnerData->centers as $center) {
+            $center->ind_status = 0;
+            $center->save();
+        }
+        foreach ($partnerData->trainers as $trainer) {
+            $trainer->ind_status = 0;
+            $trainer->save();
+        }
+
         return response()->json(['status' => 'done'],200);
-        //alert()->success('Partner Deactivated', 'Done')->autoclose(2000);
-        //return Redirect()->back();
+        
     }
     public function partnerActive($id){
         $partnerData=Partner::findOrFail($id);
         $partnerData->status=1;
         $partnerData->save();
+        foreach ($partnerData->centers as $center) {
+            $center->ind_status =1;
+            $center->save();
+        }
+        foreach ($partnerData->trainers as $trainer) {
+            $trainer->ind_status = 1;
+            $trainer->save();
+        }
         alert()->success('Partner Activated', 'Done')->autoclose(2000);
         return Redirect()->back();
     }
@@ -66,8 +85,9 @@ class AdminPartnerController extends Controller
     public function partnerVerify($id){
 
         $partnerData=Partner::findOrFail($id);
+        $centers=DB::table('centers')->where('tp_id',$id)->get();
         if ($partnerData->complete_profile && $partnerData->status==1) {
-            return view('admin.partners.partner-verify')->with(compact('partnerData'));
+            return view('admin.partners.partner-verify')->with(compact('partnerData','centers'));
         } else {
             return redirect()->route('admin.tp.partners');
         }
@@ -346,7 +366,7 @@ class AdminPartnerController extends Controller
         $sectors=Sector::all();
         $schemes=Scheme::all();
         
-        return view('admin.partners.partner-target')->with(compact('sectors','partner','tp_job','schemes'));
+        return view('admin.partners.partner-target')->with(compact('sectors','partner','schemes'));
     }
 
     public function fetchJobrole(Request $request){
@@ -365,10 +385,11 @@ class AdminPartnerController extends Controller
     }
     //Job Submit
     public function jobTarget(Request $request){
-        $data=PartnerJobrole::where([['tp_id','=',$request->tp_id],
+        $data=PartnerJobrole::where([['tp_id','=',$request->tpid],
                                     ['scheme_id','=',$request->scheme2],
                                     ['sector_id','=',$request->sector2],
                                     ['jobrole_id','=',$request->jobrole2]])->get();
+            
         if(count($data)>0){
             alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
         return Redirect()->back();
