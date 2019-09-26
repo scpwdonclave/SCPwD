@@ -26,6 +26,9 @@ Route::post('training_partners/partner-jobtarget', 'AdminAuth\AdminPartnerContro
 Route::post('training_partners/partner-jobtarget-update', 'AdminAuth\AdminPartnerController@jobTargetUpdate')->name('tp.partner.jobtarget.update');
 Route::post('training_partners/partner-jobrole-Deactive', 'AdminAuth\AdminPartnerController@jobroleDeactive')->name('tp.partner.jobrole.deactive');
 Route::get('training_partners/partner-jobrole-Active/{id}', 'AdminAuth\AdminPartnerController@jobroleActive')->name('tp.partner.jobrole.active');
+Route::get('training_partners/partner-scheme/{id}', 'AdminAuth\AdminPartnerController@partnerScheme')->name('training_partner.partner.scheme');
+Route::post('training_partners/partner-scheme-deactive', 'AdminAuth\AdminPartnerController@partnerSchemeDeactive')->name('tp.partner.scheme.deactive');
+Route::get('training_partners/partner-scheme-active/{id}/{pid}', 'AdminAuth\AdminPartnerController@partnerSchemeActive')->name('tp.partner.scheme.active');
 
 Route::get('training_centers', function () { return redirect(route('admin.tc.centers')); });
 Route::get('training_centers/centers', 'AdminAuth\AdminCenterController@centers')->name('tc.centers');

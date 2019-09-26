@@ -13,8 +13,11 @@ use App\Mail\TPRejectMail;
 use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
+use App\Reason;
+use App\PartnerJobRoleReason;
 use App\Center;
 use App\PartnerJobrole;
+use App\CenterJobRole;
 use App\Sector;
 use App\Scheme;
 use Crypt;
@@ -54,14 +57,22 @@ class AdminPartnerController extends Controller
         $partnerData->ind_status=0;
         $partnerData->save();
 
+        $reason = new Reason;
+        $reason->rel_id = $partnerData->id;
+        $reason->rel_with = 'partner';
+        $reason->reason = $request->reason;
+        $reason->save();
+
         foreach ($partnerData->centers as $center) {
             $center->ind_status = 0;
             $center->save();
+
+           
         }
-        foreach ($partnerData->trainers as $trainer) {
-            $trainer->ind_status = 0;
-            $trainer->save();
-        }
+        // foreach ($partnerData->trainers as $trainer) {
+        //     $trainer->ind_status = 0;
+        //     $trainer->save();
+        // }
 
         return response()->json(['status' => 'done'],200);
         
@@ -74,10 +85,10 @@ class AdminPartnerController extends Controller
             $center->ind_status =1;
             $center->save();
         }
-        foreach ($partnerData->trainers as $trainer) {
-            $trainer->ind_status = 1;
-            $trainer->save();
-        }
+        // foreach ($partnerData->trainers as $trainer) {
+        //     $trainer->ind_status = 1;
+        //     $trainer->save();
+        // }
         alert()->success('Partner Activated', 'Done')->autoclose(2000);
         return Redirect()->back();
     }
@@ -456,6 +467,100 @@ class AdminPartnerController extends Controller
         $partnerJob->status=1;
         $partnerJob->save();
         alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
+        return Redirect()->back();
+    }
+
+    public function partnerScheme($id){
+        $partner_id = Crypt::decrypt($id);
+        $partner_dtl=Partner::findOrFail($partner_id);
+        $partner_scheme=PartnerJobrole::where('tp_id',$partner_id)
+        ->groupBy('scheme_id')->get();
+
+        return view('admin.partners.partner-scheme')->with(compact('partner_scheme','partner_dtl'));
+        
+    }
+
+    public function partnerSchemeDeactive(Request $request){
+
+        $partnerScheme=PartnerJobrole::where([['scheme_id','=',$request->id],['tp_id','=',$request->pid]])->get();
+        
+        foreach ($partnerScheme as  $scheme) {
+            
+            $scheme->scheme_status=0;
+            $scheme->save();
+
+           $p_job_reason= new PartnerJobRoleReason;
+           $p_job_reason->partner_job_id=$scheme->id;
+           $p_job_reason->reason=$request->reason;
+           $p_job_reason->save();
+            
+            $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
+            
+            foreach ($get_tc_job as  $tcid) {
+                $tcid->scheme_status=0;
+                $tcid->save();
+               
+            }
+
+        }
+        $partner = Partner::find($request->id);
+        foreach($partner->centers as $center){
+            $notification = new Notification;
+            $notification->rel_id =$center->id;
+            $notification->rel_with = 'center';
+            $notification->title = 'Scheme Deactivated';
+            $notification->message = "Your Training Partner Scheme has been Deactivated";
+            $notification->save();
+            
+        }
+            $notification = new Notification;
+            $notification->rel_id =$request->pid;
+            $notification->rel_with = 'partner';
+            $notification->title = 'Scheme Deactivated';
+            $notification->message = "One of Your Scheme has been Deactivated";
+            $notification->save();
+
+        return response()->json(['status' => 'done'],200);
+
+    }
+
+    public function partnerSchemeActive($id,$pid){
+        $id = Crypt::decrypt($id);
+        $pid = Crypt::decrypt($pid);
+        $partnerScheme=PartnerJobrole::where([['scheme_id','=',$id],['tp_id','=',$pid]])->get();
+
+        foreach ($partnerScheme as  $scheme) {
+            
+            $scheme->scheme_status=1;
+            $scheme->save();
+            
+            $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
+            
+            foreach ($get_tc_job as  $tcid) {
+                $tcid->scheme_status=1;
+                $tcid->save();
+                
+            }
+
+        }
+
+        $partner = Partner::find($pid);
+        foreach($partner->centers as $center){
+            $notification = new Notification;
+            $notification->rel_id =$center->id;
+            $notification->rel_with = 'center';
+            $notification->title = 'Scheme Activated';
+            $notification->message = "Your Training Partner Scheme has been Activated";
+            $notification->save();
+            
+        }
+            $notification = new Notification;
+            $notification->rel_id =$pid;
+            $notification->rel_with = 'partner';
+            $notification->title = 'Scheme Activated';
+            $notification->message = "One of Your Scheme has been Activated";
+            $notification->save();
+        alert()->success("Training Partner Scheme <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
         return Redirect()->back();
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Notification;
 use App\Center;
+use App\Reason;
 use App\CenterDoc;
 use App\CenterJobRole;
 use App\Mail\TCRejectMail;
@@ -72,6 +73,7 @@ class AdminCenterController extends Controller
         $center->password=Hash::make($center_password);
         $center->status=1;
         $center->ind_status=1;
+        $center->scheme_status=1;
         $center->verified=1;
         $center->save();
 
@@ -95,7 +97,19 @@ class AdminCenterController extends Controller
         $data=Center::findOrFail($request->id);
         $data['note'] = $request->note;
         Mail::to($data->email)->send(new TCRejectMail($data));
-        $data->delete();
+         /* Notification For Partner */
+         $notification = new Notification;
+         $notification->rel_id = $data->tp_id;
+         $notification->rel_with = 'partner';
+         $notification->title = 'Training Center Rejected';
+         $notification->message = "Training Center (Spoc Name: <span style='color:blue;'>$data->spoc_name</span>) has been Rejected";
+         $notification->save();
+         /* End Notification For Partner */
+
+         $center_doc=CenterDoc::where('tc_id',$request->id)->delete();
+         $center_job=CenterJobRole::where('tc_id',$request->id)->delete();
+       
+         $data->delete();
         return response()->json(['status' => 'done'],200);
     }
     
@@ -249,10 +263,25 @@ class AdminCenterController extends Controller
         $center->status=0;
         $center->save();
 
-        foreach ($center->trainers as $trainer) {
-            $trainer->ind_status = 0;
-            $trainer->save();
-        }
+        $reason = new Reason;
+        $reason->rel_id = $center->id;
+        $reason->rel_with = 'center';
+        $reason->reason = $request->reason;
+        $reason->save();
+
+          /* Notification For Partner */
+          $notification = new Notification;
+          $notification->rel_id = $center->tp_id;
+          $notification->rel_with = 'partner';
+          $notification->title = 'Training Center Deactive';
+          $notification->message = "One of Your Center has been <span style='color:blue;'>Deactivated</span>.";
+          $notification->save();
+          /* End Notification For Partner */
+
+        // foreach ($center->trainers as $trainer) {
+        //     $trainer->ind_status = 0;
+        //     $trainer->save();
+        // }
 
         return response()->json(['status' => 'done'],200);
     }
@@ -262,10 +291,19 @@ class AdminCenterController extends Controller
         $center->status=1;
         $center->save();
 
-        foreach ($center->trainers as $trainer) {
-            $trainer->ind_status =1;
-            $trainer->save();
-        }
+         /* Notification For Partner */
+         $notification = new Notification;
+         $notification->rel_id = $center->tp_id;
+         $notification->rel_with = 'partner';
+         $notification->title = 'Training Center Active';
+         $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
+         $notification->save();
+         /* End Notification For Partner */
+
+        // foreach ($center->trainers as $trainer) {
+        //     $trainer->ind_status =1;
+        //     $trainer->save();
+        // }
 
         alert()->success('Center Activated', 'Done')->autoclose(2000);
             return Redirect()->back();
