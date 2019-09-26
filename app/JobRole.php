@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class JobRole extends Model
+class JobRole extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function sector(){
         return $this->belongsTo('App\Sector');
     }

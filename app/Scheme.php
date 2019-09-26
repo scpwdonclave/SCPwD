@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Scheme extends Model
+class Scheme extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function sectors(){
         return $this->hasMany('App\Sector');
     }
