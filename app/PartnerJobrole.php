@@ -29,4 +29,8 @@ class PartnerJobrole extends Model implements Auditable
         return $this->hasMany('App\CenterJobRole', 'tp_job_id');
     }
 
+    public function reasons(){
+        return $this->hasMany('App\PartnerJobRoleReason', 'partner_job_id');
+    }
+
 }

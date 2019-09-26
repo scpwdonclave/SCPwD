@@ -27,6 +27,7 @@
                                             <th>Spoc Email</th>
                                             <th>Spoc Mobile</th>
                                             <th>Target</th>
+                                            <th>Scheme</th>
                                             <th>View</th>
                                             <th>Action</th>
                                         </tr>
@@ -49,8 +50,10 @@
                                                 </td> --}}
                                              @if($item->status==1)
                                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.target',['id'=>Crypt::encrypt($item->id)])}}" >Target</a></td>
+                                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.scheme',['id'=>Crypt::encrypt($item->id)])}}" >Scheme</a></td>
                                             @else
                                             <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Target</a></td>
+                                            <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Scheme</a></td>
                                             @endif
                                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
                                             @if($item->status==1)
@@ -89,48 +92,94 @@
 @section('page-script')
 <script>
 function showCancelMessage(f) {
-    let _token = $("input[name='_token']").val();
-    var id=f;
     swal({
-        title: "Are you sure?",
-        text: "Partner will not be able to Access!",
-        type: "warning",
+        title: "Deactive!",
+        text: "Write Reason for Deactive:",
+        type: "input",
         showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No, cancel",
         closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.training_partner.partner.deactive')}}",
-                data:{_token,id},
-                success: function(data) {
-                   
-                   swal({
-                title: "Done",
-                text: "Partner Deactivated",
-                type:"success",
-                
-            },function(isConfirm){
+        animation: "slide-from-top",
+        showLoaderOnConfirm: true,
+        inputPlaceholder: "Write reason"
+    }, function (inputValue) {
+        if (inputValue === false) return false;
+        if (inputValue === "") {
+            swal.showInputError("You need to write something!"); return false
+        }
+        var id=f;
+        var reason=inputValue;
+        let _token = $("input[name='_token']").val();
+   
+        $.ajax({
+        type: "POST",
+        url: "{{route('admin.training_partner.partner.deactive')}}",
+        data: {_token,id,reason},
+        success: function(data) {
+           // console.log(data);
+           swal({
+        title: "Deactive",
+        text: "Record Deactive",
+        type:"success",
         
-                if (isConfirm){
-               
-                window.location="{{route('admin.tp.partners')}}";
-        
-                } 
-                });
-            
-                }
-            });
-           
-        } else {
-            swal("Cancelled", "Your Partner is safe :)", "error");
+        showConfirmButton: true
+    },function(isConfirm){
+
+        if (isConfirm){
+       
+        window.location="{{route('admin.tp.partners')}}";
+
+        } 
+        });
+    
         }
     });
+        
+    });
 }
+
+// function showCancelMessage(f) {
+//     let _token = $("input[name='_token']").val();
+//     var id=f;
+//     swal({
+//         title: "Are you sure?",
+//         text: "Partner will not be able to Access!",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#DD6B55",
+//         confirmButtonText: "Yes",
+//         cancelButtonText: "No, cancel",
+//         closeOnConfirm: false,
+//         closeOnCancel: false
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             $.ajax({
+//                 type: "POST",
+//                 url: "{{route('admin.training_partner.partner.deactive')}}",
+//                 data:{_token,id},
+//                 success: function(data) {
+                   
+//                    swal({
+//                 title: "Done",
+//                 text: "Partner Deactivated",
+//                 type:"success",
+                
+//             },function(isConfirm){
+        
+//                 if (isConfirm){
+               
+//                 window.location="{{route('admin.tp.partners')}}";
+        
+//                 } 
+//                 });
+            
+//                 }
+//             });
+           
+//         } else {
+//             swal("Cancelled", "Your Partner is safe :)", "error");
+//         }
+//     });
+// }
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

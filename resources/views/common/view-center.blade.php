@@ -279,7 +279,7 @@
                     @auth('admin')
                         <div class="text-center" >
                             @if ($centerData->status==0 && $centerData->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.verify',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Accept</button>
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.verify',['center_id' => Crypt::encrypt($centerData->id) ])}}';this.disabled = true;">Accept</button>
                                 <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                             @elseif ( $centerData->verified==1)
                                 <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                         
@@ -362,8 +362,7 @@
                 var id={{$centerData->id}};
                 var note=inputValue;
                 let _token = $("input[name='_token']").val();
-            // console.log(note);
-            // console.log(id);
+            
                 $.ajax({
                 type: "POST",
                 url: "{{route('admin.tc.reject.center')}}",
@@ -379,7 +378,7 @@
             },function(isConfirm){
         
                 if (isConfirm){
-                //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
+                
                 window.location="{{route('admin.tc.centers')}}";
         
                 } 

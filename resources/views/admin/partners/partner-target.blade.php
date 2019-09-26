@@ -50,13 +50,23 @@
                                                 <td>{{$job->target}}</td>
                                                 <td>{{$job->target}}</td>
                                                 <td>{{$job->target}}</td>
-                                                @if($job->status)
+                                                @if($job->status==1 && $job->ind_status==1)
+                                                <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})">Deactivate</a></td>
+                                                <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
+                                                @elseif($job->ind_status==0)
+                                                <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
+                                                <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
+                                                @elseif($job->status==0)
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
+                                                <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
+                                                @endif
+                                                {{-- @if($job->status)
                                                     <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})" >Deactivate</a></td>
                                                     <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
                                                 @else
                                                     <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
                                                     <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
-                                                @endif
+                                                @endif --}}
                                              </tr>
                                             @endforeach
                                            

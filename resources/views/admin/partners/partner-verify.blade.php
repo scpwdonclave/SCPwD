@@ -328,7 +328,7 @@
                         {{-- @can('partner-profile-verified', Auth::shouldUse('partner'))
                         @endcan --}}
                         @if ($partnerData->pending_verify==1)
-                        <button class="btn btn-success" onclick="location.href='{{route('admin.training_partner.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Accept</button>
+                        <button class="btn btn-success" onclick="location.href='{{route('admin.training_partner.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}';this.disabled = true;">Accept</button>
                         <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                         @elseif ($partnerData->pending_verify==0 && $partnerData->status==1)
                         <button class="btn" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Edit</button>                         
@@ -392,8 +392,8 @@
 <script>
 function showPromptMessage() {
     swal({
-        title: "An input!",
-        text: "Write something interesting:",
+        title: "Reject!",
+        text: "Write Reason for reject:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,

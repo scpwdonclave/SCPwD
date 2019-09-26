@@ -1,6 +1,6 @@
 @extends('layout.master')
-@section('title', 'Centers')
-@section('parentPageTitle', 'Centers')
+@section('title', 'Partner Scheme')
+@section('parentPageTitle', 'Partners')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
@@ -12,41 +12,37 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong> Centers </h2>
+                            <h2><strong>Scheme For</strong> Partner </h2>
                            
                         </div>
                         <div class="body">
+                                <div class="text-center">
+                                        <h4 class="margin-0">{{$partner_dtl->spoc_name}}</h4>
+                                        <h6 class="m-b-20">{{$partner_dtl->tp_id}}</h6>
+                                </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                             <tr>
                                             <th>#</th>
-                                            <th>TP ID</th>
-                                            <th>TC ID</th>
-                                            <th>Spoc Name</th>
-                                            <th>Spoc Email</th>
-                                            <th>Spoc Mobile</th>
-                                            <th>View</th>
+                                            <th>Scheme Name</th>
+                                            <th>Year</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($data as $key=>$item)
+                                            @foreach ($partner_scheme as $key=>$scheme)
                                                 
                                             <tr>
                                             <td>{{$key+1}}</td>
-                                            <td>{{$item->partner->tp_id}}</td>
-                                            <td>{{$item->tc_id}}</td>
-                                            <td>{{$item->spoc_name}}</td>
-                                            <td>{{$item->email}}</td>
-                                            <td>{{$item->mobile}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',['id'=>$item->id])}}" >View</a></td>
-                                            @if($item->status==1 && $item->ind_status==1)
-                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                            @elseif($item->ind_status==0)
-                                            <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
-                                            @elseif($item->status==0)
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                            <td>{{$scheme->scheme->scheme}}</td>
+                                            <td>{{$scheme->scheme->year}}</td>
+                                           
+                                            @if($scheme->scheme_status==1)
+                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$scheme->scheme->id}},{{$partner_dtl->id}})">Deactivate</a></td>
+                                           
+                                            @elseif($scheme->scheme_status==0)
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.scheme.active',['id'=>Crypt::encrypt($scheme->id),'pid'=>Crypt::encrypt($partner_dtl->id)])}}" >Activate</a></td>
                                             @endif
                                             </tr>
                                           
@@ -63,7 +59,7 @@
 @stop
 @section('page-script')
 <script>
-function showCancelMessage(f) {
+function showCancelMessage(f,p) {
     swal({
         title: "Deactive!",
         text: "Write Reason for Deactive:",
@@ -79,18 +75,19 @@ function showCancelMessage(f) {
             swal.showInputError("You need to write something!"); return false
         }
         var id=f;
+        var pid=p;
         var reason=inputValue;
         let _token = $("input[name='_token']").val();
    
         $.ajax({
         type: "POST",
-        url: "{{route('admin.tc.center.deactive')}}",
-        data: {_token,id,reason},
+        url: "{{route('admin.tp.partner.scheme.deactive')}}",
+        data: {_token,id,pid,reason},
         success: function(data) {
-           // console.log(data);
+          // console.log(data.url);
            swal({
         title: "Deactive",
-        text: "Center Record Deactive",
+        text: "Scheme Record Deactive",
         type:"success",
         
         showConfirmButton: true
@@ -98,7 +95,7 @@ function showCancelMessage(f) {
 
         if (isConfirm){
        
-        window.location="{{route('admin.tc.centers')}}";
+        window.location="{{route('admin.tp.partners')}}";
 
         } 
         });
