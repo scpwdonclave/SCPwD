@@ -95,8 +95,6 @@
         e.preventDefault();
         var data = e.currentTarget.data.value.split(',');
         var _token = e.currentTarget._token.value;
-        var confirmatonText = document.createElement("div");
-        confirmatonText.innerHTML = "You are about to Remove <br><span style='font-weight:bold; color:blue;'>"+ data[1] +"</span><br>Scheme";
         swal({
             text: "Please Provide Updated Scheme Name",
             content: {

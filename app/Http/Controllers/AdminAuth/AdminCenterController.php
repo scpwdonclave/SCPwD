@@ -54,7 +54,7 @@ class AdminCenterController extends Controller
         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
         ->where("tc_id", "LIKE", "TC%")->get();
         $year = date('Y');
-        if (count($data) > 0) {
+        if ((count($data)-1) > 0) {
 
             $priceprod = array();
                 foreach ($data as $key=>$data) {
@@ -79,8 +79,8 @@ class AdminCenterController extends Controller
          $notification = new Notification;
          $notification->rel_id = $center->tp_id;
          $notification->rel_with = 'partner';
-         $notification->title = 'Training Center Account Activated';
-         $notification->message = "Training Center (ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
+         $notification->title = 'TC has been Approved';
+         $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
          $notification->save();
          /* End Notification For Partner */
          $center['password']=$center_password;

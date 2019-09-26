@@ -12,44 +12,68 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="body">
+                    @if (!is_null($centerData->tc_id))
+                        <div class="text-center">
+                            <h6>
+                                TC ID: <span style='color:blue'>{{$centerData->tc_id}}</span>
+                            </h6>
+                        </div>
+                        <br>
+                    @endif
                     <ul class="cbp_tmtimeline">
                         
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>SPOC DETAILS</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-account"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                            <small class="text-muted">SPOC Name</small>
+                                            <span class="d-flex justify-content-between">
+                                                <small class="text-muted">SPOC Name</small>
+                                                @auth('partner')
+                                                {{-- @if (Gate::forUser(Auth::guard('partner')->user())->allows('partner-center-profile-active-verified', $centerData))
+                                                    hi
+                                                @endif --}}
+                                                @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $centerData))
+                                                    <span class="badge badge-success"onclick="update('{{$centerData->spoc_name}},name')">Change</span>
+                                                @endif
+                                                @endauth
+                                            </span>
                                             <p>{{$centerData->spoc_name}}</p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
-                                            <small class="text-muted">SPOC Email </small>
+                                            <span class="d-flex justify-content-between">
+                                                <small class="text-muted">SPOC Email</small>
+                                                @auth('partner')
+                                                    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $centerData))
+                                                        <span class="badge badge-success"onclick="update('{{$centerData->email}},email')">Change</span>
+                                                    @endif
+                                                @endauth
+                                            </span>
                                             <p>{{$centerData->email}}</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
-                                            <small class="text-muted">SPOC Phone</small>
+                                            <span class="d-flex justify-content-between">
+                                                <small class="text-muted">SPOC Mobile</small>
+                                                @auth('partner')
+                                                    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $centerData))
+                                                        <span class="badge badge-success"onclick="update('{{$centerData->mobile}},mobile')">Change</span>
+                                                    @endif
+                                                @endauth
+                                            </span>
                                             <p>{{$centerData->mobile}}</p>
                                             <hr>
                                     </div>
-                                    {{-- <div class="col-sm-4">
-                                        <small class="text-muted">Incorp. Document</small>
-                                        <p>Document
-                                            &nbsp;&nbsp;
-                                        <a class="btn-icon-mini" href="{{route('partner.files.partner-file',['action'=>'download','filename'=>basename($centerData->incorp_doc)])}}" download="{{basename($centerData->incorp_doc)}}"><i class="zmdi zmdi-download"></i></a>
-                                        </p>
-                                        <hr>
-                                </div> --}}
                                   
                                 </div>
                             </div>
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Training Center Details</span></time>
-                            <div class="cbp_tmicon bg-blue"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-blue"> <i class="zmdi zmdi-local-store"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -121,7 +145,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Center Image</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-image-alt"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-3">
@@ -185,7 +209,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Class Room Images</span></time>
-                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-collection-folder-image"></i></div>
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Class Room</a> <span>Images</span></h2>
                                 <div class="row">
@@ -201,7 +225,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Lab Room Images</span></time>
-                            <div class="cbp_tmicon bg-orange"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-orange"> <i class="zmdi zmdi-collection-folder-image"></i></div>
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Lab Room</a> <span>Images</span></h2>
                                 <div class="row">
@@ -217,7 +241,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Equipments Room Images</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-collection-folder-image"></i></div>
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Equipments Room</a> <span>Images</span></h2>
                                 <div class="row">
@@ -233,7 +257,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Wash Room Images</span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-collection-folder-image"></i></div>
                             <div class="cbp_tmlabel">
                                     <h2><a href="javascript:void(0);">Wash Room</a> <span>Images</span></h2>
                                 <div class="row">
@@ -322,14 +346,14 @@
     <script>
         function showPromptMessage() {
             swal({
-                title: "An input!",
-                text: "Write something interesting:",
+                title: "Reason of Rejection",
+                text: "Please Describe the Reason",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
                 showLoaderOnConfirm: true,
-                inputPlaceholder: "Write something"
+                inputPlaceholder: "Reason"
             }, function (inputValue) {
                 if (inputValue === false) return false;
                 if (inputValue === "") {
@@ -338,8 +362,8 @@
                 var id={{$centerData->id}};
                 var note=inputValue;
                 let _token = $("input[name='_token']").val();
-            console.log(note);
-            console.log(id);
+            // console.log(note);
+            // console.log(id);
                 $.ajax({
                 type: "POST",
                 url: "{{route('admin.tc.reject.center')}}",
@@ -367,6 +391,58 @@
             });
         }
     </script>
+@endauth
+
+@auth('partner')
+    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $centerData))
+        <script>
+            function update(v){
+                dataValues = v.split(',');
+                swal({
+                    title: "Update TC SPOC Details",
+                    text: "Please Provide The Updated Value",
+                    type: "input",
+                    confirmButtonText: 'UPDATE',
+                    cancelButtonText: 'NOT NOW',
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true,
+                    inputValue: dataValues[0]
+                }, function (value) {
+                    if (value === false) return false;
+                    if (value === "") {
+                        swal.showInputError("You need to write something!"); return false
+                    }
+                    var id='{{$centerData->id}}';
+                    let _token = $("input[name='_token']").val();
+                    var name = dataValues[1]
+                    $.ajax({
+                    type: "POST",
+                    url: "{{ route('partner.tc.center.update') }}",
+                    data: {_token,id,name,value},
+                    success: function(data) {
+                        swal({
+                            title: data['title'],
+                            text: data['message'],
+                            type: data['type'],
+                            html: true,
+                            showConfirmButton: true
+                        },function(isConfirm){
+                            if (isConfirm){
+                                    setTimeout(function(){location.reload()},150);
+                            } 
+                        });
+                    },
+                    error:function(){
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
+                    }); 
+                });
+            }
+        </script>
+    @endif
 @endauth
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>

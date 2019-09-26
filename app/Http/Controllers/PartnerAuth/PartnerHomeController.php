@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\CenterJobRole;
 use App\PartnerJobrole;
@@ -184,11 +185,10 @@ class PartnerHomeController extends Controller
 
     public function profile_update(Request $request){
 
-
         if (Gate::allows('partner-profile-verified', Auth::shouldUse('partner'))) {
 
-            $user = Auth::guard('partner')->user();
-            if ($user->spoc_name == $request->spoc_name && $user->email == $request->email && $user->spoc_mobile == $request->spoc_mobile) {
+            $partner = Auth::guard('partner')->user();
+            if ($partner->spoc_name == $request->spoc_name && $partner->email == $request->email && $partner->spoc_mobile == $request->spoc_mobile && is_null($request->password)) {
                 alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
                 return redirect()->back();
             } else {
@@ -196,23 +196,18 @@ class PartnerHomeController extends Controller
                     'spoc_name' => 'required',
                     'email' => 'required|email|unique:partners,email,'.Auth::guard('partner')->user()->id,
                     'spoc_mobile' => 'required|numeric',
+                    'password' => 'nullable',
                 ]);
-        
-                DB::table('partner_update')->insert(
-                    ['tp_id' => Auth::guard('partner')->user()->tp_id, 'spoc_name' => $request->spoc_name, 'email' => $request->email, 'spoc_mobile' => $request->spoc_mobile, 'created_at' => Carbon::now()]
-                );
-
-                /* For Admin */
-                $notification = new Notification;
-                $notification->rel_id = 1;
-                $notification->rel_with = 'admin';
-                $notification->title = 'Update Requested';
-                $notification->message = "<span style='color:blue;'>".Auth::guard('partner')->user()->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";
-                $notification->save();
-
-                alert()->success('Your Update request has been sent,<br> It will reflect as soon as Admin Verify it, You will get notified.','Request Received')->html()->autoclose('8000');
+                if (!is_null($request->password)) {
+                    $partner->password =  Hash::make($request->password);
+                }
+                $partner->spoc_name = $request->spoc_name;
+                $partner->email = $request->email;
+                $partner->spoc_mobile = $request->spoc_mobile;
+                $partner->save();
+                
+                alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('8000');
                 return redirect()->back();
-                // return 'Data Validated Need To Update The Profile with Given Data';
             }
 
         } else {

@@ -25,8 +25,10 @@
                                     <th>Sector</th>
                                     <th>Job Role</th>
                                     <th>Target</th>
-                                    <th>Assigned</th>
-                                    <th>Action</th>
+                                    <th>{{(Request::segment(1) === 'partner')?'Assigned':'Enrolled'}}</th>
+                                    @if (Request::segment(1) === 'partner')
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,7 +46,19 @@
                                         @endforeach
                                     @endif
                                 @endauth
-                               
+                                @auth('center')
+                                    @if (Request::segment(1) === 'center')
+                                        @foreach ($jobroles as $jobrole)
+                                            <tr>
+                                                <td>{{$jobrole->partnerjobrole->scheme->scheme}}</td>
+                                                <td>{{$jobrole->partnerjobrole->sector->sector}}</td>
+                                                <td>{{$jobrole->partnerjobrole->jobrole->job_role}}</td>
+                                                <td>{{$jobrole->target}}</td>
+                                                <td>{{$jobrole->enrolled}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                @endauth
                             </tbody>
                         </table>
                     </div> 

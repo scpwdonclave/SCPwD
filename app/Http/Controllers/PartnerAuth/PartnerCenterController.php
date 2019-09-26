@@ -51,6 +51,44 @@ class PartnerCenterController extends Controller
 
     }
 
+    public function updatecenter(Request $request){
+        $request->validate([
+            'id' => 'required',
+            'name' => 'required',
+            'value' => 'required',
+        ]);
+        $center = Center::find($request->id);
+        if ($center->partner->id == Auth::guard('partner')->user()->id) {
+            $field = $request->name;
+            switch ($request->name) {
+                case 'name':
+                    $center->spoc_name = $request->value;
+                    break;
+                case 'email':
+                    $duplicate = Center::where([['email','=', $request->value],['email', '!=', $center->email]])->first();
+                        if ($duplicate) {
+                            return response()->json(array('type' => 'error','title' => 'Duplicate Entry', 'message' => "This <span style='font-weight:bold;color:red'>Email</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);        
+                        } else {
+                            $center->email = $request->value;
+                        }
+                    break;
+                case 'mobile':
+                    $duplicate = Center::where([['mobile','=', $request->value],['mobile', '!=', $center->mobile]])->first();
+                        if ($duplicate) {
+                            return response()->json(array('type' => 'error','title' => 'Duplicate Entry', 'message' => "This <span style='font-weight:bold;color:red'>Mobile No</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);        
+                        } else {
+                            $center->mobile = $request->value;
+                        }
+                    break;
+            }
+            $center->save();
+            return response()->json(array('type' => 'success','title' => 'Job Done', 'message' => "SPOC Details of <span style='font-weight:bold;color:blue'>$center->tc_id</span> has been Updated"),200);        
+        } else {
+            return abort(401);
+        }
+
+    }
+
     public function trainers(){
         $partner = Auth::guard('partner')->user();
         $trainers = Trainer::where('tp_id', $partner->id)->get();

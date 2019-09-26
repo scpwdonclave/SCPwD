@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -15,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
         'App\Partner' => 'App\Policies\PartnerPolicy',
+        'App\Center' => 'App\Policies\CenterPolicy',
     ];
 
     /**
@@ -27,7 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('partner-profile-verified', 'App\Policies\PartnerPolicy@PartnerProfileVerified');
-        Gate::define('partner-update-pending', 'App\Policies\PartnerPolicy@PartnerUpdatePending');
         Gate::define('partner-has-jobrole', 'App\Policies\PartnerPolicy@PartnerHasJobRole');
+        Gate::define('partner-center-profile-active-verified', 'App\Policies\PartnerPolicy@CenterProfileVerifiedAndActive');
+        Gate::define('center-profile-active-verified', 'App\Policies\CenterPolicy@CenterProfileVerifiedAndActive');
+
     }
 }

@@ -28,31 +28,19 @@ class PartnerPolicy
         }
     }
 
-    public function PartnerUpdatePending($user){
-        
-        if ($this->PartnerProfileVerified($user)) {
-            $tp_id = $user->tp_id;
-            $partner = DB::table('partner_update')->where('tp_id', '=', $tp_id)->latest('id')->first();
-            if ($partner) {
-                if ($partner->action) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    }
-
     public function PartnerHasJobRole($user){
         if (count($user->partner_jobroles)) {
             return true;
         } else {
             return false;
+        }   
+    }
+
+    public function CenterProfileVerifiedAndActive($partner, $center){
+        if (($center->tp_id == $partner->id) && $center->verified && $center->status && $center->ind_status) {
+            return true;
+        } else {
+            return false;
         }
-        
     }
 }
