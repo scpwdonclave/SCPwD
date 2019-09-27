@@ -27,7 +27,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>Add</strong> New Training Center</h2>
+                    <h2><strong>Add</strong> Trainer</h2>
                    <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.trainers')}}">My Trainers</a>                      
                 </div>
                 @if ($errors->any())
@@ -40,7 +40,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_center" method="POST" action="{{ route('partner.tc.addcenter') }}" enctype="multipart/form-data">
+                    <form id="form_trainer" method="POST" action="{{ route('partner.tc.submittrainer') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -494,9 +494,9 @@
 
     /* Making Sure That the Terms & Condition is Accepted */
     
-        $('#form_center').submit(function(e){
+        $('#form_trainer').submit(function(e){
             e.preventDefault();
-            if ($('#form_center').valid()) {
+            if ($('#form_trainer').valid()) {
                 if ($('input:checkbox', this).length == $('input:checked', this).length) {
                     
                     /* Disabling Prev & Submit Button and Proceed to Submit */
@@ -706,7 +706,7 @@ $(function () {
 /* Custom Valiadtions */
     
     
-jQuery("#form_center").validate({
+jQuery("#form_trainer").validate({
         rules: {
         pin: { pin: true },
         mobile: { mobile: true },

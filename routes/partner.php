@@ -22,5 +22,6 @@ Route::post('training_centers/add-center-api', 'PartnerAuth\PartnerCenterControl
 
 Route::get('training_centers/trainers', 'PartnerAuth\PartnerTrainerController@trainers')->name('tc.trainers');
 Route::get('training_centers/add-trainer', 'PartnerAuth\PartnerTrainerController@addtrainer')->name('tc.addtrainer');
+Route::post('training_centers/add-trainer', 'PartnerAuth\PartnerTrainerController@submittrainer')->name('tc.submittrainer');
 
     

@@ -40,4 +40,8 @@ class PartnerTrainerController extends Controller
             return redirect(route('partner.tc.centers'));
         }
     }
+
+    public function submittrainer(Request $request){
+        dd($request);
+    }
 }
