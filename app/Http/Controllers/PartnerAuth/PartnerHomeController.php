@@ -102,13 +102,8 @@ class PartnerHomeController extends Controller
             $partner->landmark = $request->landmark;
             $partner->addr_proof = $request->addr_proof;
             
-            if ($request->addr_proof == 'Incorportaion Certificate') {
-                /* Linking, Already Uploaded */
-                $partner->addr_doc = $partner->incorp_doc;
-            } else {
-                $gstfilepath = Storage::disk('myDisk')->put('/partners', $request['addr_doc']);
-                $partner->addr_doc = $gstfilepath;
-            }
+            $addr_doc = Storage::disk('myDisk')->put('/partners', $request['addr_doc']);
+            $partner->addr_doc = $addr_doc;
             
             
             $partner->city = $request->city;
@@ -121,7 +116,7 @@ class PartnerHomeController extends Controller
             $partner->gst = $request->gst;
             
             if ($request->addr_proof == 'GST Registration Certificate') {
-                $partner->gst_doc = $gstfilepath;
+                $partner->gst_doc = $addr_doc;
             } else {
                 if ($request->hasFile('gst_doc')) {
                     $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);

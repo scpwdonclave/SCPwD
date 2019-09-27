@@ -27,7 +27,7 @@
                                             <th>Spoc Email</th>
                                             <th>Spoc Mobile</th>
                                             <th>Target</th>
-                                            <th>Scheme</th>
+                                            {{-- <th>Scheme</th> --}}
                                             <th>View</th>
                                             <th>Action</th>
                                         </tr>
@@ -50,10 +50,10 @@
                                                 </td> --}}
                                              @if($item->status==1)
                                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.target',['id'=>Crypt::encrypt($item->id)])}}" >Target</a></td>
-                                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.scheme',['id'=>Crypt::encrypt($item->id)])}}" >Scheme</a></td>
+                                            {{-- <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.scheme',['id'=>Crypt::encrypt($item->id)])}}" >Scheme</a></td> --}}
                                             @else
                                             <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Target</a></td>
-                                            <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Scheme</a></td>
+                                            {{-- <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Scheme</a></td> --}}
                                             @endif
                                             <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
                                             @if($item->status==1)

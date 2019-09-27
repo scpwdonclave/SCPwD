@@ -29,6 +29,9 @@ return [
         'guards'       => [
             'web',
             'api',
+            'admin',
+            'partner',
+            'center',
         ],
     ],
 

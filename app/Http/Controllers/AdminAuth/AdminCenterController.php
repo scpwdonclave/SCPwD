@@ -106,8 +106,8 @@ class AdminCenterController extends Controller
          $notification->save();
          /* End Notification For Partner */
 
-         $center_doc=CenterDoc::where('tc_id',$request->id)->delete();
-         $center_job=CenterJobRole::where('tc_id',$request->id)->delete();
+         CenterDoc::where('tc_id',$request->id)->delete();
+         CenterJobRole::where('tc_id',$request->id)->delete();
        
          $data->delete();
         return response()->json(['status' => 'done'],200);

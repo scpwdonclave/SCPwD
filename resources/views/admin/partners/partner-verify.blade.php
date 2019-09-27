@@ -12,20 +12,16 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="body">
+                        @if (!is_null($partnerData->tp_id))
+                        <div class="text-center">
+                            <h6>
+                                TP ID: <span style='color:blue'>{{$partnerData->tp_id}}</span>
+                            </h6>
+                        </div>
+                        <br>
+                    @endif
                     <ul class="cbp_tmtimeline">
-                        {{-- <li>
-                            <time class="cbp_tmtime" datetime="2017-11-04T18:30"><span class="hidden">25/12/2017</span> <span class="large">Now</span></time>
-                            <div class="cbp_tmicon"><i class="zmdi zmdi-account"></i></div>
-                            <div class="cbp_tmlabel empty"> <span>No Activity</span> </div>
-                        </li>
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-04T03:45"><span>03:45 AM</span> <span>Today</span></time>
-                            <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-label"></i></div>
-                            <div class="cbp_tmlabel">
-                                <h2><a href="javascript:void(0);">Art Ramadani</a> <span>posted a status update</span></h2>
-                                <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
-                            </div>
-                        </li> --}}
+                       
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>SPOC MAIN</span></time>
                             <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
@@ -340,13 +336,63 @@
         </div>
     </div>
 </div>
+{{-- ========================= --}}
+<div class="container-fluid">
+        <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2><strong>Schemes For</strong> Partner </h2>
+                           
+                        </div>
+                        <div class="body">
+                                <div class="text-center">
+                                        <h4 class="margin-0">{{$partnerData->spoc_name}}</h4>
+                                        <h6 class="m-b-20">{{$partnerData->tp_id}}</h6>
+                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                    <thead>
+                                            <tr>
+                                            <th>#</th>
+                                            <th>Scheme Name</th>
+                                            <th>Year</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            @foreach ($partner_scheme as $key=>$scheme)
+                                                
+                                            <tr>
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$scheme->scheme->scheme}}</td>
+                                            <td>{{$scheme->scheme->year}}</td>
+                                           
+                                            @if($scheme->scheme_status==1)
+                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$scheme->scheme->id}},{{$partnerData->id}})">Deactivate</a></td>
+                                           
+                                            @elseif($scheme->scheme_status==0)
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.scheme.active',['id'=>Crypt::encrypt($scheme->id),'pid'=>Crypt::encrypt($partnerData->id)])}}" >Activate</a></td>
+                                            @endif
+                                            </tr>
+                                          
+                                            @endforeach
+                                           
+                                        </tbody>
+                                </table>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 {{-- =================== --}}
 <div class="container-fluid">
         <div class="row clearfix">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong> Centers </h2>
+                        <h2><strong>All</strong> Centers For Partner <strong>{{$partnerData->tp_id}}</strong></h2>
                            
                         </div>
                         <div class="body">
@@ -387,6 +433,8 @@
             </div>
 </div>
 {{-- =================== --}}
+
+
 @stop
 @section('page-script')
 <script>
@@ -436,6 +484,98 @@ function showPromptMessage() {
     });
 }
 </script>
+<script>
+        function showCancelMessage(f,p) {
+            swal({
+                title: "Deactive!",
+                text: "Write Reason for Deactive:",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                showLoaderOnConfirm: true,
+                inputPlaceholder: "Write reason"
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!"); return false
+                }
+                var id=f;
+                var pid=p;
+                var reason=inputValue;
+                let _token = $("input[name='_token']").val();
+           
+                $.ajax({
+                type: "POST",
+                url: "{{route('admin.tp.partner.scheme.deactive')}}",
+                data: {_token,id,pid,reason},
+                success: function(data) {
+                  // console.log(data.url);
+                   swal({
+                title: "Deactive",
+                text: "Scheme Record Deactive",
+                type:"success",
+                
+                showConfirmButton: true
+            },function(isConfirm){
+        
+                if (isConfirm){
+               
+                window.location="{{route('admin.tp.partners')}}";
+        
+                } 
+                });
+            
+                }
+            });
+                
+            });
+        }
+        
+        // function showCancelMessage(f) {
+        //     let _token = $("input[name='_token']").val();
+        //     var id=f;
+        //     swal({
+        //         title: "Are you sure?",
+        //         text: "Center will not be able to Access!",
+        //         type: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonColor: "#DD6B55",
+        //         confirmButtonText: "Yes",
+        //         cancelButtonText: "No, cancel",
+        //         closeOnConfirm: false,
+        //         closeOnCancel: false
+        //     }, function (isConfirm) {
+        //         if (isConfirm) {
+        //             $.ajax({
+        //                 type: "POST",
+        //                 url: "{{route('admin.tc.center.deactive')}}",
+        //                 data:{_token,id},
+        //                 success: function(data) {
+                           
+        //                    swal({
+        //                 title: "Done",
+        //                 text: "Center Deactivated",
+        //                 type:"success",
+                        
+        //             },function(isConfirm){
+                
+        //                 if (isConfirm){
+                       
+        //                 window.location="{{route('admin.tc.centers')}}";
+                
+        //                 } 
+        //                 });
+                    
+        //                 }
+        //             });
+                   
+        //         } else {
+        //             swal("Cancelled", "Your Partner is safe :)", "error");
+        //         }
+        //     });
+        // }
+        </script>
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

@@ -97,8 +97,11 @@ class AdminPartnerController extends Controller
 
         $partnerData=Partner::findOrFail($id);
         $centers=DB::table('centers')->where('tp_id',$id)->get();
+        $partner_scheme=PartnerJobrole::where('tp_id',$id)
+        ->groupBy('scheme_id')->get();
+
         if ($partnerData->complete_profile && $partnerData->status==1) {
-            return view('admin.partners.partner-verify')->with(compact('partnerData','centers'));
+            return view('admin.partners.partner-verify')->with(compact('partnerData','centers','partner_scheme'));
         } else {
             return redirect()->route('admin.tp.partners');
         }
@@ -287,14 +290,9 @@ class AdminPartnerController extends Controller
         $partner->landmark = $request->landmark;
         $partner->addr_proof = $request->addr_proof;
 
-        if ($request->addr_proof == 'Incorportaion Certificate') {
-            /* Linking, Already Uploaded */
-            $partner->addr_doc = $partner->incorp_doc;
-        } else {
-            if($request->hasFile('addr_doc')){
-            $gstfilepath = Storage::disk('myDisk')->put('/partners', $request['addr_doc']);
-            $partner->addr_doc = $gstfilepath;
-                }
+        if($request->hasFile('addr_doc')){
+            $addr_doc = Storage::disk('myDisk')->put('/partners', $request['addr_doc']);
+            $partner->addr_doc = $addr_doc;
         }
             $partner->city = $request->city;
             $partner->block = $request->block;
@@ -308,7 +306,9 @@ class AdminPartnerController extends Controller
             $partner->gst = $request->gst;
 
             if ($request->addr_proof == 'GST Registration Certificate') {
-                $partner->gst_doc = $gstfilepath;
+                if($request->hasFile('addr_doc')){
+                $partner->gst_doc = $addr_doc;
+                }
             } else {
                 if($request->hasFile('gst_doc')){
                 $partner->gst_doc = Storage::disk('myDisk')->put('/partners', $request['gst_doc']);
@@ -470,15 +470,15 @@ class AdminPartnerController extends Controller
         return Redirect()->back();
     }
 
-    public function partnerScheme($id){
-        $partner_id = Crypt::decrypt($id);
-        $partner_dtl=Partner::findOrFail($partner_id);
-        $partner_scheme=PartnerJobrole::where('tp_id',$partner_id)
-        ->groupBy('scheme_id')->get();
+    // public function partnerScheme($id){
+    //     $partner_id = Crypt::decrypt($id);
+    //     $partner_dtl=Partner::findOrFail($partner_id);
+    //     $partner_scheme=PartnerJobrole::where('tp_id',$partner_id)
+    //     ->groupBy('scheme_id')->get();
 
-        return view('admin.partners.partner-scheme')->with(compact('partner_scheme','partner_dtl'));
+    //     return view('admin.partners.partner-scheme')->with(compact('partner_scheme','partner_dtl'));
         
-    }
+    // }
 
     public function partnerSchemeDeactive(Request $request){
 

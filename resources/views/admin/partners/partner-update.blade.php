@@ -218,7 +218,6 @@
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="addr_proof" onchange="checkaddress();" data-show-subtext="true" data-dropup-auto='false'>
                                                             <option value="Rent/ Lease Agreement" {{ ( $partner->addr_proof =='Rent/ Lease Agreement') ? 'selected' : '' }}>Rent/ Lease Agreement</option>
-                                                            <option value="Incorportaion Certificate" {{ ( $partner->addr_proof =='Incorportaion Certificate') ? 'selected' : '' }}>Incorportaion Certificate</option>
                                                             <option value="GST Registration Certificate" {{ ( $partner->addr_proof =='GST Registration Certificate') ? 'selected' : '' }}>GST Registration Certificate</option>
                                                             <option value="Telephone Bill (BSNL/MTNL)" {{ ( $partner->addr_proof =='Telephone Bill (BSNL/MTNL)') ? 'selected' : '' }}>Telephone Bill (BSNL/MTNL)</option>
                                                             <option value="Electricity Bill" {{ ( $partner->addr_proof =='Electricity Bill') ? 'selected' : '' }}>Electricity Bill</option>
@@ -420,19 +419,8 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-sm-4">
-                                                    {{-- <button id="last_prev_btn" type="button" onclick="validatedata('collapseSix,collapseFive');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button> --}}
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div class="form-group text-center">
-                                                        <div class="checkbox">
-                                                            <input id="terms" name="terms" type="checkbox">
-                                                            <label for="terms">I Accept All the <a href="#TermsModal" data-toggle="modal" data-target="#TermsModal">Terms & Conditions </a></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 text-right">
-                                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> SUBMIT</button>
+                                                <div class="col-sm-12 text-right">
+                                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -441,20 +429,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@stop
-@section('modal')
-    <div class="modal fade" id="TermsModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="title" id="TermsModalLabel">Company Terms & Conditions</h4>
-                </div>
-                <div class="modal-body">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum nemo vero illum esse explicabo dolor quisquam id iusto enim, placeat eligendi, ipsa facere nesciunt ex temporibus repellendus assumenda atque? Officiis.
                 </div>
             </div>
         </div>
@@ -529,32 +503,6 @@
     /* End Validation of Each Sections */
 
 
-    /* Making Sure That the Terms & Condition is Accepted */
-        
-        $('#form_complete_registration').submit(function(e){
-            e.preventDefault();
-            if ($('#form_complete_registration').valid()) {
-                if ($('input:checkbox', this).length == $('input:checked', this).length) {
-                    
-                    /* Disabling Prev & Submit Button and Proceed to Submit */
-                    
-                        $("#submit_form").prop("disabled", true);
-                        $("#last_prev_btn").prop("disabled", true);
-                        $("#submit_form").html("Please Wait...");
-                        $(this).unbind().submit();
-                    
-                    /* End Disabling Prev & Submit Button and Proceed to Submit */
-                
-
-                } else {
-                    showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
-                    console.log('Not Checked');
-                }
-            }
-        });
-        
-    /* End Making Sure That the Terms & Condition is Accepted */
-
 
     /* Checking Address Proof Type */
     $(function(){
@@ -562,21 +510,8 @@
     });
         
         function checkaddress(){
-            if ($('select[name=addr_proof]').val() === 'Incorportaion Certificate') {
-                $('#addr_doc_error').slideUp('slow');
-                $('#addr_doc').slideUp('slow', function(){
-                    $('#addr_doc-error').text('');
-                    $('#addr_doc2').hide().html('We Have Your Incorporation Certificate').fadeIn('slow');
-                });
-
-            } else {
-                $('#addr_doc2').fadeOut('slow').html('');
-                $('#addr_doc').slideDown('slow');
-                $('#addr_doc_error').slideDown('slow');
-                $('#addr_doc_error').html(''); 
-            }
-
-            if ($('select[name=addr_proof]').val() === 'GST Registration Certificate') {
+            
+           if ($('select[name=addr_proof]').val() === 'GST Registration Certificate') {
                 $('#gst_doc_id').hide();
             } else {
                 $('#gst_doc_id').show();
