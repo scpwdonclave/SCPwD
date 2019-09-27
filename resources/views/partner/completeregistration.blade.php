@@ -66,9 +66,14 @@
                                                     <label for="org_type">Oganization Type</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>Type 1</option>
-                                                            <option>Type 2</option>
-                                                            <option>Type 3</option>
+                                                            <option>NGO</option>
+                                                            <option>Private Limited</option>
+                                                            <option>Partnership Firm</option>
+                                                            <option>Proprietorship</option>
+                                                            <option>Limited Company</option>
+                                                            <option>One Person Company</option>
+                                                            <option>LLP</option>
+                                                            <option>LLC</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -282,7 +287,7 @@
                                     <div class="panel-heading" role="tab" id="headingFive">
                                         <h4 class="panel-title"> <a role="button" href="#collapseFive" onclick="return false" aria-expanded="true" aria-controls="collapseFive">Financial Information</a> </h4>
                                     </div>
-                                    <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
+                                    <div id="collapseFive" class="panel-collapse collapse show in" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-sm-5">
@@ -320,7 +325,8 @@
                                                 <div class="col-sm-3">
                                                     <label for="pan">PAN Number *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="PAN Number" value="{{ old('pan') }}" name="pan" required>
+                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('pan')" placeholder="PAN Number" value="{{ old('pan') }}" name="pan" required>
+                                                        <span id="pan_error" style="color:red"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -333,7 +339,8 @@
                                                 <div class="col-sm-3">
                                                     <label for="gst">GST Account Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="GST Number" onkeyup="this.value = this.value.toUpperCase();" value="{{ old('gst') }}" name="gst">
+                                                        <input type="text" class="form-control" placeholder="GST Number" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('gst')" value="{{ old('gst') }}" name="gst">
+                                                        <span id="gst_error" style="color:red"></span>
                                                     </div>
                                                 </div>
                                                 <div id="gst_doc_id" class="col-sm-3">
@@ -488,6 +495,42 @@
         /* End Finantial Year Calculator for CA Certificate Section */
     });
 
+        /* Check Redundancy */
+        var dup_pan_tag = true;
+        var dup_gst_tag = true;
+        function checkduplicacy(val){
+            var _token = $('[name=_token]').val();
+            let value = $('[name='+val+']').val();
+            let dataString = { checkredundancy : value, section: val, _token: _token};
+            $.ajax({
+                url: "{{ route('partner.tc.api.partner') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                    if (data.success) {
+                        $('#'+val+'_error').html('');
+                        if (val == 'pan') {
+                            dup_pan_tag = true;
+                        } else {
+                            dup_gst_tag = true;
+                        } 
+                    } else {
+                        $('#'+val+'_error').html(val+' already exists');
+                        if (val == 'pan') {
+                            dup_pan_tag = false;                        
+                        } else {
+                            dup_gst_tag = false;
+                        } 
+                    }
+                },
+                error:function(data){
+                    $('#'+val+'_error').html(val+' already exists');
+                    dup_email_tag = false;
+                    dup_email_tag = false;
+                } 
+            });
+        }
+    /* End Check Redundancy */
 
 
     /* Validation of Each Sections */
@@ -502,8 +545,12 @@
                 return false;
                 }
             });
+            if ($('[name=gst]').val() == '') {
+                $('#gst_error').html('');
+                dup_gst_tag = true;
+            }
 
-            if (tag) {
+            if (tag && dup_pan_tag && dup_gst_tag) {
 
                     $('#'+div[0]).collapse('hide');
                     $('#'+div[0]).on('hidden.bs.collapse', function () {
@@ -544,28 +591,15 @@
     /* Checking Address Proof Type */
         
         function checkaddress(){
-            // if ($('select[name=addr_proof]').val() === 'Incorportaion Certificate') {
-            //     $('#addr_doc_error').slideUp('slow');
-            //     $('#addr_doc').slideUp('slow', function(){
-            //         $('#addr_doc-error').text('');
-            //         $('#addr_doc2').hide().html('We Have Your Incorporation Certificate').fadeIn('slow');
-            //     });
-
-            // } else {
-            //     $('#addr_doc2').fadeOut('slow').html('');
-            //     $('#addr_doc').slideDown('slow');
-            //     $('#addr_doc_error').slideDown('slow');
-            //     $('#addr_doc_error').html(''); 
-            // }
-
             if ($('select[name=addr_proof]').val() === 'GST Registration Certificate') {
                 $('#gst_doc_id').hide();
             } else {
                 $('#gst_doc_id').show();
             }
-        }
-
+            }
     /* End Checking Address Proof Type */
+
+
 
 </script>
 

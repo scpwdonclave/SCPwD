@@ -6,6 +6,7 @@ Route::get('dashboard/job_roles/{id}', 'PartnerAuth\PartnerHomeController@viewjo
 
 Route::get('/complete_registration', 'PartnerAuth\PartnerHomeController@showCompleteRegistrationForm')->name('comp-register');
 Route::post('/complete_registration', 'PartnerAuth\PartnerHomeController@submitCompleteRegistrationForm')->name('comp-register');
+Route::post('/complete_registration/api_partner', 'PartnerAuth\PartnerHomeController@api_partner')->name('tc.api.partner');
 
 /* Custom URLs */
 Route::get('profile', 'PartnerAuth\PartnerHomeController@profile')->name('profile');

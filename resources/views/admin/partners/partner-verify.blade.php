@@ -12,7 +12,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="body">
-                        @if (!is_null($partnerData->tp_id))
+                        @if (!$partnerData->pending_verify)
                         <div class="text-center">
                             <h6>
                                 TP ID: <span style='color:blue'>{{$partnerData->tp_id}}</span>
