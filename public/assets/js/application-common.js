@@ -4,7 +4,8 @@ function countlevel() {
     $("#label-count").html($(".countli").length);
   } else {
     $("#label-count").html("");
-    $("#notification_header").remove();
+    // $("#notification_header").remove();
+    $('[id^=notification_]').remove();
   }
 }
 
