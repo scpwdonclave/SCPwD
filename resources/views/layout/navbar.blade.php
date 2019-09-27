@@ -22,11 +22,6 @@
         @endif
         <li class="dropdown app_menu"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-apps"></i></a>
             <ul class="dropdown-menu pullDown">
-                {{-- <li><a href="{{route('app.mail-inbox')}}"><i class="zmdi zmdi-email m-r-10"></i><span>Mail</span></a></li>
-                <li><a href="{{route('app.contact-list')}}"><i class="zmdi zmdi-accounts-list m-r-10"></i><span>Contacts</span></a></li>
-                <li><a href="{{route('app.chat')}}"><i class="zmdi zmdi-comment-text m-r-10"></i><span>Chat</span></a></li>
-                <li><a href="{{route('pages.invoices')}}"><i class="zmdi zmdi-arrows m-r-10"></i><span>Invoices</span></a></li>
-                <li><a href="{{route('app.calendar')}}"><i class="zmdi zmdi-calendar-note m-r-10"></i><span>Calendar</span></a></li> --}}
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-arrows m-r-10"></i><span>Notes</span></a></li>
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-view-column m-r-10"></i><span>Taskboard</span></a></li>                
             </ul>
@@ -34,7 +29,9 @@
         <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
             <span id="label-count" class="label-count"></span>
             </a>
-            <ul class="dropdown-menu pullDown">
+            <ul id="notification_ul" class="dropdown-menu pullDown">
+                <li id="notification_header" class="header d-flex justify-content-between">Notifcations<span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">DISMISS ALL</span></li>
+
                 <li class="body">
                         @php
                         if (Auth::guard(Request::segment(1))->check()) {
@@ -52,7 +49,6 @@
                         }
                         @endphp
                         @if (count($notifications))
-                        <li id="notification_header" class="header d-flex justify-content-between">Notifcations<span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">DISMISS ALL</span></li>
                             <ul class="menu list-unstyled">
                                 @foreach ($notifications as $notification)
                                     <li id="notification_{{$notification->id}}" class="countli">

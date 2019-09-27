@@ -32,7 +32,7 @@
                     data: {'dismiss':true,id:id},
                     success: function(data) {
                         if (data.status === 'all') {
-                            $('li[id^=notification_]').remove();
+                            $('[id^=notification_]').remove();
                             countlevel();
                         } else {
                             $('#notification_'+id).remove();
