@@ -287,7 +287,7 @@
                                     <div class="panel-heading" role="tab" id="headingFive">
                                         <h4 class="panel-title"> <a role="button" href="#collapseFive" onclick="return false" aria-expanded="true" aria-controls="collapseFive">Financial Information</a> </h4>
                                     </div>
-                                    <div id="collapseFive" class="panel-collapse collapse show in" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
+                                    <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-sm-5">
