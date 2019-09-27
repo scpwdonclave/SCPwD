@@ -58,7 +58,7 @@
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>General Details
                                 </span></time>
-                            <div class="cbp_tmicon bg-blue"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-blue"> <i class="zmdi zmdi-dehaze"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -97,7 +97,7 @@
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>CEO/MD/Head of the Organization Details
                                 </span></time>
-                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-receipt"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -122,7 +122,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Authorized Signatory Info</span></time>
-                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-shield-check"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -147,7 +147,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Address of The Organization</span></time>
-                            <div class="cbp_tmicon bg-cyan"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-cyan"> <i class="zmdi zmdi-pin"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -208,7 +208,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Financial Information</span></time>
-                            <div class="cbp_tmicon bg-orange"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-orange"> <i class="zmdi zmdi-file"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     @if ($partnerData->ca1_year!=null)
@@ -282,7 +282,7 @@
                         <li>
                             <time class="cbp_tmtime"><span>Personal Information
                                 </span></time>
-                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-case"></i></div>
+                            <div class="cbp_tmicon bg-blush"> <i class="zmdi zmdi-account-o"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">

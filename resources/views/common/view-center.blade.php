@@ -103,7 +103,7 @@
                                     
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Address Proof Document</small>
-                                                <p> &nbsp;&nbsp;
+                                                <p>Document &nbsp;&nbsp;
                                                     <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->addr_doc)])}}" download="{{basename($centerData->addr_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     </p>
                                                 <hr>
@@ -151,30 +151,38 @@
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Front View</small>
                                             <p>Center Front Image &nbsp;&nbsp;
+                                                @if($centerData->center_front_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_front_view)])}}" download="{{basename($centerData->center_front_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                               @endif
+                                            </p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Back View</small>
                                             <p>Center Back Image &nbsp;&nbsp;
+                                                @if($centerData->center_back_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_back_view)])}}" download="{{basename($centerData->center_back_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                                @endif    
+                                            </p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Right View</small>
                                             <p>Center Right Image &nbsp;&nbsp;
+                                                @if($centerData->center_right_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_right_view)])}}" download="{{basename($centerData->center_right_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                                @endif
+                                            </p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-3">
                                         <small class="text-muted">Center Left View</small>
                                         <p>Center Left Image&nbsp;&nbsp;
+                                             @if($centerData->center_left_view !=null)
                                             <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_left_view)])}}" download="{{basename($centerData->center_left_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                            </p>
+                                            @endif    
+                                        </p>
                                         <hr>
                                 </div>
                                     
@@ -184,23 +192,29 @@
                                     <div class="col-sm-4">
                                             <small class="text-muted">Biometric System</small>
                                             <p>Biometric &nbsp;&nbsp;
+                                                 @if($centerData->biometric !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->biometric)])}}" download="{{basename($centerData->biometric)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                                @endif    
+                                            </p>
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">Drinking Facility</small>
                                             <p>Drinking &nbsp;&nbsp;
+                                                @if($centerData->drinking !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->drinking)])}}" download="{{basename($centerData->drinking)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                                @endif    
+                                            </p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
                                             <small class="text-muted">Saftey</small>
                                             <p>Saftey &nbsp;&nbsp;
+                                                @if($centerData->safety !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->safety)])}}" download="{{basename($centerData->safety)}}"><i class="zmdi zmdi-download"></i></a>
-                                                </p>
+                                                @endif    
+                                            </p>
                                             <hr>
                                     </div>
                                     
@@ -263,8 +277,8 @@
                                 <div class="row">
                                     @foreach ($centerData->center_docs as $docs)
                                         @if ($docs->room === 'wash')
-                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($wash->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($wash->doc)])}}" download="{{basename($wash->doc)}}">Download</a>
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
                                             </div>
                                         @endif
                                     @endforeach

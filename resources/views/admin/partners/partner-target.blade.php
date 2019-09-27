@@ -409,7 +409,10 @@
                             
                     //         $('#jobrole').append('<option value="'+jobid+'">'+jobrole+'</option>');
                     //      });
-                    
+                    $('#sector_u').empty();
+                    $('#scheme_u').empty();
+                    $('#jobrole_u').empty();
+
                     $.each (data.sectors, function (index) {
                     var id=data.sectors[index].id;
                     var sector=data.sectors[index].sector;
