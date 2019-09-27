@@ -12,7 +12,6 @@ use App\CenterJobRole;
 use App\PartnerJobrole;
 use App\CenterDoc;
 use App\Center;
-use App\Trainer;
 use Auth;
 use DB;
 
@@ -89,12 +88,7 @@ class PartnerCenterController extends Controller
 
     }
 
-    public function trainers(){
-        $partner = Auth::guard('partner')->user();
-        $trainers = Trainer::where('tp_id', $partner->id)->get();
 
-        return view('partner.centers.trainers')->with(compact('trainers','partner'));
-    }
 
     public function view_addcenter_form(){
 

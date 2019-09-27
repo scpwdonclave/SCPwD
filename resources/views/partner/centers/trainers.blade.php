@@ -15,8 +15,8 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>My</strong> Trainers</h2>
-                    @can('partner-profile-verified', Auth::shouldUse('partner'))
-                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.addcenter')}}">Add New Trainer</a>                      
+                    @can('partner-has-jobrole', Auth::shouldUse('partner'))
+                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.addtrainer')}}">Add New Trainer</a>                      
                     @endcan
                 </div>
                 <div class="body">
@@ -24,9 +24,11 @@
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>#</th>
+                                    <th>Trainer Name</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
+                                    <th>Verified</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -34,12 +36,11 @@
                                 @foreach ($trainers as $trainer)
                                     
                                 <tr>
-                                {{-- <td><i class="zmdi zmdi-circle text-{{$trainer->status?'success':'danger'}}"></td>
-                                <td>{{$trainer->spoc_name}}</td>
+                                <td><i class="zmdi zmdi-circle text-{{$trainer->status?'success':'danger'}}"></td>
+                                <td>{{$trainer->name}}</td>
                                 <td>{{$trainer->email}}</td>
-                                <td>{{$trainer->spoc_mobile}}</td>
+                                <td>{{$trainer->mobile}}</td>
                                 <td>{{$trainer->verified?'Verified':'Not Verified'}}</td>
-                                <td>hi</td> --}}
                                 </tr>
                                 @endforeach
                                
@@ -47,8 +48,8 @@
                         </table>
                     </div> 
                     <div class="text-center">
-                        @cannot('partner-profile-verified', Auth::shouldUse('partner'))
-                            <h6>You Can Add New Trainers Once Your Account get Verified</h6>
+                        @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
+                            <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
                         @endcannot
                     </div>  
                 </div>

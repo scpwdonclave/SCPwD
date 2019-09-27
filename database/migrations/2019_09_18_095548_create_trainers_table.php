@@ -14,11 +14,22 @@ class CreateTrainersTable extends Migration
     public function up()
     {
         Schema::create('trainers', function (Blueprint $table) {
-            $table->bigIncrements('id'); 
-            $table->unsignedBigInteger('tp_id');
-            $table->unsignedBigInteger('tc_id');
-            $table->unsignedBigInteger('trainer_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('tp_id')->nullable();
             $table->unsignedBigInteger('tp_job_id');
+            $table->string('trainer_id')->unique()->nullable();
+            $table->string('name');
+            $table->string('doc_number')->unique();
+            $table->string('doc_type');
+            $table->string('doc_file');
+            $table->string('mobile')->unique();
+            $table->string('email')->unique();
+            $table->string('ssc_doc');
+            $table->string('ssc_issued');
+            $table->string('ssc_valid');
+            $table->string('scpwd_doc');
+            $table->string('scpwd_issued');
+            $table->string('scpwd_valid');
 
             $table->boolean('status')->default(0);
             $table->boolean('ind_status')->default(0);
