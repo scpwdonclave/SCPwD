@@ -55,7 +55,7 @@
                         </div>
 
                     </div>
-                    <form id="form_complete_registration" method="POST" action="{{ route('admin.training_partner.comp-details-update') }}" enctype="multipart/form-data">
+                    <form id="form2" method="POST" action="{{ route('admin.training_partner.comp-details-update') }}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2()">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-primary">
@@ -338,7 +338,8 @@
                                                 <div class="col-sm-3">
                                                     <label for="pan">PAN Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="PAN Number" value="{{ $partner->pan }}" name="pan" >
+                                                        <input type="text" id="pan" required class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="PAN Number" onchange="checkduplicacy('pan')" value="{{ $partner->pan }}" name="pan" >
+                                                        <span id="pan_error" style="color:red"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -351,7 +352,8 @@
                                                 <div class="col-sm-3">
                                                     <label for="gst">GST Account Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="GST Number" onkeyup="this.value = this.value.toUpperCase();" value="{{ $partner->gst}}" name="gst">
+                                                        <input type="text" class="form-control" placeholder="GST Number" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('gst')" value="{{ $partner->gst}}" name="gst">
+                                                        <span id="gst_error" style="color:red"></span>
                                                     </div>
                                                 </div>
                                                 <div id="gst_doc_id" class="col-sm-3">
@@ -402,7 +404,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row"> 
                                                 <div class="col-sm-4">
                                                     <label for="sanction">Sanction Letter</label>
                                                     <div class="form-group form-float">
@@ -524,6 +526,55 @@
         }
 
     /* End Checking Address Proof Type */
+     /* Check Redundancy */
+        var dup_pan_tag = true;
+        var dup_gst_tag = true;
+        function checkduplicacy(val){
+            var _token = $('[name=_token]').val();
+            let value = $('[name='+val+']').val();
+            let id = '{{$partner->id}}';
+            let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
+            $.ajax({
+                url: "{{ route('partner.tc.api.partner') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                        console.log(data);
+                    if (data.success) {
+                        $('#'+val+'_error').html('');
+                        if (val == 'pan') {
+                            dup_pan_tag = true;
+                        } else {
+                            dup_gst_tag = true;
+                        } 
+                    } else {
+                        $('#'+val+'_error').html(val+' already exists');
+                        if (val == 'pan') {
+                            dup_pan_tag = false;
+                        } else {
+                            dup_gst_tag = false; 
+                        } 
+                    }
+                },
+                error:function(data){
+                    swal('Oops!','Something Went Wrong','error');
+                    
+                } 
+            });
+        }
+    /* End Check Redundancy */
+    function myFunction2(){
+        
+            if(dup_pan_tag==false ||dup_gst_tag==false){
+               
+                return false;
+            }
+            else{
+                var form = document.getElementById("form2");
+                form.submit();
+                return true;
+            }
+        }
 
 </script>
 

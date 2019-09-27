@@ -213,10 +213,18 @@ class PartnerHomeController extends Controller
 
     public function api_partner(Request $request){
         if ($request->has('checkredundancy')) {
-            if (Partner::where($request->section,$request->checkredundancy)->first()) {
-                return response()->json(['success' => false], 200);
+            if ($request->has('id')) {
+                if (Partner::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
+                    return response()->json(['success' => false], 200);
+                } else {
+                    return response()->json(['success' => true], 200);
+                }
             } else {
-                return response()->json(['success' => true], 200);
+                if (Partner::where($request->section,$request->checkredundancy)->first()) {
+                    return response()->json(['success' => false], 200);
+                } else {
+                    return response()->json(['success' => true], 200);
+                }
             }
         }
     }
