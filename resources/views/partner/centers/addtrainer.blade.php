@@ -45,35 +45,21 @@
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingOne">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne"> SPOC Details </a> </h4>
+                                    <h4 class="panel-title"> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne"> Identity </a> </h4>
                                 </div>
                                 <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-3">
-                                                <label for="spoc_name">SPOC Name *</label>
+                                            <div class="col-sm-6">
+                                                <label for="name">Aadhar/Votar Number *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Name" value="{{ old('spoc_name') }}" name="spoc_name" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <label for="mobile">SPOC Mobile *</label>
-                                                <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
-                                                    <span id="mobile_error" style="color:red"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <label for="email">SPOC Email *</label>
-                                                <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
-                                                    <span id="email_error" style="color:red"></span>
+                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhar No or Votar No" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
-                                                <button type="button" onclick="validatedata('collapseOne,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                                <button type="button" id="btnOne" onclick="validatedata('collapseOne,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
                                     </div>
@@ -82,31 +68,37 @@
                             
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingTwo">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo">Training Center Details</a> </h4>
+                                    <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo">Trainer Basic Details</a> </h4>
                                 </div>
                                 <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                                     <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <label for="center_name">Name of the Training Center</label>
+                                        <div class="text-center">
+                                            <h6><span id="doc_message" style="color:blue"></span></h6>
+                                        </div>
+                                        <br>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-3">
+                                                <label for="name">Trainer Name *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Training Center Name" value="{{ old('center_name') }}" name="center_name">
+                                                    <input type="text" class="form-control" placeholder="Trainer Name" value="{{ old('name') }}" name="name" required>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label for="center_address">Address of the Training Center *</label>
+                                            <div class="col-sm-3">
+                                                <label for="mobile">Trainer Mobile *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Training Center Address" value="{{ old('center_address') }}" name="center_address" required>
+                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                    <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label for="landmark">Nearby Landmark *</label>
+                                            <div class="col-sm-3">
+                                                <label for="email">Trainer Email *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Landmark" value="{{ old('landmark') }}" name="landmark" required>
+                                                    <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
+                                                    <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row d-flex justify-content-around">
+                                        {{-- <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
                                                 <label for="addr_proof">Address Proof *</label>
                                                 <div class="form-group form-float">
@@ -173,14 +165,11 @@
                                                     <input type="text" class="form-control" placeholder="PIN Code" value="{{ old('pin') }}" name="pin" required>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <button type="button" onclick="validatedata('collapseTwo,collapseOne');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                            </div>
-                                            <div class="col-sm-6 text-right">
-                                                <button type="button" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                        <div class="row d-flex justify-content-end">
+                                            <div class="col-sm-6 d-flex justify-content-end">
+                                                <button type="button" id="btnTwo" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
                                     </div>
@@ -425,66 +414,160 @@
                     return false;
                 }
             });
-            
-            if (div[0] == 'collapseThree' && tag) {
-                var array = [];
-                var arrayValues = [];
-                var ajaxresponse = true;
-                $('select[id^=jobrole_]').each(function (){
-                    array.push(this.value);
-                    var temp = this.id.split('_');
-                    var last = temp[temp.length - 1];
-                    arrayValues.push($('#target_'+last).val());
-                });
-                
-                
-                if (checkIfDuplicateExists(array)) {
-                    swal('','Please Select Unique Job Roles','info');
-                    return false;
-                } else {
-                    ajaxreqst = true;
-                    var _token = $('[name=_token]').val();
-                    var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
-                    $.ajax({
-                        url: "{{ route('partner.tc.addcenter.api') }}",
-                        method: "POST",
-                        data: dataValidate,
-                        success: function(data){
-                            if (!data.success) {
-                                swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
-                                ajaxresponse = false;
-                                return true;
-                            } else {
+
+
+            if (tag) {
+              
+              switch (div[0]) {
+                  case 'collapseOne':
+                        var ajaxresponse = true;
+                        var doc_no = $('[name=doc_no]').val();
+                        $("#btnOne").prop("disabled", true);
+                        $("#btnOne").html("Please Wait...");
+                        var _token = $('[name=_token]').val();
+                        var dataValidate = { _token, doc_no };
+                        $.ajax({
+                            url: "{{ route('partner.tc.addtrainer.api') }}",
+                            method: "POST",
+                            data: dataValidate,
+                            success: function(data){
+                                if (!data.success) {
+                                    $('#doc_message').text('Note: This Aadhar/Votar Number is Registred in our Trainer Database');
+                                }
                                 ajaxresponse = true;
                                 return true;
+                            },
+                            error: function(){
+                                swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
                             }
-                            
-                        },
-                        error: function(){
-                            swal('Abort','Something went Wrong','error');
-                            ajaxresponse = false;
-                            return false;
-                        }
-                    }).done(function(){
-                        if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
-                            $('#'+div[0]).collapse('hide');
-                            $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                $('#'+div[1]).collapse('show');
-                            });
-                        }
+                        }).done(function(){
+                            if (ajaxresponse) {
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
+                            }
 
-                    });
-                }
-                // console.log($('select[id^=jobrole_]')[0].value);
-                
-            } else {
-                if (tag && dup_email_tag && dup_mobile_tag) {
-                        $('#'+div[0]).collapse('hide');
-                        $('#'+div[0]).on('hidden.bs.collapse', function () {
-                            $('#'+div[1]).collapse('show');
                         });
-                    }
+                      break;
+                  case 'collapseTwo':
+                        var ajaxresponse = true;
+                        var mobile = $('[name=mobile]').val();
+                        var email = $('[name=email]').val();
+                        var doc_no = $('[name=doc_no]').val();
+                        $("#btnTwo").prop("disabled", true);
+                        $("#btnTwo").html("Please Wait...");
+                        var _token = $('[name=_token]').val();
+                        var dataValidate = { _token, mobile, email, doc_no };
+                        $.ajax({
+                            url: "{{ route('partner.tc.addtrainer.api') }}",
+                            method: "POST",
+                            data: dataValidate,
+                            success: function(data){
+                                
+                                if (!data.success) {
+                                    var swalText = document.createElement("div");
+                                    if (!data.mobile && !data.email) {
+                                        swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
+                                    } else if(!data.mobile) {
+                                        swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
+                                    } else if (!data.email) {
+                                        swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
+                                    }    
+                                    swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                                    $("#btnTwo").prop("disabled", false);
+                                    $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                    ajaxresponse = false;
+                                    return false;
+                                }
+                                $("#btnTwo").prop("disabled", false);
+                                $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                ajaxresponse = true;
+                                return true;
+                            },
+                            error: function(){
+                                swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                            }
+                        }).done(function(){
+                            if (ajaxresponse) {
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
+                            }
+
+                        });
+                      break;
+              
+                  default:
+                      break;
+              } 
             }
+
+
+
+
+            
+            // if (div[0] == 'collapseThree' && tag) {
+            //     var array = [];
+            //     var arrayValues = [];
+            //     var ajaxresponse = true;
+            //     $('select[id^=jobrole_]').each(function (){
+            //         array.push(this.value);
+            //         var temp = this.id.split('_');
+            //         var last = temp[temp.length - 1];
+            //         arrayValues.push($('#target_'+last).val());
+            //     });
+                
+                
+            //     if (checkIfDuplicateExists(array)) {
+            //         swal('','Please Select Unique Job Roles','info');
+            //         return false;
+            //     } else {
+            //         ajaxreqst = true;
+            //         var _token = $('[name=_token]').val();
+            //         var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
+            //         $.ajax({
+            //             url: "{{ route('partner.tc.addcenter.api') }}",
+            //             method: "POST",
+            //             data: dataValidate,
+            //             success: function(data){
+            //                 if (!data.success) {
+            //                     swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
+            //                     ajaxresponse = false;
+            //                     return true;
+            //                 } else {
+            //                     ajaxresponse = true;
+            //                     return true;
+            //                 }
+                            
+            //             },
+            //             error: function(){
+            //                 swal('Abort','Something went Wrong','error');
+            //                 ajaxresponse = false;
+            //                 return false;
+            //             }
+            //         }).done(function(){
+            //             if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
+            //                 $('#'+div[0]).collapse('hide');
+            //                 $('#'+div[0]).on('hidden.bs.collapse', function () {
+            //                     $('#'+div[1]).collapse('show');
+            //                 });
+            //             }
+
+            //         });
+            //     }
+            //     // console.log($('select[id^=jobrole_]')[0].value);
+                
+            // } 
+            // else {
+            //     if (tag && dup_email_tag && dup_mobile_tag) {
+            //             $('#'+div[0]).collapse('hide');
+            //             $('#'+div[0]).on('hidden.bs.collapse', function () {
+            //                 $('#'+div[1]).collapse('show');
+            //             });
+            //         }
+            // }
 
             
 

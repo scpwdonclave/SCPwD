@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTrainersTable extends Migration
+class CreateTrainerNeutralsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateTrainersTable extends Migration
      */
     public function up()
     {
-        Schema::create('trainers', function (Blueprint $table) {
+        Schema::create('trainer_neutrals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('tp_id')->nullable();
+            $table->unsignedBigInteger('t_id');
+            $table->unsignedBigInteger('tp_id');
             $table->unsignedBigInteger('tp_job_id');
-            $table->string('trainer_id')->unique()->nullable();
+            $table->string('trainer_id');
             $table->string('name');
-            $table->string('doc_number')->unique();
+            $table->string('doc_number');
             $table->string('doc_type');
             $table->string('doc_file');
-            $table->string('mobile')->unique();
-            $table->string('email')->unique();
+            $table->string('mobile');
+            $table->string('email');
             $table->string('ssc_doc');
             $table->string('ssc_issued');
             $table->string('ssc_valid');
@@ -35,7 +36,7 @@ class CreateTrainersTable extends Migration
 
             $table->boolean('status')->default(0);
             $table->boolean('ind_status')->default(0);
-            $table->boolean('verified')->default(0);
+            $table->boolean('attached')->default(0)->comment = 'Linked to TP or Not';
             $table->timestamps();
         });
     }
@@ -47,6 +48,6 @@ class CreateTrainersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trainers');
+        Schema::dropIfExists('trainer_neutrals');
     }
 }
