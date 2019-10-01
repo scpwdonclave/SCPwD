@@ -200,7 +200,7 @@
                                                     <div class="form-group form-float">
                                                         <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles as $job)
-                                                                @if ($job->status && $job->scheme->status)
+                                                                @if ($job->status && $job->scheme_status)
                                                                     <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</option>
                                                                 @endif
                                                             @endforeach
@@ -221,7 +221,9 @@
                                                 <button type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-4 text-center">
-                                                <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
+                                                @if (count($partner->partner_jobroles)-1 > 0)
+                                                    <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
+                                                @endif
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -685,18 +687,18 @@ $(function () {
     
     /* Intializing Bootstrap DatePicker */
     
-        $('.year_picker .form-control').datepicker({
-            autoclose: true,
-            minViewMode: 'years',
-            format: 'yyyy',
-            endDate: new Date()
-        });
+        // $('.year_picker .form-control').datepicker({
+        //     autoclose: true,
+        //     minViewMode: 'years',
+        //     format: 'yyyy',
+        //     endDate: new Date()
+        // });
         
-        $('.date_picker .form-control').datepicker({
-            autoclose: true,
-            format: 'dd-mm-yyyy',
-            endDate: new Date()
-        });
+        // $('.date_picker .form-control').datepicker({
+        //     autoclose: true,
+        //     format: 'dd-mm-yyyy',
+        //     endDate: new Date()
+        // });
     
     /* End Bootstrap DatePicker */
     

@@ -185,29 +185,35 @@
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-6">
-                                                    <label for="sector">Domain/Sector *</label>
+                                                    <label for="sector[new]">Domain/Sector *</label>
                                                     <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
+                                                        <select id="sector_new" class="form-control show-tick" data-live-search="true" name="sector[new]" onchange="updatejob('new')" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
                                                                 @if ($job->status && $job->scheme_status)
-                                                                    <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
+                                                                    <option value="{{$job->scheme_id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="jobrole">Job Roles *</label>
+                                                    <label for="jobrole[new]">Job Roles *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole[]" multiple data-dropup-auto='false' required>
+                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" multiple data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="repeatable-container"></div>
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                @if (count($partner->partner_jobroles->unique("sector_id"))-1 > 0)
+                                                    <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
+                                                @endif
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -667,27 +673,50 @@
 
 /* Fetch SelectPicker Data */
 
-    // function fetchdata(id){
+    function updatejob(id){
+        var _token = $('[name=_token]').val();
+        var sectorid = $("#sector_"+id+" :selected").val()
+        $.ajax({
+            url: "{{ route('partner.tc.addcenter.api') }}",
+            method: "POST",
+            data: { _token, sectorid },
+            success: function(data){
+                console.log(data.jobs);
+                
+            } 
+        });
         
-    //     var temp = id[0].id.split('_');
-    //     var last = temp[temp.length - 1];
-    //     if (last === 'new0') {
-    //         var $options = $("#jobrole_new > option").not('option:selected').sort().clone();
-    //         $('#jobrole_'+last).append($options);
-    //         $('#jobrole_'+last).selectpicker('refresh');
-    //     } else {
-    //         console.log(Number(last.substr(-1)) - 1);
-    //         var $options = $("#jobrole_new"+(Number(last.substr(-1)) - 1)+" > option").not('option:selected').sort().clone();
-    //         $('#jobrole_'+last).append($options);
-    //         $('#jobrole_'+last).selectpicker('refresh');
-    //         //  Number(last.substr(-1)) - 1;
-    //         // fetchid = ''
-    //     }
+        $('#jobrole_'+id).empty().append('<option value="whatever">text</option>');
+        $('#jobrole_'+id).selectpicker('refresh');
 
 
-    // }
+
+    }
 
 /* End Fetch SelectPicker Data */
+
+    /* Repeatable Section for JobRole */
+    $(function() {
+            $("form .repeatable-container").repeatable({
+            template: "#jobroleform",
+            max: {{count($partner->partner_jobroles->unique("sector_id"))-1}},
+            afterAdd: function(id){
+                // console.log(id);
+                
+                var temp = id[0].id.split('_');
+                var last = temp[temp.length - 1];
+                // console.log(id);
+                $('.jobrole').selectpicker();
+                /* Fetch SelectPicker Data */
+                var $options = $("#sector_new > option").sort().clone();
+                $('#sector_'+last).append($options);
+                $('#sector_'+last).selectpicker('refresh');
+                /* End Fetch SelectPicker Data */
+            }
+            });
+            
+        });
+    /* End Repeatable Section for JobRole */
 
 </script>
 
@@ -697,23 +726,20 @@
 <script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-8">
-                <label for="jobrole[{?}]">Scheme - Sectors - Job Roles *</label>
+            <div class="col-sm-6">
+                <label for="sector[{?}]">Domain/Sector *</label>
                 <div class="form-group form-float">
-                    <select id="jobrole_{?}" class="form-control show-tick jobroleclass" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
-                        
+                    <select id="sector_{?}" class="form-control show-tick" data-live-search="true" name="sector[{?}]" onchange="updatejob('{?}')" data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <label for="target[{?}]">Target *</label>
+            <div class="col-sm-6">
+                <label for="jobrole[{?}]">Job Roles *</label>
                 <div class="form-group form-float">
-                    <input id="target_{?}" type="number" min="0" class="form-control" placeholder="Target" name="target[{?}]" required>
+                    <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}][]" multiple data-dropup-auto='false' required>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <button type="button" class="btn btn-danger delete"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>            
         </div>
     </div>
 </script>
@@ -725,7 +751,7 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
-{{-- <script src="{{asset('assets/js/jquery.repeatable.js')}}"></script> --}}
+<script src="{{asset('assets/js/jquery.repeatable.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
