@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTrainersTable extends Migration
+class CreateTrainerStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,16 @@ class CreateTrainersTable extends Migration
      */
     public function up()
     {
-        Schema::create('trainers', function (Blueprint $table) {
+        Schema::create('trainer_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('tp_id');
-            // $table->unsignedBigInteger('tp_job_id');
-            $table->string('trainer_id')->unique()->nullable();
+            $table->unsignedBigInteger('prv_id');
+            $table->string('trainer_id');
             $table->string('name');
             $table->string('doc_number')->unique();
             $table->string('doc_type');
             $table->string('doc_file');
             $table->string('mobile')->unique();
             $table->string('email')->unique();
-            // $table->string('ssc_doc');
-            // $table->string('ssc_issued');
-            // $table->string('ssc_valid');
             $table->string('scpwd_no');
             $table->string('scpwd_doc');
             $table->string('scpwd_issued');
@@ -34,9 +30,8 @@ class CreateTrainersTable extends Migration
             $table->string('resume');
             $table->string('other_doc')->nullable();
 
-            $table->boolean('status')->default(0);
-            $table->boolean('ind_status')->default(0);
-            $table->boolean('verified')->default(0);
+            $table->boolean('status')->default(1);
+            $table->boolean('attached')->default(0)->comment = 'Trainer Attached Ditached State';
             $table->timestamps();
         });
     }
@@ -48,6 +43,6 @@ class CreateTrainersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trainers');
+        Schema::dropIfExists('trainer_statuses');
     }
 }
