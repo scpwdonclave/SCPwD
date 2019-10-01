@@ -180,37 +180,34 @@
                                 <div class="panel-heading" role="tab" id="headingThree">
                                     <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Job Role Section</a> </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-8">
-                                                    <label for="jobrole[new]">Scheme - Sectors - Job Roles *</label>
+                                                <div class="col-sm-6">
+                                                    <label for="sector">Domain/Sector *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" data-dropup-auto='false' required>
-                                                            @foreach ($partner->partner_jobroles as $job)
-                                                                @if ($job->status)
-                                                                    <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</option>
+                                                        <select class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
+                                                            @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
+                                                                @if ($job->status && $job->scheme_status)
+                                                                    <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="target[new]">Target *</label>
+                                                <div class="col-sm-6">
+                                                    <label for="jobrole">Job Roles *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="number" id="target_new" min="0" class="form-control" placeholder="Target" name="target[new]" required>
+                                                        <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole[]" multiple data-dropup-auto='false' required>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="repeatable-container"></div>
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                            </div>
-                                            <div class="col-sm-4 text-center">
-                                                <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
                                             </div>
                                             <div class="col-sm-4 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -692,29 +689,6 @@
 
 /* End Fetch SelectPicker Data */
 
-    /* Repeatable Section for JobRole */
-    $(function() {
-            $("form .repeatable-container").repeatable({
-            template: "#jobroleform",
-            max: {{count($partner->partner_jobroles)-1}},
-            afterAdd: function(id){
-                // console.log(id);
-                
-                var temp = id[0].id.split('_');
-                var last = temp[temp.length - 1];
-                // console.log(id);
-                $('.jobrole').selectpicker();
-                /* Fetch SelectPicker Data */
-                var $options = $("#jobrole_new > option").sort().clone();
-                $('#jobrole_'+last).append($options);
-                $('#jobrole_'+last).selectpicker('refresh');
-                /* End Fetch SelectPicker Data */
-            }
-            });
-            
-        });
-    /* End Repeatable Section for JobRole */
-
 </script>
 
 
@@ -751,7 +725,7 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
-<script src="{{asset('assets/js/jquery.repeatable.js')}}"></script>
+{{-- <script src="{{asset('assets/js/jquery.repeatable.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

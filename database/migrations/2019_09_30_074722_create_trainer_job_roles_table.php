@@ -15,10 +15,16 @@ class CreateTrainerJobRolesTable extends Migration
     {
         Schema::create('trainer_job_roles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('tp_id');
-            $table->unsignedBigInteger('t_id');
-            $table->unsignedBigInteger('tp_job_id');
+            $table->unsignedBigInteger('tr_id');
+            $table->unsignedBigInteger('scheme_id');
+            $table->unsignedBigInteger('sector_id');
+            $table->string('ssc_no');
+            $table->string('ssc_doc');
+            $table->string('ssc_issued');
+            $table->string('ssc_valid');
+            $table->unsignedBigInteger('jobrole_id');
             $table->boolean('status')->default(1);
+            $table->boolean('scheme_status')->default(0);
             $table->timestamps();
         });
     }
