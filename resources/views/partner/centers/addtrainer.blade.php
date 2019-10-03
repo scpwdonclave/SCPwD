@@ -19,6 +19,7 @@
 .datepicker table {
     width: 100%;
 }
+
 </style>
 @stop
 @section('content')
@@ -98,74 +99,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-6">
-                                                <label for="addr_proof">Address Proof *</label>
-                                                <div class="form-group form-float">
-                                                    <select class="form-control show-tick" data-live-search="true" name="addr_proof" data-dropup-auto='false' required>
-                                                        <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
-                                                        <option value="Incorportaion Certificate">Incorportaion Certificate</option>
-                                                        <option value="GST Registration Certificate">GST Registration Certificate</option>
-                                                        <option value="Telephone Bill (BSNL/MTNL)">Telephone Bill (BSNL/MTNL)</option>
-                                                        <option value="Electricity Bill">Electricity Bill</option>
-                                                        <option value="Bank Statement">Bank Statement</option>
-                                                        <option value="Incometax Certificate">Incometax Certificate</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label>Address Proof Document *</label>
-                                                <div class="form-group form-float">
-                                                    <div class="row d-flex justify-content-center">
-                                                        <span id="addr_doc2" for="addr_doc" style="color:blue;"></span>
-                                                    </div>
-                                                    <input id="addr_doc" type="file" class="form-control" name="addr_doc" required>
-                                                    <span id="addr_doc_error" style="color:red;"></span>                                                            
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-5">
-                                                <label for="state">State/Union Territory - District *</label>
-                                                <div class="form-group form-float">
-                                                    <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
-                                                        @foreach ($states as $state)
-                                                            <option value="{{$state->id}}" data-subtext="{{ $state->state }}">{{ $state->district }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <label for="parliament">Parliament Constituency *</label>
-                                                <div class="form-group form-float">
-                                                    <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" required>
-                                                        @foreach ($parliaments as $parliament)
-                                                            <option value="{{$parliament->id}}" data-subtext="{{ $parliament->state_ut }}">{{ $parliament->constituency }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                <label for="city">City/Town/Village *</label>
-                                                <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="City/Town/Village" value="{{ old('city') }}" name="city" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="block">Tehsil/Mandal/Block *</label>
-                                                <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Tehsil/Mandal/Block" value="{{ old('block') }}" name="block" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="pin">PIN code *</label>
-                                                <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="PIN Code" value="{{ old('pin') }}" name="pin" required>
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                         
                                         <div class="row d-flex justify-content-end">
                                             <div class="col-sm-6 d-flex justify-content-end">
@@ -180,27 +113,54 @@
                                 <div class="panel-heading" role="tab" id="headingThree">
                                     <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Job Role Section</a> </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-6">
-                                                    <label for="sector[new]">Domain/Sector *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="sector[new]">Domain/Sector/SSC *</label>
                                                     <div class="form-group form-float">
                                                         <select id="sector_new" class="form-control show-tick" data-live-search="true" name="sector[new]" onchange="updatejob('new')" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
                                                                 @if ($job->status && $job->scheme_status)
-                                                                    <option value="{{$job->scheme_id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
+                                                                    <option value="{{$job->sector_id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4">
                                                     <label for="jobrole[new]">Job Roles *</label>
                                                     <div class="form-group form-float">
                                                         <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" multiple data-dropup-auto='false' required>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_doc_no">SSC Document No *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no') }}" name="ssc_doc_no" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_doc[new]">SSC Document *</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="file" id="ssc_doc_new" class="form-control" name="ssc_doc[new]" required>
+                                                        <span id="ssc_doc_new_error"  style="color:red;"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_start[new]">SSC Certificate Issued On *</label>
+                                                    <div class="form-group form-float month_range_picker">
+                                                        <input type="text" id="ssc_start_new" onchange="startchange('new')" class="form-control" name="ssc_start[new]" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_end[new]">SSC Certificate Valid Upto *</label>
+                                                    <div class="form-group form-float month_range_picker">
+                                                        <input type="text" id="ssc_end_new" class="form-control" name="ssc_end[new]" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -208,7 +168,6 @@
                                         <div class="repeatable-container"></div>
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <button type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-4 text-center">
                                                 @if (count($partner->partner_jobroles->unique("sector_id"))-1 > 0)
@@ -225,96 +184,50 @@
 
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingFour">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Upload Section</a> </h4>
+                                    <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">SCPwD / Other Documents</a> </h4>
                                 </div>
                                 <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-3">
-                                                <label>Center Front View</label>
+                                            <div class="col-sm-4">
+                                                <label for="resume">Resume *</label>
                                                 <div class="form-group form-float">
-                                                    <input id="center_front_view" type="file" class="form-control" name="center_front_view">
-                                                    <span id="center_front_view_error" style="color:red;"></span>                                                            
+                                                    <input type="file" id="resume" class="form-control" name="resume" required>
+                                                    <span id="resume_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <label>Center Back View</label>
+                                            <div class="col-sm-4">
+                                                <label for="other_doc">Other Document</label>
                                                 <div class="form-group form-float">
-                                                    <input id="center_back_view" type="file" class="form-control" name="center_back_view">
-                                                    <span id="center_back_view_error" style="color:red;"></span>                                                            
+                                                    <input type="file" id="other_doc" class="form-control" name="other_doc">
+                                                    <span id="other_doc_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <label>Center Right View</label>
+                                            <div class="col-sm-4">
+                                                <label for="scpwd_doc_no">SCPwD Document No *</label>
                                                 <div class="form-group form-float">
-                                                    <input id="center_right_view" type="file" class="form-control" name="center_right_view">
-                                                    <span id="center_right_view_error" style="color:red;"></span>                                                            
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <label>Center Left View</label>
-                                                <div class="form-group form-float">
-                                                    <input id="center_left_view" type="file" class="form-control" name="center_left_view">
-                                                    <span id="center_left_view_error" style="color:red;"></span>                                                            
+                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{ old('scpwd_doc_no') }}" name="scpwd_doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-6">
-                                                <label>Class Room(s)</label>
+                                            <div class="col-sm-4">
+                                                <label for="scpwd_doc">SSC Document *</label>
                                                 <div class="form-group form-float">
-                                                    <input id="class" type="file" class="form-control" name="class_room[]" multiple>
-                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
-                                                    <span id="class_error" style="color:red;"></span>                                                            
+                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" required>
+                                                    <span id="scpwd_doc_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <label>Lab Room(s)</label>
-                                                <div class="form-group form-float">
-                                                    <input id="lab" type="file" class="form-control" name="lab_room[]" multiple>
-                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
-                                                    <span id="lab_error" style="color:red;"></span>                                                            
+                                            <div class="col-sm-4">
+                                                <label for="scpwd_start">SCPwD Certificate Issued On *</label>
+                                                <div class="form-group form-float month_range_picker">
+                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" name="scpwd_start" required>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-6">
-                                                <label>Equipment Room(s)</label>
-                                                <div class="form-group form-float">
-                                                    <input id="equipment" type="file" class="form-control" name="equipment_room[]" multiple>
-                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
-                                                    <span id="equipment_error" style="color:red;"></span>                                                            
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label>Washroom(s)</label>
-                                                <div class="form-group form-float">
-                                                    <input id="wash" type="file" class="form-control" name="wash_room[]" multiple>
-                                                    <span class="d-flex justify-content-end" style="color:blue;">* You can choose multiple files</span>
-                                                    <span id="wash_error" style="color:red;"></span>                                                          
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-3">
-                                                <label>Biometric System</label>
-                                                <div class="form-group form-float">
-                                                    <input id="bio" type="file" class="form-control" name="bio">
-                                                    <span id="bio_error" style="color:red;"></span>                                                            
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <label>Drinking Facility</label>
-                                                <div class="form-group form-float">
-                                                    <input id="drink" type="file" class="form-control" name="drink">
-                                                    <span id="drink_error" style="color:red;"></span>                                                            
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <label>Safety</label>
-                                                <div class="form-group form-float">
-                                                    <input id="safety" type="file" class="form-control" name="safety">
-                                                    <span id="safety_error" style="color:red;"></span>                                                            
+                                            <div class="col-sm-4">
+                                                <label for="scpwd_end">SCPwD Certificate Valid Upto *</label>
+                                                <div class="form-group form-float month_range_picker">
+                                                    <input type="text" id="scpwd_end" class="form-control" name="scpwd_end" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -362,6 +275,16 @@
 @section('page-script')
 <script>
 
+    /* Onload Function */
+    $(() => {
+        updatejob('new');
+        filevalidate();
+    });
+    /* End Onload Function */
+
+
+
+
     /* Duplicate Email Checking */
     var dup_email_tag = true;
     var dup_mobile_tag = true;
@@ -408,172 +331,125 @@
     }
 
     function validatedata(divs){
-            div = divs.split(',');
-            let tag = true;
-            var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
-            fields.forEach(function (field) {
-            if (!$("[name='"+ field.name +"']").valid()) {
-                    tag = false;
-                    return false;
-                }
-            });
+        div = divs.split(',');
+        let tag = true;
+        var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
+        fields.forEach(function (field) {
+        if (!$("[name='"+ field.name +"']").valid()) {
+                tag = false;
+                return false;
+            }
+        });
 
-
-            if (tag) {
-              
-              switch (div[0]) {
-                  case 'collapseOne':
-                        var ajaxresponse = true;
-                        var doc_no = $('[name=doc_no]').val();
-                        $("#btnOne").prop("disabled", true);
-                        $("#btnOne").html("Please Wait...");
-                        var _token = $('[name=_token]').val();
-                        var dataValidate = { _token, doc_no };
-                        $.ajax({
-                            url: "{{ route('partner.tc.addtrainer.api') }}",
-                            method: "POST",
-                            data: dataValidate,
-                            success: function(data){
-                                if (!data.success) {
-                                    $('#doc_message').text('Note: This Aadhar/Votar Number is Registred in our Trainer Database');
-                                }
-                                ajaxresponse = true;
-                                return true;
-                            },
-                            error: function(){
-                                swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+        if (tag) {
+            switch (div[0]) {
+                case 'collapseOne':
+                    var ajaxresponse = true;
+                    var doc_no = $('[name=doc_no]').val();
+                    $("#btnOne").prop("disabled", true);
+                    $("#btnOne").html("Please Wait...");
+                    var _token = $('[name=_token]').val();
+                    var dataValidate = { _token, doc_no };
+                    $.ajax({
+                        url: "{{ route('partner.tc.addtrainer.api') }}",
+                        method: "POST",
+                        data: dataValidate,
+                        success: function(data){
+                            if (!data.success) {
+                                $('#doc_message').text('Note: This Aadhar/Votar Number is Registred in our Trainer Database');
                             }
-                        }).done(function(){
-                            if (ajaxresponse) {
-                                $('#'+div[0]).collapse('hide');
-                                $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                    $('#'+div[1]).collapse('show');
-                                });
-                            }
+                            ajaxresponse = true;
+                            return true;
+                        },
+                        error: function(){
+                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                        }
+                    }).done(function(){
+                        if (ajaxresponse) {
+                            $('#'+div[0]).collapse('hide');
+                            $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                $('#'+div[1]).collapse('show');
+                            });
+                        }
 
-                        });
-                      break;
-                  case 'collapseTwo':
-                        var ajaxresponse = true;
-                        var mobile = $('[name=mobile]').val();
-                        var email = $('[name=email]').val();
-                        var doc_no = $('[name=doc_no]').val();
-                        $("#btnTwo").prop("disabled", true);
-                        $("#btnTwo").html("Please Wait...");
-                        var _token = $('[name=_token]').val();
-                        var dataValidate = { _token, mobile, email, doc_no };
-                        $.ajax({
-                            url: "{{ route('partner.tc.addtrainer.api') }}",
-                            method: "POST",
-                            data: dataValidate,
-                            success: function(data){
-                                
-                                if (!data.success) {
-                                    var swalText = document.createElement("div");
-                                    if (!data.mobile && !data.email) {
-                                        swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
-                                    } else if(!data.mobile) {
-                                        swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
-                                    } else if (!data.email) {
-                                        swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
-                                    }    
-                                    swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
-                                    $("#btnTwo").prop("disabled", false);
-                                    $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                    ajaxresponse = false;
-                                    return false;
-                                }
+                    });
+                    break;
+                case 'collapseTwo':
+                    var ajaxresponse = true;
+                    var mobile = $('[name=mobile]').val();
+                    var email = $('[name=email]').val();
+                    var doc_no = $('[name=doc_no]').val();
+                    $("#btnTwo").prop("disabled", true);
+                    $("#btnTwo").html("Please Wait...");
+                    var _token = $('[name=_token]').val();
+                    var dataValidate = { _token, mobile, email, doc_no };
+                    $.ajax({
+                        url: "{{ route('partner.tc.addtrainer.api') }}",
+                        method: "POST",
+                        data: dataValidate,
+                        success: function(data){
+                            
+                            if (!data.success) {
+                                var swalText = document.createElement("div");
+                                if (!data.mobile && !data.email) {
+                                    swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
+                                } else if(!data.mobile) {
+                                    swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
+                                } else if (!data.email) {
+                                    swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
+                                }    
+                                swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
                                 $("#btnTwo").prop("disabled", false);
                                 $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                ajaxresponse = true;
-                                return true;
-                            },
-                            error: function(){
-                                swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                                ajaxresponse = false;
+                                return false;
                             }
-                        }).done(function(){
-                            if (ajaxresponse) {
-                                $('#'+div[0]).collapse('hide');
-                                $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                    $('#'+div[1]).collapse('show');
-                                });
-                            }
+                            $("#btnTwo").prop("disabled", false);
+                            $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                            ajaxresponse = true;
+                            return true;
+                        },
+                        error: function(){
+                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                        }
+                    }).done(function(){
+                        if (ajaxresponse) {
+                            $('#'+div[0]).collapse('hide');
+                            $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                $('#'+div[1]).collapse('show');
+                            });
+                        }
 
-                        });
-                      break;
-              
-                  default:
-                      break;
-              } 
+                    });
+                    break;
+                case 'collapseThree':
+                    var array = [];
+                    $('select[id^=jobrole_]').each(function (){
+                        array.push(this.value);
+                    });
+                    if (checkIfDuplicateExists(array)) {
+                        var swalText = document.createElement("div");
+                        swalText.innerHTML = 'Please Select Unique <span style="color:blue">Domain/Sector/SSC</span'; 
+                        swal({title: "", content: swalText, icon: "info", closeOnEsc: true});
+                        return false;
+                    }
+                    $('#'+div[0]).collapse('hide');
+                    $('#'+div[0]).on('hidden.bs.collapse', function () {
+                        $('#'+div[1]).collapse('show');
+                    });
+                    break;
+
+                case 'collapseFour':
+                    $('#'+div[0]).collapse('hide');
+                    $('#'+div[0]).on('hidden.bs.collapse', function () {
+                        $('#'+div[1]).collapse('show');
+                    });
+                    break;
+            
+                default:
+                    break;
+                }
             }
-
-
-
-
-            
-            // if (div[0] == 'collapseThree' && tag) {
-            //     var array = [];
-            //     var arrayValues = [];
-            //     var ajaxresponse = true;
-            //     $('select[id^=jobrole_]').each(function (){
-            //         array.push(this.value);
-            //         var temp = this.id.split('_');
-            //         var last = temp[temp.length - 1];
-            //         arrayValues.push($('#target_'+last).val());
-            //     });
-                
-                
-            //     if (checkIfDuplicateExists(array)) {
-            //         swal('','Please Select Unique Job Roles','info');
-            //         return false;
-            //     } else {
-            //         ajaxreqst = true;
-            //         var _token = $('[name=_token]').val();
-            //         var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
-            //         $.ajax({
-            //             url: "{{ route('partner.tc.addcenter.api') }}",
-            //             method: "POST",
-            //             data: dataValidate,
-            //             success: function(data){
-            //                 if (!data.success) {
-            //                     swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
-            //                     ajaxresponse = false;
-            //                     return true;
-            //                 } else {
-            //                     ajaxresponse = true;
-            //                     return true;
-            //                 }
-                            
-            //             },
-            //             error: function(){
-            //                 swal('Abort','Something went Wrong','error');
-            //                 ajaxresponse = false;
-            //                 return false;
-            //             }
-            //         }).done(function(){
-            //             if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
-            //                 $('#'+div[0]).collapse('hide');
-            //                 $('#'+div[0]).on('hidden.bs.collapse', function () {
-            //                     $('#'+div[1]).collapse('show');
-            //                 });
-            //             }
-
-            //         });
-            //     }
-            //     // console.log($('select[id^=jobrole_]')[0].value);
-                
-            // } 
-            // else {
-            //     if (tag && dup_email_tag && dup_mobile_tag) {
-            //             $('#'+div[0]).collapse('hide');
-            //             $('#'+div[0]).on('hidden.bs.collapse', function () {
-            //                 $('#'+div[1]).collapse('show');
-            //             });
-            //         }
-            // }
-
-            
-
         }
 
     /* End Validation of Each Sections */
@@ -603,97 +479,32 @@
         
     /* End Making Sure That the Terms & Condition is Accepted */
 
+    /* Fetch SelectPicker Data */
 
-
-        $(function(){
-
-            var _URL = window.URL || window.webkitURL;
-                $("[type='file']").change(function(e) {
-
-                    var image, file;
-
-                    // var l = this.files.length;
-                    // if (l>6 || l<2) {
-                    // alert('You Have To select atleast 2 images ( max limit is 6)');
-                    // $("#file").val('');
-                    // }
-
-                for (var i = this.files.length - 1; i >= 0; i--) {
-
-                    if ((file = this.files[i])) {
-
-                        size = file.size/1024/1024;
-                        size = Math.round(size * 100) / 100
-
-                        image = new Image();
-                        var fileType = file["type"];
-                        var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-                        if ($.inArray(fileType, ValidImageTypes) < 0) {
-                            // invalid file type code goes here.
-                            $("#"+e.currentTarget.id).val('');
-                            $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
-                        } else {
-                            $("#" + e.currentTarget.id + "_error").text('');
-                        }
-
-                        image.onload = function() {
-                            if (size > 1.5) {
-                                $("#"+e.currentTarget.id).val('');
-                                $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
-                            } else {
-                                $("#" + e.currentTarget.id + "_error").text('');
-                            }
-                        };
-
-                        image.src = _URL.createObjectURL(file);
-                        }
-                    }
-
-                });
+        function updatejob(id){
+            var _token = $('[name=_token]').val();
+            var sectorid = $("#sector_"+id+" :selected").val();
+            // console.log(sectorid);
+            
+            $.ajax({
+                url: "{{ route('partner.tc.addtrainer.api') }}",
+                method: "POST",
+                data: { _token, sectorid },
+                success: function(data){
+                    // console.log(data);
+                    
+                    $('#jobrole_'+id).empty();
+                    data.jobs.forEach(value => {
+                        // console.log(value);
+                        $('#jobrole_'+id).append('<option value="'+value.jobrole_id+'">'+value.jobrole.job_role+'</option>');
+                    });
+                    $('#jobrole_'+id).selectpicker('refresh');
+                    
+                } 
             });
+        }
 
-/* Job Role Changes */
-    // function role_changed(v){
-        // console.log(v.id);
-        
-        // console.log($('.jobroleclass').length);
-        // for (let i = 0; i < ($('.jobrole').length/2); i++) {
-        //     // const element = $('.jobrole')[i];
-        //     console.log('hi');
-            
-            
-        // }
-        
-    // }
-/* End Job Role Changes */
-
-
-
-
-
-/* Fetch SelectPicker Data */
-
-    function updatejob(id){
-        var _token = $('[name=_token]').val();
-        var sectorid = $("#sector_"+id+" :selected").val()
-        $.ajax({
-            url: "{{ route('partner.tc.addcenter.api') }}",
-            method: "POST",
-            data: { _token, sectorid },
-            success: function(data){
-                console.log(data.jobs);
-                
-            } 
-        });
-        
-        $('#jobrole_'+id).empty().append('<option value="whatever">text</option>');
-        $('#jobrole_'+id).selectpicker('refresh');
-
-
-
-    }
-
-/* End Fetch SelectPicker Data */
+    /* End Fetch SelectPicker Data */
 
     /* Repeatable Section for JobRole */
     $(function() {
@@ -701,22 +512,62 @@
             template: "#jobroleform",
             max: {{count($partner->partner_jobroles->unique("sector_id"))-1}},
             afterAdd: function(id){
-                // console.log(id);
-                
                 var temp = id[0].id.split('_');
                 var last = temp[temp.length - 1];
-                // console.log(id);
                 $('.jobrole').selectpicker();
+                
                 /* Fetch SelectPicker Data */
+                
                 var $options = $("#sector_new > option").sort().clone();
                 $('#sector_'+last).append($options);
                 $('#sector_'+last).selectpicker('refresh');
+                updatejob(last);
+                $('.month_range_picker .form-control').datepicker({
+                    autoclose: true,
+                    format: 'dd MM yyyy',
+                    endDate: new Date()
+                });
+
+                $('#ssc_start_'+last)
+                .datepicker()
+                .on('changeDate', function(selected){
+                    startDate = new Date(selected.date.valueOf());
+                    startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+                    $('#ssc_end_'+last).datepicker('setStartDate', startDate);
+                });
+
+                filevalidate();
+
                 /* End Fetch SelectPicker Data */
-            }
+                }
             });
             
         });
     /* End Repeatable Section for JobRole */
+
+    /* File Type Validation */
+        function filevalidate(){
+            var _URL = window.URL || window.webkitURL;
+            $("[type='file']").change(function(e) {
+            var image, file;
+            for (var i = this.files.length - 1; i >= 0; i--) {
+            if ((file = this.files[i])) {
+                    image = new Image();
+                    var fileType = file["type"];
+                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
+                    if ($.inArray(fileType, ValidImageTypes) < 0) {
+                    $("#"+e.currentTarget.id).val('');
+                    
+                    $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
+                    } else {
+                    $("#" + e.currentTarget.id + "_error").text('');
+                    }
+                    image.src = _URL.createObjectURL(file);
+                }
+            }
+            });
+        }
+    /* End File Type Validation */
 
 </script>
 
@@ -726,20 +577,44 @@
 <script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-6">
-                <label for="sector[{?}]">Domain/Sector *</label>
+            <div class="col-sm-4">
+                <label for="sector[{?}]">Domain/Sector/SSC *</label>
                 <div class="form-group form-float">
                     <select id="sector_{?}" class="form-control show-tick" data-live-search="true" name="sector[{?}]" onchange="updatejob('{?}')" data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <label for="jobrole[{?}]">Job Roles *</label>
                 <div class="form-group form-float">
                     <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}][]" multiple data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
+            <div class="col-sm-4">
+                <label for="ssc_doc[{?}]">SSC Document *</label>
+                <div class="form-group form-float">
+                    <input type="file" id="ssc_doc_{?}" class="form-control" name="ssc_doc[{?}]" required>
+                    <span id="ssc_doc_{?}_error"  style="color:red;"></span>                        
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-around">
+            <div class="col-sm-4">
+                <label for="ssc_start[{?}]">Certificate Issued On *</label>
+                <div class="form-group form-float month_range_picker">
+                    <input type="text" id="ssc_start_{?}" onchange="startchange('{?}')" class="form-control" name="ssc_start[{?}]" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <label for="ssc_end[{?}]">Certificate Valid Upto *</label>
+                <div class="form-group form-float month_range_picker">
+                    <input type="text" id="ssc_end_{?}" class="form-control" name="ssc_end[{?}]" required>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <button type="button" class="btn btn-danger delete"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>            
         </div>
     </div>
 </script>
@@ -768,34 +643,51 @@ $(function () {
     
     /* Intializing Bootstrap DatePicker */
     
-        $('.year_picker .form-control').datepicker({
+        $('.month_range_picker .form-control').datepicker({
             autoclose: true,
-            minViewMode: 'years',
-            format: 'yyyy',
+            format: 'dd MM yyyy',
             endDate: new Date()
         });
-        
-        $('.date_picker .form-control').datepicker({
-            autoclose: true,
-            format: 'dd-mm-yyyy',
-            endDate: new Date()
+
+        $('#ssc_start_new')
+        .datepicker()
+        .on('changeDate', function(selected){
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('#ssc_end_new').datepicker('setStartDate', startDate);
+        });
+
+        $('#scpwd_start')
+        .datepicker()
+        .on('changeDate', function(selected){
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('#scpwd_end').datepicker('setStartDate', startDate);
         });
     
     /* End Bootstrap DatePicker */
     
 });
 
-
-/* Custom Valiadtions */
-    
-    
-jQuery("#form_trainer").validate({
-        rules: {
-        pin: { pin: true },
-        mobile: { mobile: true },
-        "[type=email]": { email: true }
+    /* Date Range Picker Operations */
+        function startchange(id){
+            $('#ssc_end_'+id).val('');
         }
-    });
+        function startchangescpwd(){
+            $('#scpwd_end').val('');
+        }
+    /* End Date Range Picker Operations */
+
+
+
+    /* Custom Valiadtions */    
+    
+        jQuery("#form_trainer").validate({
+            rules: {
+            mobile: { mobile: true },
+            "[type=email]": { email: true }
+            }
+        });
     
     /* End Custom Valiadtions */
 </script>
