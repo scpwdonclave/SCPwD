@@ -155,27 +155,27 @@ class PartnerCenterController extends Controller
 
 
 
-            $data=DB::table('centers')
-            ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
-            ->where("tc_id", "LIKE", "TC%")->get();
-            $year = date('Y');
-            if (count($data) > 0) {
-                $priceprod = array();
-                    foreach ($data as $key=>$data) {
-                        $priceprod[$key]=$data->tc_id;
-                    }
-                    $lastid= max($priceprod);
+            // $data=DB::table('centers')
+            // ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
+            // ->where("tc_id", "LIKE", "TC%")->get();
+            // $year = date('Y');
+            // if (count($data) > 0) {
+            //     $priceprod = array();
+            //         foreach ($data as $key=>$data) {
+            //             $priceprod[$key]=$data->tc_id;
+            //         }
+            //         $lastid= max($priceprod);
                 
-                    $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001';
-                //dd($new_TCid);
-            } else {
-                $new_tcid = 'TC'.$year.'000001';
-            }
+            //         $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001';
+            //     //dd($new_TCid);
+            // } else {
+            //     $new_tcid = 'TC'.$year.'000001';
+            // }
         
 
             $center = new Center;
             $center->tp_id = Auth::guard('partner')->user()->id;
-            $center->tc_id = $new_tcid;
+            // $center->tc_id = $new_tcid;
             $center->spoc_name = $request->spoc_name;
             $center->email = $request->email;
             $center->mobile = $request->mobile;

@@ -30,6 +30,21 @@ class FileController extends Controller
             return abort(404);
         }
     }
+    protected function downloadThisTrainer($file){
+        try {
+            return response()->file(storage_path("app/files/trainer/{$file}"));
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
+
+    protected function viewThisTrainer($file){
+        try {
+            return response()->file(storage_path("app/files/trainer/{$file}"));
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
 
     public function partnerFiles($action, $file)
     {
@@ -37,6 +52,14 @@ class FileController extends Controller
             return $this->viewThis($file);
         } elseif ($action === 'download') {
             return $this->downloadThis($file);
+        }
+    }
+
+    public function trainerFiles($action, $file){
+        if ($action === 'view') {
+            return $this->viewThisTrainer($file);
+        } elseif ($action === 'download') {
+            return $this->downloadThisTrainer($file);
         }
     }
 }

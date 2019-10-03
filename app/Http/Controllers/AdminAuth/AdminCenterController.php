@@ -32,8 +32,13 @@ class AdminCenterController extends Controller
 
     public function centers(){ 
 
-        $data=Center::all();
+        $data=Center::where('verified',1)->get();
         return view('admin.centers.centers')->with(compact('data'));
+    }
+    public function pendingCenters(){ 
+
+        $data=Center::where('verified',0)->get();
+        return view('admin.centers.pending-centers')->with(compact('data'));
     }
 
     public function centerView($id){
@@ -54,8 +59,9 @@ class AdminCenterController extends Controller
         $data=DB::table('centers')
         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
         ->where("tc_id", "LIKE", "TC%")->get();
+       // dd(count($data));
         $year = date('Y');
-        if ((count($data)-1) > 0) {
+        if (count($data) > 0) {
 
             $priceprod = array();
                 foreach ($data as $key=>$data) {

@@ -16,4 +16,5 @@ class Scheme extends Model implements Auditable
     public function partners(){
         return $this->hasMany('App\PartnerJobrole', 'scheme_id');
     }
+   
 }
