@@ -51,8 +51,8 @@
                                 <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-6">
-                                                <label for="name">Aadhar/Votar Number *</label>
+                                            <div class="col-sm-5">
+                                                <label for="doc_no">Aadhar/Votar Number *</label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Enter Trainer's Aadhar No or Votar No" name="doc_no" required>
                                                 </div>
@@ -130,16 +130,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="jobrole[new]">Job Roles *</label>
+                                                    <label for="jobrole[new][]">Job Roles *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" multiple data-dropup-auto='false' required>
+                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new][]" multiple data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ssc_doc_no">SSC Document No *</label>
+                                                    <label for="ssc_doc_no[new]">SSC Document No *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no') }}" name="ssc_doc_no" required>
+                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[new]') }}" name="ssc_doc_no[new]" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -585,12 +585,20 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <label for="jobrole[{?}]">Job Roles *</label>
+                <label for="jobrole[{?}][]">Job Roles *</label>
                 <div class="form-group form-float">
                     <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}][]" multiple data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
+            <div class="col-sm-4">
+                <label for="ssc_doc_no[{?}]">SSC Document No *</label>
+                <div class="form-group form-float">
+                    <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[{?}]') }}" name="ssc_doc_no[{?}]" required>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-around">
             <div class="col-sm-4">
                 <label for="ssc_doc[{?}]">SSC Document *</label>
                 <div class="form-group form-float">
@@ -598,8 +606,6 @@
                     <span id="ssc_doc_{?}_error"  style="color:red;"></span>                        
                 </div>
             </div>
-        </div>
-        <div class="row d-flex justify-content-around">
             <div class="col-sm-4">
                 <label for="ssc_start[{?}]">Certificate Issued On *</label>
                 <div class="form-group form-float month_range_picker">

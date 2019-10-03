@@ -91,6 +91,20 @@ $(function() {
     },
     "Please enter a valid Mobile Number"
   );
+  jQuery.validator.addMethod(
+    "votar",
+    function(value, element) {
+      return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}?$/.test(value);
+    },
+    "Please enter a valid Votar ID"
+  );
+  jQuery.validator.addMethod(
+    "aadhar",
+    function(value, element) {
+      return this.optional(element) || /^\d{12}$/.test(value);
+    },
+    "Please enter a valid Aadhar Number"
+  );
 
   /* End Additional Methods for Validation  */
 });
