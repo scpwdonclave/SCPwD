@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Trainer;
 use App\TrainerStatus;
+use App\PartnerJobrole;
 use Gate;
 use Auth;
 use DB;
@@ -107,10 +108,6 @@ class PartnerTrainerController extends Controller
 
         } elseif ($request->has('doc_no')) {
 
-            $request->validate([
-                'doc_no' => 'required',
-            ]);
-
             /* Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
             $trainer = TrainerStatus::where('doc_number', $request->doc_no)->first();
             if ($trainer) {
@@ -125,7 +122,18 @@ class PartnerTrainerController extends Controller
                 return response()->json(['success' => true], 200);
             }
             /* End Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
-        } 
+        } elseif ($request->has('sectorid')) {
+            
+            $jobs = PartnerJobrole::where([['tp_id', '=', Auth::guard('partner')->user()->id],['sector_id', '=', $request->sectorid]])->select('jobrole_id')->get();
+            
+            foreach ($jobs as $job) {
+                $job->jobrole->job_role;
+            }
+            
+            return response()->json(['jobs' => $jobs],200);
+            
+        }
+
 
     }
 
