@@ -50,6 +50,14 @@
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-calendar"></i><span>Training Centers</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
+                        <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-centers')}}">Pending Centers</a></li>
+                    </ul>
+                </li> 
+                <li class="{{ Request::segment(2) === 'trainer' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-calendar"></i><span>Trainer</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/trainer/trainers') ? 'active' : null }}"><a href="{{route('admin.tc.trainers')}}">Trainers</a></li>
+                        <li class="{{ Request::is('admin/trainer/trainers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-trainers')}}">Pending Trainers</a></li>
                     </ul>
                 </li> 
                 @endif

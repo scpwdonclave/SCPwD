@@ -32,6 +32,7 @@ Route::get('training_partners/partner-scheme-active/{id}/{pid}', 'AdminAuth\Admi
 
 Route::get('training_centers', function () { return redirect(route('admin.tc.centers')); });
 Route::get('training_centers/centers', 'AdminAuth\AdminCenterController@centers')->name('tc.centers');
+Route::get('training_centers/pending-centers', 'AdminAuth\AdminCenterController@pendingCenters')->name('tc.pending-centers');
 Route::get('training_centers/centers/{id}', 'AdminAuth\AdminCenterController@centerView')->name('tc.center.view');
 Route::get('training_centers/center-verify/{id}', 'AdminAuth\AdminCenterController@centerAccept')->name('tc.center.verify');
 Route::post('training_centers/center-reject', 'AdminAuth\AdminCenterController@centerReject')->name('tc.reject.center');
@@ -39,3 +40,16 @@ Route::get('training_centers/center-edit/{id}', 'AdminAuth\AdminCenterController
 Route::post('training_centers/center-update', 'AdminAuth\AdminCenterController@centerDetailsUpdate')->name('tc.update.center');
 Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
 Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
+
+
+Route::get('trainer/trainers', 'AdminAuth\AdminTrainerController@trainers')->name('tc.trainers');
+Route::get('trainer/pending-trainers', 'AdminAuth\AdminTrainerController@pendingTrainers')->name('tc.pending-trainers');
+Route::get('trainer/trainers/{id}', 'AdminAuth\AdminTrainerController@trainerView')->name('tc.trainer.view');
+Route::get('trainer/dlink-trainers/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerView')->name('tc.dlink.trainer.view');
+Route::get('trainer/trainer-verify/{id}', 'AdminAuth\AdminTrainerController@trainerAccept')->name('tr.trainer.verify');
+Route::post('trainer/trainer-reject', 'AdminAuth\AdminTrainerController@trainerReject')->name('tr.reject.trainer');
+Route::post('trainer/trainer-dlink', 'AdminAuth\AdminTrainerController@trainerDlink')->name('tr.trainer.dlink');
+Route::post('trainer/trainer-deactive', 'AdminAuth\AdminTrainerController@trainerDeactive')->name('tr.trainer.deactive');
+Route::get('trainer/trainer-deactive/{id}', 'AdminAuth\AdminTrainerController@trainerActive')->name('tr.trainer.active');
+Route::post('trainer/dlink-trainer-deactive', 'AdminAuth\AdminTrainerController@dlinkTrainerDeactive')->name('tr.dlink.trainer.deactive');
+Route::get('trainer/dlink-trainer-active/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerActive')->name('tr.dlink.trainer.active');

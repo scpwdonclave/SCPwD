@@ -12,7 +12,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong>Verified Centers </h2>
+                            <h2><strong>All</strong>Pending Centers </h2>
                            
                         </div>
                         <div class="body">
@@ -22,12 +22,12 @@
                                             <tr>
                                             <th>#</th>
                                             <th>TP ID</th>
-                                            <th>TC ID</th>
+                                            {{-- <th>TC ID</th> --}}
                                             <th>Spoc Name</th>
                                             <th>Spoc Email</th>
                                             <th>Spoc Mobile</th>
                                             <th>View</th>
-                                            <th>Action</th>
+                                            {{-- <th>Action</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -36,18 +36,18 @@
                                             <tr>
                                             <td>{{$key+1}}</td>
                                             <td>{{$item->partner->tp_id}}</td>
-                                            <td>{{$item->tc_id}}</td>
+                                            {{-- <td>{{$item->tc_id}}</td> --}}
                                             <td>{{$item->spoc_name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',['id'=>$item->id])}}" >View</a></td>
-                                            @if($item->status==1 && $item->ind_status==1)
+                                            {{-- @if($item->status==1 && $item->ind_status==1)
                                             <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
                                             @elseif($item->ind_status==0)
                                             <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
                                             @elseif($item->status==0)
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                            @endif
+                                            @endif --}}
                                             </tr>
                                           
                                             @endforeach
