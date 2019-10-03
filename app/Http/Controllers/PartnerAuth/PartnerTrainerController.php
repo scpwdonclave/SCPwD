@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PartnerAuth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TRFormValidation;
 use Illuminate\Http\Request;
 use App\Trainer;
 use App\TrainerStatus;
@@ -116,7 +117,14 @@ class PartnerTrainerController extends Controller
         }
     }
 
-    public function submittrainer(Request $request){
+    public function submittrainer(TRFormValidation $request){
+
+        $trainer = new Trainer;
+
+        $trainer->tp_id = Auth::guard('partner')->user()->id;
+        $trainer->name = $request->name;
+        $trainer->email = $request->email;
+        $trainer->mobile = $request->mobile;
         dd($request);
     }
 }

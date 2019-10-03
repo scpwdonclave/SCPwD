@@ -99,7 +99,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+                                        <div id="doc_file_div" class="row d-flex justify-content-center">
+                                            <div class="col-sm-6">
+                                                <label for="doc_file">Aadhar / Votar Document *</label>
+                                                <div class="form-group form-float">
+                                                    <input type="file" id="doc_file" class="form-control" name="doc_file" required>
+                                                    <span id="doc_file_error"  style="color:red;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row d-flex justify-content-end">
                                             <div class="col-sm-6 d-flex justify-content-end">
                                                 <button type="button" id="btnTwo" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -212,7 +220,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc">SSC Document *</label>
+                                                <label for="scpwd_doc">SCPwD Document *</label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" required>
                                                     <span id="scpwd_doc_error"  style="color:red;"></span>
@@ -357,6 +365,7 @@
                         success: function(data){
                             if (!data.success) {
                                 $('#doc_message').text('Note: This Aadhar/Votar Number is Registred in our Trainer Database');
+                                $('#doc_file_div').remove();
                             }
                             ajaxresponse = true;
                             return true;
