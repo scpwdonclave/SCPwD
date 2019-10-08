@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TRFormValidation;
 use Illuminate\Http\Request;
 use App\Trainer;
+use App\Candidate;
 use App\TrainerStatus;
 use App\PartnerJobrole;
 use Gate;
@@ -109,22 +110,27 @@ class PartnerTrainerController extends Controller
                 'partner'  => Auth::guard('partner')->user(),
                 'parliaments'   => DB::table('parliament')->get(),
                 'states'   => DB::table('state_district')->get(),
-                // 'centers'   => Center::where('tp_id', Auth::guard('partner')->user()->id)->get()
             ];
             return view('partner.centers.addtrainer')->with($data);
         } else {   
-            return redirect(route('partner.tc.centers'));
+            return redirect(route('partner.trainers'));
         }
     }
-
+    
     public function submittrainer(TRFormValidation $request){
+        
+        if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
+            $trainer = new Trainer;
+            
+            $trainer->tp_id = Auth::guard('partner')->user()->id;
+            $trainer->name = $request->name;
+            $trainer->email = $request->email;
+            $trainer->mobile = $request->mobile;
+            
+            dd($request);
+        } else {
+            return redirect(route('partner.trainers'));
+        }
 
-        $trainer = new Trainer;
-
-        $trainer->tp_id = Auth::guard('partner')->user()->id;
-        $trainer->name = $request->name;
-        $trainer->email = $request->email;
-        $trainer->mobile = $request->mobile;
-        dd($request);
     }
 }

@@ -441,7 +441,7 @@
 function showPromptMessage() {
     swal({
         title: "Reject!",
-        text: "Write Reason for reject:",
+        text: "Write Reason for Rejection",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -488,7 +488,7 @@ function showPromptMessage() {
         function showCancelMessage(f,p) {
             swal({
                 title: "Deactive!",
-                text: "Write Reason for Deactive:",
+                text: "Write Reason for Deactivation:",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,

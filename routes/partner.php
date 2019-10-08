@@ -20,9 +20,11 @@ Route::get('training_centers/add-center', 'PartnerAuth\PartnerCenterController@v
 Route::post('training_centers/add-center', 'PartnerAuth\PartnerCenterController@submit_addcenter_form')->name('tc.addcenter');
 Route::post('training_centers/add-center-api', 'PartnerAuth\PartnerCenterController@addcenter_api')->name('tc.addcenter.api');
 
-Route::get('training_centers/trainers', 'PartnerAuth\PartnerTrainerController@trainers')->name('tc.trainers');
-Route::get('training_centers/add-trainer', 'PartnerAuth\PartnerTrainerController@addtrainer')->name('tc.addtrainer');
-Route::post('training_centers/add-trainer-api', 'PartnerAuth\PartnerTrainerController@addtrainer_api')->name('tc.addtrainer.api');
-Route::post('training_centers/add-trainer', 'PartnerAuth\PartnerTrainerController@submittrainer')->name('tc.submittrainer');
+Route::get('trainers', 'PartnerAuth\PartnerTrainerController@trainers')->name('trainers');
+Route::get('training_centers/candidates', 'PartnerAuth\PartnerCenterController@candidates')->name('tc.candidates');
+Route::get('training_centers/candidates/{id}', 'PartnerAuth\PartnerCenterController@view_candidate')->name('tc.candidate.view');
+Route::get('add-trainer', 'PartnerAuth\PartnerTrainerController@addtrainer')->name('addtrainer');
+Route::post('add-trainer', 'PartnerAuth\PartnerTrainerController@submittrainer')->name('submittrainer');
+Route::post('add-trainer-api', 'PartnerAuth\PartnerTrainerController@addtrainer_api')->name('addtrainer.api');
 
     

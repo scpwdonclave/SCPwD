@@ -56,13 +56,9 @@ class TRFormValidation extends FormRequest
             'scpwd_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             'other_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             'resume' => 'required|mimes:jpeg,jpg,png,pdf',
+            'doc_file' => 'nullable|mimes:jpeg,jpg,png,pdf',
             
         ];
-
-        if ($this->attributes->has('doc_file')) {
-            $rules['doc_file'] = 'mimes:jpeg,jpg,png,pdf';
-        }
-
         return $rules;
     }
 }

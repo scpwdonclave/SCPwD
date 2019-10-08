@@ -16,4 +16,10 @@ class CenterJobRole extends Model implements Auditable
     public function partnerjobrole(){
         return $this->belongsTo('App\PartnerJobrole', 'tp_job_id');
     }
+
+    public function candidates(){
+        return $this->hasMany('App\Candidate', 'tc_job_id');
+    }
+
+    
 }

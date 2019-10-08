@@ -8,3 +8,10 @@ Route::get('dashboard/job_roles', 'CenterAuth\CenterHomeController@jobroles')->n
 /* Custom URLs */
 Route::get('profile', 'CenterAuth\CenterHomeController@profile')->name('profile');
 Route::post('profile', 'CenterAuth\CenterHomeController@profile_update')->name('profile');
+
+Route::get('candidates', 'CenterAuth\CenterHomeController@candidates')->name('candidates');
+Route::get('candidates/{id}', 'CenterAuth\CenterHomeController@view_candidate')->name('candidate.view');
+Route::get('add-candidate', 'CenterAuth\CenterHomeController@addcandidate')->name('addcandidate');
+Route::post('add-candidate', 'CenterAuth\CenterHomeController@submit_candidate')->name('submitcandidate');
+
+Route::post('add-candidate-api', 'CenterAuth\CenterHomeController@candidate_api')->name('addcandidate.api');

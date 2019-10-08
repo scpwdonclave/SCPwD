@@ -51,6 +51,7 @@
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
                         <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-centers')}}">Pending Centers</a></li>
+                        <li class="{{ Request::is('admin/training_centers/candidates') ? 'active' : null }}"><a href="{{route('admin.tc.candidates')}}">Candidates</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'trainer' ? 'active open' : null }}">
@@ -72,9 +73,16 @@
                         <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-pin"></i><span>Training Centers</span></a>
                         <ul class="ml-menu">
                             <li class="{{ Request::is('partner/training_centers/centers') ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
-                            <li class="{{ Request::is('partner/training_centers/trainers') ? 'active' : null }}"><a href="{{route('partner.tc.trainers')}}">Trainers</a></li>
+                            <li class="{{ Request::is('partner/training_centers/candidates') ? 'active' : null }}"><a href="{{route('partner.tc.candidates')}}">Candidates</a></li>
                         </ul>
                     </li>
+                    <li class="{{ Request::is('partner/trainers') ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-account-box"></i><span>Trainers</span></a></li>
+                @endif
+            @endauth
+
+            @auth('center')
+                @if (Request::segment(1) === 'center')
+                    <li class="{{ Request::is('center/candidates') ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
                 @endif
             @endauth
             

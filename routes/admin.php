@@ -41,6 +41,9 @@ Route::post('training_centers/center-update', 'AdminAuth\AdminCenterController@c
 Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
 Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
 
+Route::get('training_centers/candidates', 'AdminAuth\AdminCenterController@candidates')->name('tc.candidates');
+Route::get('training_centers/candidates/{id}', 'AdminAuth\AdminCenterController@view_candidate')->name('tc.candidate.view');
+
 
 Route::get('trainer/trainers', 'AdminAuth\AdminTrainerController@trainers')->name('tc.trainers');
 Route::get('trainer/pending-trainers', 'AdminAuth\AdminTrainerController@pendingTrainers')->name('tc.pending-trainers');

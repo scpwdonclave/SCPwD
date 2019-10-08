@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>Add</strong> Trainer</h2>
-                   <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.trainers')}}">My Trainers</a>                      
+                   <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.trainers')}}">My Trainers</a>                      
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -41,7 +41,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_trainer" method="POST" action="{{ route('partner.tc.submittrainer') }}" enctype="multipart/form-data">
+                    <form id="form_trainer" method="POST" action="{{ route('partner.submittrainer') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -52,9 +52,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhar/Votar Number *</label>
+                                                <label for="doc_no">Aadhar/Voter Number *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhar No or Votar No" name="doc_no" required>
+                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhar No or Voter No" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div id="doc_file_div" class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                <label for="doc_file">Aadhar / Votar Document *</label>
+                                                <label for="doc_file">Aadhar / Voter Document *</label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>
@@ -359,12 +359,12 @@
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, doc_no };
                     $.ajax({
-                        url: "{{ route('partner.tc.addtrainer.api') }}",
+                        url: "{{ route('partner.addtrainer.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
                             if (!data.success) {
-                                $('#doc_message').text('Note: This Aadhar/Votar Number is Registred in our Trainer Database');
+                                $('#doc_message').text('Note: This Aadhar/Voter Number is Registred in our Trainer Database');
                                 $('#doc_file_div').remove();
                             }
                             ajaxresponse = true;
@@ -393,7 +393,7 @@
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, mobile, email, doc_no };
                     $.ajax({
-                        url: "{{ route('partner.tc.addtrainer.api') }}",
+                        url: "{{ route('partner.addtrainer.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
@@ -496,7 +496,7 @@
             // console.log(sectorid);
             
             $.ajax({
-                url: "{{ route('partner.tc.addtrainer.api') }}",
+                url: "{{ route('partner.addtrainer.api') }}",
                 method: "POST",
                 data: { _token, sectorid },
                 success: function(data){

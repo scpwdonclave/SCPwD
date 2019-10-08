@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 <div class="container-fluid">
@@ -306,54 +307,87 @@
     </div>
 </div>
 
-{{-- =================== --}}
 <div class="container-fluid">
     <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>Center</strong> Job Target</h2>
-                       
+                        <h2><strong>Job</strong> Target of <span style='color:blue'>{{$centerData->tc_id}}</span></h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
-                                        <tr>
+                                    <tr>
                                         <th>#</th>
                                         <th>Scheme</th>
                                         <th>Sector</th>
                                         <th>Job Role</th>
                                         <th>Target Allocated</th>
-                                        <th>Student Enroll</th>
-                                        <th>Target Achieve</th>
-                                       
+                                        <th>Student Enrolled</th>
+                                        <th>Target Achieved</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @foreach ($tc_target as $key=>$target)
-                                            
-                                        <tr>
+                                    @foreach ($tc_target as $key=>$target)
+                                        
+                                    <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$target->partnerjobrole->scheme->scheme}}</td>
                                         <td>{{$target->partnerjobrole->sector->sector}}</td>
                                         <td>{{$target->partnerjobrole->jobrole->job_role}}</td>
                                         <td>{{$target->target}}</td>
                                         <td>{{$target->enrolled}}</td>
-                                       <td>0</td>
-                                        </tr>
-                                      
-                                        @endforeach
-                                       
-                                    </tbody>
+                                        <td>0</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 </div>
-{{-- =================== --}}
+<div class="container-fluid">
+    <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Candidates </strong> of <span style='color:blue'>{{$centerData->tc_id}}</span></h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Candidate Name</th>
+                                        <th>Contact</th>
+                                        <th>Category</th>
+                                        <th>Date of Birth</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($centerData->candidates as $candidate)
+                                    <tr>
+                                        <td><i class="zmdi zmdi-circle text-{{$candidate->status?'success':'danger'}}"></td>
+                                        <td>{{$candidate->name}}</td>
+                                        <td>{{$candidate->contact}}</td>
+                                        <td>{{$candidate->category}}</td>
+                                        <td>{{$candidate->dob}}</td>
+                                        <td> <a href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
 @stop
 @section('page-script')
 @auth('admin')

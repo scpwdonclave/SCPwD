@@ -39,6 +39,10 @@ class Center extends Authenticatable implements Auditable
     {
         $this->notify(new CenterResetPassword($token));
     }
+    
+    public function center_jobroles(){
+        return $this->hasMany('App\CenterJobrole', 'tc_id');
+    }
 
     public function center_docs(){
         return $this->hasMany('App\CenterDoc', 'tc_id');
@@ -50,4 +54,9 @@ class Center extends Authenticatable implements Auditable
     public function trainers(){
         return $this->hasMany('App\Trainer', 'tp_id');
     }
+    
+    public function candidates(){
+        return $this->hasMany('App\Candidate', 'tc_id');
+    }
+
 }

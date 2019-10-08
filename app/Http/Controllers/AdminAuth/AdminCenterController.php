@@ -10,10 +10,12 @@ use App\Notification;
 use App\Center;
 use App\Reason;
 use App\CenterDoc;
+use App\Candidate;
 use App\CenterJobRole;
 use App\Mail\TCRejectMail;
 use App\Mail\TCConfirmationMail;
 use Crypt;
+use Auth;
 use Mail;
 use DB;
 
@@ -313,5 +315,19 @@ class AdminCenterController extends Controller
 
         alert()->success('Center Activated', 'Done')->autoclose(2000);
             return Redirect()->back();
+    }
+
+    public function candidates(){
+        $admin = Auth::guard('admin')->user();
+        $data = [
+            'admin'  => $admin,
+            'candidates' => Candidate::all(),
+        ];
+        return view('common.candidates')->with($data);
+    }
+
+    public function view_candidate($id){
+        $candidate = Candidate::findOrFail($id);
+        return $candidate;
     }
 }

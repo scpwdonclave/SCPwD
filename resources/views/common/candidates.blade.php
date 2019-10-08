@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Job Role Details')
+@section('title', 'Candidates')
 @section('page-style')
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
@@ -14,42 +14,46 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>My</strong> Job Role Details</h2>
-                </div>
-                <div class="row d-flex justify-content-center text-center">
-                    <h6>Training Centers Under<br><span style="color:blue">{{$schemesectorjobrole}}</span><br>Job Role</h6>
+                    <h2><strong>My</strong> Candidates</h2>
+                    @if (Request::segment(1) === 'center')
+                        <a class="btn btn-primary btn-round waves-effect" href="{{route('center.addcandidate')}}">Add New Candidate</a>                      
+                    @endif
                 </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>TC ID</th>
-                                    <th>Name</th>
-                                    <th>Center</th>
-                                    <th>Target</th>
-                                    <th>Enrolled</th>
-                                    <th>Achieved</th>
+                                    <th>#</th>
+                                    @if (Request::segment(1) === 'partner')
+                                        <th>TC</th>
+                                    @endif
+                                    <th>Candidate Name</th>
+                                    <th>Contact</th>
+                                    <th>Category</th>
+                                    <th>Date of Birth</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($centers as $center)
+                                @foreach ($candidates as $candidate)
                                     
                                 <tr>
-                                <td>{{$center->center->tc_id}}</td>
-                                <td>{{$center->center->spoc_name}}</td>
-                                <td>{{$center->center->center_name}}</td>
-                                <td>{{$center->target}}</td>
-                                <td>{{$center->enrolled}}</td>
-                                <td>{{$center->enrolled}}</td>
-                                <td class="text-center"> <a href="{{route('partner.tc.center.view',$center->tc_id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td>
+                                <td><i class="zmdi zmdi-circle text-{{$candidate->status?'success':'danger'}}"></td>
+                                @if (Request::segment(1) === 'partner')
+                                    <td>{{$candidate->center->tc_id}}</td>
+                                @endif
+                                <td>{{$candidate->name}}</td>
+                                <td>{{$candidate->contact}}</td>
+                                <td>{{$candidate->category}}</td>
+                                <td>{{$candidate->dob}}</td>
+                                <td class="text-center"><a href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',$candidate->id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td>
                                 </tr>
                                 @endforeach
                                
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>

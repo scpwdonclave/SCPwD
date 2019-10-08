@@ -87,16 +87,17 @@ $(function() {
   jQuery.validator.addMethod(
     "mobile",
     function(value, element) {
-      return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+      // return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+      return this.optional(element) || /^\d*$/.test(value);
     },
-    "Please enter a valid Mobile Number"
+    "Please enter a valid Contact Number"
   );
   jQuery.validator.addMethod(
-    "votar",
+    "aadharvoter",
     function(value, element) {
-      return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}?$/.test(value);
+      return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/.test(value);
     },
-    "Please enter a valid Votar ID"
+    "Please enter a Valid Aadhar or Voter Number"
   );
   jQuery.validator.addMethod(
     "aadhar",

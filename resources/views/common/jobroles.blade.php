@@ -41,7 +41,7 @@
                                                 <td>{{$jobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->assigned}}</td>
-                                                <td class="text-center"> <a href="{{route('partner.dashboard.jobroles.view',$jobrole->id)}}"><button class="btn btn-primary btn-sm">View</button></a></td>
+                                                <td class="text-center"> <a href="{{route('partner.dashboard.jobroles.view',$jobrole->id)}}"><button class="btn btn-primary waves-effect btn-round">View</button></a></td>
                                             </tr>
                                         @endforeach
                                     @endif

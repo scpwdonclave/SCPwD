@@ -152,7 +152,7 @@ class AdminPartnerController extends Controller
         /* End Notification For Partner */
         
         Mail::to($partner['email'])->send(new TPConfirmationMail($partner));
-        alert()->success('Partner Accepted', 'Done')->autoclose(2000);
+        alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(4000);
         return Redirect()->back();
     }
     public function partnerReject(Request $request){
@@ -214,9 +214,9 @@ class AdminPartnerController extends Controller
             $data['note'] = $request->note;
             $partnerData->delete();
 
-            Mail::to($data->email)->send(new TPRejectMail($data));
-           
+            
         });
+        Mail::to($data->email)->send(new TPRejectMail($data));
         return response()->json(['status' => 'done'],200);
         
        

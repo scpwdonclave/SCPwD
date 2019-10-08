@@ -57,7 +57,7 @@ class LoginController extends Controller
     /* Overriding credentials() for checking account activation status */
     protected function credentials(Request $request)
     {        
-        return ['tc_id' => $request->tc_id, 'password' => $request->password, 'status' => 1];
+        return ['tc_id' => $request->tc_id, 'password' => $request->password, 'status' => 1, 'ind_status' => 1];
     }
 
     /**

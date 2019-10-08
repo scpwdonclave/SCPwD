@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\CenterAuth;
 
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
@@ -17,7 +16,7 @@ class FileController extends Controller
 
     protected function downloadThis($file){
         try {
-            return response()->file(storage_path("app/files/centers/{$file}"));
+            return response()->download(storage_path("app/files/centers/{$file}"));
         } catch (Exception $e) {
             return abort(404);
         }
@@ -39,4 +38,5 @@ class FileController extends Controller
             return $this->downloadThis($file);
         }
     }
+    
 }

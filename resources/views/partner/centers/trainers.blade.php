@@ -16,7 +16,7 @@
                 <div class="header d-flex justify-content-between">
                     <h2><strong>My</strong> Trainers</h2>
                     @can('partner-has-jobrole', Auth::shouldUse('partner'))
-                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.addtrainer')}}">Add New Trainer</a>                      
+                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.addtrainer')}}">Add New Trainer</a>                      
                     @endcan
                 </div>
                 <div class="body">
@@ -49,7 +49,7 @@
                     </div> 
                     <div class="text-center">
                         @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
-                            <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
+                            <h6>You Can Add New Trainers Once Admin Assign you Job Roles</h6>
                         @endcannot
                     </div>  
                 </div>

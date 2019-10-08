@@ -74,7 +74,7 @@
                                     <tr style="height:5px !important">
                                     <td>{{$key+1}}</td>
                                     <td>{{$sector->sector}}</td>
-                                    <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-danger waves-effect btn-sm btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                    <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-danger waves-effect btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

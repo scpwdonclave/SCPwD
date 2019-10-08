@@ -25,7 +25,7 @@ class PartnerJobrole extends Model implements Auditable
         return $this->belongsTo('App\Sector', 'sector_id');
     }
 
-    public function centerjoroles(){
+    public function centerjobroles(){
         return $this->hasMany('App\CenterJobRole', 'tp_job_id');
     }
 

@@ -37,7 +37,6 @@
                                     
                                 <tr>
                                 <td><i class="zmdi zmdi-circle text-{{$center->status?'success':'danger'}}"></td>
-                                {{-- <td></td> --}}
                                 <td>{{$center->spoc_name}}</td>
                                 <td>{{$center->email}}</td>
                                 <td>{{$center->mobile}}</td>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use App\Notification;
 use App\CenterJobRole;
+use App\Candidate;
 use App\PartnerJobrole;
 use App\CenterDoc;
 use App\Center;
@@ -281,6 +282,32 @@ class PartnerCenterController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function candidates(){
+        $partner = Auth::guard('partner')->user();
+        $centers = Auth::guard('partner')->user()->centers;
+        $candidates = collect();
+        foreach ($centers as $center) {
+            $candidates = $center->candidates;
+        }
+        $data = [
+            'partner'  => $partner,
+            'candidates' => $candidates,
+        ];
+        return view('common.candidates')->with($data);
+    }
+
+    public function view_candidate($id){
+
+        $candidate = Candidate::findOrFail($id);
+        if ($candidate->center->partner->id == Auth::guard('partner')->user()->id) {
+            return $candidate;
+        } else {
+            return abort(404);
+        }
+        
+        return view('common.view-candidate');
     }
 
 }
