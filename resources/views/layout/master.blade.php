@@ -87,24 +87,6 @@
                                 @endif
                             </ul>
                         </div>
-                        @if (Request::segment(2) === 'rtl' )
-                            <div class="col-lg-6 col-md-6 col-sm-12 text-left">
-                            @else
-                            <div class="col-lg-6 col-md-6 col-sm-12 text-right">
-                        @endif
-                            {{-- <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
-                                <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#706bd1">3,2,6,5,9,8,7,9,5,1,3,5,7,4,6</div>
-                                <small>Page Views</small>
-                            </div>
-                            <div class="inlineblock text-center m-r-15 m-l-15 pt-1 hidden-md-down">
-                                <div class="sparkline" data-type="bar" data-width="97%" data-height="25px" data-bar-Width="2" data-bar-Spacing="5" data-bar-Color="#f9666e">1,3,5,7,4,6,3,2,6,5,9,8,7,9,5</div>
-                                <small>Visitors</small>
-                            </div> --}}
-                            {{-- @if (Request::segment(3) === 'job_roles' )
-                                <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New Sector</button>
-                                <button class="btn btn-primary btn-round btn-simple hidden-sm-down float-right m-l-10">Create New</button>
-                            @endif --}}
-                        </div>
                     </div>
                 </div>
                 @yield('content')
@@ -117,12 +99,8 @@
         @stack('before-scripts')
         <script src="{{ asset('assets/bundles/libscripts.bundle.js') }}"></script>    
         <script src="{{ asset('assets/bundles/vendorscripts.bundle.js') }}"></script>
-
         <script src="{{ asset('assets/bundles/mainscripts.bundle.js') }}"></script>
         <script src="{{ asset('assets/js/application-common.js') }}"></script>
-        
-
-
         <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
         <!-- Include this after the sweet alert js file -->
         @include('sweet::alert')
