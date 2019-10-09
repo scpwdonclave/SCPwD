@@ -74,7 +74,7 @@
                                     <tr style="height:5px !important">
                                     <td>{{$key+1}}</td>
                                     <td>{{$sector->sector}}</td>
-                                    <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-danger waves-effect btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                    <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -134,7 +134,7 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$expository->initials}}</td>
                                     <td>{{$expository->e_expository}}</td>
-                                    <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-danger waves-effect btn-sm btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -239,7 +239,7 @@
                                         @endphp
                                     @endforeach
                                     <td>{{$item1}}</td>
-                                    <td class="text-center"> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-round btn-danger waves-effect btn-sm"><i class="zmdi zmdi-delete"></button></form></td>
+                                    <td class="text-center"> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                 </tr>
                                 @php
                                     $item1='';

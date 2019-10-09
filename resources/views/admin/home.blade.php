@@ -10,24 +10,48 @@
         <div class="col-lg-3 col-sm-6">
             <div class="card">
                 <div class="body">
-                    <h3 class="m-b-0 number count-to" data-from="0" data-to="1600" data-speed="2000" data-fresh-interval="700">1600 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <p class="text-muted">New Feedbacks</p>
-                    <div class="progress">
-                        <div class="progress-bar l-blush" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                    </div>
-                    <small>Change 15%</small>
+                    @php
+                        $partnerCount = $partners->count();
+                        $activePartner = 0; $inactivePartner = 0;
+                        foreach ($partners as $partner) { ($partner->status && $partner->ind_status) ? $activePartner++ : $inactivePartner++ ; }
+                    @endphp
+                    @if ($partnerCount > 0)
+                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$partnerCount}}" data-speed="2000" data-fresh-interval="700">{{$partnerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <strong><p class="text-muted"><span style="color:blue">Total Training Partners</span></p></strong>
+                        <div class="progress">
+                            <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activePartner*100/$partnerCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activePartner*100/$partnerCount}}%;"></div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <small>Active {{$activePartner*100/$partnerCount}}%</small>
+                            <small>Inactive {{$inactivePartner*100/$partnerCount}}%</small>
+                        </div>
+                    @else
+                        <strong><p class="text-muted"><span style="color:blue">No Training Partners Has been Registered yet</span></p></strong>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="card">
                 <div class="body">
-                    <h3 class="m-b-0">50.5 Gb <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <p class="text-muted">Traffic this month</p>
-                    <div class="progress">
-                        <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                    </div>
-                    <small>Change 5%</small>
+                    @php
+                        $centerCount = $centers->count();
+                        $activeCenter = 0; $inactiveCenter = 0;
+                        foreach ($centers as $center) { ($center->status && $center->ind_status) ? $activeCenter++ : $inactiveCenter++ ; }
+                    @endphp
+                    @if ($centerCount>0)
+                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$centerCount}}" data-speed="2000" data-fresh-interval="700">{{$centerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <strong><p class="text-muted"><span style="color:blue">Total Training Centers</span></p></strong>
+                        <div class="progress">
+                            <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activeCenter*100/$centerCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activeCenter*100/$centerCount}}%;"></div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <small>Active {{$activeCenter*100/$centerCount}}%</small>
+                            <small>Inactive {{$inactiveCenter*100/$centerCount}}%</small>
+                        </div>
+                    @else
+                       <strong><p class="text-muted"><span style="color:blue">No Training Centers Has been Registered yet</span></p></strong>                        
+                    @endif
                 </div>
             </div>
         </div>
@@ -35,7 +59,7 @@
             <div class="card">
                 <div class="body">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="2105" data-speed="2000" data-fresh-interval="700">2105 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <p class="text-muted">Pageviews</p>
+                    <strong><p class="text-muted"><span style="color:blue">Total Trainers</span></p></strong>
                     <div class="progress">
                         <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
                     </div>
@@ -46,12 +70,24 @@
         <div class="col-lg-3 col-sm-6">
             <div class="card">
                 <div class="body">
-                    <h3 class="m-b-0 number count-to" data-from="0" data-to="2105" data-speed="2000" data-fresh-interval="700">2105 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <p class="text-muted">Visitors</p>
-                    <div class="progress">
-                        <div class="progress-bar l-parpl" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                    </div>
-                    <small>Change 12%</small>
+                    @php
+                        $candidateCount = $candidates->count();
+                        $activeCandidate = 0; $inactiveCandidate = 0;
+                        foreach ($candidates as $candidate) { ($candidate->status && $candidate->ind_status) ? $activeCandidate++ : $inactiveCandidate++ ; }
+                    @endphp
+                    @if ($candidateCount>0)
+                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidateCount}}" data-speed="2000" data-fresh-interval="700">{{$candidateCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <strong><p class="text-muted"><span style="color:blue">Total Candidates</span></p></strong>
+                        <div class="progress">
+                            <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activeCandidate*100/$candidateCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activeCandidate*100/$candidateCount}}%;"></div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <small>Active {{$activeCandidate*100/$candidateCount}}%</small>
+                            <small>Inactive {{$inactiveCandidate*100/$candidateCount}}%</small>
+                        </div>
+                    @else
+                        <strong><p class="text-muted"><span style="color:blue">No Candidates Has been Registered yet</span></p></strong>
+                    @endif
                 </div>
             </div>
         </div>

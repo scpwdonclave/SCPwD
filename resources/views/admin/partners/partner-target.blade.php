@@ -42,23 +42,23 @@
                                     <tbody>
                                             @foreach ($partner->partner_jobroles as $key=>$job)
                                             <tr>
-                                                <td>{{$key+1}}</td>
+                                                <td class="text-center">{{$key+1}}</td>
                                                
-                                                <td>{{$job->scheme->scheme}}</td>
-                                                <td>{{$job->sector->sector}}</td>
-                                                <td>{{$job->jobrole->job_role}}</td>
-                                                <td>{{$job->target}}</td>
-                                                <td>{{$job->target}}</td>
-                                                <td>{{$job->target}}</td>
+                                                <td class="text-center">{{$job->scheme->scheme}}</td>
+                                                <td class="text-center">{{$job->sector->sector}}</td>
+                                                <td class="text-center">{{$job->jobrole->job_role}}</td>
+                                                <td class="text-center">{{$job->target}}</td>
+                                                <td class="text-center">{{$job->target}}</td>
+                                                <td class="text-center">{{$job->target}}</td>
                                                 @if($job->status==1 && $job->scheme_status==1)
-                                                <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})">Deactivate</a></td>
-                                                <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
+                                                <td class="text-center"><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})">Deactivate</a></td>
+                                                <td class="text-center"><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
                                                 @elseif($job->scheme_status==0)
-                                                <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
-                                                <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
+                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
+                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
                                                 @elseif($job->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
-                                                <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
+                                                <td class="text-center"><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
+                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
                                                 @endif
                                                 {{-- @if($job->status)
                                                     <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})" >Deactivate</a></td>

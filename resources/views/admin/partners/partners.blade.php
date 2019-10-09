@@ -38,28 +38,28 @@
                                             <tr>
                                            
                                           
-                                            <td>{{$key+1}}</td>
+                                            <td class="text-center">{{$key+1}}</td>
                                           
-                                            <td>{{$item->tp_id}}</td>
-                                            <td>{{$item->org_name}}</td>
-                                            <td>{{$item->spoc_name}}</td>
-                                                <td>{{$item->email}}</td>
-                                                <td>{{$item->spoc_mobile}}</td>
-                                                {{-- <td class="text-center">
+                                            <td class="text-center">{{$item->tp_id}}</td>
+                                            <td class="text-center">{{$item->org_name}}</td>
+                                            <td class="text-center">{{$item->spoc_name}}</td>
+                                                <td class="text-center">{{$item->email}}</td>
+                                                <td class="text-center">{{$item->spoc_mobile}}</td>
+                                                {{-- <td class="text-center" class="text-center">
                                                     <a class="" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
                                                 </td> --}}
                                              @if($item->status==1)
-                                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.target',['id'=>Crypt::encrypt($item->id)])}}" >Target</a></td>
-                                            {{-- <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.scheme',['id'=>Crypt::encrypt($item->id)])}}" >Scheme</a></td> --}}
+                                            <td class="text-center" ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.target',['id'=>Crypt::encrypt($item->id)])}}" >Target</a></td>
+                                            {{-- <td class="text-center" ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.scheme',['id'=>Crypt::encrypt($item->id)])}}" >Scheme</a></td> --}}
                                             @else
-                                            <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Target</a></td>
-                                            {{-- <td ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Scheme</a></td> --}}
+                                            <td class="text-center" ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Target</a></td>
+                                            {{-- <td class="text-center" ><a class="badge bg-grey margin-0" href="javascript:void(0);" >Scheme</a></td> --}}
                                             @endif
-                                            <td ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
+                                            <td class="text-center" ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>
                                             @if($item->status==1)
-                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
+                                            <td class="text-center"><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
                                             @else
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.active',['id'=>$item->id])}}" >Activate</a></td>
+                                            <td class="text-center"><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.active',['id'=>$item->id])}}" >Activate</a></td>
                                             @endif
                                         </tr>
                                             {{-- <div class="modal fade" id="largeModal{{$item->id}}" tabindex="-1" role="dialog">

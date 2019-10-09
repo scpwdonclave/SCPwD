@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\JobRole;
+use App\Partner;
+use App\Center;
+use App\Candidate;
 use App\Expository;
 use App\Sector;
 use App\Scheme;
@@ -32,7 +35,14 @@ class AdminHomeController extends Controller
     }
 
     public function dashboard(){
-        return view('admin.home');
+
+        $data = [
+            'partners' => Partner::all(),
+            'centers' => Center::all(),
+            'candidates' => Candidate::all(),
+        ];
+
+        return view('admin.home')->with($data);
     }
     
     public function job_roles(){

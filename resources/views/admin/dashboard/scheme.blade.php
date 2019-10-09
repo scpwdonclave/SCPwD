@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <style>
 .table td {
     padding: .10rem;
@@ -40,7 +41,7 @@
                                 <td>{{$key+1}}</td>
                                 <td>{{$scheme->scheme}}</td>
                                 <td>{{$scheme->year}}</td>
-                                <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-round btn-primary btn-sm waves-effect"><i class="zmdi zmdi-edit"></i></button></form></td>
+                                <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
                                 </tr>
                                 @endforeach
                             </tbody>

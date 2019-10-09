@@ -40,25 +40,25 @@
             @auth('admin')
                 @if (Request::segment(1) === 'admin')
                 <li class="{{ Request::segment(2) === 'training_partners' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-box"></i><span>Training Partners</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Training Partners</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/training_partners/partners') ? 'active' : null }}"><a href="{{route('admin.tp.partners')}}"> Empanelled Partners</a></li>
                         <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-calendar"></i><span>Training Centers</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Training Centers</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
-                        <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-centers')}}">Pending Centers</a></li>
+                        <li class="{{ Request::is('admin/training_centers/pending-centers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-centers')}}">Pending Centers</a></li>
                         <li class="{{ Request::is('admin/training_centers/candidates') ? 'active' : null }}"><a href="{{route('admin.tc.candidates')}}">Candidates</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'trainer' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-calendar"></i><span>Trainer</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts-alt"></i><span>Trainers</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/trainer/trainers') ? 'active' : null }}"><a href="{{route('admin.tc.trainers')}}">Trainers</a></li>
-                        <li class="{{ Request::is('admin/trainer/trainers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-trainers')}}">Pending Trainers</a></li>
+                        <li class="{{ Request::is('admin/trainer/pending-trainers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-trainers')}}">Pending Trainers</a></li>
                     </ul>
                 </li> 
                 @endif
@@ -70,13 +70,13 @@
                         <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
                     @endif
                     <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
-                        <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-pin"></i><span>Training Centers</span></a>
+                        <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Training Centers</span></a>
                         <ul class="ml-menu">
                             <li class="{{ Request::is('partner/training_centers/centers') ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
                             <li class="{{ Request::is('partner/training_centers/candidates') ? 'active' : null }}"><a href="{{route('partner.tc.candidates')}}">Candidates</a></li>
                         </ul>
                     </li>
-                    <li class="{{ Request::is('partner/trainers') ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-account-box"></i><span>Trainers</span></a></li>
+                    <li class="{{ Request::is('partner/trainers') ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-accounts"></i><span>Trainers</span></a></li>
                 @endif
             @endauth
 
