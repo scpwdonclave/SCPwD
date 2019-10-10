@@ -29,7 +29,7 @@
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Verified</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>

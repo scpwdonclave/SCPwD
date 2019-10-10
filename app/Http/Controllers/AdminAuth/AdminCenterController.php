@@ -328,6 +328,54 @@ class AdminCenterController extends Controller
 
     public function view_candidate($id){
         $candidate = Candidate::findOrFail($id);
-        return $candidate;
+        $state_dist=DB::table('candidates as c')
+        ->join('state_district AS s','c.state_district','=','s.id')
+        ->join('expositories AS e','c.d_type','=','e.id')
+        ->where('c.id',$id)->first();
+        //dd($state_dist);
+        return view('common.view-candidate')->with(compact('candidate','state_dist'));
+    }
+    public function candidateActive($id){
+        $id=Crypt::decrypt($id);
+        $candidate=Candidate::findOrFail($id);
+        $candidate->status=1;
+        $candidate->save();
+
+         /* Notification For Center */
+         $notification = new Notification;
+         $notification->rel_id = $candidate->tc_id;
+         $notification->rel_with = 'center';
+         $notification->title = 'Candidate Active';
+         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
+         $notification->save();
+         /* End Notification For Center */
+
+         alert()->success('Candidate Activated', 'Done')->autoclose(2000);
+            return Redirect()->back();
+    }
+
+    public function candidateDeactive(Request $request){
+
+        $candidate=Candidate::findOrFail($request->id);
+        $candidate->status=0;
+        $candidate->save();
+
+        $reason = new Reason;
+        $reason->rel_id = $candidate->id;
+        $reason->rel_with = 'candidate';
+        $reason->reason = $request->reason;
+        $reason->save();
+
+         /* Notification For Center */
+         $notification = new Notification;
+         $notification->rel_id = $candidate->tc_id;
+         $notification->rel_with = 'center';
+         $notification->title = 'Candidate Deactive';
+         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Deactivated</span>.";
+         $notification->save();
+         /* End Notification For Center */
+
+         return response()->json(['status' => 'done'],200);
+
     }
 }
