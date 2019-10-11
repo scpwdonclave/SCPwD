@@ -213,10 +213,9 @@ class AdminPartnerController extends Controller
             $data = $partnerData;
             $data['note'] = $request->note;
             $partnerData->delete();
-
+            Mail::to($data->email)->send(new TPRejectMail($data));
             
         });
-        Mail::to($data->email)->send(new TPRejectMail($data));
         return response()->json(['status' => 'done'],200);
         
        

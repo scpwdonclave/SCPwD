@@ -445,6 +445,7 @@ function showPromptMessage() {
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
+        confirmButtonText: 'Reject',
         animation: "slide-from-top",
         showLoaderOnConfirm: true,
         inputPlaceholder: "Write something"
