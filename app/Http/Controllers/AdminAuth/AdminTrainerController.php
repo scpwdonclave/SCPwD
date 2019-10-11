@@ -33,8 +33,9 @@ class AdminTrainerController extends Controller
 
     }
     public function pendingTrainers(){
-        $data=Trainer::where('verified',0)->get();
-        return view('admin.trainers.pending-trainers')->with(compact('data')); 
+        $data=Trainer::where([['verified',0],['reassign',0]])->get();
+        $reassign_data=Trainer::where([['verified',0],['reassign',1]])->get();
+        return view('admin.trainers.pending-trainers')->with(compact('data','reassign_data')); 
 
     }
 
@@ -75,7 +76,9 @@ class AdminTrainerController extends Controller
             $new_trid = 'TR'.$year.'000001';
         }
 
+        if($trainer->trainer_id ==null){
         $trainer->trainer_id=$new_trid;
+        }
         $trainer->status=1;
         $trainer->ind_status=1;
         $trainer->verified=1;
@@ -187,5 +190,12 @@ class AdminTrainerController extends Controller
         alert()->success('Trainer has been Activated', 'Job Done')->autoclose(3000);
         return Redirect()->back();
 
+    }
+
+    public function trainerEdit($id){
+        $tr_id = Crypt::decrypt($id);
+        $trainer=Trainer::findOrFail($tr_id);
+
+        return view('admin.trainers.trainer-edit')->with(compact('trainer'));
     }
 }

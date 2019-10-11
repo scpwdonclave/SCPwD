@@ -13,4 +13,5 @@ class Candidate extends Model
     public function center(){
         return $this->belongsTo('App\Center', 'tc_id');
     }
+    
 }

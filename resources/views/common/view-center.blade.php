@@ -366,7 +366,7 @@
                                         <th>Contact</th>
                                         <th>Category</th>
                                         <th>Date of Birth</th>
-                                        <th>Action</th>
+                                        <th>View</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -377,7 +377,8 @@
                                         <td>{{$candidate->contact}}</td>
                                         <td>{{$candidate->category}}</td>
                                         <td>{{$candidate->dob}}</td>
-                                        <td> <a href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td>
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}" >View</a></td>
+                                        {{-- <td> <a href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
