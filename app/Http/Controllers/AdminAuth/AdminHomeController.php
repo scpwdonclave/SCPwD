@@ -36,13 +36,25 @@ class AdminHomeController extends Controller
 
     public function dashboard(){
 
-        $data = [
+        $test=[
+            'period'=> '2011',
+            'Project1'=> 0,
+            'Project2'=> 0,
+            'Project3'=> 115
+        
+        
+    ];
+    $test=json_encode($test);
+    $rr=array();
+    $rr[0]=$test;
+    
+        $data = [ 
             'partners' => Partner::all(),
             'centers' => Center::all(),
             'candidates' => Candidate::all(),
         ];
 
-        return view('admin.home')->with($data);
+        return view('admin.home')->with($data)->with($rr);
     }
     
     public function job_roles(){

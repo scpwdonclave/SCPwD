@@ -175,18 +175,11 @@
                             </div>
                         </li>
                     </ul>
-                    {{-- @auth('admin')
+                  
                         <div class="text-center" >
-                         
-                            @if ($candidate->status==0 && !is_null($candidate->verified) && $candidate->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($candidate->id) ])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                            @elseif ( $candidate->verified==1)
-                                <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($candidate->id) ])}}'">Edit</button>                         
-                            @endif
-                            
+                        <button class="btn" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'">Edit</button>                         
                         </div>
-                    @endauth --}}
+                   
                 </div>
             </div>
         </div>

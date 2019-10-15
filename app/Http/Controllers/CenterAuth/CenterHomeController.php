@@ -76,7 +76,7 @@ class CenterHomeController extends Controller
 
     public function submit_candidate(CandidateFormValidation $request){
 
-        DB::transaction(function() use ($request){
+        DB::transaction(function() use ($request){ 
             $candidate = new Candidate;
             $candidate->tc_id = Auth::guard('center')->user()->id;
             $candidate->tc_job_id = $request->job;

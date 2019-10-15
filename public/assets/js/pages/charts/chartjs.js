@@ -14,20 +14,28 @@ function getChartJs(type) {
             data: {
                 labels: ["January", "February", "March", "April", "May", "June", "July"],
                 datasets: [{
-                    label: "My First dataset",
-                    data: [28, 58, 39, 45, 30, 55, 68],
-                    borderColor: 'rgba(241,95,121, 0.2)',
-                    backgroundColor: 'rgba(241,95,121, 0.5)',
-                    pointBorderColor: 'rgba(241,95,121, 0.3)',
-                    pointBackgroundColor: 'rgba(241,95,121, 0.2)',
+                    label: "Training partner",
+                    data: [100, 58, 39, 45, 30, 55, 68],
+                    borderColor: 'rgba(0,128,128, 0.2)',
+                    backgroundColor: 'rgba(0,128,128, 0.2)',
+                    pointBorderColor: 'rgba(0,128,128, 0.3)',
+                    pointBackgroundColor: 'rgba(0,128,128, 0.2)',
                     pointBorderWidth: 1
                 }, {
-                    label: "My Second dataset",
+                    label: "Training Center",
                     data: [40, 28, 50, 48, 63, 39, 41],                    
-                    borderColor: 'rgba(140,147,154, 0.2)',
-                    backgroundColor: 'rgba(140,147,154, 0.2)',
-                    pointBorderColor: 'rgba(140,147,154, 0)',
-                    pointBackgroundColor: 'rgba(140,147,154, 0.9)',
+                    borderColor: 'rgba(49,79,232, 0.2)',
+                    backgroundColor: 'rgba(49,79,232, 0.2)',
+                    pointBorderColor: 'rgba(49,79,232, 0)',
+                    pointBackgroundColor: 'rgba(49,79,232, 0.9)',
+                    pointBorderWidth: 1
+                }, {
+                    label: "Trainer",
+                    data: [33, 30, 55, 40, 70, 49, 38],                    
+                    borderColor: 'rgba(126,239,186, 0.2)',
+                    backgroundColor: 'rgba(126,239,186, 0.2)',
+                    pointBorderColor: 'rgba(126,239,186, 0)',
+                    pointBackgroundColor: 'rgba(126,239,186, 0.9)',
                     pointBorderWidth: 1
                 }]
             },

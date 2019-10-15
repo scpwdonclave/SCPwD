@@ -378,4 +378,44 @@ class AdminCenterController extends Controller
          return response()->json(['status' => 'done'],200);
 
     }
+
+    public function candidateEdit($id){
+        $id=Crypt::decrypt($id);
+        $candidate=Candidate::findOrFail($id);
+        $center=Center::where('id',$candidate->tc_id)->first();
+        $states=DB::table('state_district')->get();
+        return view('admin.centers.candidate-edit')->with(compact('candidate','center','states'));
+    }
+
+    public function candidateUpdate(Request $request){
+        $candidate=Candidate::findOrFail($request->candidate_id);
+
+        $candidate->name = $request->name;
+        $candidate->gender = $request->gender;
+        $candidate->contact = $request->contact;
+        $candidate->email = $request->email;
+        $candidate->dob = $request->dob;
+        $candidate->m_status = $request->m_status;
+
+        $candidate->address = $request->address;
+        $candidate->state_district = $request->state_district;
+        $candidate->category = $request->category;
+        $candidate->service = $request->service;
+        $candidate->education = $request->education;
+        $candidate->g_name = $request->g_name;
+        $candidate->g_type = $request->g_type;
+
+         /* Notification For center */
+         $notification = new Notification;
+         $notification->rel_id = $candidate->tc_id;
+         $notification->rel_with = 'center';
+         $notification->title = 'Candidate Updated';
+         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Updated</span>.";
+         $notification->save();
+         /* End Notification For center */
+
+         $candidate->save();
+         alert()->success('Candidate Details Updated', 'Done')->autoclose(2000);
+         return Redirect()->back();
+    }
 }
