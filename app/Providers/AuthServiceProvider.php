@@ -30,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('partner-profile-verified', 'App\Policies\PartnerPolicy@PartnerProfileVerified');
         Gate::define('partner-has-jobrole', 'App\Policies\PartnerPolicy@PartnerHasJobRole');
         Gate::define('partner-center-profile-active-verified', 'App\Policies\PartnerPolicy@CenterProfileVerifiedAndActive');
+        Gate::define('partner-has-access-to-file', 'App\Policies\PartnerPolicy@PartnerHasAccessToFile');
         Gate::define('center-profile-active-verified', 'App\Policies\CenterPolicy@CenterProfileVerifiedAndActive');
 
     }

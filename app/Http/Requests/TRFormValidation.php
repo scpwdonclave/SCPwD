@@ -25,12 +25,12 @@ class TRFormValidation extends FormRequest
     {
         $rules = [
 
-            'doc_no' => 'required',
+            'doc_no' => 'required|unique:trainers',
             
             /* TR Basic Details */
             'name' => 'required',
-            'email' => 'required|email',
-            'mobile' => 'required|numeric',
+            'email' => 'required|email|unique:trainers',
+            'mobile' => 'required|numeric|unique:trainers',
             /* End TR Basic Details */
             
             'sector' => 'required|array|min:1',
@@ -54,7 +54,7 @@ class TRFormValidation extends FormRequest
             'scpwd_start' => 'required',
             'scpwd_end' => 'required',
             'scpwd_doc' => 'required|mimes:jpeg,jpg,png,pdf',
-            'other_doc' => 'required|mimes:jpeg,jpg,png,pdf',
+            'other_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'resume' => 'required|mimes:jpeg,jpg,png,pdf',
             'doc_file' => 'nullable|mimes:jpeg,jpg,png,pdf',
             

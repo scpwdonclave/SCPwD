@@ -4,6 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -17,9 +18,9 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                            <tr>
+                                        <tr>
                                             <th>#</th>
                                             <th>TP ID</th>
                                             <th>Trainer Name</th>
@@ -71,7 +72,7 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
                                         <th>#</th>
@@ -124,8 +125,8 @@
 <script>
 function showCancelMessage(f) {
     swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
+        title: "Deactivation!",
+        text: "Write Reason for Deactivation:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -149,7 +150,7 @@ function showCancelMessage(f) {
            // console.log(data);
            swal({
         title: "Deactive",
-        text: "Trainer Record Deactive",
+        text: "Trainer Record Deactivated",
         type:"success",
         
         showConfirmButton: true
@@ -171,8 +172,8 @@ function showCancelMessage(f) {
 
 function dlinkTrainerDeactive(f) {
     swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
+        title: "Deactivation!",
+        text: "Write Reason for Deactivation:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,

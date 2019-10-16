@@ -330,7 +330,6 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($tc_target as $key=>$target)
-                                        
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$target->partnerjobrole->scheme->scheme}}</td>
@@ -358,7 +357,7 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
                                         <th>#</th>

@@ -97,14 +97,14 @@ $(function() {
     function(value, element) {
       return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/.test(value);
     },
-    "Please enter a Valid Aadhar or Voter Number"
+    "Please enter a Valid Aadhaar or Voter Number"
   );
   jQuery.validator.addMethod(
-    "aadhar",
+    "aadhaar",
     function(value, element) {
       return this.optional(element) || /^\d{12}$/.test(value);
     },
-    "Please enter a valid Aadhar Number"
+    "Please enter a valid Aadhaar Number"
   );
 
   /* End Additional Methods for Validation  */

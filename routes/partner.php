@@ -20,11 +20,16 @@ Route::get('training_centers/add-center', 'PartnerAuth\PartnerCenterController@v
 Route::post('training_centers/add-center', 'PartnerAuth\PartnerCenterController@submit_addcenter_form')->name('tc.addcenter');
 Route::post('training_centers/add-center-api', 'PartnerAuth\PartnerCenterController@addcenter_api')->name('tc.addcenter.api');
 
-Route::get('trainers', 'PartnerAuth\PartnerTrainerController@trainers')->name('trainers');
 Route::get('training_centers/candidates', 'PartnerAuth\PartnerCenterController@candidates')->name('tc.candidates');
 Route::get('training_centers/candidates/{id}', 'PartnerAuth\PartnerCenterController@view_candidate')->name('tc.candidate.view');
+
+/* Trainers */
+Route::get('trainers', 'PartnerAuth\PartnerTrainerController@trainers')->name('trainers');
+Route::get('trainers/{id}', 'PartnerAuth\PartnerTrainerController@viewtrainer')->name('trainer.view');
 Route::get('add-trainer', 'PartnerAuth\PartnerTrainerController@addtrainer')->name('addtrainer');
 Route::post('add-trainer', 'PartnerAuth\PartnerTrainerController@submittrainer')->name('submittrainer');
 Route::post('add-trainer-api', 'PartnerAuth\PartnerTrainerController@addtrainer_api')->name('addtrainer.api');
 
-    
+/* Batches */
+Route::get('batches', 'PartnerAuth\PartnerBatchController@batches')->name('batches');
+Route::get('add-batch', 'PartnerAuth\PartnerBatchController@addbatch')->name('addbatch');

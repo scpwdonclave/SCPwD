@@ -52,9 +52,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhar/Voter Number *</label>
+                                                <label for="doc_no">Aadhaar/Voter Number *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhar No or Voter No" name="doc_no" required>
+                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar No or Voter No" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                <label for="doc_file">Aadhar / Voter Document *</label>
+                                                <label for="doc_file">Aadhaar / Voter Document *</label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>

@@ -43,14 +43,14 @@ class AdminTrainerController extends Controller
 
         $trainerData=Trainer::findOrFail($id);
         $trainerdoc=TrainerJobRole::where('tr_id',$id)->get();
-        return view('admin.trainers.view-trainer')->with(compact('trainerData','trainerdoc'));
+        return view('common.view-trainer')->with(compact('trainerData','trainerdoc'));
         
     }
     public function dlinkTrainerView($id){
 
         $trainerData=TrainerStatus::findOrFail($id);
         $trainerdoc=TrainerJobRole::where('tr_id',$trainerData->prv_id)->get();
-        return view('admin.trainers.view-trainer')->with(compact('trainerData','trainerdoc'));
+        return view('common.view-trainer')->with(compact('trainerData','trainerdoc'));
         
     }
     public function trainerAccept($id){
@@ -89,12 +89,13 @@ class AdminTrainerController extends Controller
         $neutral->trainer_id=$trainer->trainer_id;
         $neutral->tp_id=$trainer->tp_id;
         $neutral->name=$trainer->name;
-        $neutral->doc_number=$trainer->doc_number;
+        $neutral->doc_no=$trainer->doc_no;
         $neutral->doc_type=$trainer->doc_type;
         $neutral->doc_file=$trainer->doc_file;
         $neutral->mobile=$trainer->mobile;
         $neutral->email=$trainer->email;
        
+        $neutral->scpwd_no=$trainer->scpwd_no;
         $neutral->scpwd_doc=$trainer->scpwd_doc;
         $neutral->scpwd_issued=$trainer->scpwd_issued;
         $neutral->scpwd_valid=$trainer->scpwd_valid;
@@ -104,8 +105,8 @@ class AdminTrainerController extends Controller
         $neutral->attached=1;
         $neutral->save();
 
-        alert()->success('Trainer has been Approved', 'Job Done')->autoclose(3000);
-         return Redirect()->back();
+        alert()->success("Trainer has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+        return Redirect()->back();
     }
 
     public function trainerReject(Request $request){
@@ -140,8 +141,8 @@ class AdminTrainerController extends Controller
         $notification = new Notification;
         $notification->rel_id = $trainer->tp_id;
         $notification->rel_with = 'partner';
-        $notification->title = 'Trainer Deactive';
-        $notification->message = "One of Your Trainer has been <span style='color:blue;'>Deactivated</span>.";
+        $notification->title = 'Trainer Deactivated';
+        $notification->message = "Trainer (ID $trainer->trainer_id) has been <span style='color:blue;'>Deactivated</span>.";
         $notification->save();
         /* End Notification For Partner */
 
@@ -172,8 +173,8 @@ class AdminTrainerController extends Controller
         $notification = new Notification;
         $notification->rel_id = $trainer->tp_id;
         $notification->rel_with = 'partner';
-        $notification->title = 'Trainer Active';
-        $notification->message = "One of Your Trainer has been <span style='color:blue;'>Activated</span>.";
+        $notification->title = 'Trainer Activated';
+        $notification->message = "Trainer (ID $trainer->trainer_id) has been <span style='color:blue;'>Activated</span>.";
         $notification->save();
         /* End Notification For Partner */
 

@@ -24,7 +24,7 @@ class CreateTrainerJobRolesTable extends Migration
             $table->string('ssc_valid');
             $table->unsignedBigInteger('jobrole_id');
             $table->boolean('status')->default(1);
-            $table->boolean('scheme_status')->default(0);
+            $table->boolean('scheme_status')->default(1);
             $table->timestamps();
         });
     }
