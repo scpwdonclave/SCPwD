@@ -15,7 +15,7 @@
                     {{-- @if (!is_null($candidate->doc_no))
                         <div class="text-center">
                             <h6>
-                                Aadhar/Voter Number: <span style='color:blue'>{{$candidate->doc_no}}</span>
+                                Aadhaar/Voter Number: <span style='color:blue'>{{$candidate->doc_no}}</span>
                             </h6>
                         </div>
                         <br>
@@ -28,13 +28,13 @@
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <small class="text-muted">Aadhar/Voter Number</small>
+                                        <small class="text-muted">Aadhaar/Voter Number</small>
                                         <p>{{$candidate->doc_no}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-6">
-                                        <small class="text-muted">Aadhar/Voter Document</small>
+                                        <small class="text-muted">Aadhaar/Voter Document</small>
                                         <p>Document &nbsp;&nbsp;
                                                 @if ($candidate->doc_file !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'doc'])}}" download="{{basename($candidate->doc_file)}}"><i class="zmdi zmdi-download"></i></a>

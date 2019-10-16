@@ -4,6 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -17,16 +18,16 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                            <tr>
+                                        <tr>
                                             <th>#</th>
                                             <th>TP ID</th>
                                             <th>Trainer Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
                                             <th>View</th>
-                                            <th>D-Link</th>
+                                            <th>DeLink</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -39,14 +40,15 @@
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',['id'=>$item->id])}}" >View</a></td>
-                                                <td><a class="badge bg-blue margin-0" href="#" onclick="dlink({{$item->id}})" >D-Link</a></td>
+                                                <td><button class="badge bg-green margin-0" onclick="{{route('admin.tc.trainer.view',['id'=>$item->id])}}">View</button></td>
+                                                <td><button class="badge bg-blue margin-0" onclick="dlink({{$item->id}})">DeLink</button></td>
+                                                <td><button class="badge bg-blue margin-0" onclick="dlink({{$item->id}})" >DeLink</button></td>
                                                 @if($item->status==1 && $item->ind_status==1)
-                                                <td><a class="badge bg-red margin-0" href="#" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</a></td>
+                                                <td><button class="badge bg-red margin-0" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</button></td>
                                                 @elseif($item->ind_status==0)
-                                                <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
+                                                <td><button class="badge bg-grey margin-0" >Activate</button></td>
                                                 @elseif($item->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tr.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                                <td><button class="badge bg-green margin-0" onclick="{{route('admin.tr.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</button></td>
                                                 @endif
                                             </tr>
                                           
@@ -66,12 +68,12 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>All</strong> D-Linked Trainer </h2>
+                        <h2><strong>All</strong> DeLinked Trainer </h2>
                        
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
                                         <th>#</th>
@@ -96,14 +98,14 @@
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.dlink.trainer.view',['id'=>$item->id])}}" >View</a></td>
+                                            <td><button class="badge bg-green margin-0" onclick="{{route('admin.tc.dlink.trainer.view',['id'=>$item->id])}}" >View</button></td>
                                             
-                                            @if($item->status==1)
-                                            <td><a class="badge bg-red margin-0" href="#" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</a></td>
+                                            @if($item->status)
+                                            <td><button class="badge bg-red margin-0" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</button></td>
                                             {{-- @elseif($item->ind_status==0)
                                             <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td> --}}
-                                            @elseif($item->status==0)
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tr.dlink.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                            @elseif(!$item->status)
+                                            <td><button class="badge bg-green margin-0" onclick="{{route('admin.tr.dlink.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</button></td>
                                             @endif
                                         </tr>
                                       @php
@@ -124,8 +126,8 @@
 <script>
 function showCancelMessage(f) {
     swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
+        title: "Deactivation!",
+        text: "Write Reason for Deactivation:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -149,7 +151,7 @@ function showCancelMessage(f) {
            // console.log(data);
            swal({
         title: "Deactive",
-        text: "Trainer Record Deactive",
+        text: "Trainer Record Deactivated",
         type:"success",
         
         showConfirmButton: true
@@ -171,8 +173,8 @@ function showCancelMessage(f) {
 
 function dlinkTrainerDeactive(f) {
     swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
+        title: "Deactivation!",
+        text: "Write Reason for Deactivation:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -219,8 +221,8 @@ function dlinkTrainerDeactive(f) {
 
 function dlink(f) {
     swal({
-        title: "D-Link!",
-        text: "Write Reason for D-Link:",
+        title: "DeLink!",
+        text: "Write Reason for DeLink:",
         type: "input",
         showCancelButton: true,
         closeOnConfirm: false,
@@ -241,25 +243,16 @@ function dlink(f) {
         url: "{{route('admin.tr.trainer.dlink')}}",
         data: {_token,id,reason},
         success: function(data) {
-           // console.log(data);
-           swal({
-        title: "D-Link",
-        text: "Trainer Record D-Linked",
-        type:"success",
-        
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-       
-        window.location="{{route('admin.tc.centers')}}";
-
-        } 
-        });
-    
+            swal({
+            title: "DeLink",
+            text: "Trainer Record DeLinked",
+            type:"success", 
+            showConfirmButton: true
+            },function(isConfirm){
+                if (isConfirm){location.reload();} 
+            });
         }
     });
-        
     });
 }
 //==============================

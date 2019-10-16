@@ -76,7 +76,7 @@
                             <li class="{{ Request::is('partner/training_centers/candidates') ? 'active' : null }}"><a href="{{route('partner.tc.candidates')}}">Candidates</a></li>
                         </ul>
                     </li>
-                    <li class="{{ Request::is('partner/trainers') ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-accounts"></i><span>Trainers</span></a></li>
+                    <li class="{{ Request::segment(2)==='trainers' ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-accounts"></i><span>Trainers</span></a></li>
                 @endif
             @endauth
 
@@ -85,6 +85,7 @@
                     <li class="{{ Request::is('center/candidates') ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
                 @endif
             @endauth
+            <li class="{{ Request::is(Request::segment(1).'/batches') ? 'active open' : (Request::is(Request::segment(1).'/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
         </ul>
     </div>
 </aside>

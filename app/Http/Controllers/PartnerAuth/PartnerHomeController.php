@@ -163,7 +163,7 @@ class PartnerHomeController extends Controller
             $notification->save();
             
     
-            alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified by your Email", 'Job Done')->html()->autoclose(8000);
+            alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
             return redirect(route('partner.dashboard.dashboard'));
 
         } else {

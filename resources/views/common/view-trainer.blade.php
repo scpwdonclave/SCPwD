@@ -60,8 +60,8 @@
                                     <div class="col-sm-4">
                                         <small class="text-muted">Document Number</small>
                                         <p>
-                                            {{$trainerData->doc_number}} &nbsp;&nbsp;
-                                            <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($trainerData->doc_file)])}}" download="{{basename($trainerData->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
+                                            {{$trainerData->doc_no}} &nbsp;&nbsp;
+                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->doc_file)])}}" download="{{basename($trainerData->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
                                         </p>
                                         <hr>
                                     </div>
@@ -72,7 +72,7 @@
                                         <small class="text-muted">Resume</small>
                                              <p>
                                                 Resume &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($trainerData->resume)])}}" download="{{basename($trainerData->resume)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->resume)])}}" download="{{basename($trainerData->resume)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                         <hr>
                                     </div>
@@ -81,8 +81,8 @@
                                         <small class="text-muted">Other Document</small>
                                         <p>
                                             Other Document &nbsp;&nbsp;
-                                            @if($trainerData->other_doc !=null)
-                                            <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                            @if(!is_null($trainerData->other_doc))
+                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                             @endif
                                         </p>
                                         <hr>
@@ -101,7 +101,7 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Scheme</th>
-                                                        <th >Sector</th>
+                                                        <th>Sector</th>
                                                         <th>Job</th>
                                                         <th>SSC No</th>
                                                         <th>SSC Issued</th>
@@ -119,7 +119,7 @@
                                                     <td>
                                                         {{$doc->ssc_no}}
                                                         &nbsp;
-                                                        <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($doc->ssc_doc)])}}" download="{{basename($doc->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                        <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$doc->tr_id,'action'=>'download','filename'=>basename($doc->ssc_doc)])}}" download="{{basename($doc->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     </td>
                                                     <td>{{$doc->ssc_issued}}</td>
                                                     <td>{{$doc->ssc_valid}}</td>
@@ -142,7 +142,10 @@
                                 <div class="row">
                                         <div class="col-sm-4">
                                                 <small class="text-muted">SCPWD Document</small>
-                                                <p>{{$trainerData->scpwd_doc}}</p>
+                                                <p>
+                                                    Document &nbsp;&nbsp;
+                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->scpwd_doc)])}}" download="{{basename($trainerData->scpwd_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                </p>
                                                 <hr>
                                         </div>
                                     
@@ -163,14 +166,14 @@
                     </ul>
                     @auth('admin')
                         <div class="text-center" >
-                         
-                            @if ($trainerData->status==0 && !is_null($trainerData->verified) && $trainerData->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                            @elseif ( $trainerData->verified==1)
-                                <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>                         
+                            @if (Request::segment(1)==='admin')
+                                @if (!$trainerData->status && !is_null($trainerData->verified) && !$trainerData->verified)
+                                    <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
+                                    <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                @elseif ( $trainerData->verified==1)
+                                    <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>                         
+                                @endif
                             @endif
-                            
                         </div>
                     @endauth
                 </div>
@@ -279,57 +282,6 @@
     </script>
 @endauth
 
-@auth('partner')
-    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $trainerData))
-        <script>
-            function update(v){
-                dataValues = v.split(',');
-                swal({
-                    title: "Update TC SPOC Details",
-                    text: "Please Provide The Updated Value",
-                    type: "input",
-                    confirmButtonText: 'UPDATE',
-                    cancelButtonText: 'NOT NOW',
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                    inputValue: dataValues[0]
-                }, function (value) {
-                    if (value === false) return false;
-                    if (value === "") {
-                        swal.showInputError("You need to write something!"); return false
-                    }
-                    var id='{{$trainerData->id}}';
-                    let _token = $("input[name='_token']").val();
-                    var name = dataValues[1]
-                    $.ajax({
-                    type: "POST",
-                    url: "{{ route('partner.tc.center.update') }}",
-                    data: {_token,id,name,value},
-                    success: function(data) {
-                        swal({
-                            title: data['title'],
-                            text: data['message'],
-                            type: data['type'],
-                            html: true,
-                            showConfirmButton: true
-                        },function(isConfirm){
-                            if (isConfirm){
-                                    setTimeout(function(){location.reload()},150);
-                            } 
-                        });
-                    },
-                    error:function(){
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                    }); 
-                });
-            }
-        </script>
-    @endif
-@endauth
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

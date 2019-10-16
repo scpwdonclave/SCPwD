@@ -52,9 +52,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="name">Aadhar/Votar Number *</label>
+                                                <label for="name">Aadhaar/Votar Number *</label>
                                                 <div class="form-group form-float">
-                                                <input type="text" class="form-control" value="{{$trainer->doc_number}}" name="doc_no" readonly>
+                                                <input type="text" class="form-control" value="{{$trainer->doc_no}}" name="doc_no" readonly>
                                                 </div>
                                             </div>
                                         </div>

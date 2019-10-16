@@ -19,7 +19,7 @@ class CreateTrainerStatusesTable extends Migration
             $table->string('trainer_id');
             $table->unsignedBigInteger('tp_id');
             $table->string('name');
-            $table->string('doc_number');
+            $table->string('doc_no');
             $table->string('doc_type');
             $table->string('doc_file');
             $table->string('mobile');

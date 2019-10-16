@@ -276,7 +276,7 @@ class PartnerCenterController extends Controller
             $notification->message = "<span style='color:blue;'>".$partner_name."</span> Added New Training Center, TC Verification Required";
             $notification->save();
             /* End Notification For Partner */
-            alert()->success("Training Center Data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Reject</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
+            alert()->success("Training Center Data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
 
         });
 

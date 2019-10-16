@@ -52,9 +52,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhar/Voter Number *</label>
+                                                <label for="doc_no">Aadhaar/Voter Number *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhar No or Voter No" name="doc_no" required>
+                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhaar No or Voter No" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div id="doc_file_div" class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                <label for="doc_file">Aadhar / Voter Document *</label>
+                                                <label for="doc_file">Aadhaar / Voter Document *</label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>
@@ -125,49 +125,51 @@
                                     <div class="panel-body">
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <label for="sector[new]">Domain/Sector/SSC *</label>
                                                     <div class="form-group form-float">
                                                         <select id="sector_new" class="form-control show-tick" data-live-search="true" name="sector[new]" onchange="updatejob('new')" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
                                                                 @if ($job->status && $job->scheme_status)
-                                                                    <option value="{{$job->sector_id}}">{{$job->scheme->scheme.' | '.$job->sector->sector}}</option>
+                                                                    <option value="{{$job->sector_id}}">{{$job->sector->sector}}</option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-9">
                                                     <label for="jobrole[new][]">Job Roles *</label>
                                                     <div class="form-group form-float">
                                                         <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new][]" multiple data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                            </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-6">
                                                     <label for="ssc_doc_no[new]">SSC Document No *</label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[new]') }}" name="ssc_doc_no[new]" required>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-6">
                                                     <label for="ssc_doc[new]">SSC Document *</label>
                                                     <div class="form-group form-float">
                                                         <input type="file" id="ssc_doc_new" class="form-control" name="ssc_doc[new]" required>
                                                         <span id="ssc_doc_new_error"  style="color:red;"></span>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                            </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-5">
                                                     <label for="ssc_start[new]">SSC Certificate Issued On *</label>
-                                                    <div class="form-group form-float month_range_picker">
+                                                    <div class="form-group form-float month_range_picker_start">
                                                         <input type="text" id="ssc_start_new" onchange="startchange('new')" class="form-control" name="ssc_start[new]" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-5">
                                                     <label for="ssc_end[new]">SSC Certificate Valid Upto *</label>
-                                                    <div class="form-group form-float month_range_picker">
+                                                    <div class="form-group form-float month_range_picker_end">
                                                         <input type="text" id="ssc_end_new" class="form-control" name="ssc_end[new]" required>
                                                     </div>
                                                 </div>
@@ -228,13 +230,13 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <label for="scpwd_start">SCPwD Certificate Issued On *</label>
-                                                <div class="form-group form-float month_range_picker">
+                                                <div class="form-group form-float month_range_picker_start">
                                                     <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" name="scpwd_start" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <label for="scpwd_end">SCPwD Certificate Valid Upto *</label>
-                                                <div class="form-group form-float month_range_picker">
+                                                <div class="form-group form-float month_range_picker_end">
                                                     <input type="text" id="scpwd_end" class="form-control" name="scpwd_end" required>
                                                 </div>
                                             </div>
@@ -364,7 +366,7 @@
                         data: dataValidate,
                         success: function(data){
                             if (!data.success) {
-                                $('#doc_message').text('Note: This Aadhar/Voter Number is Registred in our Trainer Database');
+                                $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
                                 $('#doc_file_div').remove();
                             }
                             ajaxresponse = true;
@@ -505,7 +507,7 @@
                     $('#jobrole_'+id).empty();
                     data.jobs.forEach(value => {
                         // console.log(value);
-                        $('#jobrole_'+id).append('<option value="'+value.jobrole_id+'">'+value.jobrole.job_role+'</option>');
+                        $('#jobrole_'+id).append('<option value="'+value.jobrole_id+','+value.scheme_id+'">'+value.jobrole.job_role+' ('+value.scheme.scheme+')</option>');
                     });
                     $('#jobrole_'+id).selectpicker('refresh');
                     
@@ -534,7 +536,6 @@
                 $('.month_range_picker .form-control').datepicker({
                     autoclose: true,
                     format: 'dd MM yyyy',
-                    endDate: new Date()
                 });
 
                 $('#ssc_start_'+last)
@@ -586,44 +587,46 @@
 <script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <label for="sector[{?}]">Domain/Sector/SSC *</label>
                 <div class="form-group form-float">
                     <select id="sector_{?}" class="form-control show-tick" data-live-search="true" name="sector[{?}]" onchange="updatejob('{?}')" data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-9">
                 <label for="jobrole[{?}][]">Job Roles *</label>
                 <div class="form-group form-float">
                     <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}][]" multiple data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-4">
+        </div>
+        <div class="row d-flex justify-content-around">
+            <div class="col-sm-6">
                 <label for="ssc_doc_no[{?}]">SSC Document No *</label>
                 <div class="form-group form-float">
                     <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[{?}]') }}" name="ssc_doc_no[{?}]" required>
                 </div>
             </div>
-        </div>
-        <div class="row d-flex justify-content-around">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <label for="ssc_doc[{?}]">SSC Document *</label>
                 <div class="form-group form-float">
                     <input type="file" id="ssc_doc_{?}" class="form-control" name="ssc_doc[{?}]" required>
                     <span id="ssc_doc_{?}_error"  style="color:red;"></span>                        
                 </div>
             </div>
-            <div class="col-sm-4">
+        </div>
+        <div class="row d-flex justify-content-around">    
+            <div class="col-sm-5">
                 <label for="ssc_start[{?}]">Certificate Issued On *</label>
-                <div class="form-group form-float month_range_picker">
+                <div class="form-group form-float month_range_picker_start">
                     <input type="text" id="ssc_start_{?}" onchange="startchange('{?}')" class="form-control" name="ssc_start[{?}]" required>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-5">
                 <label for="ssc_end[{?}]">Certificate Valid Upto *</label>
-                <div class="form-group form-float month_range_picker">
+                <div class="form-group form-float month_range_picker_end">
                     <input type="text" id="ssc_end_{?}" class="form-control" name="ssc_end[{?}]" required>
                 </div>
             </div>
@@ -658,10 +661,16 @@ $(function () {
     
     /* Intializing Bootstrap DatePicker */
     
-        $('.month_range_picker .form-control').datepicker({
+        $('.month_range_picker_start .form-control').datepicker({
             autoclose: true,
             format: 'dd MM yyyy',
             endDate: new Date()
+        });
+
+        $('.month_range_picker_end .form-control').datepicker({
+            autoclose: true,
+            format: 'dd MM yyyy',
+            startDate: new Date()
         });
 
         $('#ssc_start_new')
@@ -700,6 +709,7 @@ $(function () {
         jQuery("#form_trainer").validate({
             rules: {
             mobile: { mobile: true },
+            doc_no: { aadharvoter: true },
             "[type=email]": { email: true }
             }
         });

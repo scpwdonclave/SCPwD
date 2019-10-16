@@ -18,7 +18,7 @@ class CreateTrainersTable extends Migration
             $table->unsignedBigInteger('tp_id');
             $table->string('trainer_id')->unique()->nullable();
             $table->string('name');
-            $table->string('doc_number')->unique();
+            $table->string('doc_no')->unique();
             $table->string('doc_type');
             $table->string('doc_file');
             $table->string('mobile')->unique();
