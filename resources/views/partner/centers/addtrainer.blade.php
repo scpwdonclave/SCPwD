@@ -54,7 +54,7 @@
                                             <div class="col-sm-5">
                                                 <label for="doc_no">Aadhaar/Voter Number *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Enter Trainer's Aadhaar No or Voter No" name="doc_no" required>
+                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Trainer's Aadhaar No or Voter No" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -87,14 +87,14 @@
                                             <div class="col-sm-3">
                                                 <label for="mobile">Trainer Mobile *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">Trainer Email *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
+                                                    <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
@@ -296,42 +296,46 @@
 
 
     /* Duplicate Email Checking */
-    var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
+    // var dup_email_tag = true;
+    // var dup_mobile_tag = true;
+    // function checkduplicacy(val){
+    //     var _token = $('[name=_token]').val();
+    //     // console.log('Token :'+ _token);
          
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('partner.tc.addcenter.api') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
-                    } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_email_tag = false;
-            } 
-        });
-    }
+    //     let value = $('[name='+val+']').val();
+    //     let dataString = { checkredundancy : value, section: val, _token: _token};
+    //     console.log(dataString);
+        
+    //     $.ajax({
+    //         url: "{{ route('partner.addtrainer.api') }}",
+    //         method: "POST",
+    //         data: dataString,
+    //         success: function(data){
+    //             console.log(data.success);
+                
+    //             if (data.success) {
+    //                 $('#'+val+'_error').html('');
+    //                 if (val == 'email') {
+    //                     dup_email_tag = true;
+    //                 } else {
+    //                     dup_mobile_tag = true;
+    //                 } 
+    //             } else {
+    //                 $('#'+val+'_error').html(val+' already exists');
+    //                 if (val == 'email') {
+    //                     dup_email_tag = false;                        
+    //                 } else {
+    //                     dup_mobile_tag = false;
+    //                 } 
+    //             }
+    //         },
+    //         error:function(data){
+    //             $('#'+val+'_error').html(val+' already exists');
+    //             dup_email_tag = false;
+    //             dup_email_tag = false;
+    //         } 
+    //     });
+    // }
     /* End Duplicate Email Checking */
 
     /* Validation of Each Sections */

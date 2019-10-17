@@ -562,4 +562,16 @@ class AdminPartnerController extends Controller
         alert()->success("Training Partner Scheme <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
         return Redirect()->back();
     }
+
+    public function update_partner_api(Request $request){
+        if ($request->has('checkredundancy')) {
+            if ($request->has('id')) {
+                if (Partner::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
+                    return response()->json(['success' => false], 200);
+                } else {
+                    return response()->json(['success' => true], 200);
+                }
+            }
+        }
+    }
 }

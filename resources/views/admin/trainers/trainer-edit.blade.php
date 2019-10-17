@@ -41,7 +41,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_trainer" method="POST" action="{{ route('partner.tc.submittrainer') }}" enctype="multipart/form-data">
+                <form id="form_trainer" method="POST" action="{{route('admin.tr.update.trainer')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2()">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -52,9 +52,10 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="name">Aadhaar/Votar Number *</label>
+                                                <label for="name">Aadhaar/ Votar Number </label>
                                                 <div class="form-group form-float">
                                                 <input type="text" class="form-control" value="{{$trainer->doc_no}}" name="doc_no" readonly>
+                                                <input type="hidden"  value="{{$trainer->id}}" name="trid">
                                                 </div>
                                             </div>
                                         </div>
@@ -83,7 +84,7 @@
                                             <div class="col-sm-3">
                                                 <label for="mobile">Trainer Mobile *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{$trainer->mobile}}" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{$trainer->mobile}}" onchange="checkduplicacy('mobile')"  name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
@@ -111,9 +112,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="resume">Resume *</label>
+                                                <label for="resume">Resume </label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" id="resume" class="form-control" name="resume" required>
+                                                    <input type="file" id="resume" class="form-control" name="resume" >
                                                     <span id="resume_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
@@ -133,9 +134,9 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc">SSC Document *</label>
+                                                <label for="scpwd_doc">SSC Document </label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" required>
+                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" >
                                                     <span id="scpwd_doc_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
@@ -154,7 +155,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> SUBMIT</button>
+                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> UPDATE</button>
                                             </div>
                                         </div>
                                     </div>
@@ -170,44 +171,55 @@
 @endsection
 @section('page-script')
 <script>
- /* Duplicate Email Checking */
- var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
-         
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('partner.tc.addcenter') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
+  /* Check Redundancy */
+  var dup_email_tag = true;
+        var dup_mobile_tag = true;
+        function checkduplicacy(val){
+            var _token = $('[name=_token]').val();
+            let value = $('[name='+val+']').val();
+            let id = '{{$trainer->id}}';
+            let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
+            $.ajax({
+                url: "{{route('admin.tp.addtrainer.api')}}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                       // console.log(data);
+                    if (data.success) {
+                        $('#'+val+'_error').html('');
+                        if (val == 'email') {
+                            dup_email_tag = true;
+                        } else {
+                            dup_mobile_tag = true;
+                        } 
                     } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_email_tag = false;
-            } 
-        });
-    }
-    /* End Duplicate Email Checking */
+                        $('#'+val+'_error').html(val+' already exists');
+                        if (val == 'email') {
+                            dup_email_tag = false;
+                        } else {
+                            dup_mobile_tag = false; 
+                        } 
+                    }
+                },
+                error:function(data){
+                    swal('Oops!','Something Went Wrong','error');
+                    
+                } 
+            });
+        }
+    /* End Check Redundancy */
+    function myFunction2(){
+        
+            if(dup_email_tag==false ||dup_mobile_tag==false){
+               
+                return false;
+            }
+            else{
+                var form = document.getElementById("form_trainer");
+                form.submit();
+                return true;
+            }
+        }
 </script>
 <script>
 
@@ -269,7 +281,7 @@
          var _token = $('[name=_token]').val();
         var dataValidate = { _token, mobile, email, doc_no };
         $.ajax({
-            url: "{{ route('partner.tc.addtrainer.api') }}",
+            url: "",
             method: "POST",
             data: dataValidate,
         }).done(function (data){
@@ -323,13 +335,13 @@
     /* End File Type Validation */
 
 
-    $('#form_trainer').on('submit', function(e){
-        e.preventDefault();
+    // $('#form_trainer').on('submit', function(e){
+    //     e.preventDefault();
        
-        var result = checkData();
+    //     var result = checkData();
        
         
-    });
+    // });
 
 </script>
 
@@ -384,7 +396,7 @@ $(function () {
             $('#ssc_end_'+id).val('');
         }
         function startchangescpwd(){
-            $('#scpwd_end').val('');
+            $('#scpwd_end').val($('#scpwd_end').val());
         }
     /* End Date Range Picker Operations */
 

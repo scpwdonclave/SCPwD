@@ -334,7 +334,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row d-flex justify-content-center">
+                                            <div class="row d-flex justify-content-center"> 
                                                 <div class="col-sm-3">
                                                     <label for="pan">PAN Number</label>
                                                     <div class="form-group form-float">
@@ -535,7 +535,7 @@
             let id = '{{$partner->id}}';
             let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
             $.ajax({
-                url: "{{ route('partner.tc.api.partner') }}",
+                url: "{{ route('admin.tp.partner.api') }}",
                 method: "POST",
                 data: dataString,
                 success: function(data){

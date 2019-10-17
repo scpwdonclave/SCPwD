@@ -9,6 +9,7 @@ Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });
 Route::get('training_partners/partners', 'AdminAuth\AdminPartnerController@partners')->name('tp.partners');
+Route::post('training_partners/partners/api', 'AdminAuth\AdminPartnerController@update_partner_api')->name('tp.partner.api');
 Route::get('training_partners/pending-partners', 'AdminAuth\AdminPartnerController@pendingpartners')->name('tp.pp');
 Route::get('training_partners/partners/{id}', 'AdminAuth\AdminPartnerController@partnerVerify')->name('training_partner.partner.verify');
 Route::get('training_partners/partner-accept/{id}', 'AdminAuth\AdminPartnerController@partnerAccept')->name('training_partner.accept.partner');
