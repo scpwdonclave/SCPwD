@@ -62,6 +62,7 @@ Route::get('trainer/trainer-deactive/{id}', 'AdminAuth\AdminTrainerController@tr
 Route::post('trainer/dlink-trainer-deactive', 'AdminAuth\AdminTrainerController@dlinkTrainerDeactive')->name('tr.dlink.trainer.deactive');
 Route::get('trainer/dlink-trainer-active/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerActive')->name('tr.dlink.trainer.active');
 Route::get('trainer/trainer-edit/{id}', 'AdminAuth\AdminTrainerController@trainerEdit')->name('tr.edit.trainer');
+Route::post('trainer/trainer-update', 'AdminAuth\AdminTrainerController@trainerUpdate')->name('tr.update.trainer');
 
 /* Batches */
 Route::get('batches', 'AdminAuth\AdminBatchController@batches')->name('batches');

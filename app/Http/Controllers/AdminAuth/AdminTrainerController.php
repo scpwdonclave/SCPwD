@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Trainer;
 use App\TrainerStatus;
@@ -198,5 +199,29 @@ class AdminTrainerController extends Controller
         $trainer=Trainer::findOrFail($tr_id);
 
         return view('admin.trainers.trainer-edit')->with(compact('trainer'));
+    }
+
+    public function trainerUpdate(Request $request){
+        $trainer=Trainer::findOrFail($request->trid);
+        $trainer->name=$request->name;
+        $trainer->mobile=$request->mobile;
+        $trainer->email=$request->email;
+        if ($request->hasFile('resume')) {
+            $trainer->resume = Storage::disk('myDisk')->put('/trainers', $request['resume']);            
+        }
+        if ($request->hasFile('other_doc')) {
+            $trainer->other_doc = Storage::disk('myDisk')->put('/trainers', $request['other_doc']);            
+        }
+        $trainer->scpwd_no=$request->scpwd_doc_no;
+        if ($request->hasFile('scpwd_doc')) {
+            $trainer->scpwd_doc = Storage::disk('myDisk')->put('/trainers', $request['scpwd_doc']);            
+        }
+        $trainer->scpwd_issued=$request->scpwd_start;
+        $trainer->scpwd_valid=$request->scpwd_end;
+        $trainer->save();
+
+        alert()->success('Trainer has been Updated', 'Job Done')->autoclose(3000);
+        return Redirect()->back();
+       
     }
 }
