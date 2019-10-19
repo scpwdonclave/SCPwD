@@ -31,7 +31,7 @@
                    
                 </div>
                 <div class="body">
-                <form id="form_center" method="POST" action="{{route('admin.tc.update.center')}}" enctype="multipart/form-data">
+                <form id="form_center" method="POST" action="{{route('admin.tc.update.center')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2()">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -290,44 +290,55 @@
 @section('page-script')
 <script>
 
-    /* Duplicate Email Checking */
+    /* Check Redundancy */
     var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
-         
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('partner.tc.addcenter') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
+        var dup_mobile_tag = true;
+        function checkduplicacy(val){
+            var _token = $('[name=_token]').val();
+            let value = $('[name='+val+']').val();
+            let id = '{{$center->id}}';
+            let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
+            $.ajax({
+                url: "{{route('admin.tc.center.api')}}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                       // console.log(data);
+                    if (data.success) {
+                        $('#'+val+'_error').html('');
+                        if (val == 'email') {
+                            dup_email_tag = true;
+                        } else {
+                            dup_mobile_tag = true;
+                        } 
                     } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_email_tag = false;
-            } 
-        });
-    }
-    /* End Duplicate Email Checking */
+                        $('#'+val+'_error').html(val+' already exists');
+                        if (val == 'email') {
+                            dup_email_tag = false;
+                        } else {
+                            dup_mobile_tag = false; 
+                        } 
+                    }
+                },
+                error:function(data){
+                    swal('Oops!','Something Went Wrong','error');
+                    
+                } 
+            });
+        }
+    /* End Check Redundancy */
+    function myFunction2(){
+        
+            if(dup_email_tag==false ||dup_mobile_tag==false){
+               
+                return false;
+            }
+            else{
+                var form = document.getElementById("form_center");
+                form.submit();
+                return true;
+            }
+        }
 
     /* Validation of Each Sections */
 
@@ -353,30 +364,7 @@
 
     /* End Validation of Each Sections */
 
-    /* Making Sure That the Terms & Condition is Accepted */
     
-        // $('#form_center').submit(function(e){
-        //     e.preventDefault();
-        //     if ($('#form_center').valid()) {
-        //         if ($('input:checkbox', this).length == $('input:checked', this).length) {
-                    
-        //             /* Disabling Prev & Submit Button and Proceed to Submit */
-                    
-        //                 $("#submit_form").prop("disabled", true);
-        //                 $("#last_prev_btn").prop("disabled", true);
-        //                 $("#submit_form").html("Please Wait...");
-        //                 $(this).unbind().submit();
-                    
-        //             /* End Disabling Prev & Submit Button and Proceed to Submit */
-                
-
-        //         } else {
-        //             showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
-        //         }
-        //     }
-        // });
-        
-    /* End Making Sure That the Terms & Condition is Accepted */
 
 
 
@@ -428,67 +416,7 @@
             });
 
 
-
-
-
-
-
-
-
-    /* Repeatable Section for JobRole */
-    // $(function() {
-    //         $("form .repeatable-container").repeatable({
-    //         template: "#jobroleform",
-    //         max: 5,
-    //         afterAdd: function(id){
-    //             var temp = id[0].id.split('_');
-    //             var last = temp[temp.length - 1];
-    //             console.log(id);
-    //             $('.jobrole').selectpicker();
-    //             // filevalidate();
-    //         }
-    //         });
-            
-    //     });
-    /* End Repeatable Section for JobRole */
-
 </script>
-
-
-{{-- ADD EMPLOYEE EXPERIENCE FUNCTION BODY (DYNAMIC) --}}
-
-{{-- <script type="text/template" id="jobroleform">
-    <div class="card body field-group" id="form_id_{?}">
-        <div class="row d-flex justify-content-around">
-            <div class="col-sm-5">
-                <label for="jobrole[{?}]">Job Roles - Sectors *</label>
-                <div class="form-group form-float">
-                    <select class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
-                        <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
-                        <option value="Incorportaion Certificate">Incorportaion Certificate</option>
-                        <option value="GST Registration Certificate">GST Registration Certificate</option>
-                        <option value="Telephone Bill (BSNL/MTNL)">Telephone Bill (BSNL/MTNL)</option>
-                        <option value="Electricity Bill">Electricity Bill</option>
-                        <option value="Bank Statement">Bank Statement</option>
-                        <option value="Incometax Certificate">Incometax Certificate</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-5">
-                <label for="target[{?}]">Target *</label>
-                <div class="form-group form-float">
-                    <input type="text" class="form-control" placeholder="Target" name="target[{?}]" required>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <button type="button" class="btn btn-danger delete"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>            
-        </div>
-    </div>
-</script> --}}
-
-{{-- ADD Employee Experience Function Call --}}
-
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>

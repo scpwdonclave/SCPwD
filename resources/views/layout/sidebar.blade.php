@@ -61,14 +61,21 @@
                         <li class="{{ Request::is('admin/trainer/pending-trainers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-trainers')}}">Pending Trainers</a></li>
                     </ul>
                 </li> 
+                <li class="{{ Request::segment(2) === 'batches' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Batches</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/batches/batches') ? 'active' : null }}"><a href="{{route('admin.batch.batches')}}"> Approved Batches</a></li>
+                        <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li>
+                    </ul>
+                </li> 
                 @endif
             @endauth
-
+                    
             @auth('partner')
-                @if (Request::segment(1) === 'partner')
-                    @if (!$partner->complete_profile)
-                        <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
-                    @endif
+            @if (Request::segment(1) === 'partner')
+                @if (!$partner->complete_profile)
+                    <li class="{{ Request::is('partner/complete_registration') ? 'active open' : null }}"><a href="{{route('partner.comp-register')}}"><i class="zmdi zmdi-account-box"></i><span>Registration</span></a></li>
+                @endif
                     <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
                         <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Training Centers</span></a>
                         <ul class="ml-menu">
@@ -85,7 +92,9 @@
                     <li class="{{ Request::is('center/candidates') ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
                 @endif
             @endauth
-            <li class="{{ Request::is(Request::segment(1).'/batches') ? 'active open' : (Request::is(Request::segment(1).'/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
+            @if (Request::segment(1) != 'admin')
+                <li class="{{ Request::is(Request::segment(1).'/batches') ? 'active open' : (Request::is(Request::segment(1).'/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>            
+            @endif
         </ul>
     </div>
 </aside>

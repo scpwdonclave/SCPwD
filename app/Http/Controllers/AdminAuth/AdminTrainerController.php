@@ -203,25 +203,49 @@ class AdminTrainerController extends Controller
 
     public function trainerUpdate(Request $request){
         $trainer=Trainer::findOrFail($request->trid);
+        $trainer_status=TrainerStatus::where('prv_id',$request->trid)->first();
         $trainer->name=$request->name;
+        $trainer_status->name=$request->name;
         $trainer->mobile=$request->mobile;
+        $trainer_status->mobile=$request->mobile;
         $trainer->email=$request->email;
+        $trainer_status->email=$request->email;
         if ($request->hasFile('resume')) {
             $trainer->resume = Storage::disk('myDisk')->put('/trainers', $request['resume']);            
+            $trainer_status->resume = Storage::disk('myDisk')->put('/trainers', $request['resume']);            
         }
         if ($request->hasFile('other_doc')) {
             $trainer->other_doc = Storage::disk('myDisk')->put('/trainers', $request['other_doc']);            
+            $trainer_status->other_doc = Storage::disk('myDisk')->put('/trainers', $request['other_doc']);            
         }
         $trainer->scpwd_no=$request->scpwd_doc_no;
         if ($request->hasFile('scpwd_doc')) {
             $trainer->scpwd_doc = Storage::disk('myDisk')->put('/trainers', $request['scpwd_doc']);            
+            $trainer_status->scpwd_doc = Storage::disk('myDisk')->put('/trainers', $request['scpwd_doc']);            
         }
         $trainer->scpwd_issued=$request->scpwd_start;
+        $trainer_status->scpwd_issued=$request->scpwd_start;
         $trainer->scpwd_valid=$request->scpwd_end;
+        $trainer_status->scpwd_valid=$request->scpwd_end;
         $trainer->save();
+        $trainer_status->save();
 
         alert()->success('Trainer has been Updated', 'Job Done')->autoclose(3000);
         return Redirect()->back();
        
+    }
+
+    public function trainerApi(Request $request){
+
+        if ($request->has('checkredundancy')) {
+            if ($request->has('id')) {
+                if (Trainer::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
+                    return response()->json(['success' => false], 200);
+                } else {
+                    return response()->json(['success' => true], 200);
+                }
+            }
+        }
+
     }
 }

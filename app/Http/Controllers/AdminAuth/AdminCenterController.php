@@ -418,4 +418,17 @@ class AdminCenterController extends Controller
          alert()->success('Candidate Details Updated', 'Done')->autoclose(2000);
          return Redirect()->back();
     }
+
+    public function centerApi(Request $request){
+        if ($request->has('checkredundancy')) {
+            if ($request->has('id')) {
+                if (Center::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
+                    return response()->json(['success' => false], 200);
+                } else {
+                    return response()->json(['success' => true], 200);
+                }
+            }
+        }
+
+    }
 }

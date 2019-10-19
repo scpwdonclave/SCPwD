@@ -214,7 +214,7 @@
                                            
                                            
                                             <div class="col-sm-12 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> UPDATE</button>
+                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                             </div>
                                         </div>
                                     </div>

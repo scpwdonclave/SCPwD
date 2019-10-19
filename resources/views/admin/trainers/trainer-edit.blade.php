@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Add Trainer')
+@section('title', 'Edit Trainer')
 @section('page-style')
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
@@ -155,7 +155,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> UPDATE</button>
+                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +172,7 @@
 @section('page-script')
 <script>
   /* Check Redundancy */
-  var dup_email_tag = true;
+        var dup_email_tag = true;
         var dup_mobile_tag = true;
         function checkduplicacy(val){
             var _token = $('[name=_token]').val();
@@ -180,7 +180,7 @@
             let id = '{{$trainer->id}}';
             let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
             $.ajax({
-                url: "{{route('admin.tp.addtrainer.api')}}",
+                url: "{{route('admin.tr.trainer.api')}}",
                 method: "POST",
                 data: dataString,
                 success: function(data){
@@ -230,86 +230,6 @@
     });
     /* End Onload Function */
 
-
-
-
-    /* Duplicate Email Checking */
-    // var dup_email_tag = true;
-    // var dup_mobile_tag = true;
-    // function checkduplicacy(val){
-    //     var _token = $('[name=_token]').val();
-    //     // console.log('Token :'+ _token);
-         
-    //     let value = $('[name='+val+']').val();
-    //     let dataString = { checkredundancy : value, section: val, _token: _token};
-    //     $.ajax({
-    //         url: "{{ route('partner.tc.addcenter.api') }}",
-    //         method: "POST",
-    //         data: dataString,
-    //         success: function(data){
-    //             if (data.success) {
-    //                 $('#'+val+'_error').html('');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = true;
-    //                 } else {
-    //                     dup_mobile_tag = true;
-    //                 } 
-    //             } else {
-    //                 $('#'+val+'_error').html(val+' already exists');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = false;                        
-    //                 } else {
-    //                     dup_mobile_tag = false;
-    //                 } 
-    //             }
-    //         },
-    //         error:function(data){
-    //             $('#'+val+'_error').html(val+' already exists');
-    //             dup_email_tag = false;
-    //             dup_email_tag = false;
-    //         } 
-    //     });
-    // }
-    /* End Duplicate Email Checking */
-
-    /* Duplicate Email Mobile Check */
-
-    function checkData(){
-        var mobile = $('[name=mobile]').val();
-        var email = $('[name=email]').val();
-        var doc_no = $('[name=doc_no]').val();
-         var _token = $('[name=_token]').val();
-        var dataValidate = { _token, mobile, email, doc_no };
-        $.ajax({
-            url: "",
-            method: "POST",
-            data: dataValidate,
-        }).done(function (data){
-            console.log(data);
-            
-            if (!data.success) {
-                var swalText = document.createElement("div");
-                if (!data.mobile && !data.email) {
-                    swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
-                } else if(!data.mobile) {
-                    swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
-                } else if (!data.email) {
-                    swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
-                }    
-                swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
-                return false;
-            }
-            return true;
-        });
-    }
-
-    /* End Duplicate Email Mobile Check */
-
-
-
-
-
-
     /* File Type Validation */
         function filevalidate(){
             var _URL = window.URL || window.webkitURL;
@@ -334,14 +254,6 @@
         }
     /* End File Type Validation */
 
-
-    // $('#form_trainer').on('submit', function(e){
-    //     e.preventDefault();
-       
-    //     var result = checkData();
-       
-        
-    // });
 
 </script>
 

@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Batches')
+@section('title', 'Pending Batches')
 @section('page-style')
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">

@@ -41,6 +41,7 @@ Route::get('training_centers/center-edit/{id}', 'AdminAuth\AdminCenterController
 Route::post('training_centers/center-update', 'AdminAuth\AdminCenterController@centerDetailsUpdate')->name('tc.update.center');
 Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
 Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
+Route::post('training_centers/center-api', 'AdminAuth\AdminCenterController@centerApi')->name('tc.center.api');
 
 Route::get('training_centers/candidates', 'AdminAuth\AdminCenterController@candidates')->name('tc.candidates');
 Route::get('training_centers/candidates/{id}', 'AdminAuth\AdminCenterController@view_candidate')->name('tc.candidate.view');
@@ -63,6 +64,11 @@ Route::post('trainer/dlink-trainer-deactive', 'AdminAuth\AdminTrainerController@
 Route::get('trainer/dlink-trainer-active/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerActive')->name('tr.dlink.trainer.active');
 Route::get('trainer/trainer-edit/{id}', 'AdminAuth\AdminTrainerController@trainerEdit')->name('tr.edit.trainer');
 Route::post('trainer/trainer-update', 'AdminAuth\AdminTrainerController@trainerUpdate')->name('tr.update.trainer');
+Route::post('trainer/trainer-api', 'AdminAuth\AdminTrainerController@trainerApi')->name('tr.trainer.api');
 
 /* Batches */
-Route::get('batches', 'AdminAuth\AdminBatchController@batches')->name('batches');
+Route::get('batches/batches', 'AdminAuth\AdminBatchController@batches')->name('batch.batches');
+Route::get('batches/pending-batches', 'AdminAuth\AdminBatchController@pendingBatches')->name('batch.pb');
+Route::get('batches/batch-view/{id}', 'AdminAuth\AdminBatchController@viewBatch')->name('bt.batch.view');
+Route::get('batches/batch-verify/{id}', 'AdminAuth\AdminBatchController@batchAccept')->name('bt.batch.verify');
+Route::post('batches/batch-reject', 'AdminAuth\AdminBatchController@batchReject')->name('bt.reject.batch');
