@@ -50,7 +50,6 @@
                                 <td>{{$candidate->category}}</td>
                                 <td>{{$candidate->dob}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',$candidate->id)}}" >View</a></td>
-                                {{-- <td class="text-center"><a href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',$candidate->id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td> --}}
                                 @if($candidate->status==1)
                                 <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$candidate->id}})">Deactivate</a></td>
                                 @elseif($candidate->status==0)

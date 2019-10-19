@@ -33,3 +33,5 @@ Route::post('add-trainer-api', 'PartnerAuth\PartnerTrainerController@addtrainer_
 /* Batches */
 Route::get('batches', 'PartnerAuth\PartnerBatchController@batches')->name('batches');
 Route::get('add-batch', 'PartnerAuth\PartnerBatchController@addbatch')->name('addbatch');
+Route::post('add-batch', 'PartnerAuth\PartnerBatchController@submitbatch')->name('submitbatch');
+Route::post('add-batch/api', 'PartnerAuth\PartnerBatchController@addbatch_api')->name('addbatch.api');

@@ -13,5 +13,9 @@ class Candidate extends Model
     public function center(){
         return $this->belongsTo('App\Center', 'tc_id');
     }
+
+    public function disability(){
+        return $this->belongsTo('App\Expository', 'd_type');
+    }
     
 }

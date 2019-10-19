@@ -72,8 +72,8 @@
                     <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
                         <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Training Centers</span></a>
                         <ul class="ml-menu">
-                            <li class="{{ Request::is('partner/training_centers/centers') ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
-                            <li class="{{ Request::is('partner/training_centers/candidates') ? 'active' : null }}"><a href="{{route('partner.tc.candidates')}}">Candidates</a></li>
+                            <li class="{{ Request::segment(3)==='centers' ? 'active' : null }}"><a href="{{route('partner.tc.centers')}}">Centers</a></li>
+                            <li class="{{ Request::segment(3)==='candidates' ? 'active' : null }}"><a href="{{route('partner.tc.candidates')}}">Candidates</a></li>
                         </ul>
                     </li>
                     <li class="{{ Request::segment(2)==='trainers' ? 'active open' : (Request::is('partner/add-trainer') ? 'active open' : null ) }}"><a href="{{route('partner.trainers')}}"><i class="zmdi zmdi-accounts"></i><span>Trainers</span></a></li>
@@ -82,7 +82,7 @@
 
             @auth('center')
                 @if (Request::segment(1) === 'center')
-                    <li class="{{ Request::is('center/candidates') ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
+                    <li class="{{ Request::segment(2)==='candidates' ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
                 @endif
             @endauth
             <li class="{{ Request::is(Request::segment(1).'/batches') ? 'active open' : (Request::is(Request::segment(1).'/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>

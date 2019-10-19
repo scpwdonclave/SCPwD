@@ -61,9 +61,9 @@ class CenterHomeController extends Controller
     public function view_candidate($id){
 
         $candidate = Candidate::where([['id',$id],['tc_id', Auth::guard('center')->user()->id]])->firstOrFail();
-        return $candidate;
-        
-        return view('common.view-candidate');
+        $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
+        return view('common.view-candidate')->with(compact('candidate','state_dist'));
+
     }
 
     public function addcandidate(){

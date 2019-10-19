@@ -35,10 +35,13 @@
                                 
                                     <div class="col-sm-6">
                                         <small class="text-muted">Aadhaar/Voter Document</small>
-                                        <p>Document &nbsp;&nbsp;
-                                                @if ($candidate->doc_file !=null)
+                                        @if (!is_null($candidate->doc_file))
+                                            <p>Document &nbsp;&nbsp;
                                                 <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'doc'])}}" download="{{basename($candidate->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif</p>
+                                            </p>
+                                        @else
+                                            <p>No Document Provided</p>
+                                        @endif
                                         <hr>
                                     </div>
                                 </div>
@@ -98,7 +101,7 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                                 <small class="text-muted">Sector/Job Role/NSQF/QP Code</small>
                                                 <p>{{$candidate->jobrole->partnerjobrole->scheme->scheme}}|
                                                     {{$candidate->jobrole->partnerjobrole->jobrole->job_role}}|
@@ -108,18 +111,20 @@
                                                 <hr>
                                         </div>
                                     
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                                 <small class="text-muted">Disability Type</small>
-                                                <p>{{$state_dist->e_expository}}</p>
+                                                <p>{{$candidate->disability->e_expository}}</p>
                                                 <hr>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                                 <small class="text-muted">Disability Certificate</small>
-                                                <p>Document &nbsp;&nbsp;
-                                                    @if ($candidate->d_cert !=null)
-                                                    <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'cert'])}}" download="{{basename($candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
-                                                    @endif
+                                                @if (!is_null($candidate->d_cert))
+                                                    <p>Document &nbsp;&nbsp;
+                                                        <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'cert'])}}" download="{{basename($candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
                                                     </p>
+                                                @else
+                                                    <p>No Document Provided</p>                                                 
+                                                @endif
                                                 <hr>
                                         </div>
                                     </div>
@@ -146,12 +151,12 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Ex Service Employee </small>
-                                                <p>{{$state_dist->service}}</p>
+                                                <p>{{$candidate->service}}</p>
                                                 <hr>
                                         </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Education</small>
-                                                <p>{{$state_dist->education}}</p>
+                                                <p>{{$candidate->education}}</p>
                                                 <hr>
                                         </div>
                                        
@@ -165,7 +170,7 @@
                                     
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Guardian Type </small>
-                                                <p>{{$state_dist->g_type}}</p>
+                                                <p>{{$candidate->g_type}}</p>
                                                 <hr>
                                         </div>
                                        
@@ -176,9 +181,11 @@
                         </li>
                     </ul>
                   
+                    @if (Request::segment(1)==='admin')
                         <div class="text-center" >
-                        <button class="btn" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'">Edit</button>                         
+                            <button class="btn" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
                         </div>
+                    @endif
                    
                 </div>
             </div>
@@ -186,54 +193,6 @@
     </div>
 </div>
 
-{{-- =================== --}}
-{{-- <div class="container-fluid">
-    <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Center</strong> Job Target</h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>Scheme</th>
-                                        <th>Sector</th>
-                                        <th>Job Role</th>
-                                        <th>Target Allocated</th>
-                                        <th>Student Enroll</th>
-                                        <th>Target Achieve</th>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        @foreach ($tc_target as $key=>$target)
-                                            
-                                        <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>{{$target->partnerjobrole->scheme->scheme}}</td>
-                                        <td>{{$target->partnerjobrole->sector->sector}}</td>
-                                        <td>{{$target->partnerjobrole->jobrole->job_role}}</td>
-                                        <td>{{$target->target}}</td>
-                                        <td>{{$target->enrolled}}</td>
-                                       <td>0</td>
-                                        </tr>
-                                      
-                                        @endforeach
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div> --}}
-{{-- =================== --}}
 @stop
 @section('page-script')
 @auth('admin')

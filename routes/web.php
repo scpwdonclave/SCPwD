@@ -12,7 +12,10 @@
 */
 
 
-Route::get('/', function () { return redirect('admin'); });
+// Route::get('/', function () { return redirect('admin'); });
+
+Route::get('/', 'Controller@index')->name('index');
+
 
 /* Admin Routes */
 Route::group(['prefix' => 'admin'], function () {

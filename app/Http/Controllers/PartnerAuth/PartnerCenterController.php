@@ -299,15 +299,14 @@ class PartnerCenterController extends Controller
     }
 
     public function view_candidate($id){
-
         $candidate = Candidate::findOrFail($id);
         if ($candidate->center->partner->id == Auth::guard('partner')->user()->id) {
-            return $candidate;
+            $partner = $this->guard()->user();
+            $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
+            return view('common.view-candidate')->with(compact('candidate','state_dist','partner'));
         } else {
             return abort(404);
         }
-        
-        return view('common.view-candidate');
     }
 
 }

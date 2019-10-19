@@ -328,11 +328,7 @@ class AdminCenterController extends Controller
 
     public function view_candidate($id){
         $candidate = Candidate::findOrFail($id);
-        $state_dist=DB::table('candidates as c')
-        ->join('state_district AS s','c.state_district','=','s.id')
-        ->join('expositories AS e','c.d_type','=','e.id')
-        ->where('c.id',$id)->first();
-        //dd($state_dist);
+        $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
         return view('common.view-candidate')->with(compact('candidate','state_dist'));
     }
     public function candidateActive($id){

@@ -12,4 +12,8 @@ class Expository extends Model implements Auditable
     public function job_roles(){
         return $this->belongsToMany('App\JobRole')->withTimestamps();
     }
+
+    public function candidates(){
+        return $this->hasMany('App\Candidate', 'd_type');
+    }
 }
