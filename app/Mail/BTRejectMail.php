@@ -16,10 +16,11 @@ class BTRejectMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($batch)
     {
         //
-    }
+        $this->batch = $batch;
+    } 
 
     /**
      * Build the message.
@@ -28,6 +29,6 @@ class BTRejectMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('emails.btreject')->subject("Batch Request Rejected | SCPwD")->with(['batch' => $this->batch]);
     }
 }

@@ -16,4 +16,10 @@ class Batch extends Model
     public function trainer(){
         return $this->belongsTo('App\Trainer', 'tr_id');
     }
+    public function scheme(){
+        return $this->belongsTo('App\Scheme', 'scheme_id');
+    }
+    public function jobrole(){
+        return $this->belongsTo('App\JobRole', 'jobrole_id');
+    }
 }

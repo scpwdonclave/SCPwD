@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Batch;
 use App\BatchCandidateMap;
+use App\Mail\BTRejectMail;
 use App\Notification;
 use Crypt;
 use DB;
+use Mail;
 
 class AdminBatchController extends Controller
 {
@@ -85,7 +87,7 @@ class AdminBatchController extends Controller
     public function batchReject(Request $request){
         $data=Batch::findOrFail($request->id);
         $data['note'] = $request->note;
-        // Mail::to($data->email)->send(new TCRejectMail($data));
+         Mail::to($data->partner->email)->send(new BTRejectMail($data));
          /* Notification For Partner */
          $notification = new Notification;
          $notification->rel_id = $data->tp_id;

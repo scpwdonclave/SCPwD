@@ -46,14 +46,19 @@
                                   
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <small class="text-muted">Scheme</small>
-                                        <p>{{$batchData->scheme}}</p>
+                                        <p>{{$batchData->scheme->scheme}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Sector</small>
+                                        <p>{{$batchData->jobrole->sector->sector}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <small class="text-muted">Job Role</small>
-                                        <p>{{$batchData->job_role}}</p>
+                                        <p>{{$batchData->jobrole->job_role}}</p>
                                         <hr>
                                     </div>
                                 

@@ -15,7 +15,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>My</strong> Batches</h2>
+                    <h2><strong>All</strong> Approved Batches</h2>
                     @if (Request::segment(1) === 'partner')
                         <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.addbatch')}}">Add New Batch</a>                      
                     @endif
@@ -34,7 +34,7 @@
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
                                     <th>View</th>
-                                    <th>Action</th>
+                                   
                                 </tr>
                                
                             </thead>
@@ -49,7 +49,7 @@
                                 <td>{{$item->batch_end_time}}</td>
                                 <td>{{$item->assesment_date}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route('admin.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                <td>action</td>
+                               
                                 </tr>
                                 @endforeach
                             </tbody>
