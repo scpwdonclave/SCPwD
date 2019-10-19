@@ -75,17 +75,17 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Batch start Date</small>
-                                        <p>{{$batchData->batch_start_time}}</p>
+                                        <p>{{$batchData->batch_start}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Batch End Date</small>
-                                        <p>{{$batchData->batch_end_time}}</p>
+                                        <p>{{$batchData->batch_end}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Assesment Date</small>
-                                        <p>{{$batchData->assesment_date}}</p>
+                                        <p>{{$batchData->assesment}}</p>
                                         <hr>
                                     </div>
                 

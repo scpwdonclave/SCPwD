@@ -65,6 +65,34 @@ table.dataTable thead th:first-child {
                                 </div>
                             </div>
 
+                            <div class="row d-flex justify-content-around">
+                                <div class="col-sm-3">
+                                    <label for="trainer">Trainer *</label>
+                                    <div class="form-group form-float">
+                                        <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="batch_start">Batch Start Date *</label>
+                                    <div class="form-group form-float date_range_picker_start">
+                                        <input type="text" id="batch_start" onchange="startchange()" class="form-control" name="batch_start" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="batch_end">Batch End Date *</label>
+                                    <div class="form-group form-float date_range_picker_end">
+                                        <input type="text" id="batch_end" class="form-control" name="batch_end" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="assesment_date">Assesment Date *</label>
+                                    <div class="form-group form-float date_picker">
+                                        <input type="text" id="assesment_date" class="form-control" name="assesment_date" required>
+                                    </div>
+                                </div>
+                            </div>
+
                             <table id="batchtable" data-page-length="30" class="batchtable table table-bordered table-striped table-hover display select">
                                 <thead>
                                     <tr>
@@ -320,19 +348,19 @@ $('#form_addbatch').on('submit', function(e){
             $(form).append(
                 $('<input>')
                     .attr('type', 'hidden')
-                    .attr('name', 'id'+index)
+                    .attr('name', 'id['+index+']')
                     .val(rowId)
             );
         });
 
         var count = $('input[name^="id"]', form).length;
-        if (count < 10) {
-           swal('Abort','You need to choose atleast 10 Candidates', 'info');
-        } else if (count > 30) {
-            swal('Abort','You can choose atmost 30 Candidates', 'info');
-        } else {
+        // if (count < 10) {
+        //    swal('Abort','You need to choose atleast 10 Candidates', 'info');
+        // } else if (count > 30) {
+        //     swal('Abort','You can choose atmost 30 Candidates', 'info');
+        // } else {
             $('#form_addbatch').unbind().submit();
-        }
+        // }
 
         
             // FOR DEMONSTRATION ONLY     
