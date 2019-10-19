@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PartnerJobrole;
 use App\Center;
+use App\Batch;
 use Auth;
 
 class PartnerBatchController extends Controller
@@ -24,6 +25,7 @@ class PartnerBatchController extends Controller
 
         $data = [
             'partner' => $this->guard()->user(),
+            'data' => Batch::where([['verified','=',1],['tp_id','=',$this->guard()->user()]])->get()
         ];
         return view('common.batches')->with($data);
     }

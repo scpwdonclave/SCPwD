@@ -12,7 +12,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong>Pending Centers </h2>
+                            <h2><strong>All</strong> Pending Centers </h2>
                            
                         </div>
                         <div class="body">

@@ -300,7 +300,7 @@
                                 <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                         
                             @endif
                         </div>
-                    @endauth
+                    @endauth 
                 </div>
             </div>
         </div>
