@@ -36,7 +36,6 @@ class CreateCandidatesTable extends Migration
             $table->string('education');
             $table->string('g_name')->comment = 'Guardian Name';
             $table->string('g_type')->comment = 'Guardian Type';
-            $table->string('batch_id')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('ind_status')->default(1);
             $table->timestamps();
