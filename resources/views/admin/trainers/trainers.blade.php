@@ -36,7 +36,7 @@
                                                 
                                             <tr>
                                             <td>{{$key+1}}</td>
-                                            <td>{{$item->partner->tp_id}}</td>
+                                            <td>hi</td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
@@ -82,7 +82,6 @@
                                         <th>Email</th>
                                         <th>Mobile</th>
                                         <th>View</th>
-                                        
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -93,24 +92,21 @@
                                         @foreach ($dlinkData as $key=>$item)
                                          
                                         <tr>
-                                        <td>{{$j}}</td>
-                                        <td>{{$item->tp_id}}</td>
+                                            <td>{{$j}}</td>
+                                            <td>{{$item->partner->tp_id}}</td>
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tc.dlink.trainer.view',['id'=>$item->id])}}" >View</a></td>
-                                            
                                             @if($item->status)
-                                            <td><button class="badge bg-red margin-0" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</button></td>
-                                            {{-- @elseif($item->ind_status==0)
-                                            <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td> --}}
+                                                <td><button class="badge bg-red margin-0" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</button></td>
                                             @elseif(!$item->status)
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tr.dlink.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tr.dlink.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
                                             @endif
                                         </tr>
-                                      @php
-                                         $j++; 
-                                      @endphp
+                                        @php
+                                            $j++; 
+                                        @endphp
                                         @endforeach
                                        
                                     </tbody>

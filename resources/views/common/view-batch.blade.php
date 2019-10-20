@@ -136,7 +136,7 @@
                                 </thead>
                                 <tbody>
                                        
-                                       @foreach ($candidates as $key=>$item)
+                                       @foreach ($batchData->candidatesmap as $key=>$item)
                                            
                                        <tr>
                                         <td>{{$key+1}}</td>
@@ -144,7 +144,11 @@
                                         <td>{{$item->candidate->contact}}</td>
                                         <td>{{$item->candidate->email}}</td>
                                         <td>{{$item->candidate->doc_no}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>
+                                        @if (Request::segment(1)==='center')
+                                            <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>                                                                                
+                                        @else
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>
+                                        @endif
                                         
                                     </tr>
                                     @endforeach     

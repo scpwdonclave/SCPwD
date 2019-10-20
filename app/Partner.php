@@ -50,4 +50,8 @@ class Partner extends Authenticatable implements Auditable
     public function trainers(){
         return $this->hasMany('App\Trainer', 'tp_id');
     }
+
+    public function batches(){
+        return $this->hasMany('App\Batch', 'tp_id');
+    }
 }

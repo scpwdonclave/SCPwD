@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class TrainerStatus extends Model
 {
     public function partner(){
-        return $this->belongsTo('App\Partner', 'tp_id');
+        return $this->belongsTo('App\Partner', 'prv_id');
     }
 }

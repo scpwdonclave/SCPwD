@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PartnerJobrole;
+use App\TrainerJobRole;
 use App\Center;
 use App\Batch;
+use Crypt;
 use App\BatchCandidateMap;
 use Auth;
 use DB;
@@ -29,9 +31,20 @@ class PartnerBatchController extends Controller
 
         $data = [
             'partner' => $this->guard()->user(),
-            'data' => Batch::where([['verified','=',1],['tp_id','=',$this->guard()->user()]])->get()
+            'data' => Batch::where('tp_id',$this->guard()->user()->id)->get()
         ];
         return view('common.batches')->with($data);
+    }
+
+    public function viewBatch($id){
+        $id = Crypt::decrypt($id);
+        $batchData=Batch::findOrFail($id);
+        if ($batchData->partner->id==$this->guard()->user()->id) {
+            $partner = $this->guard()->user();
+            return view('common.view-batch')->with(compact('batchData','partner'));
+        } else {
+            return abort(401);
+        }
     }
     
     public function addbatch(){
@@ -52,17 +65,30 @@ class PartnerBatchController extends Controller
         }
         if ($request->has('jobid')) {
             $filteredCenters = collect([]);
+            $filteredTrainers = collect([]);
             $partner = $this->guard()->user();
-            $partnerJob = PartnerJobrole::where('id', $request->jobid)->get();
+            $partnerJob = PartnerJobrole::find($request->jobid);
+            if ($partnerJob) {
+                $trainerjobs = TrainerJobRole::where([['scheme_id', $partnerJob->scheme_id],['sector_id', $partnerJob->sector_id],['jobrole_id', $partnerJob->jobrole_id]])->get();
+                foreach ($trainerjobs as $trainerjob) {
+                    if ($trainerjob->trainer->status && $trainerjob->trainer->ind_status && $trainerjob->trainer->verified) {
+                        $filteredTrainers->push($trainerjob->trainer);
+                    }
+                }
+            }
+
+            
             $centers = $partner->centers;
             foreach ($centers as $center) {
-                foreach ($center->center_jobroles as $centerJob) {
-                    if ($centerJob->tp_job_id == (int)$request->jobid) {
-                        $filteredCenters->push($center);
+                if ($center->status &&  $center->ind_status && $center->verified && $center->scheme_status) {
+                    foreach ($center->center_jobroles as $centerJob) {
+                        if ($centerJob->tp_job_id == (int)$request->jobid) {
+                            $filteredCenters->push($center);
+                        }
                     }
-                }    
+                }
             }
-            return response()->json(['success' => true, 'centers' => $filteredCenters], 200);                        
+            return response()->json(['success' => true, 'centers' => $filteredCenters, 'trainers' => $filteredTrainers], 200);                        
         }
         if ($request->has('centerid')) {
             $partner = $this->guard()->user();
@@ -130,6 +156,7 @@ class PartnerBatchController extends Controller
             $batch->tr_id = $request->trainer;
             $batch->tc_id = $request->center;
             $batch->scheme_id = $request->scheme;
+            $batch->jobrole_id = $request->jobrole;
             $batch->batch_start = $request->batch_start;
             $batch->batch_end = $request->batch_end;
             $batch->assesment = $request->assesment;

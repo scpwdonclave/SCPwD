@@ -17,4 +17,8 @@ class TrainerJobRole extends Model
     public function sector(){
         return $this->belongsTo('App\Sector', 'sector_id');
     }
+
+    public function trainer(){
+        return $this->belongsTo('App\Trainer', 'tr_id');
+    }
 }

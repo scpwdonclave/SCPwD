@@ -36,10 +36,7 @@ class AdminBatchController extends Controller
     public function viewBatch($id){
         $id = Crypt::decrypt($id); 
         $batchData=Batch::findOrFail($id);
-        $candidates=BatchCandidateMap::where('bt_id',$id)->get();
-        return view('admin.batches.view-batch')->with(compact('batchData','candidates'));
-
-
+        return view('common.view-batch')->with(compact('batchData','candidates'));
     }
 
     public function batchAccept($id){

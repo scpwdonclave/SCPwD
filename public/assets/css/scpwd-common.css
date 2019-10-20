@@ -11,6 +11,13 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.datepicker-inline {
+  width: 100%;
+}
+.datepicker table {
+  width: 100%;
+}
+
 .table td {
     vertical-align: center;
     border-top: 1px solid #dee2e6;
