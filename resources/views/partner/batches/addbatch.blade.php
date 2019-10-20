@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatables-checkboxes/css/dataTables.checkboxes.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <style>
 table.dataTable.select tbody tr,
@@ -18,8 +19,9 @@ table.dataTable thead th:first-child {
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="card">
-            <div class="header">
+            <div class="header d-flex justify-content-between">
                 <h2><strong>Add</strong> Batch</h2>
+                <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.batches')}}">My Batches</a>                      
             </div>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -75,20 +77,20 @@ table.dataTable thead th:first-child {
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="batch_start">Batch Start Date *</label>
-                                    <div class="form-group form-float date_range_picker_start">
-                                        <input type="text" id="batch_start" onchange="startchange()" class="form-control" name="batch_start" required>
+                                    <div class="form-group form-float date_picker">
+                                        <input type="text" id="batch_start" class="form-control" name="batch_start" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="batch_end">Batch End Date *</label>
-                                    <div class="form-group form-float date_range_picker_end">
+                                    <div class="form-group form-float date_picker">
                                         <input type="text" id="batch_end" class="form-control" name="batch_end" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label for="assesment_date">Assesment Date *</label>
+                                    <label for="assesment">Assesment Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <input type="text" id="assesment_date" class="form-control" name="assesment_date" required>
+                                        <input type="text" id="assesment" class="form-control" name="assesment" required>
                                     </div>
                                 </div>
                             </div>
@@ -123,6 +125,32 @@ table.dataTable thead th:first-child {
 
     $(()=>{
         update('job');
+        
+        $('.date_picker .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+            // endDate: new Date()
+        });
+
+
+        // $('.date_range_picker_start .form-control').datepicker({
+        //     autoclose: true,
+        //     format: 'dd-mm-yyyy',
+        // });
+
+        // $('.date_range_picker_end .form-control').datepicker({
+        //     autoclose: true,
+        //     format: 'dd-mm-yyyy'
+        // });
+
+        $('#batch_start')
+        .datepicker()
+        .on('changeDate', function(selected){
+            $('#batch_end').val('');
+            startDate = new Date(selected.date.valueOf());
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            $('#batch_end').datepicker('setStartDate', startDate);
+        });
     });
 
 
@@ -156,10 +184,16 @@ table.dataTable thead th:first-child {
                         success: function(data){
                             $('#center').empty();
                             $("#center").prepend("<option value='' selected='selected'>Select Center</option>");
+                            $('#trainer').empty();
+                            $("#trainer").prepend("<option value='' selected='selected'>Select Trainer</option>");
                             data.centers.forEach(value => {
                                 $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
                             });
+                            data.trainers.forEach(value => {
+                                $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
+                            });
                             $('#center').selectpicker('refresh');
+                            $('#trainer').selectpicker('refresh');
                         }
                     });
                 break;
@@ -249,10 +283,9 @@ function viewcandidate(id) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js')}}"></script>
+<script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-
-
 
 
 <script>

@@ -17,5 +17,9 @@ class Candidate extends Model
     public function disability(){
         return $this->belongsTo('App\Expository', 'd_type');
     }
+
+    public function batchmap(){
+        return $this->belongsTo('App\BatchCandidateMap', 'candidate_id');
+    }
     
 }

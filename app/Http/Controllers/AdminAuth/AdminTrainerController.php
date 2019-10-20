@@ -29,7 +29,7 @@ class AdminTrainerController extends Controller
 
     public function trainers(){
         $data=Trainer::where('verified',1)->get();
-        $dlinkData=DB::table('Trainer_statuses')->where('attached',0)->orderBy('id', 'desc')->get()->unique('trainer_id');
+        $dlinkData=TrainerStatus::where('attached',0)->orderBy('id', 'desc')->get()->unique('trainer_id');
         return view('admin.trainers.trainers')->with(compact('data','dlinkData')); 
 
     }

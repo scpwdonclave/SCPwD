@@ -12,14 +12,6 @@
 
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-<style>
-.datepicker-inline {
-    width: 100%;
-}
-.datepicker table {
-    width: 100%;
-}
-</style>
 @stop
 @section('content')
 <div class="container-fluid home">
@@ -28,7 +20,7 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>Add</strong> New Training Center</h2>
-                   <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.centers')}}">My Training Centers</a>                      
+                    <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.tc.centers')}}">My Training Centers</a>                      
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">

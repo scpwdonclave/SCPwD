@@ -27,7 +27,7 @@
                                
                                 <tr>
                                     <th>#</th> 
-                                    <th>Batch ID</th>
+                                    {{-- <th>Batch ID</th> --}}
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
                                     <th>Start Date</th>
@@ -42,7 +42,7 @@
                                 @foreach ($data as $key=>$item)
                                 <tr>
                                 <td>{{$key+1}}</td>
-                                <td>{{$item->batch_id}}</td>
+                                {{-- <td>{{$item->batch_id}}</td> --}}
                                 <td>{{$item->partner->tp_id}}</td>
                                 <td>{{$item->center->tc_id}}</td>
                                 <td>{{$item->batch_start}}</td>

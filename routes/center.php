@@ -17,3 +17,4 @@ Route::post('add-candidate-api', 'CenterAuth\CenterHomeController@candidate_api'
 
 /* Batches */
 Route::get('batches', 'CenterAuth\CenterBatchController@batches')->name('batches');
+Route::get('batches/batch-view/{id}', 'CenterAuth\CenterBatchController@viewBatch')->name('bt.batch.view');
