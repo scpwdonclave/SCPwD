@@ -107,8 +107,8 @@ class AdminHomeController extends Controller
     }
 
     public function holiday(){
-        $holiday = Holiday::all();
-        return view('admin.dashboard.holiday')->with(compact('holiday'));
+        $holidays = Holiday::all();
+        return view('admin.dashboard.holiday')->with(compact('holidays'));
     }
     public function holidayInsert(Request $request){
         
@@ -116,7 +116,7 @@ class AdminHomeController extends Controller
         $holiday->holiday_name=$request->holiday_name;
         $holiday->holiday_date=$request->holiday_date;
         $holiday->save();
-        alert()->success("Holiday Data <span style='color:blue;'>Insert</span>", "Done")->html()->autoclose(4000);
+        alert()->success("Holiday Added <span style='color:blue;'>Successfully</span>", "Done")->html()->autoclose(4000);
         return Redirect()->back();
         
     }

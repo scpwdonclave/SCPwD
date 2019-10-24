@@ -39,7 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($holiday as $key=>$holiday)
+                                @foreach ($holidays as $key=>$holiday)
                                 <tr style="height:5px !important">
                                 <td>{{$key+1}}</td>
                                 <td>{{$holiday->holiday_name}}</td>
