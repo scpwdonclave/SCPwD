@@ -16,11 +16,7 @@ class CreateHolidaysTable extends Migration
         Schema::create('holidays', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('holiday_name');
-<<<<<<< HEAD
             $table->string('holiday_date');
-=======
-            $table->string('date');
->>>>>>> 9e3aada910be5d8766e57ec78bf753f263a6b824
             $table->timestamps();
         });
     }
