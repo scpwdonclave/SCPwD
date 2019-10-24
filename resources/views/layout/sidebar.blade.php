@@ -32,9 +32,13 @@
                 <ul class="ml-menu">
                     <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
                     <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.jobroles')}}">Job Roles</a></li>
-                    @auth('admin')
-                        <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
-                    @endauth
+                    
+                    @if (Request::segment(1) === 'admin')
+                        
+                    <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
+                    <li class="{{ Request::segment(3) === 'holiday' ? 'active' : null }}"><a href="{{route('admin.dashboard.holiday')}}">Holidays</a></li>
+                    @endif
+                    
                 </ul>
             </li>
             @auth('admin')
@@ -49,9 +53,9 @@
                 <li class="{{ Request::segment(2) === 'training_centers' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Training Centers</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('admin/training_centers/centers') ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
+                        <li class="{{ Request::segment(3)==='centers' ? 'active' : null }}"><a href="{{route('admin.tc.centers')}}">Centers</a></li>
                         <li class="{{ Request::is('admin/training_centers/pending-centers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-centers')}}">Pending Centers</a></li>
-                        <li class="{{ Request::is('admin/training_centers/candidates') ? 'active' : null }}"><a href="{{route('admin.tc.candidates')}}">Candidates</a></li>
+                        <li class="{{ Request::segment(3)==='candidates' ? 'active' : null }}"><a href="{{route('admin.tc.candidates')}}">Candidates</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'trainer' ? 'active open' : null }}">

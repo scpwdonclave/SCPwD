@@ -12,6 +12,7 @@ use App\Candidate;
 use App\Expository;
 use App\Sector;
 use App\Scheme;
+use App\Holiday;
 
 class AdminHomeController extends Controller
 {
@@ -103,6 +104,28 @@ class AdminHomeController extends Controller
         } else if ($request->has('name')) {
             return $this->dispatchNow(new \App\Jobs\UpdateScheme($request));
         }
+    }
+
+    public function holiday(){
+        $holiday = Holiday::all();
+        return view('admin.dashboard.holiday')->with(compact('holiday'));
+    }
+    public function holidayInsert(Request $request){
+        
+        $holiday = new Holiday;
+        $holiday->holiday_name=$request->holiday_name;
+        $holiday->date=$request->holiday_date;
+        $holiday->save();
+        alert()->success("Holiday Data <span style='color:blue;'>Insert</span>", "Done")->html()->autoclose(4000);
+        return Redirect()->back();
+        
+    }
+
+    public function holidayDelete(Request $request){
+        $data=Holiday::findOrFail($request->id);
+        $data->delete();
+        return response()->json(['status' => 'done'],200);
+
     }
 
 }

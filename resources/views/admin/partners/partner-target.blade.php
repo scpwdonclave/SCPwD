@@ -48,7 +48,7 @@
                                                 <td class="text-center">{{$job->sector->sector}}</td>
                                                 <td class="text-center">{{$job->jobrole->job_role}}</td>
                                                 <td class="text-center">{{$job->target}}</td>
-                                                <td class="text-center">{{$job->target}}</td>
+                                                <td class="text-center">{{$job->assigned}}</td>
                                                 <td class="text-center">{{$job->target}}</td>
                                                 @if($job->status==1 && $job->scheme_status==1)
                                                 <td class="text-center"><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})">Deactivate</a></td>
@@ -115,7 +115,7 @@
                                                                                     <div class="col-sm-6">
                                                                                             <label for="scheme">Enter Target Value</label>    
                                                                                             <div class="form-group form-float">
-                                                                                                <input type="number" class="form-control" placeholder="Enter Target Value" name="target_u" id="target_u">
+                                                                                                <input type="number" min=200 class="form-control" placeholder="Enter Target Value" name="target_u" id="target_u">
                                                                                             </div>
                                                                                         <span id="e_target2" class="error text-danger">This Field required</span>
                                                                                     </div>
@@ -441,6 +441,7 @@
                     $('#jobrole_u').selectpicker('refresh');
 
                     $("#target_u").val(data.data.target);
+                    $("#target_u").attr("min", data.data.assigned);
                     
                    
                     $("#p_job_id").val(data.data.id);
