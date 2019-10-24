@@ -28,23 +28,21 @@
                                     <th>Trainer Name</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
-                                    <th>Verified</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($trainers as $trainer)
-                                    
-                                <tr>
-                                <td><i class="zmdi zmdi-circle text-{{$trainer->status?'success':'danger'}}"></td>
-                                <td>{{$trainer->name}}</td>
-                                <td>{{$trainer->email}}</td>
-                                <td>{{$trainer->mobile}}</td>
-                                <td>{{$trainer->verified?'Verified':'Not Verified'}}</td>
-                                <td> <a href="{{route('partner.trainer.view',$trainer->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td>
-                                </tr>
+                                @foreach ($partner->trainers as $trainer)
+                                    <tr>
+                                        <td><i class="zmdi zmdi-circle text-{{$trainer->status?'success':'danger'}}"></td>
+                                        <td>{{$trainer->name}}</td>
+                                        <td>{{$trainer->email}}</td>
+                                        <td>{{$trainer->mobile}}</td>
+                                        <td class="text-{{$trainer->verified?'success':'danger'}}">{{$trainer->verified?'Verified':'Not Verified'}}</td>
+                                        <td> <a href="{{route('partner.trainer.view',$trainer->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td>
+                                    </tr>
                                 @endforeach
-                               
                             </tbody>
                         </table>
                     </div> 

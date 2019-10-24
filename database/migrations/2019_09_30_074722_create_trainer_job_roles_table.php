@@ -18,11 +18,13 @@ class CreateTrainerJobRolesTable extends Migration
             $table->unsignedBigInteger('tr_id');
             $table->unsignedBigInteger('scheme_id');
             $table->unsignedBigInteger('sector_id');
-            $table->string('ssc_no');
-            $table->string('ssc_doc');
-            $table->string('ssc_issued');
-            $table->string('ssc_valid');
             $table->unsignedBigInteger('jobrole_id');
+            $table->string('qualification');
+            $table->string('qualification_doc');
+            $table->string('ssc_no')->nullable();
+            $table->string('ssc_doc')->nullable();
+            $table->string('ssc_issued')->nullable();
+            $table->string('ssc_valid')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('scheme_status')->default(1);
             $table->timestamps();

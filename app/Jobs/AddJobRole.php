@@ -36,6 +36,7 @@ class AddJobRole implements ShouldQueue
             'job_role' => 'required|unique:job_roles',
             'qp_code' => 'required|unique:job_roles',
             'nsqf_level' => 'required|numeric',
+            'hours' => 'required|numeric',
             'role_expository' => 'array|required'
         ]);
         
@@ -44,6 +45,7 @@ class AddJobRole implements ShouldQueue
         $jobrole->job_role = $request->job_role;
         $jobrole->qp_code = $request->qp_code;
         $jobrole->nsqf_level = $request->nsqf_level;
+        $jobrole->hours = $request->hours;
         $jobrole->save();
 
         $jobrole->expositories()->sync($request->role_expository);

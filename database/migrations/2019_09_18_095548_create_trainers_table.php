@@ -23,11 +23,11 @@ class CreateTrainersTable extends Migration
             $table->string('doc_file');
             $table->string('mobile')->unique();
             $table->string('email')->unique();
-            $table->string('scpwd_no');
-            $table->string('scpwd_doc');
-            $table->string('scpwd_issued');
-            $table->string('scpwd_valid');
-            $table->string('resume');
+            $table->string('scpwd_no')->nullable();
+            $table->string('scpwd_doc')->nullable();
+            $table->string('scpwd_issued')->nullable();
+            $table->string('scpwd_valid')->nullable();
+            $table->string('resume')->nullable();
             $table->string('other_doc')->nullable();
 
             $table->boolean('status')->default(0);

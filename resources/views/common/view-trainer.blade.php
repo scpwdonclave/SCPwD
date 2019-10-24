@@ -59,10 +59,14 @@
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Document Number</small>
-                                        <p>
-                                            {{$trainerData->doc_no}} &nbsp;&nbsp;
-                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->doc_file)])}}" download="{{basename($trainerData->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
-                                        </p>
+                                        @if (!is_null($trainerData->doc_file))
+                                            <p>
+                                                {{$trainerData->doc_no}} &nbsp;&nbsp;
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->doc_file)])}}" download="{{basename($trainerData->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
+                                            </p>
+                                        @else
+                                            <p>No Document Provided</p>
+                                        @endif
                                         <hr>
                                     </div>
                 
@@ -70,21 +74,27 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Resume</small>
-                                             <p>
-                                                Resume &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->resume)])}}" download="{{basename($trainerData->resume)}}"><i class="zmdi zmdi-download"></i></a>
-                                            </p>
+                                            @if (!is_null($trainerData->resume))
+                                                <p>
+                                                    Resume &nbsp;&nbsp;
+                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->resume)])}}" download="{{basename($trainerData->resume)}}"><i class="zmdi zmdi-download"></i></a>
+                                                </p>
+                                            @else
+                                                <p>No Resume Provided</p>
+                                            @endif
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Other Document</small>
-                                        <p>
-                                            Other Document &nbsp;&nbsp;
-                                            @if(!is_null($trainerData->other_doc))
-                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
-                                            @endif
-                                        </p>
+                                        @if (!is_null($trainerData->other_doc))
+                                            <p>
+                                                Other Document &nbsp;&nbsp;
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                            </p>
+                                        @else
+                                            <p>No Document Provided</p>
+                                        @endif
                                         <hr>
                                     </div>
                 
@@ -116,10 +126,25 @@
                                                     <td>{{$doc->scheme->scheme}}</td>
                                                     <td >{{$doc->sector->sector}}</td>
                                                     <td>{{$doc->jobrole->job_role}}</td>
+                                                    @if (!is_null($trainerData->other_doc))
+                                                        <p>
+                                                            Other Document &nbsp;&nbsp;
+                                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                        </p>
+                                                    @else
+                                                        <p>No Document Provided</p>
+                                                    @endif
+
+
+
                                                     <td>
                                                         {{$doc->ssc_no}}
                                                         &nbsp;
-                                                        <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$doc->tr_id,'action'=>'download','filename'=>basename($doc->ssc_doc)])}}" download="{{basename($doc->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                        @if (!is_null($doc->ssc_doc))
+                                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$doc->tr_id,'action'=>'download','filename'=>basename($doc->ssc_doc)])}}" download="{{basename($doc->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                        @else
+                                                            No Certificate Provided
+                                                        @endif
                                                     </td>
                                                     <td>{{$doc->ssc_issued}}</td>
                                                     <td>{{$doc->ssc_valid}}</td>
@@ -141,12 +166,16 @@
                                 
                                 <div class="row">
                                         <div class="col-sm-4">
-                                                <small class="text-muted">SCPWD Document</small>
+                                            <small class="text-muted">SCPWD Certificate</small>
+                                            @if (!is_null($trainerData->scpwd_doc))
                                                 <p>
-                                                    Document &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->scpwd_doc)])}}" download="{{basename($trainerData->scpwd_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    {{$trainerData->scpwd_no}} &nbsp;&nbsp;
+                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->scpwd_doc)])}}" download="{{basename($trainerData->scpwd_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
                                                 </p>
-                                                <hr>
+                                            @else
+                                                <p>No Certificate Provided</p>
+                                            @endif
+                                            <hr>
                                         </div>
                                     
                                         <div class="col-sm-4">

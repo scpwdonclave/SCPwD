@@ -125,7 +125,7 @@
                                     <div class="panel-body">
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <label for="sector[new]">Domain/Sector/SSC *</label>
                                                     <div class="form-group form-float">
                                                         <select id="sector_new" class="form-control show-tick" data-live-search="true" name="sector[new]" onchange="updatejob('new')" data-dropup-auto='false' required>
@@ -137,40 +137,54 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-9">
-                                                    <label for="jobrole[new][]">Job Roles *</label>
+                                                <div class="col-sm-6">
+                                                    <label for="jobrole[new]">Job Roles *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new][]" multiple data-dropup-auto='false' required>
+                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" onchange="updatequali('new')" data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-6">
-                                                    <label for="ssc_doc_no[new]">SSC Document No *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="qualification[new]">Qualification *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[new]') }}" name="ssc_doc_no[new]" required>
+                                                        <select id="qualification_new" class="form-control show-tick" data-live-search="true" name="qualification[new]" data-dropup-auto='false' required>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <label for="ssc_doc[new]">SSC Document *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="qualification_doc[new]">Qualification Certificate Upload *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="file" id="ssc_doc_new" class="form-control" name="ssc_doc[new]" required>
-                                                        <span id="ssc_doc_new_error"  style="color:red;"></span>
+                                                        <input type="file" id="qualification_doc_new" class="form-control" name="qualification_doc[new]" required>
+                                                        <span id="qualification_doc_new_error"  style="color:red;"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_doc_no[new]">SSC Certificate No</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[new]') }}" name="ssc_doc_no[new]">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-5">
-                                                    <label for="ssc_start[new]">SSC Certificate Issued On *</label>
-                                                    <div class="form-group form-float month_range_picker_start">
-                                                        <input type="text" id="ssc_start_new" onchange="startchange('new')" class="form-control" name="ssc_start[new]" required>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_doc[new]">SSC Certificate Upload</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="file" id="ssc_doc_new" class="form-control" name="ssc_doc[new]">
+                                                        <span id="ssc_doc_new_error"  style="color:red;"></span>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-5">
-                                                    <label for="ssc_end[new]">SSC Certificate Valid Upto *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_start[new]">SSC Certificate Issued On</label>
+                                                    <div class="form-group form-float month_range_picker_start">
+                                                        <input type="text" id="ssc_start_new" onchange="startchange('new')" class="form-control" name="ssc_start[new]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="ssc_end[new]">SSC Certificate Valid Upto</label>
                                                     <div class="form-group form-float month_range_picker_end">
-                                                        <input type="text" id="ssc_end_new" class="form-control" name="ssc_end[new]" required>
+                                                        <input type="text" id="ssc_end_new" class="form-control" name="ssc_end[new]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -200,9 +214,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="resume">Resume *</label>
+                                                <label for="resume">Resume</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" id="resume" class="form-control" name="resume" required>
+                                                    <input type="file" id="resume" class="form-control" name="resume">
                                                     <span id="resume_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
@@ -214,30 +228,30 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc_no">SCPwD Document No *</label>
+                                                <label for="scpwd_doc_no">SCPwD Certificate No</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{ old('scpwd_doc_no') }}" name="scpwd_doc_no" required>
+                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{ old('scpwd_doc_no') }}" name="scpwd_doc_no">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc">SCPwD Document *</label>
+                                                <label for="scpwd_doc">SCPwD Certificate Upload</label>
                                                 <div class="form-group form-float">
-                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" required>
+                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc">
                                                     <span id="scpwd_doc_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_start">SCPwD Certificate Issued On *</label>
+                                                <label for="scpwd_start">SCPwD Certificate Issued On</label>
                                                 <div class="form-group form-float month_range_picker_start">
-                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" name="scpwd_start" required>
+                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" name="scpwd_start">
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_end">SCPwD Certificate Valid Upto *</label>
+                                                <label for="scpwd_end">SCPwD Certificate Valid Upto</label>
                                                 <div class="form-group form-float month_range_picker_end">
-                                                    <input type="text" id="scpwd_end" class="form-control" name="scpwd_end" required>
+                                                    <input type="text" id="scpwd_end" class="form-control" name="scpwd_end">
                                                 </div>
                                             </div>
                                         </div>
@@ -370,11 +384,27 @@
                         data: dataValidate,
                         success: function(data){
                             if (!data.success) {
-                                $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
-                                $('#doc_file_div').remove();
+                                var swalText = document.createElement("div");
+                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registred</span> and Active in our Trainer Database'; 
+                                swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                                $("#btnOne").prop("disabled", false);
+                                $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                ajaxresponse = false;
+                                return false;
+                            } else {
+                                if (data.present) {
+                                    $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
+                                    $('#doc_file_div').remove();
+                                    $('[name=name]').val(data.trainerData.name);
+                                    $('[name=email]').val(data.trainerData.email);
+                                    $('[name=mobile]').val(data.trainerData.mobile);
+                                    ajaxresponse = true;
+                                    return true;
+                                } else {
+                                    ajaxresponse = true;
+                                    return true;
+                                }
                             }
-                            ajaxresponse = true;
-                            return true;
                         },
                         error: function(){
                             swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
@@ -405,26 +435,43 @@
                         success: function(data){
                             
                             if (!data.success) {
-                                var swalText = document.createElement("div");
-                                if (!data.mobile && !data.email) {
-                                    swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
-                                } else if(!data.mobile) {
-                                    swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
-                                } else if (!data.email) {
-                                    swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
-                                }    
-                                swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                                Object.keys(data.errors).forEach(function(k){
+                                    $('#'+k+'_error').html(data.errors[k][0]);
+                                });
                                 $("#btnTwo").prop("disabled", false);
                                 $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = false;
                                 return false;
+                            } else {
+                                $('#mobile_error').html('');
+                                $('#email_error').html('');
+                                ajaxresponse = true;
+                                return true;
                             }
-                            $("#btnTwo").prop("disabled", false);
-                            $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                            ajaxresponse = true;
-                            return true;
+                            
+                            // if (!data.success) {
+                            //     var swalText = document.createElement("div");
+                            //     if (!data.mobile && !data.email) {
+                            //         swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
+                            //     } else if(!data.mobile) {
+                            //         swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
+                            //     } else if (!data.email) {
+                            //         swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
+                            //     }    
+                            //     swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                            //     $("#btnTwo").prop("disabled", false);
+                            //     $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                            //     ajaxresponse = false;
+                            //     return false;
+                            // }
+                            // $("#btnTwo").prop("disabled", false);
+                            // $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                            // // ajaxresponse = true;
+                            // // return true;
+                            // ajaxresponse = false;
+                            // return false;
                         },
-                        error: function(){
+                        error: function(data){
                             swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
                         }
                     }).done(function(){
@@ -444,7 +491,7 @@
                     });
                     if (checkIfDuplicateExists(array)) {
                         var swalText = document.createElement("div");
-                        swalText.innerHTML = 'Please Select Unique <span style="color:blue">Domain/Sector/SSC</span'; 
+                        swalText.innerHTML = 'Please Select Unique <span style="color:blue">Domain/Sector/SSC</span>'; 
                         swal({title: "", content: swalText, icon: "info", closeOnEsc: true});
                         return false;
                     }
@@ -509,8 +556,8 @@
                     // console.log(data);
                     
                     $('#jobrole_'+id).empty();
+                    $('#jobrole_'+id).prepend("<option value='' selected>Select Job Role</option>");
                     data.jobs.forEach(value => {
-                        // console.log(value);
                         $('#jobrole_'+id).append('<option value="'+value.jobrole_id+','+value.scheme_id+'">'+value.jobrole.job_role+' ('+value.scheme.scheme+')</option>');
                     });
                     $('#jobrole_'+id).selectpicker('refresh');
@@ -521,6 +568,39 @@
 
     /* End Fetch SelectPicker Data */
 
+
+    /* Qualification DropDown Item Section */
+        function updatequali(id) {
+            var jobroleid = ($("#jobrole_"+id+" :selected").val()).split(',')[0];
+            var _token= $('[name=_token]').val();
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('partner.addtrainer.api') }}",
+                data: {_token, jobroleid},
+                success: function (response) {
+                    qualifications = '<?php echo json_encode($config)?>';
+                    data = JSON.parse(qualifications);
+
+                    $('#qualification_'+id).empty();
+                    $('#qualification_'+id).prepend("<option value='' selected>Select Qualificaton</option>");
+                    Object.keys(data).forEach(function(k){
+                        if (k >= response.qualification) {
+                            $('#qualification_'+id).append('<option value="'+k+'">'+data[k]+'</option>');
+                        }
+                    });
+                    $('#qualification_'+id).selectpicker('refresh');
+
+                },
+                error: function (data) {
+                    setTimeout(function () {
+                        swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                    }, 1500);   
+                }
+            });
+        }
+    /* End Qualification DropDown Item Section */
+
+
     /* Repeatable Section for JobRole */
     $(function() {
             $("form .repeatable-container").repeatable({
@@ -530,6 +610,7 @@
                 var temp = id[0].id.split('_');
                 var last = temp[temp.length - 1];
                 $('.jobrole').selectpicker();
+                $('.qualification').selectpicker('refresh');
                 
                 /* Fetch SelectPicker Data */
                 
@@ -537,9 +618,17 @@
                 $('#sector_'+last).append($options);
                 $('#sector_'+last).selectpicker('refresh');
                 updatejob(last);
-                $('.month_range_picker .form-control').datepicker({
+
+                $('.month_range_picker_start .form-control').datepicker({
                     autoclose: true,
                     format: 'dd MM yyyy',
+                    endDate: new Date()
+                });
+
+                $('.month_range_picker_end .form-control').datepicker({
+                    autoclose: true,
+                    format: 'dd MM yyyy',
+                    startDate: new Date()
                 });
 
                 $('#ssc_start_'+last)
@@ -591,47 +680,62 @@
 <script type="text/template" id="jobroleform">
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <label for="sector[{?}]">Domain/Sector/SSC *</label>
                 <div class="form-group form-float">
                     <select id="sector_{?}" class="form-control show-tick" data-live-search="true" name="sector[{?}]" onchange="updatejob('{?}')" data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-9">
-                <label for="jobrole[{?}][]">Job Roles *</label>
+            <div class="col-sm-6">
+                <label for="jobrole[{?}]">Job Roles *</label>
                 <div class="form-group form-float">
-                    <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}][]" multiple data-dropup-auto='false' required>
+                    <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}]" onchange="updatequali('{?}')" data-dropup-auto='false' required>
                     </select>
                 </div>
             </div>
         </div>
         <div class="row d-flex justify-content-around">
-            <div class="col-sm-6">
-                <label for="ssc_doc_no[{?}]">SSC Document No *</label>
+            <div class="col-sm-4">
+                <label for="qualification[{?}]">Qualification *</label>
                 <div class="form-group form-float">
-                    <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[{?}]') }}" name="ssc_doc_no[{?}]" required>
+                    <select id="qualification_{?}" class="form-control show-tick qualification" data-live-search="true" name="qualification[{?}]" data-dropup-auto='false' required>
+                    </select>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <label for="ssc_doc[{?}]">SSC Document *</label>
+            <div class="col-sm-4">
+                <label for="qualification_doc[{?}]">Qualification Certificate Upload *</label>
                 <div class="form-group form-float">
-                    <input type="file" id="ssc_doc_{?}" class="form-control" name="ssc_doc[{?}]" required>
+                    <input type="file" id="qualification_doc_{?}" class="form-control" name="qualification_doc[{?}]" required>
+                    <span id="qualification_doc_{?}_error"  style="color:red;"></span>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <label for="ssc_doc_no[{?}]">SSC Certificate No</label>
+                <div class="form-group form-float">
+                    <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[{?}]') }}" name="ssc_doc_no[{?}]">
+                </div>
+            </div>
+            
+        </div>
+        <div class="row d-flex justify-content-around">   
+            <div class="col-sm-4">
+                <label for="ssc_doc[{?}]">SSC Certificate Upload</label>
+                <div class="form-group form-float">
+                    <input type="file" id="ssc_doc_{?}" class="form-control" name="ssc_doc[{?}]">
                     <span id="ssc_doc_{?}_error"  style="color:red;"></span>                        
                 </div>
-            </div>
-        </div>
-        <div class="row d-flex justify-content-around">    
-            <div class="col-sm-5">
-                <label for="ssc_start[{?}]">Certificate Issued On *</label>
+            </div> 
+            <div class="col-sm-4">
+                <label for="ssc_start[{?}]">SSC Certificate Issued On</label>
                 <div class="form-group form-float month_range_picker_start">
-                    <input type="text" id="ssc_start_{?}" onchange="startchange('{?}')" class="form-control" name="ssc_start[{?}]" required>
+                    <input type="text" id="ssc_start_{?}" onchange="startchange('{?}')" class="form-control" name="ssc_start[{?}]">
                 </div>
             </div>
-            <div class="col-sm-5">
-                <label for="ssc_end[{?}]">Certificate Valid Upto *</label>
+            <div class="col-sm-4">
+                <label for="ssc_end[{?}]">SSC Certificate Valid Upto</label>
                 <div class="form-group form-float month_range_picker_end">
-                    <input type="text" id="ssc_end_{?}" class="form-control" name="ssc_end[{?}]" required>
+                    <input type="text" id="ssc_end_{?}" class="form-control" name="ssc_end[{?}]">
                 </div>
             </div>
         </div>

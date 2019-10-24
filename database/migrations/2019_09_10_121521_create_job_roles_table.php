@@ -19,6 +19,8 @@ class CreateJobRolesTable extends Migration
             $table->string('job_role');
             $table->string('qp_code');
             $table->string('nsqf_level');
+            $table->string('hours');
+            $table->string('qualification');
             $table->timestamps();
         });
     }

@@ -68,26 +68,35 @@ table.dataTable thead th:first-child {
                             </div>
 
                             <div class="row d-flex justify-content-around">
-                                <div class="col-sm-3">
+                                <div class="col-sm-6">
                                     <label for="trainer">Trainer *</label>
                                     <div class="form-group form-float">
                                         <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-6">
+                                    <label for="batch_time">Batch Time *</label>
+                                    <div class="form-group form-float time_picker">
+                                        <input type="text" id="batch_time" class="form-control" name="batch_time" required>                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-sm-4">
                                     <label for="batch_start">Batch Start Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <input type="text" id="batch_start" class="form-control" name="batch_start" required>
+                                        <input type="text" id="batch_start" class="form-control" onchange="stratdateupdate()" name="batch_start" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="batch_end">Batch End Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <input type="text" id="batch_end" class="form-control" name="batch_end" required>
+                                        <input type="text" id="batch_end" class="form-control" name="batch_end" readonly required>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="assesment">Assesment Date *</label>
                                     <div class="form-group form-float date_picker">
                                         <input type="text" id="assesment" class="form-control" name="assesment" required>
@@ -127,6 +136,12 @@ table.dataTable thead th:first-child {
         update('job');
         
         $('.date_picker .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+            // endDate: new Date()
+        });
+
+        $('.time_picker .form-control').datepicker({
             autoclose: true,
             format: 'dd-mm-yyyy',
             // endDate: new Date()
@@ -177,6 +192,9 @@ table.dataTable thead th:first-child {
             
             case 'center':
                     var jobid = $('#jobrole :selected').val();
+                    $('#batch_start').val('');
+                    $('#batch_end').val('');
+                    $('#assesment').val('');
                     $.ajax({
                         url: "{{ route('partner.addbatch.api') }}",
                         method: "POST",
@@ -232,6 +250,26 @@ table.dataTable thead th:first-child {
 
 <script>
 
+function stratdateupdate() {
+    var startdate = $('#batch_start').val();
+    var jobrole = $('select#jobrole option:selected').val();
+    var _token= $('[name=_token]').val();
+    if (startdate!='' && jobrole!='') {
+        $.ajax({
+            method: 'post',
+            url: '{{route("partner.addbatch.api")}}',
+            data: {startdate,_token,jobrole},
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                setTimeout(function () {
+                    swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                }, 2000);
+            }
+        });
+    }
+}
 
 
 
@@ -271,6 +309,7 @@ function viewcandidate(id) {
     let url = "{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',':id')}}";
     location.href = url.replace(':id', id);    
 }
+
 
 </script>
 

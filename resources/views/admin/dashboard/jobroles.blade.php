@@ -155,7 +155,7 @@
                     <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-around">
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <label for="sector_id">Sector *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='true' required>
@@ -165,7 +165,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <label for="role_expository">Expository *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="role_expository[]" multiple data-show-subtext="true" data-dropup-auto='true' required>
@@ -175,10 +175,29 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row d-flex-justify-content-center">
                             <div class="col-sm-4">
+                                <label for="hours">Total Hours *</label>
+                                <div class="form-group form-float year_picker">
+                                    <input type="number" min="1" class="form-control" placeholder="Total Allocated Hours" value="{{ old('hours') }}" name="hours" required>
+                                    @if ($errors->has('hours'))
+                                        <span style="color:red">{{$errors->first('hours')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            
+                            <div class="col-sm-3">
+                                <label for="qualification">Minimum Required Qualification *</span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick selectpicker" data-live-search="true" name="qualification" data-dropup-auto='true' required>
+                                        @foreach (config('constants.qualifications') as $key => $qualification)
+                                            <option value="{{$key}}">{{$qualification}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
                                 <label for="job_role">Job Role *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
@@ -187,7 +206,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="qp_code">QP Code *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
@@ -196,7 +215,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="nsqf_level">NSQF Level *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
@@ -219,6 +238,8 @@
                                     <th>Job Role</th>
                                     <th>QP Code</th>
                                     <th>NSQF</th>
+                                    <th>Min. Qualification</th>
+                                    <th>Hours</th>
                                     <th>Disabilities</th>
                                     <th>Action</th>
                                 </tr>
@@ -233,6 +254,8 @@
                                     <td>{{$jobrole->job_role}}</td>
                                     <td>{{$jobrole->qp_code}}</td>
                                     <td>{{$jobrole->nsqf_level}}</td>
+                                    <td>{{config('constants.qualifications.'.$jobrole->qualification)}}</td>
+                                    <td>{{$jobrole->hours}}</td>
                                     @foreach ($jobrole->expositories as $item)
                                         @php
                                             $item1 = $item->initials.', '.$item1;

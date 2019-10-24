@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
+use Carbon\Carbon;
 use App\Center;
 use App\Batch;
 use Crypt;
@@ -116,6 +117,17 @@ class PartnerBatchController extends Controller
                 }
             } else {
                 return response()->json(['success' => true, 'candidates' => $candidateArray],200);
+            }
+        }
+        
+        if ($request->has('startdate')) {
+            $startdate = $request->startdate;
+            $jobrole = PartnerJobrole::find($request->jobrole);
+            if ($jobrole) {
+                $hours = $jobrole->jobrole->hours;
+                return response()->json(['success' => true, 'candidates' => $startdate],200);
+            } else {
+                return response()->json(['success' => false],400);
             }
         }
     }
