@@ -114,7 +114,7 @@ class AdminHomeController extends Controller
         
         $holiday = new Holiday;
         $holiday->holiday_name=$request->holiday_name;
-        $holiday->date=$request->holiday_date;
+        $holiday->holiday_date=$request->holiday_date;
         $holiday->save();
         alert()->success("Holiday Data <span style='color:blue;'>Insert</span>", "Done")->html()->autoclose(4000);
         return Redirect()->back();

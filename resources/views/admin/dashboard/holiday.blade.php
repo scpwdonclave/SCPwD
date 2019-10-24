@@ -43,7 +43,7 @@
                                 <tr style="height:5px !important">
                                 <td>{{$key+1}}</td>
                                 <td>{{$holiday->holiday_name}}</td>
-                                <td>{{$holiday->date}}</td>
+                                <td>{{$holiday->holiday_date}}</td>
                                 <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$holiday->id}});"><i class="zmdi zmdi-delete"></button></td>
                                 </tr>
                                 @endforeach
