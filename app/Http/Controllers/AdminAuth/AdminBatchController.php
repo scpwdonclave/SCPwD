@@ -36,13 +36,16 @@ class AdminBatchController extends Controller
     public function viewBatch($id){
         $id = Crypt::decrypt($id); 
         $batchData=Batch::findOrFail($id);
-        return view('common.view-batch')->with(compact('batchData','candidates'));
+        return view('common.view-batch')->with(compact('batchData'));
     }
 
     public function batchAccept($id){
         $id = Crypt::decrypt($id); 
         $batch=Batch::findOrFail($id);
-
+        if($batch->verified==1){
+            alert()->error("This Batch already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+            return Redirect()->back(); 
+        }
         $data=DB::table('batches')
         ->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))
         ->where("batch_id", "LIKE", "BT%")->get();

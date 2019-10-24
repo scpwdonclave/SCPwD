@@ -58,6 +58,11 @@ class AdminTrainerController extends Controller
         $trainer_id = Crypt::decrypt($id); 
         $trainer=Trainer::findOrFail($trainer_id);
 
+        if($trainer->verified==1){
+            alert()->error("Trainer Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+            return Redirect()->back(); 
+        }
+        
         $data=DB::table('trainers')
         ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
         ->where("trainer_id", "LIKE", "TR%")->get();
