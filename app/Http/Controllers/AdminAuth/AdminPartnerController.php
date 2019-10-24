@@ -120,6 +120,10 @@ class AdminPartnerController extends Controller
     public function partnerAccept($id){
         $partner_id = Crypt::decrypt($id); 
         $partner=Partner::findOrFail($partner_id);
+        if($partner->pending_verify==0){
+            alert()->error("Training Partner Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+            return Redirect()->back(); 
+        }
         $data=DB::table('partners')
         ->select(\DB::raw('SUBSTRING(tp_id,3) as tp_id'))
         ->where("tp_id", "LIKE", "TP%")->get();

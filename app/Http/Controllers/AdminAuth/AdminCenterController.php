@@ -57,7 +57,10 @@ class AdminCenterController extends Controller
     public function centerAccept($id){
         $center_id = Crypt::decrypt($id); 
         $center=Center::findOrFail($center_id);
-
+        if($center->verified==1){
+            alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+            return Redirect()->back(); 
+        }
         $data=DB::table('centers')
         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
         ->where("tc_id", "LIKE", "TC%")->get();

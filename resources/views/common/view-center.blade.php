@@ -151,39 +151,39 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Front View</small>
+                                            @if($centerData->center_front_view !=null)
                                             <p>Center Front Image &nbsp;&nbsp;
-                                                @if($centerData->center_front_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_front_view)])}}" download="{{basename($centerData->center_front_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                               @endif
                                             </p>
+                                            @endif
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Back View</small>
+                                            @if($centerData->center_back_view !=null)
                                             <p>Center Back Image &nbsp;&nbsp;
-                                                @if($centerData->center_back_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_back_view)])}}" download="{{basename($centerData->center_back_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif    
                                             </p>
+                                            @endif    
                                             <hr>
                                     </div>
                                     <div class="col-sm-3">
                                             <small class="text-muted">Center Right View</small>
+                                            @if($centerData->center_right_view !=null)
                                             <p>Center Right Image &nbsp;&nbsp;
-                                                @if($centerData->center_right_view !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_right_view)])}}" download="{{basename($centerData->center_right_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif
                                             </p>
+                                            @endif
                                             <hr>
                                     </div>
                                     <div class="col-sm-3">
                                         <small class="text-muted">Center Left View</small>
+                                        @if($centerData->center_left_view !=null)
                                         <p>Center Left Image&nbsp;&nbsp;
-                                             @if($centerData->center_left_view !=null)
                                             <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_left_view)])}}" download="{{basename($centerData->center_left_view)}}"><i class="zmdi zmdi-download"></i></a>
-                                            @endif    
                                         </p>
+                                        @endif    
                                         <hr>
                                 </div>
                                     
@@ -192,30 +192,30 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                             <small class="text-muted">Biometric System</small>
+                                            @if($centerData->biometric !=null)
                                             <p>Biometric &nbsp;&nbsp;
-                                                 @if($centerData->biometric !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->biometric)])}}" download="{{basename($centerData->biometric)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif    
                                             </p>
+                                            @endif    
                                             <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                             <small class="text-muted">Drinking Facility</small>
+                                            @if($centerData->drinking !=null)
                                             <p>Drinking &nbsp;&nbsp;
-                                                @if($centerData->drinking !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->drinking)])}}" download="{{basename($centerData->drinking)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif    
                                             </p>
+                                            @endif    
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
                                             <small class="text-muted">Saftey</small>
+                                            @if($centerData->safety !=null)
                                             <p>Saftey &nbsp;&nbsp;
-                                                @if($centerData->safety !=null)
                                                 <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->safety)])}}" download="{{basename($centerData->safety)}}"><i class="zmdi zmdi-download"></i></a>
-                                                @endif    
                                             </p>
+                                            @endif    
                                             <hr>
                                     </div>
                                     

@@ -16,7 +16,7 @@ class Trainer extends Model implements Auditable
     //     return $this->belongsTo('App\Center', 'tp_id');
     // }
     // public function partner_jobrole(){
-    //     return $this->belongsTo('App\PartnerJobrole','tp_job_id');
+    //     return $this->belongsTo('App\PartnerJobrole','tp_job_id'); 
     // }
 
     public function jobroles(){
