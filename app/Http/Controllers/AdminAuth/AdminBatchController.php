@@ -100,4 +100,8 @@ class AdminBatchController extends Controller
          $data->delete();
          return response()->json(['status' => 'done'],200);
     }
+
+    public function tesst(){
+        return 'Hello';
+    }
 }
