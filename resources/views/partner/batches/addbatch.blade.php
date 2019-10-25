@@ -169,6 +169,13 @@ table.dataTable thead th:first-child {
     });
 
 
+    function clearDropdown(id,msg) {
+        $('#'+id).empty();
+        $('#'+id).prepend("<option value='' selected>Select "+msg+"</option>");
+        $('#'+id).selectpicker('refresh');
+    }
+
+
     function update(v){
         var _token = $('[name=_token]').val();
         switch (v) {
@@ -179,41 +186,43 @@ table.dataTable thead th:first-child {
                         method: "POST",
                         data: { _token, schemeid },
                         success: function(data){
-                            $('#jobrole').empty();
-                            $("#jobrole").prepend("<option value='' selected='selected'>Select Jobrole</option>");
+                            clearDropdown('jobrole','Job Role');
                             data.jobrole.forEach(value => {
                                 $('#jobrole').append('<option value="'+value.id+'">'+value.jobrole.job_role+'</option>');
                             });
                             $('#jobrole').selectpicker('refresh');
-                            
+                            clearDropdown('center','Center');
+                            clearDropdown('trainer','Trainer');
                         } 
                     });
                 break;
             
             case 'center':
                     var jobid = $('#jobrole :selected').val();
-                    $('#batch_start').val('');
-                    $('#batch_end').val('');
-                    $('#assesment').val('');
-                    $.ajax({
-                        url: "{{ route('partner.addbatch.api') }}",
-                        method: "POST",
-                        data: { _token, jobid },
-                        success: function(data){
-                            $('#center').empty();
-                            $("#center").prepend("<option value='' selected='selected'>Select Center</option>");
-                            $('#trainer').empty();
-                            $("#trainer").prepend("<option value='' selected='selected'>Select Trainer</option>");
-                            data.centers.forEach(value => {
-                                $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
-                            });
-                            data.trainers.forEach(value => {
-                                $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
-                            });
-                            $('#center').selectpicker('refresh');
-                            $('#trainer').selectpicker('refresh');
-                        }
-                    });
+                    // $('#batch_start').val('');
+                    // $('#batch_end').val('');
+                    // $('#assesment').val('');
+                    if (jobid!='') {
+                        $.ajax({
+                            url: "{{ route('partner.addbatch.api') }}",
+                            method: "POST",
+                            data: { _token, jobid },
+                            success: function(data){
+                                $('#center').empty();
+                                $("#center").prepend("<option value='' selected='selected'>Select Center</option>");
+                                $('#trainer').empty();
+                                $("#trainer").prepend("<option value='' selected='selected'>Select Trainer</option>");
+                                data.centers.forEach(value => {
+                                    $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
+                                });
+                                data.trainers.forEach(value => {
+                                    $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
+                                });
+                                $('#center').selectpicker('refresh');
+                                $('#trainer').selectpicker('refresh');
+                            }
+                        });
+                    }
                 break;
             case 'table':
                     var centerid = $('#center :selected').val();

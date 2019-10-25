@@ -68,14 +68,33 @@ class PartnerBatchController extends Controller
             $filteredCenters = collect([]);
             $filteredTrainers = collect([]);
             $partner = $this->guard()->user();
+
             $partnerJob = PartnerJobrole::find($request->jobid);
             if ($partnerJob) {
-                $trainerjobs = TrainerJobRole::where([['scheme_id', $partnerJob->scheme_id],['sector_id', $partnerJob->sector_id],['jobrole_id', $partnerJob->jobrole_id]])->get();
-                foreach ($trainerjobs as $trainerjob) {
-                    if ($trainerjob->trainer->status && $trainerjob->trainer->ind_status && $trainerjob->trainer->verified) {
-                        $filteredTrainers->push($trainerjob->trainer);
+
+                // TrainerJobroleScheme::where('scheme_id',$partnerJob->scheme_id)->first()
+
+                $trainers = $partner->trainers;
+                foreach ($trainers as $trainer) {
+                    if ($trainer->status && $trainer->ind_status) {
+                        foreach ($trainer->jobroles as $trainerJob) {
+                            if ($trainerJob->status && $trainerJob->scheme_status) {
+                                foreach ($trainerJob->schemes as $scheme) {
+                                    if ($scheme->scheme_id == $partnerJob->scheme_id) {
+                                        $filteredTrainers->push($trainer);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+
+                // $trainerjobs = TrainerJobRole::where([['scheme_id', $partnerJob->scheme_id],['sector_id', $partnerJob->sector_id],['jobrole_id', $partnerJob->jobrole_id]])->get();
+                // foreach ($trainerjobs as $trainerjob) {
+                //     if ($trainerjob->trainer->status && $trainerjob->trainer->ind_status && $trainerjob->trainer->verified) {
+                //         $filteredTrainers->push($trainerjob->trainer);
+                //     }
+                // }
             }
 
             
