@@ -56,16 +56,15 @@ class PartnerTrainerController extends Controller
         } elseif ($request->has('doc_no')) {
 
             /* Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
-            $trainer = Trainer::where('doc_no', $request->doc_no)->first();
-            if ($trainer) {
-                return response()->json(['success' => false], 200);
-            } else {
-                $trainerStatus = TrainerStatus::where([['doc_no', $request->doc_no],['attached', 0]])->latest()->first();
-                if ($trainerStatus) {
-                    return response()->json(['success' => true, 'present' => true, 'trainerData' => $trainerStatus], 200);
+            $trainerStatus = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
+            if ($trainerStatus) {
+                if ($trainerStatus->attached) {
+                    return response()->json(['success' => false], 200);                        
                 } else {
-                    return response()->json(['success' => true, 'present' => false], 200);
+                    return response()->json(['success' => true, 'present' => true, 'trainerData' => $trainerStatus], 200);
                 }
+            } else {
+                return response()->json(['success' => true, 'present' => false], 200);
             }
             /* End Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
         } elseif ($request->has('sectorid')) {
@@ -117,10 +116,22 @@ class PartnerTrainerController extends Controller
     
     public function submittrainer(TRFormValidation $request){
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
-
+            
+            $result = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
+            if ($result->attached) {
+                $trainer_id = $reassign = $status = $ind_status = NULL;
+            } else {
+                if ($result->status && $result->ind_status) {
+                    $trainer_id = $result->trainer_id;
+                    $reassign = $status = $ind_status = 1;
+                } else {
+                    return abort(400);
+                }
+            }
             DB::transaction(function() use ($request){
                 $trainer = new Trainer;
                 $trainer->tp_id = $this->guard()->user()->id;
+                $trainer->trainer_id = $trainer_id;
                 $trainer->name = $request->name;
                 $trainer->email = $request->email;
                 $trainer->mobile = $request->mobile;
@@ -140,12 +151,13 @@ class PartnerTrainerController extends Controller
                 if ($request->has('other_doc')) {
                     $trainer->other_doc = Storage::disk('myDisk')->put('/trainers', $request->other_doc);
                 }
-
+                $trainer->reassign = $reassign;
+                $trainer->status = $status;
+                $trainer->ind_status = $ind_status;
                 $trainer->save();
                 
 
                 $trainerJob = new TrainerJobRole;
-                // $data = explode(',',$job);
                 $trainerJob->tr_id = $trainer->id;
                 $trainerJob->sector_id = $request->sector;
                 $trainerJob->jobrole_id = $request->jobrole;

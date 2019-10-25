@@ -393,13 +393,23 @@
                                 return false;
                             } else {
                                 if (data.present) {
-                                    $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
-                                    $('#doc_file_div').remove();
-                                    $('[name=name]').val(data.trainerData.name);
-                                    $('[name=email]').val(data.trainerData.email);
-                                    $('[name=mobile]').val(data.trainerData.mobile);
-                                    ajaxresponse = true;
-                                    return true;
+                                    if (data.trainerData.status && data.trainerData.ind_status) {
+                                        $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
+                                        $('#doc_file_div').remove();
+                                        $('[name=name]').val(data.trainerData.name);
+                                        $('[name=email]').val(data.trainerData.email);
+                                        $('[name=mobile]').val(data.trainerData.mobile);
+                                        ajaxresponse = true;
+                                        return true;
+                                    } else {
+                                        var swalText = document.createElement("div");
+                                        swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Deactivated</span> in our Record, Please Contact SCPwD';
+                                        swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                                        $("#btnOne").prop("disabled", false);
+                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                        ajaxresponse = false;
+                                        return false;
+                                    }
                                 } else {
                                     ajaxresponse = true;
                                     return true;
