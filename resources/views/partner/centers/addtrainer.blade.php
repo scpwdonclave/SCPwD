@@ -43,6 +43,7 @@
                 <div class="body">
                     <form id="form_trainer" method="POST" action="{{ route('partner.submittrainer') }}" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="prsnt" value="0">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingOne">
@@ -393,6 +394,7 @@
                                 return false;
                             } else {
                                 if (data.present) {
+                                    $('[name=prsnt]').val('1');
                                     if (data.trainerData.status) {
                                         $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
                                         $('#doc_file_div').remove();
@@ -411,6 +413,7 @@
                                         return false;
                                     }
                                 } else {
+                                    $('[name=prsnt]').val('0');
                                     ajaxresponse = true;
                                     return true;
                                 }

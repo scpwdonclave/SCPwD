@@ -30,22 +30,6 @@ class TRFormValidation extends FormRequest
 
             /* TR Basic Details */
             'doc_no' => ['required','unique:trainers','regex:/^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/'],
-            'email' => [
-                'required',
-                'email',
-                'unique:trainers,email',
-                'unique:partners,email',
-                'unique:centers,email',
-                Rule::unique('trainer_statuses','email')->ignore($this->email,'email'),
-            ],
-            'mobile' => [
-                'required',
-                'numeric',
-                'unique:trainers,mobile',
-                'unique:partners,spoc_mobile',
-                'unique:centers,mobile',
-                Rule::unique('trainer_statuses','mobile')->ignore($this->mobile,'mobile'),
-            ],
             'name' => 'required',
             /* End TR Basic Details */
 
@@ -63,10 +47,48 @@ class TRFormValidation extends FormRequest
             'scpwd_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'other_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'resume' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            'doc_file' => 'required|mimes:jpeg,jpg,png,pdf',
             'qualification_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             
         ];
+
+        if ($this->prsnt) {
+            $rules['email'] = [
+                'required',
+                'email',
+                'unique:trainers,email',
+                'unique:partners,email',
+                'unique:centers,email',
+                Rule::unique('trainer_statuses','email')->ignore($this->email,'email'),                
+            ];
+            $rules['mobile'] = [
+                'required',
+                'numeric',
+                'unique:trainers,mobile',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                Rule::unique('trainer_statuses','mobile')->ignore($this->mobile,'mobile'),
+            ];
+            $rules['doc_file'] = 'nullable|mimes:jpeg,jpg,png,pdf';
+        } else {
+            $rules['email'] = [
+                'required',
+                'email',
+                'unique:trainers,email',
+                'unique:partners,email',
+                'unique:centers,email',
+                'unique:trainer_statuses,email',
+            ];
+            $rules['mobile'] = [
+                'required',
+                'numeric',
+                'unique:trainers,mobile',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                'unique:trainer_statuses,mobile',
+            ];
+            $rules['doc_file'] = 'required|mimes:jpeg,jpg,png,pdf';
+        }        
+
         return $rules;
     }
 }
