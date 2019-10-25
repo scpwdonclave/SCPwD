@@ -110,37 +110,20 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        {{-- <th>Scheme</th> --}}
+                                                        <th>Scheme</th>
                                                         <th>Sector</th>
                                                         <th>Job</th>
-                                                        <th>SSC No</th>
-                                                        <th>SSC Issued</th>
-                                                        <th>SSC Valid</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($trainerdoc as $key=>$doc)
-                                                        
+                                                    @foreach ($trainerData->jobroles[0]->schemes as $key=>$scheme)
                                                     <tr>
-                                                    <td>{{$key+1}}</td>
-                                                    {{-- <td>{{$doc->scheme->scheme}}</td> --}}
-                                                    <td >{{$doc->sector->sector}}</td>
-                                                    <td>{{$doc->jobrole->job_role}}</td>
-                                                    <td>
-                                                        {{$doc->ssc_no}}
-                                                        &nbsp;
-                                                        @if (!is_null($doc->ssc_doc))
-                                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$doc->tr_id,'action'=>'download','filename'=>basename($doc->ssc_doc)])}}" download="{{basename($doc->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>
-                                                        @else
-                                                            No Certificate Provided
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$doc->ssc_issued}}</td>
-                                                    <td>{{$doc->ssc_valid}}</td>
+                                                        <td>{{$key+1}}</td>
+                                                        <td>{{$scheme->scheme->scheme}}</td>
+                                                        <td >{{$trainerData->jobroles[0]->sector->sector}}</td>
+                                                        <td>{{$trainerData->jobroles[0]->jobrole->job_role}}</td>
                                                     </tr>
                                                     @endforeach
-                                                    
-                                                   
                                                 </tbody>
                                             </table>
                                         </div>
@@ -175,6 +158,49 @@
                                         <div class="col-sm-4">
                                                 <small class="text-muted">SCPWD Valid</small>
                                                 <p>{{$trainerData->scpwd_valid}}</p>
+                                                <hr>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                        </li>
+                        <li>
+                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Trainer Education & Other Documents</span></time>
+                            <div class="cbp_tmicon bg-yellow"> <i class="zmdi zmdi-local-store"></i></div>
+                            <div class="cbp_tmlabel">
+                                
+                                <div class="row">
+                                        <div class="col-sm-4">
+                                            <small class="text-muted">Qualification</small>
+                                                <p>
+                                                   
+                                                    {{config('constants.qualifications.'.$trainerData->jobroles[0]->qualification)}} &nbsp;&nbsp;                                                    
+                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->jobroles[0]->qualification_doc)])}}" download="{{basename($trainerData->jobroles[0]->qualification_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                                </p>
+                                          
+                                            <hr>
+                                        </div>
+                                    
+                                        <div class="col-sm-4">
+                                                <small class="text-muted">SSC No</small>
+                                                @if (!is_null($trainerData->jobroles[0]->ssc_doc))
+                                                <p>{{$trainerData->jobroles[0]->ssc_no}}&nbsp;&nbsp; 
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->jobroles[0]->ssc_doc)])}}" download="{{basename($trainerData->jobroles[0]->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                                </p>
+                                                @else
+                                                <p>No Document Provided</p>
+                                                @endif
+
+                                                <hr>
+                                        </div>
+                                        <div class="col-sm-4">
+                                                <small class="text-muted">SSC Issued</small>
+                                                <p>{{$trainerData->jobroles[0]->ssc_issued}}</p>
+                                                <hr>
+                                        </div>
+                                        <div class="col-sm-4">
+                                                <small class="text-muted">SSC Valid</small>
+                                                <p>{{$trainerData->jobroles[0]->ssc_valid}}</p>
                                                 <hr>
                                         </div>
                                     </div>

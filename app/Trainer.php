@@ -20,7 +20,7 @@ class Trainer extends Model implements Auditable
     // }
 
     public function jobroles(){
-        return $this->hasMany('App\TrainerJobrole', 'tr_id');
+        return $this->hasMany('App\TrainerJobRole', 'tr_id');
     }
 
     public function batches(){

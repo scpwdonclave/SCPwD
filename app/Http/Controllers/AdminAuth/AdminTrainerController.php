@@ -43,8 +43,8 @@ class AdminTrainerController extends Controller
     public function trainerView($id){
 
         $trainerData=Trainer::findOrFail($id);
-        $trainerdoc=TrainerJobRole::where('tr_id',$id)->get();
-        return view('common.view-trainer')->with(compact('trainerData','trainerdoc'));
+        // $trainerdoc=TrainerJobRole::where('tr_id',$id)->get();
+        return view('common.view-trainer')->with(compact('trainerData'));
         
     }
     public function dlinkTrainerView($id){
