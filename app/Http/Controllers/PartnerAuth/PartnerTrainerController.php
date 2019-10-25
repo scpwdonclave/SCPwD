@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PartnerAuth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TRFormValidation;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\TrainerStatus;
 use App\Notification;
@@ -43,8 +44,22 @@ class PartnerTrainerController extends Controller
 
         if ($request->has('mobile')) {
             $validator = Validator::make($request->all(), [
-                'email' => 'required|email|unique:trainers,email|unique:trainer_statuses,email|unique:partners,email|unique:centers,email',
-                'mobile' => 'required|numeric|unique:trainers,mobile|unique:trainer_statuses,mobile|unique:partners,spoc_mobile|unique:centers,mobile',
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:trainers,email',
+                    'unique:partners,email',
+                    'unique:centers,email',
+                    Rule::unique('trainer_statuses','email')->ignore($request->email,'email'),
+                ],
+                'mobile' => [
+                    'required',
+                    'numeric',
+                    'unique:trainers,mobile',
+                    'unique:partners,spoc_mobile',
+                    'unique:centers,mobile',
+                    Rule::unique('trainer_statuses','mobile')->ignore($request->mobile,'mobile'),
+                ],
             ]);
 
             if ($validator->fails()) {

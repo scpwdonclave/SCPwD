@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class TRFormValidation extends FormRequest
 {
@@ -23,14 +25,28 @@ class TRFormValidation extends FormRequest
      */
     public function rules()
     {
+        // $request = $this->attributes->all();
         $rules = [
 
-            'doc_no' => ['required','unique:trainers','regex:/^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/'],
-            
             /* TR Basic Details */
+            'doc_no' => ['required','unique:trainers','regex:/^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/'],
+            'email' => [
+                'required',
+                'email',
+                'unique:trainers,email',
+                'unique:partners,email',
+                'unique:centers,email',
+                Rule::unique('trainer_statuses','email')->ignore($this->email,'email'),
+            ],
+            'mobile' => [
+                'required',
+                'numeric',
+                'unique:trainers,mobile',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                Rule::unique('trainer_statuses','mobile')->ignore($this->mobile,'mobile'),
+            ],
             'name' => 'required',
-            'email' => 'required|email|unique:trainers,email|unique:trainer_statuses,email|unique:partners,email|unique:centers,email',
-            'mobile' => 'required|numeric|unique:trainers,mobile|unique:trainer_statuses,mobile|unique:partners,spoc_mobile|unique:centers,mobile',
             /* End TR Basic Details */
 
             'qualification' => 'required|numeric',
