@@ -131,6 +131,7 @@ class PartnerTrainerController extends Controller
     
     public function submittrainer(TRFormValidation $request){
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
+            $doc_file = '';
             
             $result = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
             if ($result) {
@@ -139,6 +140,7 @@ class PartnerTrainerController extends Controller
                 } else {
                     if ($result->status) {
                         $trainer_id = $result->trainer_id;
+                        $doc_file = $result->doc_file;
                         $reassign = $status = 1;
                     } else {
                         return abort(400);
@@ -150,7 +152,7 @@ class PartnerTrainerController extends Controller
                 // return $trainer_id;
             }
             
-            DB::transaction(function() use ($request, $trainer_id, $reassign, $status){
+            DB::transaction(function() use ($request, $trainer_id, $reassign, $status, $doc_file){
                 $trainer = new Trainer;
                 $trainer->tp_id = $this->guard()->user()->id;
                 $trainer->trainer_id = $trainer_id;
@@ -159,7 +161,12 @@ class PartnerTrainerController extends Controller
                 $trainer->mobile = $request->mobile;
                 $trainer->doc_no = $request->doc_no;
                 $trainer->doc_type = (strlen($request->doc_no) == 12)? 'Aadhaar':'Voter';
-                $trainer->doc_file = Storage::disk('myDisk')->put('/trainers', $request->doc_file);
+                if ($request->has('doc_file')) {
+                    $trainer->doc_file = Storage::disk('myDisk')->put('/trainers', $request->doc_file);
+                } else {
+                    $trainer->doc_file = $doc_file;
+                }
+                
 
                 $trainer->scpwd_no = $request->scpwd_doc_no;
                 if ($request->has('scpwd_doc')) {
