@@ -119,11 +119,11 @@ class PartnerTrainerController extends Controller
             
             $result = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
             if ($result->attached) {
-                $trainer_id = $reassign = $status = $ind_status = NULL;
+                $trainer_id = $reassign = $status = NULL;
             } else {
-                if ($result->status && $result->ind_status) {
+                if ($result->status) {
                     $trainer_id = $result->trainer_id;
-                    $reassign = $status = $ind_status = 1;
+                    $reassign = $status = 1;
                 } else {
                     return abort(400);
                 }
@@ -153,7 +153,6 @@ class PartnerTrainerController extends Controller
                 }
                 $trainer->reassign = $reassign;
                 $trainer->status = $status;
-                $trainer->ind_status = $ind_status;
                 $trainer->save();
                 
 

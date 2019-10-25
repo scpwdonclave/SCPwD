@@ -393,7 +393,7 @@
                                 return false;
                             } else {
                                 if (data.present) {
-                                    if (data.trainerData.status && data.trainerData.ind_status) {
+                                    if (data.trainerData.status) {
                                         $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
                                         $('#doc_file_div').remove();
                                         $('[name=name]').val(data.trainerData.name);
