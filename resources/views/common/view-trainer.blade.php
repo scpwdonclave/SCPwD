@@ -126,17 +126,6 @@
                                                     <td>{{$doc->scheme->scheme}}</td>
                                                     <td >{{$doc->sector->sector}}</td>
                                                     <td>{{$doc->jobrole->job_role}}</td>
-                                                    @if (!is_null($trainerData->other_doc))
-                                                        <p>
-                                                            Other Document &nbsp;&nbsp;
-                                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->other_doc)])}}" download="{{basename($trainerData->other_doc)}}"><i class="zmdi zmdi-download"></i></a>
-                                                        </p>
-                                                    @else
-                                                        <p>No Document Provided</p>
-                                                    @endif
-
-
-
                                                     <td>
                                                         {{$doc->ssc_no}}
                                                         &nbsp;

@@ -75,3 +75,6 @@ Route::get('batches/pending-batches', 'AdminAuth\AdminBatchController@pendingBat
 Route::get('batches/batch-view/{id}', 'AdminAuth\AdminBatchController@viewBatch')->name('bt.batch.view');
 Route::get('batches/batch-verify/{id}', 'AdminAuth\AdminBatchController@batchAccept')->name('bt.batch.verify');
 Route::post('batches/batch-reject', 'AdminAuth\AdminBatchController@batchReject')->name('bt.reject.batch');
+
+/* Agencies */
+Route::get('agency/agencies', 'AdminAuth\AdminAgencyController@agencies')->name('agency.agencies');

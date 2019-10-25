@@ -72,6 +72,13 @@
                         <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li>
                     </ul>
                 </li> 
+                <li class="{{ Request::segment(2) === 'agency' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Agencies</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/agency/agencies') ? 'active' : null }}"><a href="{{route('admin.agency.agencies')}}"> All Agency</a></li>
+                        {{-- <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li> --}}
+                    </ul>
+                </li> 
                 @endif
             @endauth
                     
