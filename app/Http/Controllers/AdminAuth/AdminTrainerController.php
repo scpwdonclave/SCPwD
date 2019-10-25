@@ -66,14 +66,25 @@ class AdminTrainerController extends Controller
         $data=DB::table('trainers')
         ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
         ->where("trainer_id", "LIKE", "TR%")->get();
+       
+       
+        $dataStatus=DB::table('trainer_statuses')
+        ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
+        ->where('attached',0)
+        ->orderBy('id', 'desc')->get()->unique('trainer_id');
       
         $year = date('Y');
-        if (count($data) > 0) {
+        if (count($data) > 0 && count($dataStatus) > 0 ) {
 
-            $priceprod = array();
+            $priceprod1 = array();
                 foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->trainer_id;
+                    $priceprod1[$key]=$data->trainer_id;
                 }
+            $priceprod2 = array();
+                foreach ($dataStatus as $key=>$dataStatus) {
+                    $priceprod2[$key]=$dataStatus->trainer_id;
+                }
+               $priceprod= array_merge($priceprod1,$priceprod2);
                 $lastid= max($priceprod);
                
                 $new_trid = (substr($lastid, 0, 4)== $year) ? 'TR'.($lastid + 1) : 'TR'.$year.'000001' ;

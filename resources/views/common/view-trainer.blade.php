@@ -110,7 +110,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Scheme</th>
+                                                        {{-- <th>Scheme</th> --}}
                                                         <th>Sector</th>
                                                         <th>Job</th>
                                                         <th>SSC No</th>
@@ -123,7 +123,7 @@
                                                         
                                                     <tr>
                                                     <td>{{$key+1}}</td>
-                                                    <td>{{$doc->scheme->scheme}}</td>
+                                                    {{-- <td>{{$doc->scheme->scheme}}</td> --}}
                                                     <td >{{$doc->sector->sector}}</td>
                                                     <td>{{$doc->jobrole->job_role}}</td>
                                                     <td>
@@ -185,7 +185,7 @@
                     @auth('admin')
                         <div class="text-center" >
                             @if (Request::segment(1)==='admin')
-                                @if (!$trainerData->status && !is_null($trainerData->verified) && !$trainerData->verified)
+                                @if (!$trainerData->verified )
                                     <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
                                     <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                                 @elseif ( $trainerData->verified==1)

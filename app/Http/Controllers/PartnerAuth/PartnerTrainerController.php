@@ -133,17 +133,24 @@ class PartnerTrainerController extends Controller
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
             
             $result = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
-            if ($result->attached) {
-                $trainer_id = $reassign = $status = NULL;
-            } else {
-                if ($result->status) {
-                    $trainer_id = $result->trainer_id;
-                    $reassign = $status = 1;
-                } else {
+            if ($result) {
+                if ($result->attached) {
                     return abort(400);
+                } else {
+                    if ($result->status) {
+                        $trainer_id = $result->trainer_id;
+                        $reassign = $status = 1;
+                    } else {
+                        return abort(400);
+                    }
                 }
+            } else {
+                $reassign = $status = 0;                
+                $trainer_id = NULL;
+                // return $trainer_id;
             }
-            DB::transaction(function() use ($request){
+            
+            DB::transaction(function() use ($request, $trainer_id, $reassign, $status){
                 $trainer = new Trainer;
                 $trainer->tp_id = $this->guard()->user()->id;
                 $trainer->trainer_id = $trainer_id;
