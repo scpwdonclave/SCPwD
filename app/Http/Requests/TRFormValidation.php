@@ -33,34 +33,22 @@ class TRFormValidation extends FormRequest
             'mobile' => 'required|numeric|unique:trainers,mobile|unique:trainer_statuses,mobile|unique:partners,spoc_mobile|unique:centers,mobile',
             /* End TR Basic Details */
 
-            'qualification' => 'required|array|min:1',
-            'qualification.*' => 'required',
-            'qualification_doc' => 'required|array|min:1',
-            'qualification_doc.*' => 'required|mimes:jpeg,jpg,png,pdf',
-
-            'sector' => 'required|array|min:1',
-            'sector.*' => 'required',
-            'ssc_doc_no' => 'nullable|array|min:1',
-            'ssc_doc_no.*' => 'nullable',
-            'ssc_start' => 'nullable|array|min:1',
-            'ssc_start.*' => 'nullable',
-            'ssc_end' => 'nullable|array|min:1',
-            'ssc_end.*' => 'nullable',
-            
-            'jobrole' => 'required|array|min:1',
-            'jobrole.*' => 'required',
-            
-            'ssc_doc' => 'nullable|array:min:1',
-            'ssc_doc.*' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            
-            
+            'qualification' => 'required|numeric',
+            'sector' => 'required|numeric',
+            'ssc_doc_no' => 'nullable',
+            'ssc_start' => 'nullable',
+            'ssc_end' => 'nullable',
             'scpwd_doc_no' => 'nullable',
             'scpwd_start' => 'nullable',
             'scpwd_end' => 'nullable',
+            'jobrole' => 'required|numeric',
+            
+            'ssc_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'scpwd_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'other_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'resume' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'doc_file' => 'required|mimes:jpeg,jpg,png,pdf',
+            'qualification_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             
         ];
         return $rules;

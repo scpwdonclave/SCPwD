@@ -123,12 +123,12 @@
                                 </div>
                                 <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
-                                        <div class="card body field-group" id="form_id_new">
+                                        <div class="card body field-group" id="form_id">
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-6">
-                                                    <label for="sector[new]">Domain/Sector/SSC *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="sector">Domain/Sector/SSC *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="sector_new" class="form-control show-tick" data-live-search="true" name="sector[new]" onchange="updatejob('new')" data-dropup-auto='false' required>
+                                                        <select id="sector" class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
                                                                 @if ($job->status && $job->scheme_status)
                                                                     <option value="{{$job->sector_id}}">{{$job->sector->sector}}</option>
@@ -137,68 +137,68 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <label for="jobrole[new]">Job Roles *</label>
+                                                <div class="col-sm-4">
+                                                    <label for="jobrole">Job Roles *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" onchange="updatequali('new')" data-dropup-auto='false' required>
+                                                        <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole" onchange="updatequali()" data-dropup-auto='false' required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="scheme[]">Schemes *</label>
+                                                    <div class="form-group form-float">
+                                                        <select id="scheme" class="form-control show-tick" name="scheme[]" multiple data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification[new]">Qualification *</label>
+                                                    <label for="qualification">Qualification *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="qualification_new" class="form-control show-tick" data-live-search="true" name="qualification[new]" data-dropup-auto='false' required>
+                                                        <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="qualification_doc[new]">Qualification Certificate Upload *</label>
+                                                    <label for="qualification_doc">Qualification Certificate Upload *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="file" id="qualification_doc_new" class="form-control" name="qualification_doc[new]" required>
-                                                        <span id="qualification_doc_new_error"  style="color:red;"></span>
+                                                        <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" required>
+                                                        <span id="qualification_doc_error"  style="color:red;"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ssc_doc_no[new]">SSC Certificate No</label>
+                                                    <label for="ssc_doc_no">SSC Certificate No</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[new]') }}" name="ssc_doc_no[new]">
+                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no') }}" name="ssc_doc_no">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="ssc_doc[new]">SSC Certificate Upload</label>
+                                                    <label for="ssc_doc">SSC Certificate Upload</label>
                                                     <div class="form-group form-float">
-                                                        <input type="file" id="ssc_doc_new" class="form-control" name="ssc_doc[new]">
-                                                        <span id="ssc_doc_new_error"  style="color:red;"></span>
+                                                        <input type="file" id="ssc_doc" class="form-control" name="ssc_doc">
+                                                        <span id="ssc_doc_error"  style="color:red;"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ssc_start[new]">SSC Certificate Issued On</label>
+                                                    <label for="ssc_start">SSC Certificate Issued On</label>
                                                     <div class="form-group form-float month_range_picker_start">
-                                                        <input type="text" id="ssc_start_new" onchange="startchange('new')" class="form-control" name="ssc_start[new]">
+                                                        <input type="text" id="ssc_start" onchange="startchange()" class="form-control" name="ssc_start">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ssc_end[new]">SSC Certificate Valid Upto</label>
+                                                    <label for="ssc_end">SSC Certificate Valid Upto</label>
                                                     <div class="form-group form-float month_range_picker_end">
-                                                        <input type="text" id="ssc_end_new" class="form-control" name="ssc_end[new]">
+                                                        <input type="text" id="ssc_end" class="form-control" name="ssc_end">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="repeatable-container"></div>
                                         <div class="row">
-                                            <div class="col-sm-4">
-                                            </div>
-                                            <div class="col-sm-4 text-center">
-                                                @if (count($partner->partner_jobroles->unique("sector_id"))-1 > 0)
-                                                    <button type="button" class="btn btn-primary add" ><span class="glyphicon glyphicon-plus-sign"></span> Add More</button>
-                                                @endif
-                                            </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-12 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
@@ -301,7 +301,7 @@
 
     /* Onload Function */
     $(() => {
-        updatejob('new');
+        updatejob();
         filevalidate();
     });
     /* End Onload Function */
@@ -385,7 +385,7 @@
                         success: function(data){
                             if (!data.success) {
                                 var swalText = document.createElement("div");
-                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registred</span> and Active in our Trainer Database'; 
+                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Present</span> in our Trainer Database'; 
                                 swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
@@ -541,11 +541,33 @@
         
     /* End Making Sure That the Terms & Condition is Accepted */
 
+
+        function updatescheme() {
+            var _token = $('[name=_token]').val();
+            var sid = $("#sector :selected").val(); 
+            var jid = $("#jobrole :selected").val();
+            $.ajax({
+                url: "{{ route('partner.addtrainer.api') }}",
+                method: "POST",
+                data: { _token, sid, jid },
+                success: function(data){
+                    $('#scheme').empty();
+                    // $('#scheme').prepend("<option value=''>Select Schemes</option>");
+                    data.jobs.forEach(value => {
+                        $('#scheme').append('<option value='+value.scheme_id+'>'+value.scheme.scheme+'</option>');
+                    });
+                    $('#scheme').selectpicker('refresh');
+                } 
+            });
+        }
+
+
+
     /* Fetch SelectPicker Data */
 
-        function updatejob(id){
+        function updatejob(){
             var _token = $('[name=_token]').val();
-            var sectorid = $("#sector_"+id+" :selected").val();
+            var sectorid = $("#sector :selected").val();
             // console.log(sectorid);
             
             $.ajax({
@@ -555,13 +577,14 @@
                 success: function(data){
                     // console.log(data);
                     
-                    $('#jobrole_'+id).empty();
-                    $('#jobrole_'+id).prepend("<option value='' selected>Select Job Role</option>");
+                    $('#jobrole').empty();
+                    // $('#jobrole').prepend("<option value=''>Select Job Role</option>");
                     data.jobs.forEach(value => {
-                        $('#jobrole_'+id).append('<option value="'+value.jobrole_id+','+value.scheme_id+'">'+value.jobrole.job_role+' ('+value.scheme.scheme+')</option>');
+                        $('#jobrole').append('<option value='+value.jobrole_id+'>'+value.jobrole.job_role+'</option>');
                     });
-                    $('#jobrole_'+id).selectpicker('refresh');
-                    
+                    $('#jobrole').selectpicker('refresh');
+                    updatescheme();
+                    updatequali();
                 } 
             });
         }
@@ -570,26 +593,28 @@
 
 
     /* Qualification DropDown Item Section */
-        function updatequali(id) {
-            var jobroleid = ($("#jobrole_"+id+" :selected").val()).split(',')[0];
+        function updatequali() {
+            var jobroleid = ($("#jobrole :selected").val()).split(',')[0];
             var _token= $('[name=_token]').val();
             $.ajax({
                 method: 'POST',
                 url: "{{ route('partner.addtrainer.api') }}",
                 data: {_token, jobroleid},
                 success: function (response) {
+                    // console.log(response);
+                    
                     qualifications = '<?php echo json_encode($config)?>';
                     data = JSON.parse(qualifications);
 
-                    $('#qualification_'+id).empty();
-                    $('#qualification_'+id).prepend("<option value='' selected>Select Qualificaton</option>");
+                    $('#qualification').empty();
+                    // $('#qualification').prepend("<option value=''>Select Qualificaton</option>");
                     Object.keys(data).forEach(function(k){
                         if (k >= response.qualification) {
-                            $('#qualification_'+id).append('<option value="'+k+'">'+data[k]+'</option>');
+                            $('#qualification').append('<option value="'+k+'">'+data[k]+'</option>');
                         }
                     });
-                    $('#qualification_'+id).selectpicker('refresh');
-
+                    $('#qualification').selectpicker('refresh');
+                    updatescheme();
                 },
                 error: function (data) {
                     setTimeout(function () {
@@ -673,80 +698,6 @@
     /* End File Type Validation */
 
 </script>
-
-
-{{-- Add More FUNCTION BODY (DYNAMIC) --}}
-
-<script type="text/template" id="jobroleform">
-    <div class="card body field-group" id="form_id_{?}">
-        <div class="row d-flex justify-content-around">
-            <div class="col-sm-6">
-                <label for="sector[{?}]">Domain/Sector/SSC *</label>
-                <div class="form-group form-float">
-                    <select id="sector_{?}" class="form-control show-tick" data-live-search="true" name="sector[{?}]" onchange="updatejob('{?}')" data-dropup-auto='false' required>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <label for="jobrole[{?}]">Job Roles *</label>
-                <div class="form-group form-float">
-                    <select id="jobrole_{?}" class="form-control show-tick jobrole" data-live-search="true" name="jobrole[{?}]" onchange="updatequali('{?}')" data-dropup-auto='false' required>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row d-flex justify-content-around">
-            <div class="col-sm-4">
-                <label for="qualification[{?}]">Qualification *</label>
-                <div class="form-group form-float">
-                    <select id="qualification_{?}" class="form-control show-tick qualification" data-live-search="true" name="qualification[{?}]" data-dropup-auto='false' required>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <label for="qualification_doc[{?}]">Qualification Certificate Upload *</label>
-                <div class="form-group form-float">
-                    <input type="file" id="qualification_doc_{?}" class="form-control" name="qualification_doc[{?}]" required>
-                    <span id="qualification_doc_{?}_error"  style="color:red;"></span>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <label for="ssc_doc_no[{?}]">SSC Certificate No</label>
-                <div class="form-group form-float">
-                    <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no[{?}]') }}" name="ssc_doc_no[{?}]">
-                </div>
-            </div>
-            
-        </div>
-        <div class="row d-flex justify-content-around">   
-            <div class="col-sm-4">
-                <label for="ssc_doc[{?}]">SSC Certificate Upload</label>
-                <div class="form-group form-float">
-                    <input type="file" id="ssc_doc_{?}" class="form-control" name="ssc_doc[{?}]">
-                    <span id="ssc_doc_{?}_error"  style="color:red;"></span>                        
-                </div>
-            </div> 
-            <div class="col-sm-4">
-                <label for="ssc_start[{?}]">SSC Certificate Issued On</label>
-                <div class="form-group form-float month_range_picker_start">
-                    <input type="text" id="ssc_start_{?}" onchange="startchange('{?}')" class="form-control" name="ssc_start[{?}]">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <label for="ssc_end[{?}]">SSC Certificate Valid Upto</label>
-                <div class="form-group form-float month_range_picker_end">
-                    <input type="text" id="ssc_end_{?}" class="form-control" name="ssc_end[{?}]">
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <button type="button" class="btn btn-danger delete"><span class="glyphicon glyphicon-minus-sign"></span> Remove</button>            
-        </div>
-    </div>
-</script>
-
-{{-- Add More Function Call --}}
-
 
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

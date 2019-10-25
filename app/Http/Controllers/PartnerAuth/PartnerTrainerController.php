@@ -14,6 +14,7 @@ use App\Candidate;
 use App\JobRole;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
+use App\TrainerJobroleScheme;
 use Storage;
 use Gate;
 use Auth;
@@ -32,7 +33,7 @@ class PartnerTrainerController extends Controller
     }
 
     public function trainers(){
-        $partner = Auth::guard('partner')->user();
+        $partner = $this->guard()->user();
         $trainers = Trainer::where('tp_id', $partner->id)->get();
 
         return view('partner.centers.trainers')->with(compact('trainers','partner'));
@@ -69,11 +70,12 @@ class PartnerTrainerController extends Controller
             /* End Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
         } elseif ($request->has('sectorid')) {
             
-            $jobs = PartnerJobrole::where([['tp_id', '=', Auth::guard('partner')->user()->id],['sector_id', '=', $request->sectorid]])->select('jobrole_id', 'scheme_id')->get();
+            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sectorid]])->select('jobrole_id','status','scheme_status')->groupBy('jobrole_id')->get();
             
             foreach ($jobs as $job) {
-                $job->jobrole->job_role;
-                $job->scheme->scheme;
+                if ($job->status && $job->scheme_status) {
+                    $job->jobrole->job_role;
+                }
             }
             
             return response()->json(['jobs' => $jobs],200);
@@ -85,6 +87,16 @@ class PartnerTrainerController extends Controller
             } else {
                 return response()->json(['success' => false],400);
             }
+        } elseif ($request->has('sid')){
+            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sid],['jobrole_id', '=', $request->jid]])->select('scheme_id','status','scheme_status')->get();
+            
+            foreach ($jobs as $job) {
+                if ($job->status && $job->scheme_status) {
+                    $job->scheme->scheme;
+                }
+            }
+            
+            return response()->json(['jobs' => $jobs],200);
         }
 
     }
@@ -92,7 +104,7 @@ class PartnerTrainerController extends Controller
     public function addtrainer(){
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
             $data = [
-                'partner'  => Auth::guard('partner')->user(),
+                'partner'  => $this->guard()->user(),
                 'parliaments'   => DB::table('parliament')->get(),
                 'states'   => DB::table('state_district')->get(),
                 'config' => Config::get('constants.qualifications')
@@ -131,29 +143,27 @@ class PartnerTrainerController extends Controller
 
                 $trainer->save();
                 
-                foreach ($request->jobrole as $key => $job) {
 
-                    $trainerJob = new TrainerJobRole;
-                    $data = explode(',',$job);
-                    $trainerJob->jobrole_id = $data[0];
-                    $trainerJob->scheme_id = $data[1];
+                $trainerJob = new TrainerJobRole;
+                // $data = explode(',',$job);
+                $trainerJob->tr_id = $trainer->id;
+                $trainerJob->sector_id = $request->sector;
+                $trainerJob->jobrole_id = $request->jobrole;
+                $trainerJob->qualification = $request->qualification;
+                $trainerJob->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request->qualification_doc);
+                $trainerJob->ssc_no = $request->ssc_doc_no;
+                if ($request->hasFile('ssc_doc')) {
+                    $trainerJob->ssc_doc = Storage::disk('myDisk')->put('/trainers', $request->ssc_doc);
+                }
+                $trainerJob->ssc_issued = $request->ssc_start;
+                $trainerJob->ssc_valid = $request->ssc_end;
+                $trainerJob->save();
 
-                
-                    $trainerJob->qualification = $request->qualification[$key];
-                    if ($request->has('qualification_doc.'.$key)) {
-                        $trainerJob->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request->qualification_doc[$key]);
-                    }
-
-                    $trainerJob->tr_id = $trainer->id;
-                    $trainerJob->sector_id = $request->sector[$key];
-                    $trainerJob->ssc_no = $request->ssc_doc_no[$key];
-                    $trainerJob->ssc_issued = $request->ssc_start[$key];
-                    $trainerJob->ssc_valid = $request->ssc_end[$key];
-                    if ($request->hasFile('ssc_doc.'.$key)) {
-                        $trainerJob->ssc_doc = Storage::disk('myDisk')->put('/trainers', $request->ssc_doc[$key]);
-                    }
-                    $trainerJob->save();
-
+                foreach ($request->scheme as $scheme) {
+                    $trScheme = new TrainerJobroleScheme;
+                    $trScheme->tr_job_id = $trainerJob->id;
+                    $trScheme->scheme_id = $scheme;
+                    $trScheme->save();
                 }
 
                 $pid = $trainer->partner->tp_id;

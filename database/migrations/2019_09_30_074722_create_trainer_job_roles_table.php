@@ -16,7 +16,6 @@ class CreateTrainerJobRolesTable extends Migration
         Schema::create('trainer_job_roles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tr_id');
-            $table->unsignedBigInteger('scheme_id');
             $table->unsignedBigInteger('sector_id');
             $table->unsignedBigInteger('jobrole_id');
             $table->string('qualification');

@@ -10,8 +10,8 @@ class TrainerJobRole extends Model
         return $this->belongsTo('App\JobRole', 'jobrole_id');
     }
 
-    public function scheme(){
-        return $this->belongsTo('App\Scheme', 'scheme_id');
+    public function schemes(){
+        return $this->hasMany('App\TrainerJobroleScheme', 'tr_job_id');
     }
 
     public function sector(){
