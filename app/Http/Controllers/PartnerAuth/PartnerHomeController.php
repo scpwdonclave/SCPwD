@@ -221,4 +221,44 @@ class PartnerHomeController extends Controller
         }
     }
 
+    public function test(){
+        // $holidays = ["2015-01-01", "2015-01-02"];
+
+        // $date = "12/31/14";
+        // $MyDateCarbon = Carbon::parse($date);
+
+        // $MyDateCarbon->addWeekdays(3);
+
+        // for ($i = 1; $i <= 3; $i++) {
+
+        //     if (in_array(Carbon::parse($date)->addWeekdays($i)->toDateString(), $holidays)) {
+
+        //         $MyDateCarbon->addDay();
+
+        //     }
+        // }
+
+        // dd($MyDateCarbon);
+    
+        // $date = "2019-10-20";
+        // $datework = new Carbon($date);
+        // $now = Carbon::now();
+        // $diff = $datework->diffInDays($now);
+        // return $diff;
+
+
+
+        $dt = Carbon::create(2019, 10, 4);
+        $dt2 = Carbon::create(2019, 10, 29);
+        $daysForExtraCoding = $dt->diffInDaysFiltered(function(Carbon $date) {
+            // return !$date->isWeekend();
+            return false;
+        }, $dt2);
+
+        return $daysForExtraCoding;
+    
+
+    
+    }
+
 }
