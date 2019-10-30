@@ -211,11 +211,13 @@
                     @auth('admin')
                         <div class="text-center" >
                             @if (Request::segment(1)==='admin')
-                                @if (!$trainerData->verified )
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
-                                    <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                                @elseif ( $trainerData->verified==1)
-                                    <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>                         
+                                @if (is_null($trainerData->attached))
+                                    @if (!$trainerData->verified )
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                    @elseif ( $trainerData->verified==1)
+                                        <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>                         
+                                    @endif
                                 @endif
                             @endif
                         </div>

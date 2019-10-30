@@ -29,9 +29,8 @@ class AdminTrainerController extends Controller
 
     public function trainers(){
         $data=Trainer::where('verified',1)->get();
-        $dlinkData=TrainerStatus::where('attached',0)->orderBy('id', 'desc')->get()->unique('trainer_id');
-        return view('admin.trainers.trainers')->with(compact('data','dlinkData')); 
-
+        $dlinkData=TrainerStatus::orderBy('id', 'desc')->get()->unique('trainer_id');
+        return view('admin.trainers.trainers')->with(compact('data','dlinkData'));
     }
     public function pendingTrainers(){
         $data=Trainer::where([['verified',0],['reassign',0]])->get();
@@ -43,7 +42,6 @@ class AdminTrainerController extends Controller
     public function trainerView($id){
 
         $trainerData=Trainer::findOrFail($id);
-        // $trainerdoc=TrainerJobRole::where('tr_id',$id)->get();
         return view('common.view-trainer')->with(compact('trainerData'));
         
     }
@@ -51,6 +49,7 @@ class AdminTrainerController extends Controller
 
         $trainerData=TrainerStatus::findOrFail($id);
         $trainerdoc=TrainerJobRole::where('tr_id',$trainerData->prv_id)->get();
+        $dlinkData = collect([]);
         return view('common.view-trainer')->with(compact('trainerData','trainerdoc'));
         
     }
