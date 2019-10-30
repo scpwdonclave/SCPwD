@@ -72,9 +72,10 @@ class AdminTrainerController extends Controller
         ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
         ->where('attached',0)
         ->orderBy('id', 'desc')->get()->unique('trainer_id');
+       
       
         $year = date('Y');
-        if (count($data) > 0 && count($dataStatus) > 0 ) {
+        if (count($data) > 0 || count($dataStatus) > 0 ) {
 
             $priceprod1 = array();
                 foreach ($data as $key=>$data) {
@@ -86,6 +87,7 @@ class AdminTrainerController extends Controller
                 }
                $priceprod= array_merge($priceprod1,$priceprod2);
                 $lastid= max($priceprod);
+               
                
                 $new_trid = (substr($lastid, 0, 4)== $year) ? 'TR'.($lastid + 1) : 'TR'.$year.'000001' ;
            

@@ -10,7 +10,9 @@ use App\PartnerJobrole;
 use App\TrainerJobRole;
 use Carbon\Carbon;
 use App\Center;
+use App\Holiday;
 use App\Batch;
+use Config;
 use Crypt;
 use App\BatchCandidateMap;
 use Auth;
@@ -51,7 +53,9 @@ class PartnerBatchController extends Controller
     public function addbatch(){
         $data = [
             'partner' => $this->guard()->user(),
+            'hours' => Config::get('constants.hours')
         ];
+
         return view('partner.batches.addbatch')->with($data);
     }
 
@@ -140,11 +144,34 @@ class PartnerBatchController extends Controller
         }
         
         if ($request->has('startdate')) {
+
+
+            /* Validation Rules */
+            /* End Validation Rules */
+
             $startdate = $request->startdate;
             $jobrole = PartnerJobrole::find($request->jobrole);
             if ($jobrole) {
-                $hours = $jobrole->jobrole->hours;
-                return response()->json(['success' => true, 'candidates' => $startdate],200);
+                $total_hours = $jobrole->jobrole->hours;
+
+                $total_days = $total_hours / $request->hour;
+        
+                
+                $start_date = Carbon::parse($request->startdate);
+                $end_date_approx = $start_date->copy()->addDays($total_days);
+                $hds = Holiday::all();
+                $holidays = [];
+                foreach ($hds as $hd) {
+                    array_push($holidays, $hd->holiday_date);
+                }
+                $end_date = $end_date_approx->copy();
+                for($date = $start_date->copy(); $date->lte($end_date_approx); $date->addDay()) {
+                    if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
+                        // echo $date->toDateString().'<br>';
+                        $end_date->addDay();
+                    }
+                }
+                return response()->json(['success' => true, 'enddate' => $end_date->toDateString()],200);
             } else {
                 return response()->json(['success' => false],400);
             }

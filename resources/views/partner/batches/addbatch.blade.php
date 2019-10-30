@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatables-checkboxes/css/dataTables.checkboxes.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/jquery-timepicker-wvega/jquery.timepicker.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <style>
 table.dataTable.select tbody tr,
@@ -75,10 +76,20 @@ table.dataTable thead th:first-child {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label for="batch_time">Batch Time *</label>
-                                    <div class="form-group form-float time_picker">
-                                        <input type="text" id="batch_time" class="form-control" name="batch_time" required>                                        
+                                <div class="col-sm-3">
+                                    <label for="batch_time">Batch Start Time *</label>
+                                    <div class="form-group form-float">
+                                        <input type="text" id="batch_time" class="form-control time_picker" name="batch_time" onchange="calculate_enddate()" required>                                        
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="batch_hour">Hours Per Day *</label>
+                                    <div class="form-group form-float">
+                                        <select id="batch_hour" class="form-control show-tick" data-live-search="true" onchange="calculate_enddate()" name="batch_hour" data-dropup-auto='false' required>
+                                            @foreach (config('constants.hours') as $item)
+                                                <option value="">{{$item}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -87,12 +98,12 @@ table.dataTable thead th:first-child {
                                 <div class="col-sm-4">
                                     <label for="batch_start">Batch Start Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <input type="text" id="batch_start" class="form-control" onchange="stratdateupdate()" name="batch_start" required>
+                                        <input type="text" id="batch_start" class="form-control" onchange="calculate_enddate()" name="batch_start" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="batch_end">Batch End Date *</label>
-                                    <div class="form-group form-float date_picker">
+                                    <div class="form-group form-float">
                                         <input type="text" id="batch_end" class="form-control" name="batch_end" readonly required>
                                     </div>
                                 </div>
@@ -141,10 +152,21 @@ table.dataTable thead th:first-child {
             // endDate: new Date()
         });
 
-        $('.time_picker .form-control').datepicker({
-            autoclose: true,
-            format: 'dd-mm-yyyy',
-            // endDate: new Date()
+        // $('.time_picker .form-control').datepicker({
+        //     autoclose: true,
+        //     format: 'dd-mm-yyyy',
+        //     // endDate: new Date()
+        // });
+        $('input.time_picker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 15,
+            minTime: '6:00am',
+            maxTime: '10:00pm',
+            defaultTime: '8',
+            startTime: '6:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
         });
 
 
@@ -174,6 +196,9 @@ table.dataTable thead th:first-child {
         $('#'+id).prepend("<option value='' selected>Select "+msg+"</option>");
         $('#'+id).selectpicker('refresh');
     }
+
+
+
 
 
     function update(v){
@@ -259,15 +284,20 @@ table.dataTable thead th:first-child {
 
 <script>
 
-function stratdateupdate() {
+function calculate_enddate() {
     var startdate = $('#batch_start').val();
+    var starttime = $('#batch_time').val();
+    var hour = $('#batch_hour').val();
     var jobrole = $('select#jobrole option:selected').val();
     var _token= $('[name=_token]').val();
-    if (startdate!='' && jobrole!='') {
+    if (jobrole==='') {
+        $('#batch_start').val('');
+    }
+    if (startdate!='' && jobrole!='' && starttime!='' && hour!='') {
         $.ajax({
             method: 'post',
             url: '{{route("partner.addbatch.api")}}',
-            data: {startdate,_token,jobrole},
+            data: {startdate,_token,jobrole,starttime,hour},
             success: function (data) {
                 console.log(data);
             },
@@ -332,6 +362,7 @@ function viewcandidate(id) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-timepicker-wvega/jquery.timepicker.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 

@@ -21,4 +21,7 @@ class TrainerJobRole extends Model
     public function trainer(){
         return $this->belongsTo('App\Trainer', 'tr_id');
     }
+    public function dlinktrainer(){
+        return $this->belongsTo('App\TrainerStatus', 'prv_id');
+    }
 }
