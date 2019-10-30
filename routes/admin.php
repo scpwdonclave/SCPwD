@@ -78,3 +78,4 @@ Route::post('batches/batch-reject', 'AdminAuth\AdminBatchController@batchReject'
 
 /* Agencies */
 Route::get('agency/agencies', 'AdminAuth\AdminAgencyController@agencies')->name('agency.agencies');
+Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@addAgency')->name('aa.add-agency');

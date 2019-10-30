@@ -19,7 +19,10 @@ class AdminAgencyController extends Controller
 
     public function agencies(){
 
-        return 'hi';
+        return view('admin.agencies.agency');
 
+    }
+    public function addAgency(Request $request){
+        dd($request);
     }
 }

@@ -126,33 +126,53 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc_no">SCPwD Document No *</label>
+                                                <label for="scpwd_doc_no">SCPwD Document No </label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{$trainer->scpwd_no}}" name="scpwd_doc_no" required>
+                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{$trainer->scpwd_no}}" name="scpwd_doc_no" >
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="scpwd_doc">SSC Document </label>
+                                                <label for="scpwd_doc">SCPwD Document </label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc" >
                                                     <span id="scpwd_doc_error"  style="color:red;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_start">SCPwD Certificate Issued On *</label>
+                                                <label for="scpwd_start">SCPwD Certificate Issued On </label>
                                                 <div class="form-group form-float month_range_picker">
-                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" value="{{$trainer->scpwd_issued}}" name="scpwd_start" required>
+                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" value="{{$trainer->scpwd_issued}}" name="scpwd_start" >
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="scpwd_end">SCPwD Certificate Valid Upto *</label>
+                                                <label for="scpwd_end">SCPwD Certificate Valid Upto </label>
                                                 <div class="form-group form-float month_range_picker">
-                                                    <input type="text" id="scpwd_end" class="form-control" value="{{$trainer->scpwd_valid}}" name="scpwd_end" required>
+                                                    <input type="text" id="scpwd_end" class="form-control" value="{{$trainer->scpwd_valid}}" name="scpwd_end" >
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-4">
+                                                    <label for="qualification">Qualification</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="qualification" data-show-subtext="true" data-dropup-auto='false'>
+                                                            @foreach (config('constants.qualifications') as $key=>$qualification)
+                                                                <option value="{{$key}}" {{ ( $key ==$trainer->jobroles[0]->qualification) ? 'selected' : '' }}>{{ $qualification }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            <div class="col-sm-4">
+                                                <label for="scpwd_doc">Qualification Certificate </label>
+                                                <div class="form-group form-float">
+                                                    <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" >
+                                                    <span id="qualification_doc_error"  style="color:red;"></span>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
                                                 <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>

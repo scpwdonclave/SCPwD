@@ -220,6 +220,8 @@ class AdminTrainerController extends Controller
     public function trainerUpdate(Request $request){
         $trainer=Trainer::findOrFail($request->trid);
         $trainer_status=TrainerStatus::where('prv_id',$request->trid)->first();
+        $trainer_job=TrainerJobRole::where('tr_id',$request->trid)->first();
+
         $trainer->name=$request->name;
         $trainer_status->name=$request->name;
         $trainer->mobile=$request->mobile;
@@ -243,8 +245,16 @@ class AdminTrainerController extends Controller
         $trainer_status->scpwd_issued=$request->scpwd_start;
         $trainer->scpwd_valid=$request->scpwd_end;
         $trainer_status->scpwd_valid=$request->scpwd_end;
+
+        $trainer_job->qualification=$request->qualification;
+        if ($request->hasFile('qualification_doc')) {
+            $trainer_job->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request['qualification_doc']);            
+            
+        }
+
         $trainer->save();
         $trainer_status->save();
+        $trainer_job->save();
 
         alert()->success('Trainer has been Updated', 'Job Done')->autoclose(3000);
         return Redirect()->back();
