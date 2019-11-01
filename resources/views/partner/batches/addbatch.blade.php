@@ -14,6 +14,13 @@ table.dataTable.select tbody tr,
 table.dataTable thead th:first-child {
   cursor: pointer;
 }
+
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+  background: none;
+  color: red;
+  cursor: not-allowed;
+}
 </style>
 @stop
 @section('content')
@@ -87,7 +94,7 @@ table.dataTable thead th:first-child {
                                     <div class="form-group form-float">
                                         <select id="batch_hour" class="form-control show-tick" data-live-search="true" onchange="calculate_enddate()" name="batch_hour" data-dropup-auto='false' required>
                                             @foreach (config('constants.hours') as $item)
-                                                <option value="">{{$item}}</option>
+                                                <option value="{{$item['val']}}">{{$item['text']}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -97,7 +104,7 @@ table.dataTable thead th:first-child {
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="batch_start">Batch Start Date *</label>
-                                    <div class="form-group form-float date_picker">
+                                    <div class="form-group form-float batch_start_datepicker">
                                         <input type="text" id="batch_start" class="form-control" onchange="calculate_enddate()" name="batch_start" required>
                                     </div>
                                 </div>
@@ -110,7 +117,8 @@ table.dataTable thead th:first-child {
                                 <div class="col-sm-4">
                                     <label for="assesment">Assesment Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <input type="text" id="assesment" class="form-control" name="assesment" required>
+                                        <select id="assesment" class="form-control show-tick" data-live-search="true" name="assesment" data-dropup-auto='false' required>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -145,11 +153,14 @@ table.dataTable thead th:first-child {
 
     $(()=>{
         update('job');
-        
-        $('.date_picker .form-control').datepicker({
+
+
+        $('.batch_start_datepicker .form-control').datepicker({
             autoclose: true,
             format: 'dd-mm-yyyy',
-            // endDate: new Date()
+            startDate: new Date(),
+            daysOfWeekDisabled: [0,6],
+            datesDisabled: JSON.parse('<?php echo json_encode($holidays)?>'),
         });
 
         // $('.time_picker .form-control').datepicker({
@@ -184,9 +195,10 @@ table.dataTable thead th:first-child {
         .datepicker()
         .on('changeDate', function(selected){
             $('#batch_end').val('');
+            $('#assesment').empty();
+            $('#assesment').selectpicker('refresh');
             startDate = new Date(selected.date.valueOf());
             startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-            $('#batch_end').datepicker('setStartDate', startDate);
         });
     });
 
@@ -245,6 +257,7 @@ table.dataTable thead th:first-child {
                                 });
                                 $('#center').selectpicker('refresh');
                                 $('#trainer').selectpicker('refresh');
+                                calculate_enddate();
                             }
                         });
                     }
@@ -290,6 +303,8 @@ function calculate_enddate() {
     var hour = $('#batch_hour').val();
     var jobrole = $('select#jobrole option:selected').val();
     var _token= $('[name=_token]').val();
+    // console.log(starttime);
+    
     if (jobrole==='') {
         $('#batch_start').val('');
     }
@@ -299,7 +314,18 @@ function calculate_enddate() {
             url: '{{route("partner.addbatch.api")}}',
             data: {startdate,_token,jobrole,starttime,hour},
             success: function (data) {
-                console.log(data);
+                if (data.success) {
+                    $('#batch_end').val(data.enddate);
+                    $('#assesment').empty();
+                    $("#assesment").prepend("<option value='' selected='selected'>Select Assesment Date</option>");
+                    data.assesment_dates.forEach(value => {
+                        $('#assesment').append('<option value="'+value+'">'+value+'</option>');
+                    });
+                    $('#assesment').selectpicker('refresh');
+                } else {
+                    swal('Abort',data.message, 'info');
+                    $('#batch_start').val('');
+                }
             },
             error: function (data) {
                 setTimeout(function () {
@@ -368,18 +394,6 @@ function viewcandidate(id) {
 
 
 <script>
-
-// console.log($.fn.dataTable.isDataTable( '#batchtable' ));
-
-// if ( $.fn.dataTable.isDataTable( '.batchtable' ) ) {
-//     var table = $('.batchtable').DataTable();
-// }
-// else {
-//     var table = $('.batchtable').DataTable();
-// }
-
-
-// $('#batchtable').destroy();
 
 var table = $('.batchtable').DataTable({
     dom: 'Bfrtip',
@@ -467,22 +481,15 @@ $('#form_addbatch').on('submit', function(e){
 
         var count = $('input[name^="id"]', form).length;
         // if (count < 10) {
-        //    swal('Abort','You need to choose atleast 10 Candidates', 'info');
+        //    swal('Attention','You need to choose atleast 10 Candidates', 'info');
         // } else if (count > 30) {
-        //     swal('Abort','You can choose atmost 30 Candidates', 'info');
+        //     swal('Attention','You can choose atmost 30 Candidates', 'info');
         // } else {
             $('#form_addbatch').unbind().submit();
         // }
-
         
-            // FOR DEMONSTRATION ONLY     
-            
-            // Output form data to a console     
-        //   $('.batchtable-console').text($(form).serialize());
-            // console.log("Form submission", $(form).serialize());
-            
-            // Remove added elements
-            $('input[name^="id"]', form).remove();
+        // Remove added elements
+        $('input[name^="id"]', form).remove();
     }
     
 

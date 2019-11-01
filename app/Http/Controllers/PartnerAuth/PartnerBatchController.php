@@ -51,9 +51,14 @@ class PartnerBatchController extends Controller
     }
     
     public function addbatch(){
+        $hds = Holiday::all();
+        $holidays = [];
+        foreach ($hds as $hd) {
+            array_push($holidays, $hd->holiday_date);
+        }
         $data = [
             'partner' => $this->guard()->user(),
-            'hours' => Config::get('constants.hours')
+            'holidays' => $holidays
         ];
 
         return view('partner.batches.addbatch')->with($data);
@@ -147,31 +152,61 @@ class PartnerBatchController extends Controller
 
 
             /* Validation Rules */
+            // startdate, starttime, hour, jobrole
             /* End Validation Rules */
 
-            $startdate = $request->startdate;
             $jobrole = PartnerJobrole::find($request->jobrole);
             if ($jobrole) {
                 $total_hours = $jobrole->jobrole->hours;
-
-                $total_days = $total_hours / $request->hour;
-        
-                
-                $start_date = Carbon::parse($request->startdate);
-                $end_date_approx = $start_date->copy()->addDays($total_days);
+                /* Custom Holiday List */
                 $hds = Holiday::all();
                 $holidays = [];
                 foreach ($hds as $hd) {
-                    array_push($holidays, $hd->holiday_date);
+                    array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
                 }
-                $end_date = $end_date_approx->copy();
-                for($date = $start_date->copy(); $date->lte($end_date_approx); $date->addDay()) {
+                /* End Custom Holiday List */
+
+
+                        
+                $total_days = ceil($total_hours/$request->hour);
+
+
+                $start_date = Carbon::parse($request->startdate);
+                // $end_date_approx = $start_date->copy()->addDays($total_days-1);
+                
+                            
+                if ($start_date->isWeekend() || in_array($start_date->toDateString(), $holidays)) {
+                    return response()->json(['success' => false, 'message' => 'Start Date Cannot be on a Holiday'],200);                    
+                }
+                // $end_date = $end_date_approx->copy();
+                
+                $date = $start_date->copy(); // 15-11-2019
+                $count = 0;
+                while ($count <= ($total_days-1)) {
                     if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
-                        // echo $date->toDateString().'<br>';
-                        $end_date->addDay();
+                        while ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
+                            $date->addDay();
+                        }
+                    } else {
+                        $count ++;
+                        $date->addDay();
+                    }
+
+                }
+                
+                $end_date = $date->subDay();
+
+                $assesment_dates = [];             
+
+                for ($edate = $end_date->copy()->addDay(); sizeof($assesment_dates) < 5 ; $edate->addDay()) { 
+                    if ($edate->isWeekend() || in_array($edate->toDateString(), $holidays)) {
+                        
+                    } else {
+                        array_push($assesment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y'));
                     }
                 }
-                return response()->json(['success' => true, 'enddate' => $end_date->toDateString()],200);
+
+                return response()->json(['success' => true,'assesment_dates' => $assesment_dates, 'enddate' => Carbon::parse($end_date->toDateString())->format('d-m-Y')],200);
             } else {
                 return response()->json(['success' => false],400);
             }
@@ -179,6 +214,13 @@ class PartnerBatchController extends Controller
     }
 
     public function submitbatch(Request $request){
+
+        dd($request);
+
+        /* Regex For Time */
+        // ((1[0-2]|0?[1-9]):([0-5][05]) ?([AaPp][Mm]))
+        /* End Regex For Time */
+
 
         $messsages = array(
             'scheme.required'=>'Please Choose a Scheme',
@@ -194,13 +236,14 @@ class PartnerBatchController extends Controller
             );
 
         $rules = array(
-            'scheme' => 'required',
-            'jobrole' => 'required',
-            'center' => 'required',
+            'scheme' => 'required|numeric',
+            'jobrole' => 'required|numeric',
+            'center' => 'required|numeric',
             'batch_start' => 'required',
+            'batch_hour' => 'required|numeric',
             'batch_end' => 'required',
             'assesment' => 'required',
-            'trainer' => 'required',
+            'trainer' => 'required|numeric',
             'id' => 'required|array|min:10|max:30',
         );
         $validator = Validator::make(Input::all(), $rules,$messsages);
