@@ -13,6 +13,7 @@ use App\CenterJobRole;
 use App\PartnerJobrole;
 use App\Notification;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use App\Partner;
 use App\Holiday;
 use Alert;
@@ -220,98 +221,6 @@ class PartnerHomeController extends Controller
                 return response()->json(['success' => true], 200);
             }
         }
-    }
-
-    public function test(){
-        // $holidays = ["2015-01-01", "2015-01-02"];
-
-        // $date = "12/31/14";
-        // $MyDateCarbon = Carbon::parse($date);
-
-        // $MyDateCarbon->addWeekdays(3);
-
-        // for ($i = 1; $i <= 3; $i++) {
-
-        //     if (in_array(Carbon::parse($date)->addWeekdays($i)->toDateString(), $holidays)) {
-
-        //         $MyDateCarbon->addDay();
-
-        //     }
-        // }
-
-        // dd($MyDateCarbon);
-    
-        // $date = "2019-10-20";
-        // $datework = new Carbon($date);
-        // $now = Carbon::now();
-        // $diff = $datework->diffInDays($now);
-        // return $diff;
-
-
-
-        $start_date = Carbon::parse('15-10-2019');
-        // $start_date = $start_date_exact->copy()->addDay();
-        $end_date_approx = $start_date->copy()->addDays(10);
-        // $end_date = $start_date->copy()->add(25, 'days');
-        // $end_date = Carbon::parse('30-09-2019');
-
-        // return $end_date;
-
-        // $dt2 = Carbon::create(2019, 10, 29);
-        // $date = '31-10-2019';
-        // echo $date.'<br>';
-        // $new = Carbon::parse($date);
-        // echo $new.'<br>';
-        // return 'hi';
-        $dates = [];
-        $hds = Holiday::all();
-        $holidays = [];
-        foreach ($hds as $hd) {
-            array_push($holidays, $hd->holiday_date);
-        }
-        $end_date = $end_date_approx->copy();
-        for($date = $start_date->copy(); $date->lte($end_date_approx); $date->addDay()) {
-            if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
-                echo $date->toDateString().'<br>';
-                $end_date->addDay();
-            }
-        }
-        return 'Start Date: '.$start_date->toDateString().'<br>Approx End Date: '.$end_date_approx->toDateString().'<br>End Date: '.$end_date->toDateString().'<br>';
-
-        
-
-        $daysForExtraCoding = $start_date->diffInDaysFiltered(function(Carbon $date) {
-        $hds = Holiday::all();
-        $holidays = [];
-        foreach ($hds as $hd) {
-            array_push($holidays, $hd->holiday_date);
-        }    
-            // echo $date->toDateString().'<br>';
-            // if (in_array($date->toDateString(), $holidays)) {
-            //     echo 'Present<br>';
-                
-            // } else {
-                
-            //     echo 'Not Present<br>';
-            // }
-    
-            if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
-                echo $date->toDateString().' Holiday<br>';
-                return false;
-            } else {
-                echo 'its Not<br>';
-                return true;
-            }
-    
-            
-            // return !$date->isWeekend();
-            // return false;
-        }, $end_date_approx);
-
-        return $daysForExtraCoding;
-    
-
-    
     }
 
 }

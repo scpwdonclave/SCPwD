@@ -106,6 +106,13 @@ $(function() {
     },
     "Please enter a valid Aadhaar Number"
   );
+  jQuery.validator.addMethod(
+    "time",
+    function(value, element) {
+      return this.optional(element) || /(1[0-2]|0?[1-9]):([0-5][05]) ?([AP][M])/.test(value);
+    },
+    "Please enter a valid Time"
+  );
 
   /* End Additional Methods for Validation  */
 });

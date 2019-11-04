@@ -51,13 +51,43 @@ class PartnerBatchController extends Controller
     }
     
     public function addbatch(){
+        $hds = Holiday::all();
+        $holidays = [];
+        foreach ($hds as $hd) {
+            array_push($holidays, $hd->holiday_date);
+        }
         $data = [
             'partner' => $this->guard()->user(),
-            'hours' => Config::get('constants.hours')
+            'holidays' => $holidays
         ];
 
         return view('partner.batches.addbatch')->with($data);
     }
+
+
+    public function trainer_availability($trainer_id, $starttime, $endtime){
+        $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
+
+        if ($trainer_batches) {
+            foreach ($trainer_batches as $trainer_batch) {
+                $start = Carbon::parse($trainer_batch->start_time); 
+                $end = Carbon::parse($trainer_batch->end_time); 
+                if ($starttime->lessThan($start)) {
+                    if (!$endtime->lessThanOrEqualTo($start)) {
+                        return false;
+                    }
+                } else {
+                    if (!$starttime->greaterThanOrEqualTo($end)) {
+                        return false;
+                    }                
+                }
+            }
+        } else {
+            return true;
+        }
+        return true;
+    }
+
 
     public function addbatch_api(Request $request){
         if ($request->has('schemeid')) {
@@ -93,12 +123,6 @@ class PartnerBatchController extends Controller
                     }
                 }
 
-                // $trainerjobs = TrainerJobRole::where([['scheme_id', $partnerJob->scheme_id],['sector_id', $partnerJob->sector_id],['jobrole_id', $partnerJob->jobrole_id]])->get();
-                // foreach ($trainerjobs as $trainerjob) {
-                //     if ($trainerjob->trainer->status && $trainerjob->trainer->ind_status && $trainerjob->trainer->verified) {
-                //         $filteredTrainers->push($trainerjob->trainer);
-                //     }
-                // }
             }
 
             
@@ -147,39 +171,80 @@ class PartnerBatchController extends Controller
 
 
             /* Validation Rules */
+            // startdate, starttime, hour, jobrole
             /* End Validation Rules */
 
-            $startdate = $request->startdate;
             $jobrole = PartnerJobrole::find($request->jobrole);
             if ($jobrole) {
                 $total_hours = $jobrole->jobrole->hours;
-
-                $total_days = $total_hours / $request->hour;
-        
-                
-                $start_date = Carbon::parse($request->startdate);
-                $end_date_approx = $start_date->copy()->addDays($total_days);
+                /* Custom Holiday List */
                 $hds = Holiday::all();
                 $holidays = [];
                 foreach ($hds as $hd) {
-                    array_push($holidays, $hd->holiday_date);
+                    array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
                 }
-                $end_date = $end_date_approx->copy();
-                for($date = $start_date->copy(); $date->lte($end_date_approx); $date->addDay()) {
+                /* End Custom Holiday List */
+
+
+                        
+                $total_days = ceil($total_hours/$request->hour);
+
+
+                $start_date = Carbon::parse($request->startdate);
+                // $end_date_approx = $start_date->copy()->addDays($total_days-1);
+                
+                            
+                if ($start_date->isWeekend() || in_array($start_date->toDateString(), $holidays)) {
+                    return response()->json(['success' => false, 'message' => 'Start Date Cannot be on a Holiday'],200);                    
+                }
+                // $end_date = $end_date_approx->copy();
+                
+                $date = $start_date->copy(); // 15-11-2019
+                $count = 0;
+                while ($count <= ($total_days-1)) {
                     if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
-                        // echo $date->toDateString().'<br>';
-                        $end_date->addDay();
+                        while ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
+                            $date->addDay();
+                        }
+                    } else {
+                        $count ++;
+                        $date->addDay();
+                    }
+
+                }
+                
+                $end_date = $date->subDay();
+
+                $assesment_dates = [];             
+
+                for ($edate = $end_date->copy()->addDay(); sizeof($assesment_dates) < 5 ; $edate->addDay()) { 
+                    if ($edate->isWeekend() || in_array($edate->toDateString(), $holidays)) {
+                        
+                    } else {
+                        array_push($assesment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y'));
                     }
                 }
-                return response()->json(['success' => true, 'enddate' => $end_date->toDateString()],200);
+
+                return response()->json(['success' => true,'assesment_dates' => $assesment_dates, 'enddate' => Carbon::parse($end_date->toDateString())->format('d-m-Y')],200);
             } else {
                 return response()->json(['success' => false],400);
             }
         }
+
+        if ($request->has('starttime') && $request->has('trainer') && $request->has('hour')) {
+            $starttime = Carbon::parse($request->starttime);
+            $endtime = Carbon::parse($request->starttime)->add($request->hour.' hours');
+            
+            if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
+                return response()->json(['success' => true], 200);
+            } else {
+                return response()->json(['success' => false], 200);
+            }   
+        }
     }
 
-    public function submitbatch(Request $request){
 
+    public function submitbatch(Request $request){
         $messsages = array(
             'scheme.required'=>'Please Choose a Scheme',
             'jobrole.required'=>'Please Choose a Job role',
@@ -194,40 +259,56 @@ class PartnerBatchController extends Controller
             );
 
         $rules = array(
-            'scheme' => 'required',
-            'jobrole' => 'required',
-            'center' => 'required',
+            'scheme' => 'required|numeric',
+            'jobrole' => 'required|numeric',
+            'center' => 'required|numeric',
+            'batch_time' => ['required','regex:/(1[0-2]|0?[1-9]):([0-5][05]) ?([AP][M])/'],
+            'batch_hour' => ['required','regex:/^(?!4.5)[1-4]{1}([\.5]+)?$/'],
             'batch_start' => 'required',
             'batch_end' => 'required',
             'assesment' => 'required',
-            'trainer' => 'required',
-            'id' => 'required|array|min:10|max:30',
+            'trainer' => 'required|numeric',
+            // 'id' => 'required|array|min:10|max:30',
         );
         $validator = Validator::make(Input::all(), $rules,$messsages);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        DB::transaction(function() use ($request){
-            $batch = new Batch;
-            $batch->tp_id = $this->guard()->user()->id;
-            $batch->tr_id = $request->trainer;
-            $batch->tc_id = $request->center;
-            $batch->scheme_id = $request->scheme;
-            $batch->jobrole_id = $request->jobrole;
-            $batch->batch_start = $request->batch_start;
-            $batch->batch_end = $request->batch_end;
-            $batch->assesment = $request->assesment;
-            $batch->save();
 
-            foreach ($request->id as $value) {
-                $batchCandidate = new BatchCandidateMap;
-                $batchCandidate->candidate_id = $value;
-                $batchCandidate->bt_id = $batch->id; 
-                $batchCandidate->save();
-            }
-        });
-        alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
-        return redirect()->back();
+        $starttime_store = $request->batch_time;
+        $starttime = Carbon::parse($starttime_store);
+        $endtime = Carbon::parse($starttime_store)->add($request->batch_hour.' hours');
+        $endtime_store = $endtime->format('h:i A');
+
+        // dd($request);
+        if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
+            DB::transaction(function() use ($request,$starttime_store,$endtime_store){
+                $batch = new Batch;
+                $batch->tp_id = $this->guard()->user()->id;
+                $batch->tr_id = $request->trainer;
+                $batch->tc_id = $request->center;
+                $batch->scheme_id = $request->scheme;
+                $batch->jobrole_id = $request->jobrole;
+                $batch->start_time = $starttime_store;
+                $batch->end_time = $endtime_store;
+                $batch->batch_start = $request->batch_start;
+                $batch->batch_end = $request->batch_end;
+                $batch->assesment = $request->assesment;
+                $batch->save();
+    
+                foreach ($request->id as $value) {
+                    $batchCandidate = new BatchCandidateMap;
+                    $batchCandidate->bt_id = $batch->id; 
+                    $batchCandidate->candidate_id = $value;
+                    $batchCandidate->save();
+                }
+            });
+            alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
+            return redirect()->back();
+        } else {
+            alert()->error("The Selected Trainer isn't <span style='font-weight:bold;color:red'>Available</span> on Requested Time, Please Change Batch Time or choose another Trainer", 'Attention')->html()->autoclose(6000);
+            return redirect()->back();
+        }
     }
 }

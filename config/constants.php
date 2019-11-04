@@ -11,13 +11,34 @@ return [
     ],
 
     'hours' => [
-        '0' => '1 hour',
-        '1' => '1:30 hours',
-        '2' => '2 hours',
-        '3' => '2:30 hours',
-        '4' => '3 hours',
-        '5' => '3:30 hours',
-        '6' => '4 hours',
+        '0' => [
+            'val' => 1,
+            'text' => '1 hour'
+        ],
+        '1' => [
+            'val' => 1.5,
+            'text' => '1 hour 30 minutes'
+        ],
+        '2' => [
+            'val' => 2,
+            'text' => '2 hours'
+        ],
+        '3' => [
+            'val' => 2.5,
+            'text' => '2 hours 30 minutes'
+        ],
+        '4' => [
+            'val' => 3,
+            'text' => '3 hours'
+        ],
+        '5' => [
+            'val' => 3.5,
+            'text' => '3 hours 30 minutes'
+        ],
+        '6' => [
+            'val' => 4,
+            'text' => '4 hours'
+        ],
     ],
 
 ];
