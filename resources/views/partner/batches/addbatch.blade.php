@@ -163,11 +163,7 @@ table.dataTable thead th:first-child {
             datesDisabled: JSON.parse('<?php echo json_encode($holidays)?>'),
         });
 
-        // $('.time_picker .form-control').datepicker({
-        //     autoclose: true,
-        //     format: 'dd-mm-yyyy',
-        //     // endDate: new Date()
-        // });
+
         $('input.time_picker').timepicker({
             timeFormat: 'h:mm p',
             interval: 15,
@@ -181,15 +177,6 @@ table.dataTable thead th:first-child {
         });
 
 
-        // $('.date_range_picker_start .form-control').datepicker({
-        //     autoclose: true,
-        //     format: 'dd-mm-yyyy',
-        // });
-
-        // $('.date_range_picker_end .form-control').datepicker({
-        //     autoclose: true,
-        //     format: 'dd-mm-yyyy'
-        // });
 
         $('#batch_start')
         .datepicker()
@@ -479,21 +466,55 @@ $('#form_addbatch').on('submit', function(e){
             );
         });
 
+
         var count = $('input[name^="id"]', form).length;
         // if (count < 10) {
         //    swal('Attention','You need to choose atleast 10 Candidates', 'info');
         // } else if (count > 30) {
         //     swal('Attention','You can choose atmost 30 Candidates', 'info');
         // } else {
-            $('#form_addbatch').unbind().submit();
+
+            var starttime = $('#batch_time').val();
+            var hour = $('#batch_hour').val();
+            var trainer = $('select#trainer option:selected').val();
+            var _token= $('[name=_token]').val();
+
+            $.ajax({
+                method: 'post',
+                url: '{{route("partner.addbatch.api")}}',
+                data: {_token,trainer,starttime,hour},
+                success: function (data) {
+                    if (data.success) {
+                        $('#form_addbatch').unbind().submit();
+                        // Remove added elements
+                        $('input[name^="id"]', form).remove();
+                    } else {
+                        swal('Attention','The Selected Trainer is Pre-Occupied on This Time, Please Switch to another Trainer or Change Batch Time', 'info');
+                    }
+                },
+                error: function (data) {
+                    setTimeout(function () {
+                        swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                    }, 2000);
+                }
+            });
+
         // }
-        
-        // Remove added elements
-        $('input[name^="id"]', form).remove();
+
     }
     
 
 });
+
+    /* Custom Valiadtions */    
+    
+    jQuery("#form_addbatch").validate({
+            rules: {
+                batch_time: { time: true },
+            }
+        });
+    
+    /* End Custom Valiadtions */
 
 </script>
 @stop

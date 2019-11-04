@@ -15,8 +15,8 @@ class CreateBatchCandidateMapsTable extends Migration
     {
         Schema::create('batch_candidate_maps', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('candidate_id');
             $table->unsignedBigInteger('bt_id');
+            $table->unsignedBigInteger('candidate_id');
             $table->timestamps();
         });
     }

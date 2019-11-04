@@ -27,19 +27,20 @@
                                
                                 <tr>
                                     <th>#</th>
+                                    <th>Batch ID</th>
                                     @if (Request::segment(1)==='admin')
-                                        <th>Batch ID</th>
+                                        <th>Partner ID</th>
+                                        <th>Center ID</th>
+                                    @else
+                                        @if (Request::segment(1)==='partner')
+                                            <th>Center ID</th>
+                                        @endif
                                     @endif
-                                    <th>Partner ID</th>
-                                    <th>Center ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
-                                    @if (Request::segment(1)==='partner')
-                                        <th>Status</th>
-                                    @endif
+                                    <th>Status</th>
                                     <th>View</th>
-                                   
                                 </tr>
                                
                             </thead>
@@ -47,17 +48,19 @@
                                 @foreach ($data as $key=>$item)
                                 <tr>
                                 <td>{{$key+1}}</td>
+                                <td>{{is_null($item->batch_id)?'NULL':$item->batch_id}}</td>
                                 @if (Request::segment(1)==='admin')
-                                    <td>{{$item->batch_id}}</td>
-                                @endif 
-                                <td>{{$item->partner->tp_id}}</td>
-                                <td>{{$item->center->tc_id}}</td>
+                                    <td>{{$item->partner->tp_id}}</td>
+                                    <td>{{$item->center->tc_id}}</td>
+                                @else
+                                    @if (Request::segment(1)==='partner')
+                                        <td>{{$item->center->tc_id}}</td>
+                                    @endif
+                                @endif
                                 <td>{{$item->batch_start}}</td>
                                 <td>{{$item->batch_end}}</td>
                                 <td>{{$item->assesment}}</td>
-                                @if (Request::segment(1)==='partner')
-                                    <td class="text-{{($item->verified)?'success':'danger'}}">{{($item->verified)?'Verified':'Not Verified'}}</td>
-                                @endif
+                                <td class="text-{{($item->verified)?'success':'danger'}}">{{($item->verified)?'Verified':'Not Verified'}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                
                                 </tr>
