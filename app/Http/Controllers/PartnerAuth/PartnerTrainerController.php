@@ -43,7 +43,7 @@ class PartnerTrainerController extends Controller
     public function addtrainer_api(Request $request){
 
         if ($request->has('mobile')) {
-            $validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [ 
                 'email' => [
                     'required',
                     'email',

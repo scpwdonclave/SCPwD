@@ -174,13 +174,13 @@
                                 <div class="row">
                                         <div class="col-sm-4">
                                                 <small class="text-muted">State/Union Territory - District</small>
-                                                <p>{{$partnerData->state_district}}</p>
+                                                <p>{{$partnerState->state}} ({{$partnerState->district}})</p>
                                                 <hr>
                                         </div>
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Parliament Constituency</small>
-                                                <p>{{$partnerData->parliament}}</p>
+                                                <p>{{$partnerState->constituency}}</p>
                                                 <hr>
                                         </div>
                                         

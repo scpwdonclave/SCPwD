@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Trainer;
 use App\TrainerStatus;
 use App\TrainerJobRole;
+use App\Batch;
 use App\Notification;
 use App\Reason;
 use Auth;
@@ -137,17 +138,24 @@ class AdminTrainerController extends Controller
     public function trainerDlink(Request $request){
         $trainer=Trainer::findOrFail($request->id);
         $trainerStatus=TrainerStatus::where('prv_id',$request->id)->first();
+
+        $batch=Batch::where('tr_id',$request->id)->get();
+        if(count($batch)>0){
+            return response()->json(['status' => 'fail'],200);
+        }else{
+
         $trainerStatus->attached=0;        
         $trainerStatus->dlink_reason=$request->reason;   
         $trainerStatus->save();  
         $trainer->delete();   
         return response()->json(['status' => 'done'],200);
+        }
     }
 
     public function trainerDeactive(Request $request){
         $trainer=Trainer::findOrFail($request->id);
         $trainer->status=0;
-        $trainer->save();
+        $trainer->save(); 
 
         $reason = new Reason;
         $reason->rel_id = $trainer->id;

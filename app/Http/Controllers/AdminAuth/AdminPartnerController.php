@@ -95,13 +95,20 @@ class AdminPartnerController extends Controller
 
     public function partnerVerify($id){
 
-        $partnerData=Partner::findOrFail($id);
+        $partnerData=Partner::findOrFail($id); 
+        $partnerState=DB::table('partners')
+        ->join('state_district','partners.state_district','=','state_district.id')
+        ->join('parliament','partners.parliament','=','parliament.id')
+        ->first();
+
+        
+
         $centers=DB::table('centers')->where('tp_id',$id)->get();
         $partner_scheme=PartnerJobrole::where('tp_id',$id)
         ->groupBy('scheme_id')->get();
 
         if ($partnerData->complete_profile && $partnerData->status==1) {
-            return view('admin.partners.partner-verify')->with(compact('partnerData','centers','partner_scheme'));
+            return view('admin.partners.partner-verify')->with(compact('partnerData','partnerState','centers','partner_scheme'));
         } else {
             return redirect()->route('admin.tp.partners');
         }

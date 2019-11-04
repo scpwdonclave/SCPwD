@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Validator;
 use App\Notification;
 use App\Center;
 use App\Reason;
@@ -420,7 +422,7 @@ class AdminCenterController extends Controller
 
     public function centerApi(Request $request){
         if ($request->has('checkredundancy')) {
-            if ($request->has('id')) {
+            if ($request->has('id')) { 
                 if (Center::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
                     return response()->json(['success' => false], 200);
                 } else {

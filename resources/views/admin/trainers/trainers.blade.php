@@ -241,6 +241,8 @@ function dlink(f) {
         url: "{{route('admin.tr.trainer.dlink')}}",
         data: {_token,id,reason},
         success: function(data) {
+            //console.log(data.status);
+            if(data.status=='done'){
             swal({
             title: "DeLink",
             text: "Trainer Record DeLinked",
@@ -248,7 +250,17 @@ function dlink(f) {
             showConfirmButton: true
             },function(isConfirm){
                 if (isConfirm){location.reload();} 
-            });
+             });
+            }else{
+                swal({
+            title: "DeLink Failed",
+            text: "Trainer Record Linked with Some Batch",
+            type:"warning", 
+            showConfirmButton: true
+            },function(isConfirm){
+                if (isConfirm){location.reload();} 
+             });
+            }
         }
     });
     });

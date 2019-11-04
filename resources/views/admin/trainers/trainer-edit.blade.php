@@ -78,7 +78,7 @@
                                             <div class="col-sm-3">
                                                 <label for="name">Trainer Name *</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Trainer Name" value="{{$trainer->name}}" name="name" required>
+                                                    <input type="text" class="form-control" placeholder="Trainer Name" value="{{$trainer->name}}" name="name" required> 
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">

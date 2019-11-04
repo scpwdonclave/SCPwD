@@ -62,7 +62,7 @@ Route::get('trainer/trainer-verify/{id}', 'AdminAuth\AdminTrainerController@trai
 Route::post('trainer/trainer-reject', 'AdminAuth\AdminTrainerController@trainerReject')->name('tr.reject.trainer');
 Route::post('trainer/trainer-dlink', 'AdminAuth\AdminTrainerController@trainerDlink')->name('tr.trainer.dlink');
 Route::post('trainer/trainer-deactive', 'AdminAuth\AdminTrainerController@trainerDeactive')->name('tr.trainer.deactive');
-Route::get('trainer/trainer-deactive/{id}', 'AdminAuth\AdminTrainerController@trainerActive')->name('tr.trainer.active');
+Route::get('trainer/trainer-active/{id}', 'AdminAuth\AdminTrainerController@trainerActive')->name('tr.trainer.active');
 Route::post('trainer/dlink-trainer-deactive', 'AdminAuth\AdminTrainerController@dlinkTrainerDeactive')->name('tr.dlink.trainer.deactive');
 Route::get('trainer/dlink-trainer-active/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerActive')->name('tr.dlink.trainer.active');
 Route::get('trainer/trainer-edit/{id}', 'AdminAuth\AdminTrainerController@trainerEdit')->name('tr.edit.trainer');
@@ -78,4 +78,9 @@ Route::post('batches/batch-reject', 'AdminAuth\AdminBatchController@batchReject'
 
 /* Agencies */
 Route::get('agency/agencies', 'AdminAuth\AdminAgencyController@agencies')->name('agency.agencies');
-Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@addAgency')->name('aa.add-agency');
+Route::get('agency/add-agency', 'AdminAuth\AdminAgencyController@addAgency')->name('aa.add-agency');
+Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@insertAgency')->name('aa.insert-agency');
+Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDeactive')->name('aa.agency.deactive');
+Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
+Route::get('agency/agency-view/{id}', 'AdminAuth\AdminAgencyController@agencyView')->name('aa.agency.view');
+Route::post('agency/agency-api', 'AdminAuth\AdminAgencyController@agencyApi')->name('aa.agency.api');

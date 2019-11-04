@@ -4,6 +4,16 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use App\Mail\AAConfirmationMail;
+use App\Agency;
+use App\Reason;
+use App\AgencySector;
+use Validator;
+use Crypt;
+use DB;
+use Mail;
 
 class AdminAgencyController extends Controller
 {
@@ -18,11 +28,179 @@ class AdminAgencyController extends Controller
     }
 
     public function agencies(){
+        $data=Agency::where('status',1)->get();
+        $deactiveData=Agency::where('status',0)->get();
+        return view('admin.agencies.agencies')->with(compact('data','deactiveData'));
+     }
 
-        return view('admin.agencies.agency');
+    public function addAgency(){
+         $states=DB::table('state_district')->get();
+        $parliaments=DB::table('parliament')->get();
+        $sectors=DB::table('sectors')->get();
+        return view('admin.agencies.addagency')->with(compact('states','parliaments','sectors'));
+    }
+    public function insertAgency(Request $request){
+        $data=DB::table('agencies')
+        ->select(\DB::raw('SUBSTRING(aa_id,3) as aa_id'))
+        ->where("aa_id", "LIKE", "AA%")->get();
+       // dd(count($data));
+        $year = date('Y');
+        if (count($data) > 0) {
+
+            $priceprod = array();
+                foreach ($data as $key=>$data) {
+                    $priceprod[$key]=$data->aa_id;
+                }
+                $lastid= max($priceprod);
+               
+                $new_aaid = (substr($lastid, 0, 4)== $year) ? 'AA'.($lastid + 1) : 'AA'.$year.'000001' ;
+            //dd($new_tpid);
+        } else {
+            $new_aaid = 'AA'.$year.'000001';
+        }
+
+        $agency_password = str_random(8);
+
+        $agency = new Agency;
+        $agency->aa_id=$new_aaid;
+        $agency->password=Hash::make($agency_password);
+        $agency->agency_name=$request->agency_name;
+        $agency->org_type=$request->org_type;	
+        $agency->org_id	=$request->org_id;
+        $agency->sla_date=$request->sla_date;	
+        $agency->sla_end_date=$request->sla_end_date;
+        $agency->ceo_name=$request->ceo_name;	
+        $agency->aadhaar_no	=$request->aadhaar_no;
+        $agency->ceo_email=$request->ceo_email;	
+        $agency->ceo_mobile	=$request->ceo_mobile;
+        $agency->gender	=$request->gender;
+        $agency->ceo_designation=$request->ceo_designation;	
+        $agency->ceo_landline=$request->ceo_landline;	
+        $agency->spoc_name=$request->spoc_name;	
+        $agency->spoc_aadhaar_no=$request->spoc_aadhaar_no;	
+        $agency->email=$request->email;
+        $agency->mobile=$request->mobile;	
+        $agency->spoc_gender=$request->spoc_gender;	
+        $agency->spoc_designation=$request->spoc_designation;	
+        $agency->spoc_landline=$request->spoc_landline;	
+        $agency->org_address=$request->org_address;	
+        $agency->post_office=$request->post_office;	
+        $agency->state_district	=$request->state_district;
+        $agency->parliament	=$request->parliament;
+        $agency->city=$request->city;	
+        $agency->sub_district=$request->sub_district;	
+        $agency->pin=$request->pin;	
+        $agency->landline=$request->landline;	
+        $agency->website=$request->website;	
+        $agency->save();
+
+        foreach ($request->sector as $sector) {
+            $agencySector = new AgencySector;
+            $agencySector->aa_id=$agency->id;
+            $agencySector->sector=$sector;
+            $agencySector->save();
+
+        }
+
+        $agency['password']=$agency_password;
+        Mail::to($agency['email'])->send(new AAConfirmationMail($agency));
+
+        alert()->success('Assessment Agency has been Registered', 'Job Done')->autoclose(3000);
+        return Redirect()->back();
 
     }
-    public function addAgency(Request $request){
-        dd($request);
+
+    public function agencyView($id){
+        $agency=Agency::findOrFail($id);
+        return view('admin.agencies.view-agency')->with(compact('agency'));
+    }
+
+    public function agencyDeactive(Request $request){
+        $agency=Agency::findOrFail($request->id);
+        $agency->status=0;
+        $agency->save();
+
+        $reason = new Reason;
+        $reason->rel_id = $agency->id;
+        $reason->rel_with = 'agency';
+        $reason->reason = $request->reason;
+        $reason->save();
+
+        return response()->json(['status' => 'done'],200);
+    }
+
+    public function agencyActive($id){
+        $aa_id = Crypt::decrypt($id);
+        $agency=Agency::findOrFail($aa_id);
+        $agency->status=1;
+        $agency->save();
+
+        alert()->success('Assessment Agency has been Activated', 'Job Done')->autoclose(3000);
+        return Redirect()->back();
+    }
+
+    public function agencyApi(Request $request){
+
+        if ($request->section=='mobile') {
+            $validator = Validator::make($request->all(), [ 
+              
+                'checkredundancy' => [
+                    'required',
+                    'numeric',
+                    'unique:trainers,mobile',
+                    'unique:partners,spoc_mobile',
+                    'unique:centers,mobile',
+                    'unique:trainer_statuses,mobile',
+                    'unique:agencies,mobile',
+                ],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors'=>$validator->errors()]);
+            } else {
+                return response()->json(['success' => true], 200);
+            }
+        
+        }
+        else if ($request->section=='email') {
+            $validator = Validator::make($request->all(), [ 
+              
+                'checkredundancy' => [
+                    'required',
+                    'unique:trainers,email',
+                    'unique:partners,email',
+                    'unique:centers,email',
+                    'unique:trainer_statuses,email',
+                    'unique:agencies,email',
+                ],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors'=>$validator->errors()]);
+            } else {
+                return response()->json(['success' => true], 200);
+            }
+        
+        }
+        else if ($request->section=='spoc_aadhaar_no') {
+            $validator = Validator::make($request->all(), [ 
+              
+                'checkredundancy' => [
+                    'required',
+                    'unique:trainers,doc_no',
+                    'unique:trainer_statuses,doc_no',
+                    'unique:agencies,spoc_aadhaar_no',
+                    
+                ],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors'=>$validator->errors()]);
+            } else {
+                return response()->json(['success' => true], 200);
+            }
+        
+        }
+
     }
 }
