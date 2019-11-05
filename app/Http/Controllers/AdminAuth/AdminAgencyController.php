@@ -35,7 +35,7 @@ class AdminAgencyController extends Controller
      }
 
     public function addAgency(){
-         $states=DB::table('state_district')->get();
+        $states=DB::table('state_district')->get();
         $parliaments=DB::table('parliament')->get();
         $sectors=DB::table('sectors')->get();
         return view('admin.agencies.addagency')->with(compact('states','parliaments','sectors'));
@@ -70,20 +70,23 @@ class AdminAgencyController extends Controller
         $agency->org_id	=$request->org_id;
         $agency->sla_date=$request->sla_date;	
         $agency->sla_end_date=$request->sla_end_date;
+
         $agency->ceo_name=$request->ceo_name;	
-        $agency->aadhaar_no	=$request->aadhaar_no;
+        $agency->ceo_aadhaar=$request->ceo_aadhaar;
         $agency->ceo_email=$request->ceo_email;	
         $agency->ceo_mobile	=$request->ceo_mobile;
-        $agency->gender	=$request->gender;
+        $agency->ceo_gender	=$request->ceo_gender;
         $agency->ceo_designation=$request->ceo_designation;	
-        $agency->ceo_landline=$request->ceo_landline;	
-        $agency->spoc_name=$request->spoc_name;	
-        $agency->spoc_aadhaar_no=$request->spoc_aadhaar_no;	
+        $agency->ceo_landline=$request->ceo_landline;
+
+        $agency->name=$request->name;	
+        $agency->aadhaar=$request->aadhaar;	
         $agency->email=$request->email;
         $agency->mobile=$request->mobile;	
-        $agency->spoc_gender=$request->spoc_gender;	
-        $agency->spoc_designation=$request->spoc_designation;	
-        $agency->spoc_landline=$request->spoc_landline;	
+        $agency->gender=$request->gender;	
+        $agency->designation=$request->designation;	
+        $agency->landline=$request->landline;
+
         $agency->org_address=$request->org_address;	
         $agency->post_office=$request->post_office;	
         $agency->state_district	=$request->state_district;
@@ -91,7 +94,7 @@ class AdminAgencyController extends Controller
         $agency->city=$request->city;	
         $agency->sub_district=$request->sub_district;	
         $agency->pin=$request->pin;	
-        $agency->landline=$request->landline;	
+        $agency->org_landline=$request->org_landline;	
         $agency->website=$request->website;	
         $agency->save();
 
@@ -204,14 +207,14 @@ class AdminAgencyController extends Controller
             }
         
         }
-        else if ($request->section=='spoc_aadhaar_no') {
+        else if ($request->section=='aadhaar') {
             $validator = Validator::make($request->all(), [ 
               
                 'checkredundancy' => [
                     'required',
                     'unique:trainers,doc_no',
                     'unique:trainer_statuses,doc_no',
-                    'unique:agencies,spoc_aadhaar_no',
+                    'unique:agencies,aadhaar',
                     
                 ],
             ]);

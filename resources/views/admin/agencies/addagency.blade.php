@@ -56,16 +56,16 @@
                                                 <div class="panel-body">
                                                     <div class="row d-flex justify-content-around">
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_name">SPOC Name *</label>
+                                                            <label for="name">SPOC Name *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Name"  name="spoc_name" required>
+                                                                <input type="text" class="form-control" placeholder="SPOC Name"  name="name" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_aadhaar_no">SPOC Aadhaar *</label>
+                                                            <label for="aadhaar">SPOC Aadhaar *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('spoc_aadhaar_no')" placeholder="Enter Aadhaar No" name="spoc_aadhaar_no" required>
-                                                                <span id="spoc_aadhaar_no_error" style="color:red"></span>
+                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('aadhaar')" placeholder="Enter Aadhaar No" name="aadhaar" required>
+                                                                <span id="aadhaar_error" style="color:red"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -86,7 +86,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_gender">SPOC Gender *</label>
+                                                            <label for="gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
                                                                     <option value="Male">Male</option>
@@ -96,15 +96,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_designation">SPOC Designation *</label>
+                                                            <label for="designation">SPOC Designation *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Designation"  name="spoc_designation" required>
+                                                                <input type="text" class="form-control" placeholder="Designation"  name="designation" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_landline">SPOC Landline Number</label>
+                                                            <label for="landline">SPOC Landline Number</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Landline"  name="spoc_landline">
+                                                                <input type="text" class="form-control" placeholder="Landline No"  name="landline">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -195,9 +195,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="aadhaar_no">Aadhaar *</label>
+                                                    <label for="ceo_aadhaar">Aadhaar *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="aadhaar_no" required>
+                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="ceo_aadhaar" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -216,12 +216,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="gender">Gender *</label>
+                                                    <label for="ceo_gender">Gender *</label>
                                                     <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                            <option value="male">Male</option>
-                                                            <option value="female">Female</option>
-                                                            <option value="other">Other</option>
+                                                        <select class="form-control show-tick" data-live-search="true" name="ceo_gender" data-dropup-auto='false' required>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                            <option value="Transgender">Transgender</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -234,7 +234,7 @@
                                                 <div class="col-sm-3">
                                                     <label for="ceo_landline">Landline Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Landline"  name="ceo_landline">
+                                                        <input type="text" class="form-control" placeholder="Landline No"  name="ceo_landline">
                                                     </div>
                                                 </div>
                                             </div>
@@ -310,9 +310,9 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="landline">Landline</label>
+                                                    <label for="org_landline">Landline</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Landline Number"  name="landline"  >
+                                                        <input type="text" class="form-control" placeholder="Landline No"  name="org_landline"  >
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -389,10 +389,11 @@
     
     jQuery("#form2").validate({
             rules: {
-            
-            spoc_aadhaar_no: { aadhaar: true },
-            aadhaar_no: { aadhaar: true },
-            "[type=email]": { email: true }
+                aadhaar: { aadhaar: true },
+                website: { website: true },
+                pin: { pin: true },
+                ceo_aadhaar: { aadhaar: true },
+                "[type=email]": { email: true }
             }
         });
     
@@ -417,9 +418,9 @@ function yearAdd(){
         var dup_mobile_tag = false;
         var dup_aadhaar_tag = false;
         function checkduplicacy(val){
-         dup_email_tag = true;
-         dup_mobile_tag = true;
-         dup_aadhaar_tag = true;
+        dup_email_tag = true;
+        dup_mobile_tag = true;
+        dup_aadhaar_tag = true;
             var _token = $('[name=_token]').val();
             
             let value = $('[name='+val+']').val();
@@ -441,7 +442,7 @@ function yearAdd(){
                             dup_aadhaar_tag = true;
                         }
                     } else {
-                        if(val=='spoc_aadhaar_no'){
+                        if(val=='aadhaar'){
 
                         $('#'+val+'_error').html('Aadhaar already exists');
                         }else{

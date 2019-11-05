@@ -21,6 +21,10 @@
                                 <h4>{{Auth::guard('center')->user()->spoc_name}}</h4>
                                 <p class="m-b-0">{{Auth::guard('center')->user()->tc_id}}</p>
                                 @break
+                             @case('agency')
+                                <h4>{{Auth::guard('agency')->user()->name}}</h4>
+                                <p class="m-b-0">{{Auth::guard('agency')->user()->aa_id}}</p>
+                                @break
                             @default
                         @endswitch
                     </div>
@@ -31,7 +35,9 @@
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
-                    <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.jobroles')}}">Job Roles</a></li>
+                    @if (Request::segment(1) != 'agency')
+                        <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.jobroles')}}">Job Roles</a></li>
+                    @endif
                     
                     @if (Request::segment(1) === 'admin')
                         
@@ -103,7 +109,13 @@
                     <li class="{{ Request::segment(2)==='candidates' ? 'active open' : (Request::is('center/add-candidate') ? 'active open' : null) }}"><a href="{{route('center.candidates')}}"><i class="zmdi zmdi-account-box"></i><span>Candidates</span></a></li>
                 @endif
             @endauth
-            @if (Request::segment(1) != 'admin')
+
+            @auth('agency')
+                @if (Request::segment(1) === 'agency')
+                    
+                @endif
+            @endauth
+            @if (Request::segment(1) != 'admin' && Request::segment(1) != 'agency')
                 <li class="{{ Request::segment(2)==='batches' ? 'active open' : (Request::is('partner/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
             @endif
         </ul>

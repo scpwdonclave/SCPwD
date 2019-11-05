@@ -10,6 +10,7 @@
 <div class="container-fluid home">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12">
+            @if (Request::segment(1) != 'agency')
             <div class="card">
                 <div class="header">
                     <h2><strong>My</strong> Profile</h2>
@@ -92,6 +93,7 @@
                     </form>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>

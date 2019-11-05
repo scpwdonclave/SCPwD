@@ -29,13 +29,13 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">SPOC Name</small>
-                                        <p>{{$agency->spoc_name}}</p>
+                                        <p>{{$agency->name}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">SPOC Aadhaar No</small>
-                                        <p>{{$agency->spoc_aadhaar_no}}</p>
+                                        <p>{{$agency->aadhaar}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
@@ -53,13 +53,13 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">SPOC Gender</small>
-                                        <p>{{$agency->spoc_gender}}</p>
+                                        <p>{{$agency->gender}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">SPOC Designation</small>
-                                        <p>{{$agency->spoc_designation}}</p>
+                                        <p>{{$agency->designation}}</p>
                                         <hr>
                                     </div>
                 
@@ -67,7 +67,7 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">SPOC Landline</small>
-                                        <p>{{$agency->spoc_landline}}</p>
+                                        <p>{{$agency->landline}}</p>
                                         <hr>
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">CEO Aadhaar no</small>
-                                                <p>{{$agency->aadhaar_no}}</p>
+                                                <p>{{$agency->ceo_aadhaar}}</p>
 
                                                 <hr>
                                         </div>
@@ -180,7 +180,7 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Gender</small>
-                                                <p>{{$agency->gender}}</p>
+                                                <p>{{$agency->ceo_gender}}</p>
 
                                                 <hr>
                                         </div>
@@ -255,7 +255,7 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Landline</small>
-                                                <p>{{$agency->landline}}</p>
+                                                <p>{{$agency->org_landline}}</p>
 
                                                 <hr>
                                         </div>
