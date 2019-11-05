@@ -91,7 +91,7 @@
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
                                                                     <option value="male">Male</option>
                                                                     <option value="female">Female</option>
-                                                                    <option value="other">Other</option>
+                                                                    <option value="transgender">Transgender</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -221,7 +221,7 @@
                                                         <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                             <option value="male">Male</option>
                                                             <option value="female">Female</option>
-                                                            <option value="other">Other</option>
+                                                            <option value="transgender">Transgender</option>
                                                         </select>
                                                     </div>
                                                 </div>
