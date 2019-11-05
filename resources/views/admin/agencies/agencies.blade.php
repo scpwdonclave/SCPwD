@@ -22,9 +22,9 @@
                                             <tr>
                                             <th>#</th>
                                             <th>Agency ID</th>
-                                            <th>Spoc Name</th>
-                                            <th>Spoc Email</th>
-                                            <th>Spoc Mobile</th>
+                                            <th>SPOC Name</th>
+                                            <th>SPOC Email</th>
+                                            <th>SPOC Mobile</th>
                                             <th>View</th>
                                             <th>Action</th>
                                         </tr>
@@ -35,7 +35,7 @@
                                             <tr>
                                             <td>{{$key+1}}</td>
                                             <td>{{$item->aa_id}}</td>
-                                            <td>{{$item->spoc_name}}</td>
+                                            <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>$item->id])}}" >View</a></td>
@@ -72,9 +72,9 @@
                                         <tr>
                                         <th>#</th>
                                         <th>Agency ID</th>
-                                        <th>Spoc Name</th>
-                                        <th>Spoc Email</th>
-                                        <th>Spoc Mobile</th>
+                                        <th>SPOC Name</th>
+                                        <th>SPOC Email</th>
+                                        <th>SPOC Mobile</th>
                                         <th>View</th>
                                         <th>Action</th>
                                     </tr>
@@ -85,7 +85,7 @@
                                         <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$item->aa_id}}</td>
-                                        <td>{{$item->spoc_name}}</td>
+                                        <td>{{$item->name}}</td>
                                         <td>{{$item->email}}</td>
                                         <td>{{$item->mobile}}</td>
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>$item->id])}}" >View</a></td>
