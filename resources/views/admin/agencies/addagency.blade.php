@@ -413,10 +413,13 @@ function yearAdd(){
 }
 
 /* Check Redundancy */
+        var dup_email_tag = false;
+        var dup_mobile_tag = false;
+        var dup_aadhaar_tag = false;
+        function checkduplicacy(val){
         var dup_email_tag = true;
         var dup_mobile_tag = true;
         var dup_aadhaar_tag = true;
-        function checkduplicacy(val){
             var _token = $('[name=_token]').val();
             
             let value = $('[name='+val+']').val();
