@@ -83,4 +83,5 @@ Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@insertAgency')
 Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDeactive')->name('aa.agency.deactive');
 Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
 Route::get('agency/agency-view/{id}', 'AdminAuth\AdminAgencyController@agencyView')->name('aa.agency.view');
+Route::get('agency/agency-edit/{id}', 'AdminAuth\AdminAgencyController@agencyEdit')->name('aa.edit.agency');
 Route::post('agency/agency-api', 'AdminAuth\AdminAgencyController@agencyApi')->name('aa.agency.api');

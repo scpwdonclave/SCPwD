@@ -113,7 +113,24 @@ class AdminAgencyController extends Controller
 
     public function agencyView($id){
         $agency=Agency::findOrFail($id);
-        return view('admin.agencies.view-agency')->with(compact('agency'));
+        $agencyState=DB::table('agencies')
+        ->join('state_district','agencies.state_district','=','state_district.id')
+        ->join('parliament','agencies.parliament','=','parliament.id')
+        ->first();
+        return view('admin.agencies.view-agency')->with(compact('agency','agencyState'));
+    }
+
+    public function agencyEdit($id){
+        try {
+            $aa_id = Crypt::decrypt($id);
+         } catch (DecryptException $e) {
+             abort(404);
+         }
+         $agency=Agency::findOrFail($aa_id);
+         $states=DB::table('state_district')->get();
+         $parliaments=DB::table('parliament')->get();
+         $sectors=DB::table('sectors')->get();
+         return view('admin.agencies.agency-edit')->with(compact('agency','states','parliaments','sectors'));
     }
 
     public function agencyDeactive(Request $request){

@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Agency Registration')
+@section('title', 'Agency Edit')
 @section('page-style')
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
@@ -31,8 +31,8 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>Agency</strong> Registration</h2>
-                <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.agency.agencies')}}">My Agencies</a> 
+                    <h2><strong>Agency</strong> Edit</h2>
+                {{-- <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.agency.agencies')}}">My Agencies</a>  --}}
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -58,20 +58,20 @@
                                                         <div class="col-sm-4">
                                                             <label for="spoc_name">SPOC Name *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Name"  name="spoc_name" required>
+                                                            <input type="text" class="form-control" placeholder="SPOC Name" value="{{$agency->spoc_name}}" name="spoc_name" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <label for="spoc_aadhaar_no">SPOC Aadhaar *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('spoc_aadhaar_no')" placeholder="Enter Aadhaar No" name="spoc_aadhaar_no" required>
+                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" value="{{$agency->spoc_aadhaar_no}}" onchange="checkduplicacy('spoc_aadhaar_no')" placeholder="Enter Aadhaar No" name="spoc_aadhaar_no" required>
                                                                 <span id="spoc_aadhaar_no_error" style="color:red"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <label for="spoc_email">SPOC Email Address *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
+                                                                <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" value="{{$agency->email}}" name="email" required>
                                                                 <span id="email_error" style="color:red"></span>
                                                             </div>
                                                         </div>
@@ -81,7 +81,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="spoc_mobile">SPOC Mobile Number *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                                <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" value="{{$agency->mobile}}" name="mobile" required>
                                                                 <span id="mobile_error" style="color:red"></span>
                                                             </div>
                                                         </div>
@@ -89,22 +89,22 @@
                                                             <label for="spoc_gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
-                                                                    <option value="Male">Male</option>
-                                                                    <option value="Female">Female</option>
-                                                                    <option value="Transgender">Transgender</option>
+                                                                    <option value="Male" {{ ( $agency->spoc_gender =="Male") ? 'selected' : '' }}>Male</option>
+                                                                    <option value="Female" {{ ( $agency->spoc_gender =="Female") ? 'selected' : '' }}>Female</option>
+                                                                    <option value="Transgender" {{ ( $agency->spoc_gender =="Transgender") ? 'selected' : '' }}>Transgender</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <label for="spoc_designation">SPOC Designation *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Designation"  name="spoc_designation" required>
+                                                                <input type="text" class="form-control" placeholder="SPOC Designation" value="{{$agency->spoc_designation}}"  name="spoc_designation" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
                                                             <label for="spoc_landline">SPOC Landline Number</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Landline"  name="spoc_landline">
+                                                                <input type="text" class="form-control" placeholder="SPOC Landline"  value="{{$agency->spoc_landline}}" name="spoc_landline">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +123,7 @@
                                                 <div class="col-sm-3">
                                                     <label for="agency_name">Assesment Agency Name * </label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name of the Agency"  name="agency_name" required>
+                                                        <input type="text" class="form-control" placeholder="Name of the Agency" value="{{$agency->spoc_landline}}" name="agency_name" required>
                                                        
                                                     </div>
                                                 </div>
@@ -417,9 +417,9 @@ function yearAdd(){
         var dup_mobile_tag = false;
         var dup_aadhaar_tag = false;
         function checkduplicacy(val){
-         dup_email_tag = true;
-         dup_mobile_tag = true;
-         dup_aadhaar_tag = true;
+        var dup_email_tag = true;
+        var dup_mobile_tag = true;
+        var dup_aadhaar_tag = true;
             var _token = $('[name=_token]').val();
             
             let value = $('[name='+val+']').val();
@@ -469,7 +469,8 @@ function yearAdd(){
     /* End Check Redundancy */
 
     function myFunction2(){
-         if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
+        
+        if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
            
             return false;
         }

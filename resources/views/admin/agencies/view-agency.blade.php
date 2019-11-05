@@ -114,8 +114,8 @@
                                 
                             </div>
                         </li>
-                        {{-- <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Trainer Job Role</span></time>
+                        <li>
+                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Agency Sector</span></time>
                             <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-pin"></i></div>
                             <div class="cbp_tmlabel">
                                     <div class="table-responsive">
@@ -123,18 +123,17 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Scheme</th>
+                                                        
                                                         <th>Sector</th>
-                                                        <th>Job</th>
+                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($agency->jobroles[0]->schemes as $key=>$scheme)
+                                                    @foreach ($agency->agencySector as $key=>$item)
                                                     <tr>
                                                         <td>{{$key+1}}</td>
-                                                        <td>{{$scheme->scheme->scheme}}</td>
-                                                        <td >{{$agency->jobroles[0]->sector->sector}}</td>
-                                                        <td>{{$agency->jobroles[0]->jobrole->job_role}}</td>
+                                                        <td>{{$item->sectors->sector}}</td>
+                                                       
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
@@ -143,7 +142,7 @@
                                
                                 
                             </div>
-                        </li> --}}
+                        </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>CEO/Head of the Organization Details
                             </span></time>
@@ -202,7 +201,7 @@
                         </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Address of The Organization</span></time>
-                            <div class="cbp_tmicon bg-yellow"> <i class="zmdi zmdi-local-store"></i></div>
+                            <div class="cbp_tmicon bg-red"> <i class="zmdi zmdi-local-store"></i></div>
                             <div class="cbp_tmlabel">
                                 
                                     <div class="row">
@@ -221,7 +220,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">State - District</small>
-                                                <p>{{$agency->state_district}}</p>
+                                                <p>{{$agencyState->state}} ({{$agencyState->district}})</p>
                                                 <hr>
                                         </div>
                                        
@@ -229,7 +228,7 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <small class="text-muted">Parliament Constituency </small>
-                                            <p>{{$agency->parliament}}</p>
+                                            <p>{{$agencyState->constituency}} ({{$agencyState->state_ut}})</p>
                                           
                                             <hr>
                                         </div>
@@ -270,20 +269,11 @@
                             </div>
                         </li>
                     </ul>
-                    {{-- @auth('admin')
+                    
                         <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
-                                @if (is_null($agency->attached))
-                                    @if (!$agency->verified )
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($agency->id) ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                                    @elseif ( $agency->verified==1)
-                                        <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($agency->id) ])}}'">Edit</button>                         
-                                    @endif
-                                @endif
-                            @endif
+                                <button class="btn" onclick="location.href='{{route('admin.aa.edit.agency',['aa_id' => Crypt::encrypt($agency->id) ])}}'">Edit</button>                         
                         </div>
-                    @endauth --}}
+                    
                 </div>
             </div>
         </div>
