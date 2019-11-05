@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
+use App\Notification;
 use Carbon\Carbon;
 use App\Center;
 use App\Holiday;
@@ -260,7 +261,7 @@ class PartnerBatchController extends Controller
 
         $rules = array(
             'scheme' => 'required|numeric',
-            'jobrole' => 'required|numeric',
+            'jobrole' => 'required',
             'center' => 'required|numeric',
             'batch_time' => ['required','regex:/(1[0-2]|0?[1-9]):([0-5][05]) ?([AP][M])/'],
             'batch_hour' => ['required','regex:/^(?!4.5)[1-4]{1}([\.5]+)?$/'],
@@ -284,12 +285,16 @@ class PartnerBatchController extends Controller
         // dd($request);
         if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
             DB::transaction(function() use ($request,$starttime_store,$endtime_store){
+
+                $job = explode(',',$request->jobrole);
+
                 $batch = new Batch;
                 $batch->tp_id = $this->guard()->user()->id;
                 $batch->tr_id = $request->trainer;
                 $batch->tc_id = $request->center;
                 $batch->scheme_id = $request->scheme;
-                $batch->jobrole_id = $request->jobrole;
+                $batch->jobrole_id = $job[1];
+                $batch->tp_job_id = $job[0];
                 $batch->start_time = $starttime_store;
                 $batch->end_time = $endtime_store;
                 $batch->batch_start = $request->batch_start;
@@ -304,6 +309,16 @@ class PartnerBatchController extends Controller
                     $batchCandidate->save();
                 }
             });
+
+            $partner = $this->guard()->user();
+            /* For Admin */
+            $notification = new Notification;
+            $notification->rel_id = 1;
+            $notification->rel_with = 'admin';
+            $notification->title = 'New Batch Registred';
+            $notification->message = "TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.";
+            $notification->save();
+
             alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
             return redirect()->back();
         } else {
