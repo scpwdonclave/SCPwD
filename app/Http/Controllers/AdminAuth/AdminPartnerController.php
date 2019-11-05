@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\TPConfirmationMail;
 use App\Mail\TPUpdateAccept;
@@ -116,7 +117,12 @@ class AdminPartnerController extends Controller
     }
 
     public function partnerUpdate($id){
-        $partner_id = Crypt::decrypt($id);
+        try {
+            $partner_id = Crypt::decrypt($id);
+           
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $partner=Partner::findOrFail($partner_id);
         $states=DB::table('state_district')->get();
         $parliaments=DB::table('parliament')->get();
@@ -125,7 +131,11 @@ class AdminPartnerController extends Controller
     }
 
     public function partnerAccept($id){
-        $partner_id = Crypt::decrypt($id); 
+        try {
+           $partner_id = Crypt::decrypt($id); 
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $partner=Partner::findOrFail($partner_id);
         if($partner->pending_verify==0){
             alert()->error("Training Partner Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
@@ -373,10 +383,11 @@ class AdminPartnerController extends Controller
         // ->join('customers','orders.customer_id','=','customers.cust_id')
         // ->select('orders.id','orders.order_date','orders.order_no','orders.order_date','orders.total_amount','customers.customer_display_name')
         // ->get();
-
-
-
-        $partner_id = Crypt::decrypt($id);
+        try {
+           $partner_id = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $partner= Partner::findOrFail($partner_id);
         // $tp_job=DB::table('partner_jobroles AS p')
         //     ->join('sectors AS s','p.sector_id','=','s.id')
@@ -535,8 +546,13 @@ class AdminPartnerController extends Controller
     }
 
     public function partnerSchemeActive($id,$pid){
-        $id = Crypt::decrypt($id);
-        $pid = Crypt::decrypt($pid);
+        try {
+            $id = Crypt::decrypt($id);
+            $pid = Crypt::decrypt($pid);
+           
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $partnerScheme=PartnerJobrole::where([['scheme_id','=',$id],['tp_id','=',$pid]])->get();
 
         foreach ($partnerScheme as  $scheme) {

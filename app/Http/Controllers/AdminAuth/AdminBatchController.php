@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Batch;
 use App\BatchCandidateMap;
 use App\Mail\BTRejectMail;
@@ -34,13 +35,22 @@ class AdminBatchController extends Controller
         return view('admin.batches.pending-batches')->with(compact('data'));
     }
     public function viewBatch($id){
-        $id = Crypt::decrypt($id); 
+        try {
+           
+            $id = Crypt::decrypt($id);  
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $batchData=Batch::findOrFail($id);
         return view('common.view-batch')->with(compact('batchData'));
     }
 
     public function batchAccept($id){
-        $id = Crypt::decrypt($id); 
+        try {
+            $id = Crypt::decrypt($id); 
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $batch=Batch::findOrFail($id);
         if($batch->verified==1){
             alert()->error("This Batch already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Trainer;
 use App\TrainerStatus;
 use App\TrainerJobRole;
@@ -55,7 +56,11 @@ class AdminTrainerController extends Controller
         
     }
     public function trainerAccept($id){
-        $trainer_id = Crypt::decrypt($id); 
+        try {
+            $trainer_id = Crypt::decrypt($id); 
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $trainer=Trainer::findOrFail($trainer_id);
 
         if($trainer->verified==1){
@@ -190,7 +195,11 @@ class AdminTrainerController extends Controller
 
     }
     public function trainerActive($id){
-        $tr_id = Crypt::decrypt($id);
+        try {
+            $tr_id = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $trainer=Trainer::findOrFail($tr_id);
         $trainer->status=1;
         $trainer->save();
@@ -209,7 +218,11 @@ class AdminTrainerController extends Controller
 
     }
     public function dlinkTrainerActive($id){
-        $tr_id = Crypt::decrypt($id);
+        try {
+            $tr_id = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $trainer=TrainerStatus::findOrFail($tr_id);
         $trainer->status=1;
         $trainer->save();
@@ -220,7 +233,11 @@ class AdminTrainerController extends Controller
     }
 
     public function trainerEdit($id){
-        $tr_id = Crypt::decrypt($id);
+        try {
+            $tr_id = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $trainer=Trainer::findOrFail($tr_id);
 
         return view('admin.trainers.trainer-edit')->with(compact('trainer'));

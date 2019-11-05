@@ -210,6 +210,8 @@ table.dataTable thead th:first-child {
                         method: "POST",
                         data: { _token, schemeid },
                         success: function(data){
+                            console.log(data);
+                            
                             clearDropdown('jobrole','Job Role');
                             data.jobrole.forEach(value => {
                                 $('#jobrole').append('<option value="'+value.id+'">'+value.jobrole.job_role+'</option>');

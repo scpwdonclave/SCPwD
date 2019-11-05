@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Mail\AAConfirmationMail;
@@ -130,7 +131,11 @@ class AdminAgencyController extends Controller
     }
 
     public function agencyActive($id){
-        $aa_id = Crypt::decrypt($id);
+        try {
+           $aa_id = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $agency=Agency::findOrFail($aa_id);
         $agency->status=1;
         $agency->save();

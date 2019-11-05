@@ -180,7 +180,7 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Parliament Constituency</small>
-                                                <p>{{$partnerState->constituency}}</p>
+                                                <p>{{$partnerState->constituency}} ({{$partnerState->state_ut}})</p>
                                                 <hr>
                                         </div>
                                         

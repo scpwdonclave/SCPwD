@@ -128,7 +128,7 @@
                                         <th>Name</th>
                                         <th>Contact</th>
                                         <th>Email</th>
-                                        <th>Aadhaar</th>
+                                        <th>Aadhaar/Voter</th>
                                         <th>View</th>
                                         
                                        

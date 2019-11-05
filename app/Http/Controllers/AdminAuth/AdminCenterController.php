@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminAuth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -57,7 +58,11 @@ class AdminCenterController extends Controller
         
     }
     public function centerAccept($id){
-        $center_id = Crypt::decrypt($id); 
+        try {
+            $center_id = Crypt::decrypt($id); 
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $center=Center::findOrFail($center_id);
         if($center->verified==1){
             alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
@@ -127,7 +132,12 @@ class AdminCenterController extends Controller
     }
     
     public function centerEdit($id){
-     $center_id = Crypt::decrypt($id); 
+        try {
+            $center_id = Crypt::decrypt($id); 
+            
+        } catch (DecryptException $e) {
+            abort(404);
+        }
      $center=Center::findOrFail($center_id);
      $states=DB::table('state_district')->get();
      $parliaments=DB::table('parliament')->get();
@@ -299,7 +309,11 @@ class AdminCenterController extends Controller
         return response()->json(['status' => 'done'],200);
     }
     public function centerActive($id){
-        $id=Crypt::decrypt($id);
+        try {
+            $id=Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $center=Center::findOrFail($id);
         $center->status=1;
         $center->save();
@@ -337,7 +351,11 @@ class AdminCenterController extends Controller
         return view('common.view-candidate')->with(compact('candidate','state_dist'));
     }
     public function candidateActive($id){
-        $id=Crypt::decrypt($id);
+        try {
+            $id=Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $candidate=Candidate::findOrFail($id);
         $candidate->status=1;
         $candidate->save();
@@ -381,7 +399,11 @@ class AdminCenterController extends Controller
     }
 
     public function candidateEdit($id){
-        $id=Crypt::decrypt($id);
+        try {
+           $id=Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
         $candidate=Candidate::findOrFail($id);
         $center=Center::where('id',$candidate->tc_id)->first();
         $states=DB::table('state_district')->get();
