@@ -104,7 +104,7 @@
                 @endif
             @endauth
             @if (Request::segment(1) != 'admin')
-                <li class="{{ Request::is(Request::segment(1).'/batches') ? 'active open' : (Request::is(Request::segment(1).'/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>            
+                <li class="{{ Request::segment(2)==='batches' ? 'active open' : (Request::is('partner/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
             @endif
         </ul>
     </div>

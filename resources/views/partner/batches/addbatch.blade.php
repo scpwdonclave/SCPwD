@@ -214,7 +214,7 @@ table.dataTable thead th:first-child {
                             
                             clearDropdown('jobrole','Job Role');
                             data.jobrole.forEach(value => {
-                                $('#jobrole').append('<option value="'+value.id+'">'+value.jobrole.job_role+'</option>');
+                                $('#jobrole').append('<option value="'+value.id+','+value.jobrole.id+'">'+value.jobrole.job_role+'</option>');
                             });
                             $('#jobrole').selectpicker('refresh');
                             clearDropdown('center','Center');
@@ -224,7 +224,9 @@ table.dataTable thead th:first-child {
                 break;
             
             case 'center':
-                    var jobid = $('#jobrole :selected').val();
+                    var job = $('#jobrole :selected').val();
+                    job.split(',');
+                    var jobid = job[0];
                     // $('#batch_start').val('');
                     // $('#batch_end').val('');
                     // $('#assesment').val('');

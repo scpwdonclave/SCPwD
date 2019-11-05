@@ -15,7 +15,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>All</strong> Approved Batches</h2>
+                    <h2><strong>All</strong> Batches</h2>
                     @if (Request::segment(1) === 'partner')
                         <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.addbatch')}}">Add New Batch</a>                      
                     @endif

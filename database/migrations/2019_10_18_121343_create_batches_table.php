@@ -21,6 +21,7 @@ class CreateBatchesTable extends Migration
             $table->string('batch_id')->unique()->nullable();
             $table->unsignedBigInteger('scheme_id');
             $table->unsignedBigInteger('jobrole_id');
+            $table->unsignedBigInteger('tp_job_id');
             $table->string('start_time');
             $table->string('end_time');
             $table->string('batch_start');
