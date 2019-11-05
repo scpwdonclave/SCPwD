@@ -39,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapAgencyRoutes();
+
         $this->mapCenterRoutes();
 
         $this->mapPartnerRoutes();
@@ -100,6 +102,19 @@ class RouteServiceProvider extends ServiceProvider
         require base_path('routes/partner.php');
         });
     }
+
+    protected function mapAgencyRoutes()
+    {
+    Route::group([
+        'middleware' => ['web', 'agency:agency'],
+        'prefix' => 'agency',
+        'as' => 'agency.',
+        'namespace' => $this->namespace,
+        ], function ($router) {
+        require base_path('routes/agency.php');
+        });
+    }
+
 
     protected function mapCenterRoutes()
     {

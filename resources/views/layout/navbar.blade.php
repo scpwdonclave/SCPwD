@@ -37,6 +37,9 @@
                                 case 'center':
                                     $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('center')->user()->id]])->orderBy('created_at', 'desc')->get();
                                     break;                                
+                                case 'agency':
+                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('agency')->user()->id]])->orderBy('created_at', 'desc')->get();
+                                    break;                                
                             }
                         }
                         @endphp
