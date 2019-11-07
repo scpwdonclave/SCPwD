@@ -115,9 +115,9 @@ table.dataTable thead th:first-child {
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="assesment">Assesment Date *</label>
+                                    <label for="assessment">Assessment Date *</label>
                                     <div class="form-group form-float date_picker">
-                                        <select id="assesment" class="form-control show-tick" data-live-search="true" name="assesment" data-dropup-auto='false' required>
+                                        <select id="assessment" class="form-control show-tick" data-live-search="true" name="assessment" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
@@ -182,8 +182,8 @@ table.dataTable thead th:first-child {
         .datepicker()
         .on('changeDate', function(selected){
             $('#batch_end').val('');
-            $('#assesment').empty();
-            $('#assesment').selectpicker('refresh');
+            $('#assessment').empty();
+            $('#assessment').selectpicker('refresh');
             startDate = new Date(selected.date.valueOf());
             startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
         });
@@ -229,7 +229,7 @@ table.dataTable thead th:first-child {
                     var jobid = job[0];
                     // $('#batch_start').val('');
                     // $('#batch_end').val('');
-                    // $('#assesment').val('');
+                    // $('#assessment').val('');
                     if (jobid!='') {
                         $.ajax({
                             url: "{{ route('partner.addbatch.api') }}",
@@ -307,12 +307,13 @@ function calculate_enddate() {
             success: function (data) {
                 if (data.success) {
                     $('#batch_end').val(data.enddate);
-                    $('#assesment').empty();
-                    $("#assesment").prepend("<option value='' selected='selected'>Select Assesment Date</option>");
-                    data.assesment_dates.forEach(value => {
-                        $('#assesment').append('<option value="'+value+'">'+value+'</option>');
+                    $('#assessment').empty();
+                    $("#assessment").prepend("<option value='' selected='selected'>Select Assessment Date</option>");
+                    data.assessment_dates.forEach(value => {
+                        date = value.split(' ');
+                        $('#assessment').append('<option value="'+date[0]+'">'+value+'</option>');
                     });
-                    $('#assesment').selectpicker('refresh');
+                    $('#assessment').selectpicker('refresh');
                 } else {
                     swal('Abort',data.message, 'info');
                     $('#batch_start').val('');

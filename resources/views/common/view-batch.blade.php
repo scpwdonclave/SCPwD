@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <small class="text-muted">Batch start Date</small>
+                                        <small class="text-muted">Batch Start Date</small>
                                         <p>{{$batchData->batch_start}}</p>
                                         <hr>
                                     </div>
@@ -87,8 +87,8 @@
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
-                                        <small class="text-muted">Assesment Date</small>
-                                        <p>{{$batchData->assesment}}</p>
+                                        <small class="text-muted">Assessment Date</small>
+                                        <p>{{$batchData->assessment}}</p>
                                         <hr>
                                     </div>
                 
@@ -97,16 +97,18 @@
                         </li>
                         
                     </ul>
-                    @auth('admin')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
+                    <div class="text-center" >
+                        @if (Request::segment(1)==='admin')
                             @if ($batchData->status==0 && $batchData->verified==0)
-                            <button class="btn btn-success" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Accept</button>
-                            <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Accept</button>
+                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                             @endif
+                        @else
+                            @if (Request::segment(1) ==='partner')
+                                <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                             @endif
-                        </div>
-                    @endauth
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,7 +121,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>Batch</strong> Students</h2>
+                        <h2><strong>Batch</strong> Candidates</h2>
                        
                     </div>
                     <div class="body">

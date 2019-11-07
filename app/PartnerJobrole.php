@@ -32,8 +32,8 @@ class PartnerJobrole extends Model implements Auditable
     public function reasons(){
         return $this->hasMany('App\PartnerJobRoleReason', 'partner_job_id');
     }
-    public function trainers(){
-        return $this->hasMany('App\Trainer', 'tp_job_id');
-    }
+    // public function trainers(){
+    //     return $this->hasMany('App\Trainer', 'tp_job_id');
+    // }
 
 }

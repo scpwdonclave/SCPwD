@@ -39,7 +39,7 @@ class AdminBatchController extends Controller
            
             $id = Crypt::decrypt($id);  
         } catch (DecryptException $e) {
-            abort(404);
+            return abort(404);
         }
         $batchData=Batch::findOrFail($id);
         return view('common.view-batch')->with(compact('batchData'));
@@ -49,7 +49,7 @@ class AdminBatchController extends Controller
         try {
             $id = Crypt::decrypt($id); 
         } catch (DecryptException $e) {
-            abort(404);
+            return abort(404);
         }
         $batch=Batch::findOrFail($id);
         if($batch->verified==1){

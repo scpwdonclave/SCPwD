@@ -121,7 +121,7 @@
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
-                                                    <label for="agency_name">Assesment Agency Name * </label>
+                                                    <label for="agency_name">Assessment Agency Name * </label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name of the Agency"  name="agency_name" required>
                                                        

@@ -26,7 +26,7 @@ class CreateBatchesTable extends Migration
             $table->string('end_time');
             $table->string('batch_start');
             $table->string('batch_end');
-            $table->string('assesment');
+            $table->string('assessment');
             $table->boolean('status')->default(0);
             $table->boolean('ind_status')->default(0);
             $table->boolean('verified')->default(0); 

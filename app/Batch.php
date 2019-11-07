@@ -22,7 +22,9 @@ class Batch extends Model
     public function jobrole(){
         return $this->belongsTo('App\JobRole', 'jobrole_id');
     }
-
+    public function tpjobrole(){
+        return $this->belongsTo('App\PartnerJobrole', 'tp_job_id');
+    }
     public function candidatesmap(){
         return $this->hasMany('App\BatchCandidateMap', 'bt_id');
     }

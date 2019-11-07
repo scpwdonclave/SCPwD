@@ -50,6 +50,47 @@ class PartnerBatchController extends Controller
             return abort(401);
         }
     }
+
+    public function editBatch($id){
+        try {
+            $id = Crypt::decrypt($id);  
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+        $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['ind_status', 1],['verified', 1],['completed', 0]])->first();
+        if ($batchData) {
+
+            $partnerJob = $batchData->tpjobrole;
+            $filteredTrainers = collect([]);
+
+            $partner = $this->guard()->user();
+            $trainers = $partner->trainers;
+                foreach ($trainers as $trainer) {
+                    if ($trainer->status && $trainer->ind_status) {
+                        foreach ($trainer->jobroles as $trainerJob) {
+                            if ($trainerJob->status && $trainerJob->scheme_status) {
+                                foreach ($trainerJob->schemes as $scheme) {
+                                    if ($scheme->scheme_id == $partnerJob->scheme_id) {
+                                        $filteredTrainers->push($trainer);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+
+            $data = [
+                'partner' => $partner,
+                'batchData' => $batchData,
+                'trainers' => $filteredTrainers
+            ];
+            return view('partner.batches.edit-batch')->with($data);
+        } else {
+            return abort(404);
+        }        
+    }
     
     public function addbatch(){
         $hds = Holiday::all();
@@ -216,17 +257,17 @@ class PartnerBatchController extends Controller
                 
                 $end_date = $date->subDay();
 
-                $assesment_dates = [];             
+                $assessment_dates = [];             
 
-                for ($edate = $end_date->copy()->addDay(); sizeof($assesment_dates) < 5 ; $edate->addDay()) { 
+                for ($edate = $end_date->copy()->addDay(); sizeof($assessment_dates) < 5 ; $edate->addDay()) { 
                     if ($edate->isWeekend() || in_array($edate->toDateString(), $holidays)) {
                         
                     } else {
-                        array_push($assesment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y'));
+                        array_push($assessment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y l'));
                     }
                 }
 
-                return response()->json(['success' => true,'assesment_dates' => $assesment_dates, 'enddate' => Carbon::parse($end_date->toDateString())->format('d-m-Y')],200);
+                return response()->json(['success' => true,'assessment_dates' => $assessment_dates, 'enddate' => Carbon::parse($end_date->toDateString())->format('d-m-Y')],200);
             } else {
                 return response()->json(['success' => false],400);
             }
@@ -253,7 +294,7 @@ class PartnerBatchController extends Controller
             'trainer.required'=>'Please Choose a Trainer',
             'batch_start.required'=>'Please Choose Batch Start Date',
             'batch_end.required'=>'Please Choose Batch End Date',
-            'assesment.required'=>'Please Choose a Assesment Date',
+            'assessment.required'=>'Please Choose a Assessment Date',
             'id.required'=>'Please choose Candidates',
             'id.min'=>'Please Choose Atleast 10 Candidates',
             'id.max'=>'you can Choose Atmost 30 Candidates',
@@ -267,7 +308,7 @@ class PartnerBatchController extends Controller
             'batch_hour' => ['required','regex:/^(?!4.5)[1-4]{1}([\.5]+)?$/'],
             'batch_start' => 'required',
             'batch_end' => 'required',
-            'assesment' => 'required',
+            'assessment' => 'required',
             'trainer' => 'required|numeric',
             // 'id' => 'required|array|min:10|max:30',
         );
@@ -299,7 +340,7 @@ class PartnerBatchController extends Controller
                 $batch->end_time = $endtime_store;
                 $batch->batch_start = $request->batch_start;
                 $batch->batch_end = $request->batch_end;
-                $batch->assesment = $request->assesment;
+                $batch->assessment = $request->assessment;
                 $batch->save();
     
                 foreach ($request->id as $value) {
@@ -308,16 +349,19 @@ class PartnerBatchController extends Controller
                     $batchCandidate->candidate_id = $value;
                     $batchCandidate->save();
                 }
-            });
 
-            $partner = $this->guard()->user();
-            /* For Admin */
-            $notification = new Notification;
-            $notification->rel_id = 1;
-            $notification->rel_with = 'admin';
-            $notification->title = 'New Batch Registred';
-            $notification->message = "TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.";
-            $notification->save();
+                DB::table('trainer_batch_map')->insert(['tr_id'=> $batch->tr_id, 'bt_id'=> $batch->id, 'start'=> $batch->batch_start, 'end'=> $batch->batch_end]);
+                DB::table('batch_trainer_map')->insert(['bt_id'=> $batch->id, 'tr_id'=> $batch->tr_id, 'assign_date'=> $batch->batch_start]);
+    
+                $partner = $this->guard()->user();
+                /* For Admin */
+                $notification = new Notification;
+                $notification->rel_id = 1;
+                $notification->rel_with = 'admin';
+                $notification->title = 'New Batch Registred';
+                $notification->message = "TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.";
+                $notification->save();
+            });
 
             alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
             return redirect()->back();

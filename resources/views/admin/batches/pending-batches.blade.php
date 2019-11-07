@@ -47,7 +47,7 @@
                                 <td>{{$item->center->tc_id}}</td>
                                 <td>{{$item->batch_start}}</td>
                                 <td>{{$item->batch_end}}</td>
-                                <td>{{$item->assesment}}</td>
+                                <td>{{$item->assessment}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route('admin.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                 </tr>
                                 @endforeach

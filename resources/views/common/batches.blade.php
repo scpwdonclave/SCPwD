@@ -59,7 +59,7 @@
                                 @endif
                                 <td>{{$item->batch_start}}</td>
                                 <td>{{$item->batch_end}}</td>
-                                <td>{{$item->assesment}}</td>
+                                <td>{{$item->assessment}}</td>
                                 <td class="text-{{($item->verified)?'success':'danger'}}">{{($item->verified)?'Verified':'Not Verified'}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                
