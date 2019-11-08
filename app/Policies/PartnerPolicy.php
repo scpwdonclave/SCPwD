@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\TrainerJobRole;
 use App\Partner;
 use App\Trainer;
+use App\BatchUpdate;
 
 class PartnerPolicy
 {
@@ -35,6 +36,16 @@ class PartnerPolicy
             return true;
         } else {
             return false;
+        }   
+    }
+
+    public function PartnerBatchUpdate($partner, $batch){
+
+        $result = BatchUpdate::where([['bt_id', $batch],['tp_id', $partner->id],['action', 0]])->first();
+        if ($result) {
+            return false;
+        } else {
+            return true;
         }   
     }
 

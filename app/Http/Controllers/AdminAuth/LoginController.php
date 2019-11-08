@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -47,6 +48,11 @@ class LoginController extends Controller
     }
     /* End Logout Route */
 
+    /* Overriding credentials() for checking account activation status */
+    protected function credentials(Request $request)
+    {        
+        return ['email' => $request->email, 'password' => $request->password, 'status' => 1];
+    }
     /**
      * Show the application's login form.
      *

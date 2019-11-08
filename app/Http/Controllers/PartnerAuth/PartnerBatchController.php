@@ -12,6 +12,7 @@ use App\Notification;
 use Carbon\Carbon;
 use App\Center;
 use App\Holiday;
+use App\BatchUpdate;
 use App\Batch;
 use Config;
 use Crypt;
@@ -29,6 +30,15 @@ class PartnerBatchController extends Controller
     protected function guard()
     {
         return Auth::guard('partner');
+    }
+
+    protected function getHolidays(){
+        $hds = Holiday::all();
+        $holidays = [];
+        foreach ($hds as $hd) {
+            array_push($holidays, $hd->holiday_date);
+        }
+        return $holidays;
     }
 
     public function batches(){
@@ -59,6 +69,11 @@ class PartnerBatchController extends Controller
         }
         $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['ind_status', 1],['verified', 1],['completed', 0]])->first();
         if ($batchData) {
+            // $hds = Holiday::all();
+            // $holidays = [];
+            // foreach ($hds as $hd) {
+            //     array_push($holidays, $hd->holiday_date);
+            // }
 
             $partnerJob = $batchData->tpjobrole;
             $filteredTrainers = collect([]);
@@ -84,7 +99,8 @@ class PartnerBatchController extends Controller
             $data = [
                 'partner' => $partner,
                 'batchData' => $batchData,
-                'trainers' => $filteredTrainers
+                'trainers' => $filteredTrainers,
+                'holidays' => $this->getHolidays()
             ];
             return view('partner.batches.edit-batch')->with($data);
         } else {
@@ -93,23 +109,22 @@ class PartnerBatchController extends Controller
     }
     
     public function addbatch(){
-        $hds = Holiday::all();
-        $holidays = [];
-        foreach ($hds as $hd) {
-            array_push($holidays, $hd->holiday_date);
-        }
+        // $hds = Holiday::all();
+        // $holidays = [];
+        // foreach ($hds as $hd) {
+        //     array_push($holidays, $hd->holiday_date);
+        // }
         $data = [
             'partner' => $this->guard()->user(),
-            'holidays' => $holidays
+            'holidays' => $this->getHolidays()
         ];
 
         return view('partner.batches.addbatch')->with($data);
     }
 
 
-    public function trainer_availability($trainer_id, $starttime, $endtime){
+    protected function trainer_availability($trainer_id, $starttime, $endtime){
         $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
-
         if ($trainer_batches) {
             foreach ($trainer_batches as $trainer_batch) {
                 $start = Carbon::parse($trainer_batch->start_time); 
@@ -283,6 +298,24 @@ class PartnerBatchController extends Controller
                 return response()->json(['success' => false], 200);
             }   
         }
+        if ($request->has('batchid')) {
+            $batch = Batch::find($request->batchid);
+            if ($batch) {
+                $assessment_dates = [];             
+                $end_date = Carbon::parse($request->batchend);
+                for ($edate = $end_date->copy()->addDay(); sizeof($assessment_dates) < 5 ; $edate->addDay()) { 
+                    if ($edate->isWeekend() || in_array($edate->toDateString(), $this->getHolidays())) {
+                        
+                    } else {
+                        array_push($assessment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y l'));
+                    }
+                }
+                return response()->json(['success' => true,'assessment_dates' => $assessment_dates],200);
+            } else {
+                return response()->json(['success' => false], 400);                
+            }
+
+        }
     }
 
 
@@ -369,5 +402,63 @@ class PartnerBatchController extends Controller
             alert()->error("The Selected Trainer isn't <span style='font-weight:bold;color:red'>Available</span> on Requested Time, Please Change Batch Time or choose another Trainer", 'Attention')->html()->autoclose(6000);
             return redirect()->back();
         }
+    }
+
+    public function submitEditBatch(Request $request){
+        $request->validate([
+            'batchid' => 'required|numeric',
+            'trainer' => 'required|numeric',
+            'batch_end' => 'required',
+            'assessment' => 'required',
+        ]);
+
+        $batch = Batch::findOrFail($request->batchid);
+        if ($batch->tp_id == $this->guard()->user()->id) {
+            $batchupdate = BatchUpdate::where([['bt_id', $batch->id],['action', 0]])->first();
+            if ($batchupdate) {
+                alert()->error("You Cannot Request for an Update, While Your Last Request is still <span style='font-weight:bold;color:red'>Pending</span>, Contact Admin for Further Action", 'Abort')->html()->autoclose(6000);
+                return redirect()->back();
+            } else {
+                if ($batch->tr_id != $request->trainer) {
+                    if (!$this->trainer_availability($batch->tr_id, Carbon::parse($batch->start_time), Carbon::parse($batch->end_time))) {
+                        alert()->error("The Selected Trainer in <span style='font-weight:bold;color:blue'>Preoccupied</span> on provided Time with Another Active Batch, Kindly Change it to Another Trainer", 'Abort')->html()->autoclose(6000);
+                        return redirect()->back();
+                    } else {
+                        $batchstore = new BatchUpdate;
+                        $batchstore->bt_id = $batch->id;
+                        $batchstore->tr_id = $batch->tr_id;
+                        $batchstore->tp_id = $this->guard()->user()->id;
+                        $batchstore->new_tr_id = $request->trainer;
+                        $batchstore->start_date = $batch->batch_start;
+                        $batchstore->end_date = $request->batch_end;
+                        $batchstore->assessment = $request->assessment;
+                        $batchstore->save();
+                        alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
+                        return redirect()->back();
+                    }
+                } else {
+                    $batchstore = new BatchUpdate;
+                    $batchstore->bt_id = $batch->id;
+                    $batchstore->tr_id = $batch->tr_id;
+                    $batchstore->tp_id = $this->guard()->user()->id;
+                    $batchstore->new_tr_id = $request->trainer;
+                    $batchstore->start_date = $batch->batch_start;
+                    $batchstore->end_date = $request->batch_end;
+                    $batchstore->assessment = $request->assessment;
+                    $batchstore->save();
+                    alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
+                    return redirect()->back();
+                }
+
+
+                /* Codes for Notification */
+                /* End Codes for Notification */
+
+            }
+            
+        } else {
+            return abort(401);
+        }
+        
     }
 }

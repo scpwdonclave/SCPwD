@@ -36,4 +36,6 @@ Route::get('add-batch', 'PartnerAuth\PartnerBatchController@addbatch')->name('ad
 Route::post('add-batch', 'PartnerAuth\PartnerBatchController@submitbatch')->name('submitbatch');
 Route::post('add-batch/api', 'PartnerAuth\PartnerBatchController@addbatch_api')->name('addbatch.api');
 Route::get('batches/batch-view/{id}', 'PartnerAuth\PartnerBatchController@viewBatch')->name('bt.batch.view');
+Route::get('batches/batch-edit', function () { return redirect(route('partner.batches')); });
+Route::post('batches/batch-edit', 'PartnerAuth\PartnerBatchController@submitEditBatch')->name('bt.batch.submitedit');
 Route::get('batches/batch-edit/{id}', 'PartnerAuth\PartnerBatchController@editBatch')->name('bt.batch.edit');

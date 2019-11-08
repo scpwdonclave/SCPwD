@@ -16,6 +16,7 @@ class CreateBatchUpdatesTable extends Migration
         Schema::create('batch_updates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bt_id');
+            $table->unsignedBigInteger('tp_id');
             $table->unsignedBigInteger('tr_id');
             $table->unsignedBigInteger('new_tr_id')->nullable();
             $table->string('start_date')->nullable();

@@ -76,17 +76,22 @@
                 
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
+                                        <small class="text-muted">Batch Time</small>
+                                        <p>{{$batchData->start_time.' - '.$batchData->end_time}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Batch Start Date</small>
                                         <p>{{$batchData->batch_start}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Batch End Date</small>
                                         <p>{{$batchData->batch_end}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Assessment Date</small>
                                         <p>{{$batchData->assessment}}</p>
                                         <hr>
@@ -99,9 +104,13 @@
                     </ul>
                     <div class="text-center" >
                         @if (Request::segment(1)==='admin')
-                            @if ($batchData->status==0 && $batchData->verified==0)
+                            @if (!$batchData->verified)
                                 <button class="btn btn-success" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Accept</button>
                                 <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                            @else
+                                @if (!Auth::guard('admin')->user()->supadmin)
+                                    <button class="btn btn-danger" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Request for DELETE</button>                                
+                                @endif
                             @endif
                         @else
                             @if (Request::segment(1) ==='partner')
