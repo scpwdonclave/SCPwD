@@ -17,6 +17,16 @@ use Auth;
 
 class AgencyHomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['agency','prevent-back-history']);
+    }
+
+    protected function guard()
+    {
+        return Auth::guard('agency');
+    }
+
     public function index() {
         return view('agency.home')->with('agency',Auth::guard('agency')->user());
     }

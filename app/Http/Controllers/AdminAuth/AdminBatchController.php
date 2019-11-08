@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Encryption\DecryptException;
+use App\BatchUpdate;
 use App\Batch;
 use App\BatchCandidateMap;
 use App\Mail\BTRejectMail;
@@ -112,6 +113,20 @@ class AdminBatchController extends Controller
     }
 
     public function batchUpdates(){
-        return view('admin.batches.batch-updates');
+        $data = [
+            'batchupdates' => BatchUpdate::where('action', 1)->get(),
+            'updaterequests' => BatchUpdate::where('action', 0)->get()
+        ];
+        return view('admin.batches.batch-updates')->with($data);
+    }
+
+    public function submitBatchUpdate(Request $request){
+        try {
+            $id = Crypt::decrypt($request->id);
+            return $id;
+            
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
     }
 }
