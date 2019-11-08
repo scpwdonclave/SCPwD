@@ -76,6 +76,7 @@
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/batches/batches') ? 'active' : null }}"><a href="{{route('admin.batch.batches')}}"> Approved Batches</a></li>
                         <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li>
+                        <li class="{{ Request::is('admin/batches/batch-updates') ? 'active' : null }}"><a href="{{route('admin.batch.bu')}}"> Batch Updates</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'agency' ? 'active open' : null }}">

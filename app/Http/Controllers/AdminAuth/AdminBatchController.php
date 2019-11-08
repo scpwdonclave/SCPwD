@@ -111,7 +111,7 @@ class AdminBatchController extends Controller
          return response()->json(['status' => 'done'],200);
     }
 
-    public function tesst(){
-        return 'Hello';
+    public function batchUpdates(){
+        return view('admin.batches.batch-updates');
     }
 }
