@@ -19,6 +19,7 @@ use Crypt;
 use App\BatchCandidateMap;
 use Auth;
 use DB;
+use Storage;
 
 class PartnerBatchController extends Controller
 {
@@ -36,9 +37,39 @@ class PartnerBatchController extends Controller
         $hds = Holiday::all();
         $holidays = [];
         foreach ($hds as $hd) {
-            array_push($holidays, $hd->holiday_date);
+            array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
         }
         return $holidays;
+    }
+
+    protected function isHoliday($date){
+        if ($date->isWeekend() || in_array($date->toDateString(), $this->getHolidays())) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+
+    protected function trainer_availability($trainer_id, $starttime, $endtime){
+        $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
+        if ($trainer_batches) {
+            foreach ($trainer_batches as $trainer_batch) {
+                $start = Carbon::parse($trainer_batch->start_time); 
+                $end = Carbon::parse($trainer_batch->end_time); 
+                if ($starttime->lessThan($start)) {
+                    if (!$endtime->lessThanOrEqualTo($start)) {
+                        return false;
+                    }
+                } else {
+                    if (!$starttime->greaterThanOrEqualTo($end)) {
+                        return false;
+                    }                
+                }
+            }
+        } else {
+            return true;
+        }
+        return true;
     }
 
     public function batches(){
@@ -121,30 +152,6 @@ class PartnerBatchController extends Controller
 
         return view('partner.batches.addbatch')->with($data);
     }
-
-
-    protected function trainer_availability($trainer_id, $starttime, $endtime){
-        $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
-        if ($trainer_batches) {
-            foreach ($trainer_batches as $trainer_batch) {
-                $start = Carbon::parse($trainer_batch->start_time); 
-                $end = Carbon::parse($trainer_batch->end_time); 
-                if ($starttime->lessThan($start)) {
-                    if (!$endtime->lessThanOrEqualTo($start)) {
-                        return false;
-                    }
-                } else {
-                    if (!$starttime->greaterThanOrEqualTo($end)) {
-                        return false;
-                    }                
-                }
-            }
-        } else {
-            return true;
-        }
-        return true;
-    }
-
 
     public function addbatch_api(Request $request){
         if ($request->has('schemeid')) {
@@ -235,11 +242,11 @@ class PartnerBatchController extends Controller
             if ($jobrole) {
                 $total_hours = $jobrole->jobrole->hours;
                 /* Custom Holiday List */
-                $hds = Holiday::all();
-                $holidays = [];
-                foreach ($hds as $hd) {
-                    array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
-                }
+                // $hds = Holiday::all();
+                // $holidays = [];
+                // foreach ($hds as $hd) {
+                //     array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
+                // }
                 /* End Custom Holiday List */
 
 
@@ -251,7 +258,7 @@ class PartnerBatchController extends Controller
                 // $end_date_approx = $start_date->copy()->addDays($total_days-1);
                 
                             
-                if ($start_date->isWeekend() || in_array($start_date->toDateString(), $holidays)) {
+                if ($this->isHoliday($start_date)) {
                     return response()->json(['success' => false, 'message' => 'Start Date Cannot be on a Holiday'],200);                    
                 }
                 // $end_date = $end_date_approx->copy();
@@ -259,8 +266,8 @@ class PartnerBatchController extends Controller
                 $date = $start_date->copy(); // 15-11-2019
                 $count = 0;
                 while ($count <= ($total_days-1)) {
-                    if ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
-                        while ($date->isWeekend() || in_array($date->toDateString(), $holidays)) {
+                    if ($this->isHoliday($date)) {
+                        while ($this->isHoliday($date)) {
                             $date->addDay();
                         }
                     } else {
@@ -275,9 +282,7 @@ class PartnerBatchController extends Controller
                 $assessment_dates = [];             
 
                 for ($edate = $end_date->copy()->addDay(); sizeof($assessment_dates) < 5 ; $edate->addDay()) { 
-                    if ($edate->isWeekend() || in_array($edate->toDateString(), $holidays)) {
-                        
-                    } else {
+                    if (!$this->isHoliday($edate)) {
                         array_push($assessment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y l'));
                     }
                 }
@@ -304,10 +309,8 @@ class PartnerBatchController extends Controller
                 $assessment_dates = [];             
                 $end_date = Carbon::parse($request->batchend);
                 for ($edate = $end_date->copy()->addDay(); sizeof($assessment_dates) < 5 ; $edate->addDay()) { 
-                    if ($edate->isWeekend() || in_array($edate->toDateString(), $this->getHolidays())) {
-                        
-                    } else {
-                        array_push($assessment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y l'));
+                    if (!$this->isHoliday($edate)) {
+                        array_push($assessment_dates, $edate->format('d-m-Y l'));
                     }
                 }
                 return response()->json(['success' => true,'assessment_dates' => $assessment_dates],200);
@@ -419,17 +422,27 @@ class PartnerBatchController extends Controller
                 alert()->error("You Cannot Request for an Update, While Your Last Request is still <span style='font-weight:bold;color:red'>Pending</span>, Contact Admin for Further Action", 'Abort')->html()->autoclose(6000);
                 return redirect()->back();
             } else {
+                if ($this->isHoliday(Carbon::parse($request->batch_end))) {
+                    alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                    return redirect()->back();
+                }
+
+
                 if ($batch->tr_id != $request->trainer) {
-                    if (!$this->trainer_availability($batch->tr_id, Carbon::parse($batch->start_time), Carbon::parse($batch->end_time))) {
+                    if (!$this->trainer_availability($request->trainer, Carbon::parse($batch->start_time), Carbon::parse($batch->end_time))) {
                         alert()->error("The Selected Trainer in <span style='font-weight:bold;color:blue'>Preoccupied</span> on provided Time with Another Active Batch, Kindly Change it to Another Trainer", 'Abort')->html()->autoclose(6000);
                         return redirect()->back();
                     } else {
+                        if ($this->isHoliday(Carbon::parse($request->trainer_start))) {
+                            alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                            return redirect()->back();
+                        }
                         $batchstore = new BatchUpdate;
                         $batchstore->bt_id = $batch->id;
                         $batchstore->tr_id = $batch->tr_id;
                         $batchstore->tp_id = $this->guard()->user()->id;
                         $batchstore->new_tr_id = $request->trainer;
-                        $batchstore->start_date = $batch->batch_start;
+                        $batchstore->new_tr_start = $request->trainer_start;
                         $batchstore->end_date = $request->batch_end;
                         $batchstore->assessment = $request->assessment;
                         $batchstore->save();
@@ -442,7 +455,7 @@ class PartnerBatchController extends Controller
                     $batchstore->tr_id = $batch->tr_id;
                     $batchstore->tp_id = $this->guard()->user()->id;
                     $batchstore->new_tr_id = $request->trainer;
-                    $batchstore->start_date = $batch->batch_start;
+                    $batchstore->new_tr_start = $request->trainer_start;
                     $batchstore->end_date = $request->batch_end;
                     $batchstore->assessment = $request->assessment;
                     $batchstore->save();

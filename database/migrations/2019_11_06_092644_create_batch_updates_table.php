@@ -19,11 +19,12 @@ class CreateBatchUpdatesTable extends Migration
             $table->unsignedBigInteger('tp_id');
             $table->unsignedBigInteger('tr_id');
             $table->unsignedBigInteger('new_tr_id')->nullable();
-            $table->string('start_date')->nullable();
+            $table->string('new_tr_start')->nullable();
             $table->string('end_date')->nullable();
             $table->string('assessment')->nullable();
             $table->boolean('action')->default(0)->comment = 'Admin took action';
             $table->boolean('approved')->nullable()->comment = 'Update Accept Reject';
+            $table->text('reason')->nullable()->comment = 'Reason of Rejection';
             $table->timestamps();
         });
     }

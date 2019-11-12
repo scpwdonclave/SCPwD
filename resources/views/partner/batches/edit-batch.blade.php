@@ -60,7 +60,7 @@ table.dataTable thead th:first-child {
                                 <div class="col-sm-4">
                                     <label for="trainer">Trainer *</label>
                                     <div class="form-group form-float">
-                                        <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' required>
+                                        <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' onchange="changetrainer()" required>
                                             @foreach ($trainers as $trainer)
                                                 <option value="{{$trainer->id}}" {{($trainer->id == $batchData->tr_id)?'selected':null}}>{{$trainer->name}}</option>
                                             @endforeach
@@ -81,13 +81,21 @@ table.dataTable thead th:first-child {
                                     </div>
                                 </div>
                             </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-sm-4" id="trainer_start_div">
+                                    <label for="trainer_start">New Trainer Start Date *</label>
+                                    <div class="form-group form-float trainer_start_datepicker">
+                                        <input type="text" id="trainer_start" class="form-control" placeholder="Trainer Start Date" onchange="calculate_assessment()" name="trainer_start">
+                                    </div>
+                                </div>
+                            </div>
                             @if (Auth::guard('partner')->user()->can('partner-batch-update', $batchData->id))
                                 <div class="row d-fle justify-content-center">
                                     <button type="submit" class="btn btn-primary waves-effect">REQUEST FOR AN UPDATE</button>
                                 </div>
                             @else
                                 <div class="row d-fle justify-content-center" style="margin-top:20px">
-                                    <h6>You Can ony request for an update after your pending update request gets cleared</h6>
+                                    <h6>You Can only request for an update after your pending update request gets cleared</h6>
                                 </div>
                             @endif
                         </form>
@@ -123,6 +131,15 @@ $(()=>{
         datesDisabled: JSON.parse('<?php echo json_encode($holidays)?>'),
     });
 
+    $('.trainer_start_datepicker .form-control').datepicker({
+        autoclose: true,
+        format: 'dd-mm-yyyy',
+        startDate: '<?php echo $batchData->batch_start?>',
+        endDate: '<?php echo $batchData->batch_end?>',
+        daysOfWeekDisabled: [0,6],
+        datesDisabled: JSON.parse('<?php echo json_encode($holidays)?>'),
+    });
+
 
     $('#form_updatebatch').on('submit', function(e){
         e.preventDefault();
@@ -135,6 +152,8 @@ $(()=>{
             }
         }    
     });
+
+    $('#trainer_start_div').hide();
 });
 
 
@@ -173,6 +192,19 @@ function calculate_assessment() {
             }
         });
     }
+}
+
+function changetrainer(){
+
+    old_tr = '<?php echo $batchData->tr_id?>';
+    if ($('#trainer').val() == old_tr) {
+        $('#trainer_start_div').slideUp();
+        $('#trainer_start').prop('required', false);
+    } else {
+        $('#trainer_start_div').slideDown();
+        $('#trainer_start').prop('required', true);
+    }
+    
 }
 
 </script>

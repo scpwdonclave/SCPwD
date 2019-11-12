@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Encryption\DecryptException;
 use App\BatchUpdate;
+use App\Holiday;
 use App\Batch;
 use App\BatchCandidateMap;
 use App\Mail\BTRejectMail;
 use App\Notification;
+use Carbon\Carbon;
 use Crypt;
 use DB;
 use Mail;
@@ -26,6 +28,31 @@ class AdminBatchController extends Controller
         return Auth::guard('admin');
     }
 
+    protected function getHolidays(){
+        $hds = Holiday::all();
+        $holidays = [];
+        foreach ($hds as $hd) {
+            array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
+        }
+        return $holidays;
+    }
+
+    protected function isHoliday($date){
+        if ($date->isWeekend() || in_array($date->toDateString(), $this->getHolidays())) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
+    protected function getLastActiveDay($date){
+        while ($this->isHoliday($date)) {
+            $date->subDay();
+        }
+        return $date->format('d-m-Y');
+    }
+
     public function batches(){
         $data=Batch::where('verified',1)->get();
         return view('common.batches')->with(compact('data')); 
@@ -37,79 +64,79 @@ class AdminBatchController extends Controller
     }
     public function viewBatch($id){
         try {
-           
             $id = Crypt::decrypt($id);  
+            $batchData=Batch::findOrFail($id);
+            return view('common.view-batch')->with(compact('batchData'));
         } catch (DecryptException $e) {
             return abort(404);
         }
-        $batchData=Batch::findOrFail($id);
-        return view('common.view-batch')->with(compact('batchData'));
     }
 
-    public function batchAccept($id){
+
+    public function batchAction(Request $request){
         try {
-            $id = Crypt::decrypt($id); 
+            $id = Crypt::decrypt($request->id); 
+            $data=Batch::findOrFail($id);
+            if (!$data->verified) {
+                if ($request->action === 'accept') {
+                    $records=DB::table('batches')->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
+                    $year = date('Y');
+                    if (count($records) > 0) {
+                        $priceprod = array();
+                        foreach ($records as $key=>$record) {
+                            $priceprod[$key]=$record->batch_id;
+                        }
+                        $lastid= max($priceprod);
+                        $new_batchid = (substr($lastid, 0, 4)== $year) ? 'BT'.($lastid + 1) : 'BT'.$year.'000001' ;
+                    } else {
+                        $new_batchid = 'BT'.$year.'000001';
+                    }
+            
+                    $data->batch_id=$new_batchid;
+                    $data->status=1;
+                    $data->ind_status=1;
+                    $data->verified=1;
+                    $data->save();
+            
+                    /* Notification For Partner */
+                    $notification = new Notification;
+                    $notification->rel_id = $data->tp_id;
+                    $notification->rel_with = 'partner';
+                    $notification->title = 'Batch has been Approved';
+                    $notification->message = "Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved";
+                    $notification->save();
+                    /* End Notification For Partner */
+            
+                    alert()->success("Batch has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+                } elseif ($request->action === 'reject') {
+                    if (!is_null($request->reason)) {
+                        $data['note'] = $request->reason;
+                        Mail::to($data->partner->email)->send(new BTRejectMail($data));
+                        
+                        /* Notification For Partner */
+                        $notification = new Notification;
+                        $notification->rel_id = $data->tp_id;
+                        $notification->rel_with = 'partner';
+                        $notification->title = 'Batch Rejected';
+                        $notification->message = "One of your Batch has been <span style='color:blue;'>Rejected</span>, Please Check your Mail";
+                        $notification->save();
+                        /* End Notification For Partner */
+                        
+                        BatchCandidateMap::where('bt_id',$id)->delete();
+                        $data->delete();
+                        alert()->success("Batch has been <span style='color:blue;'>Rejected</span>", 'Job Done')->html()->autoclose(3000);         
+                    } else {
+                        alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
+                    }
+                }
+                return redirect()->route('admin.batch.batches');
+                
+            } else {
+                return redirect()->route('admin.batch.batches');
+            }
         } catch (DecryptException $e) {
             return abort(404);
         }
-        $batch=Batch::findOrFail($id);
-        if($batch->verified==1){
-            alert()->error("This Batch already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-            return Redirect()->back(); 
-        }
-        $data=DB::table('batches')
-        ->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))
-        ->where("batch_id", "LIKE", "BT%")->get();
-       // dd(count($data));
-        $year = date('Y');
-        if (count($data) > 0) {
-
-            $priceprod = array();
-                foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->batch_id;
-                }
-                $lastid= max($priceprod);
-               
-                $new_batchid = (substr($lastid, 0, 4)== $year) ? 'BT'.($lastid + 1) : 'BT'.$year.'000001' ;
-            //dd($new_tpid);
-        } else {
-            $new_batchid = 'BT'.$year.'000001';
-        }
-
-        $batch->batch_id=$new_batchid;
-        $batch->status=1;
-        $batch->ind_status=1;
-        $batch->verified=1;
-        $batch->save();
-
-          /* Notification For Partner */
-          $notification = new Notification;
-          $notification->rel_id = $batch->tp_id;
-          $notification->rel_with = 'partner';
-          $notification->title = 'Batch has been Approved';
-          $notification->message = "Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved";
-          $notification->save();
-          /* End Notification For Partner */
-
-          alert()->success('Batch has been Approved', 'Job Done')->autoclose(3000);
-          return Redirect()->back();
-    }
-
-    public function batchReject(Request $request){
-        $data=Batch::findOrFail($request->id);
-        $data['note'] = $request->note;
-         Mail::to($data->partner->email)->send(new BTRejectMail($data));
-         /* Notification For Partner */
-         $notification = new Notification;
-         $notification->rel_id = $data->tp_id;
-         $notification->rel_with = 'partner';
-         $notification->title = 'Batch Rejected';
-         $notification->message = "One of your Batch has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
-         $notification->save();
-         /* End Notification For Partner */
-         BatchCandidateMap::where('bt_id',$request->id)->delete();
-         $data->delete();
-         return response()->json(['status' => 'done'],200);
     }
 
     public function batchUpdates(){
@@ -120,10 +147,57 @@ class AdminBatchController extends Controller
         return view('admin.batches.batch-updates')->with($data);
     }
 
-    public function submitBatchUpdate(Request $request){
+    public function batchUpdateAction(Request $request){
+        
         try {
             $id = Crypt::decrypt($request->id);
-            return $id;
+            $batchupdate = BatchUpdate::findOrFail($id);
+            if (!$batchupdate->action) {
+                if ($request->action === 'accept') {
+                    if ($this->isHoliday(Carbon::parse($batchupdate->end_date))) {
+                        alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                        return redirect()->route('admin.batch.bu');
+                    }
+    
+                    $batch = Batch::findOrFail($batchupdate->batch->id);
+                    DB::transaction(function () use($batch,$batchupdate){
+                        if ($batch->tr_id != $batchupdate->new_tr_id) {
+                            if ($this->isHoliday(Carbon::parse($batchupdate->new_tr_start))) {
+                                alert()->error('New Trainer Start Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                                return redirect()->route('admin.batch.bu');
+                            }
+                            $old_trainer_end_date = $this->getLastActiveDay(Carbon::parse($batchupdate->new_tr_start)->subDay());
+                            DB::table('batch_trainer_map')->insert(['bt_id' => $batch->id, 'tr_id' => $batchupdate->new_tr_id, 'assign_date' => $batchupdate->new_tr_start]);
+                            DB::table('trainer_batch_map')->where(['bt_id' => $batch->id, 'tr_id' => $batch->tr_id])->update(['end' => $old_trainer_end_date]);
+                            DB::table('trainer_batch_map')->insert(['bt_id' => $batch->id, 'tr_id' => $batchupdate->new_tr_id, 'start' => $batchupdate->new_tr_start, 'end' => $batchupdate->end_date]);
+                        }
+                        
+                        $batch->tr_id = $batchupdate->new_tr_id;
+                        $batch->batch_end = $batchupdate->end_date;
+                        $batch->assessment = $batchupdate->assessment;
+                        $batch->save();
+                        $batchupdate->action = 1;
+                        $batchupdate->approved = 1;
+                        $batchupdate->save();
+                    });
+    
+                    alert()->success('Batch Update Request has been <span style="color:blue">Approved</span> Successfully', 'Job Done')->html()->autoclose(3000);
+                
+                } elseif ($request->action === 'reject') {
+                    
+                    if (!is_null($request->reason)) {
+                        $batchupdate->reason = $request->reason;
+                        $batchupdate->action = 1;
+                        $batchupdate->reason = $request->reason;
+                        $batchupdate->approved = 0;
+                        $batchupdate->save();
+                        alert()->success('Batch Update Request has been <span style="color:red">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
+                    } else {
+                        alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
+                    }                    
+                }
+            }
+            return redirect()->route('admin.batch.bu');
             
         } catch (DecryptException $e) {
             return abort(404);

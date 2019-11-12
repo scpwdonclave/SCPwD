@@ -63,17 +63,7 @@
                                         <small class="text-muted">Job Role</small>
                                         <p>{{$batchData->jobrole->job_role}}</p>
                                         <hr>
-                                    </div>
-                                
-                                    {{-- <div class="col-sm-4">
-                                        <small class="text-muted">Document Number</small>
-                                        <p>
-                                            {{$batchData->doc_no}} &nbsp;&nbsp;
-                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$batchData->id,'action'=>'download','filename'=>basename($batchData->doc_file)])}}" download="{{basename($batchData->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
-                                        </p>
-                                        <hr>
-                                    </div> --}}
-                
+                                    </div>                
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3">
@@ -105,16 +95,20 @@
                     <div class="text-center" >
                         @if (Request::segment(1)==='admin')
                             @if (!$batchData->verified)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                            @else
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.batch.action',['id' => Crypt::encrypt($batchData->id),'action'=>'accept' ])}}';this.disabled = true;">Accept</button>
+                                <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($batchData->id)}}');">Reject</button>
+                            {{-- @else
                                 @if (!Auth::guard('admin')->user()->supadmin)
                                     <button class="btn btn-danger" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Request for DELETE</button>                                
-                                @endif
+                                @endif --}}
                             @endif
                         @else
                             @if (Request::segment(1) ==='partner')
-                                <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                @if ($batchData->verified)
+                                    <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                @else
+                                    <h6>Only Verified Batches are Editable</h6>
+                                @endif
                             @endif
                         @endif
                     </div>
@@ -124,113 +118,96 @@
     </div>
 </div>
 
-{{-- =================== --}}
 <div class="container-fluid">
     <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Batch</strong> Candidates</h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Contact</th>
-                                        <th>Email</th>
-                                        <th>Aadhaar/Voter</th>
-                                        <th>View</th>
-                                        
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                       
-                                       @foreach ($batchData->candidatesmap as $key=>$item)
-                                           
-                                       <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>{{$item->candidate->name}}</td>
-                                        <td>{{$item->candidate->contact}}</td>
-                                        <td>{{$item->candidate->email}}</td>
-                                        <td>{{$item->candidate->doc_no}}</td>
-                                        @if (Request::segment(1)==='center')
-                                            <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>                                                                                
-                                        @else
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>
-                                        @endif
-                                        
-                                    </tr>
-                                    @endforeach     
-                                      
-                                        
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>Batch</strong> Candidates</h2>
+                    
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                                    <th>Aadhaar/Voter</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($batchData->candidatesmap as $key=>$item)
+                                <tr>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$item->candidate->name}}</td>
+                                    <td>{{$item->candidate->contact}}</td>
+                                    <td>{{$item->candidate->email}}</td>
+                                    <td>{{$item->candidate->doc_no}}</td>
+                                    @if (Request::segment(1)==='center')
+                                        <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>                                                                                
+                                    @else
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>
+                                    @endif
+                                </tr>
+                                @endforeach     
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
-{{-- =================== --}}
 @stop
 @section('page-script')
 @auth('admin')
     <script>
-        function showPromptMessage() {
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
+
+    function showPromptMessage(id) {
+        swal({
+            text: "Please Provide the Reason for Rejection",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                },
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                cancel: {
+                    text: "Cancel",
+                    visible: true,
+                    value: null,
+                    closeModal: true,
+                },
+                confirm: {
+                    text: "Confirm Reject",
+                    value: true,
+                    closeModal: false
                 }
-                var id={{$batchData->id}};
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
-            
-                $.ajax({
-                type: "POST",
-                url: "{{route('admin.bt.reject.batch')}}",
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Deleted",
-                text: "Record Deleted",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-                
-                window.location="{{route('admin.batch.pb')}}";
-        
-                } 
-                });
-            
-                }
-            });
-                
-            });
-        }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(note){
+            if (note!='' && note!=null) {
+                let route = '{{route("admin.batch.action", [":id", "reject", ":reason"])}}';
+                route = route.replace(':id',id);
+                route = route.replace(':reason',note);
+                location.href=route;
+            } else if(note != null) {
+                swal('Attention', 'Write Something Before you Submit','info');
+            }
+        });
+    }
     </script>
 @endauth
 
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
