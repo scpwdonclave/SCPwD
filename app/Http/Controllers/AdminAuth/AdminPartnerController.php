@@ -54,44 +54,36 @@ class AdminPartnerController extends Controller
 
     public function partnerDeactive(Request $request){
         $partnerData=Partner::findOrFail($request->id);
-        $partnerData->status=0;
-        $partnerData->ind_status=0;
-        $partnerData->save();
+            DB::transaction(function($partnerData){
+                $partnerData->status=0;
+                $partnerData->save();
 
-        $reason = new Reason;
-        $reason->rel_id = $partnerData->id;
-        $reason->rel_with = 'partner';
-        $reason->reason = $request->reason;
-        $reason->save();
+                $reason = new Reason;
+                $reason->rel_id = $partnerData->id;
+                $reason->rel_with = 'partner';
+                $reason->reason = $request->reason;
+                $reason->save();
 
-        foreach ($partnerData->centers as $center) {
-            $center->ind_status = 0;
-            $center->save();
-
-           
-        }
-        // foreach ($partnerData->trainers as $trainer) {
-        //     $trainer->ind_status = 0;
-        //     $trainer->save();
-        // }
-
+                foreach ($partnerData->partner_jobroles as $partnerjob) {
+                    $partnerjob->status = 0;
+                    $partnerjob->save();
+                }
+            });
         return response()->json(['status' => 'done'],200);
         
     }
     public function partnerActive($id){
         $partnerData=Partner::findOrFail($id);
-        $partnerData->status=1;
-        $partnerData->save();
-        foreach ($partnerData->centers as $center) {
-            $center->ind_status =1;
-            $center->save();
-        }
-        // foreach ($partnerData->trainers as $trainer) {
-        //     $trainer->ind_status = 1;
-        //     $trainer->save();
-        // }
-        alert()->success('Partner Activated', 'Done')->autoclose(2000);
-        return Redirect()->back();
+        DB::transaction(function($partnerData){
+            $partnerData->status=1;
+            $partnerData->save();
+            foreach ($partnerData->partner_jobroles as $partnerjob) {
+                $partnerjob->status = 1;
+                $partnerjob->save();
+            }
+        });
+        alert()->success("Partner and all its <span style='color:blue;'>Schemes, Jobroles</span> are now <span style='color:blue;'>Activated</span>", "Done")->autoclose(2000);
+        return redirect()->back();
     }
 
     public function partnerVerify($id){

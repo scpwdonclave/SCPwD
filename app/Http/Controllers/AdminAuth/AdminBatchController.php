@@ -117,7 +117,7 @@ class AdminBatchController extends Controller
                 if ($request->action === 'accept') {
 
                     if ($this->trainer_availability($data->tr_id, Carbon::parse($data->start_time), Carbon::parse($data->end_time)) && $this->candidate_availability($data->id)) {
-                        $records=DB::table('batches')->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
+                        $records=DB::table('batches')->select(DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
                         $year = date('Y');
                         if (count($records) > 0) {
                             $priceprod = array();

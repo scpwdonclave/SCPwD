@@ -72,8 +72,20 @@ class PartnerBatchController extends Controller
     }
 
     
-    protected function partnerscheme($candidate){
-        return $candidate->jobrole->partnerjobrole->status;
+    protected function partnerscheme($collection, $flag){
+        switch ($flag) {
+            case 'candidate':
+                return $collection->jobrole->partnerjobrole->status;
+                break;
+            case 'center':
+                foreach ($collection->center_jobroles as $centerjob) {
+                    if ($centerjob->partnerjobrole->status) {
+                        return true;
+                    }
+                }
+                return false;
+                break;
+        }
     }
 
     public function batches(){
@@ -104,11 +116,6 @@ class PartnerBatchController extends Controller
         }
         $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['ind_status', 1],['verified', 1],['completed', 0]])->first();
         if ($batchData) {
-            // $hds = Holiday::all();
-            // $holidays = [];
-            // foreach ($hds as $hd) {
-            //     array_push($holidays, $hd->holiday_date);
-            // }
 
             $partnerJob = $batchData->tpjobrole;
             $filteredTrainers = collect([]);
@@ -174,8 +181,6 @@ class PartnerBatchController extends Controller
             $partnerJob = PartnerJobrole::find($request->jobid);
             if ($partnerJob) {
 
-                // TrainerJobroleScheme::where('scheme_id',$partnerJob->scheme_id)->first()
-
                 $trainers = $partner->trainers;
                 foreach ($trainers as $trainer) {
                     if ($trainer->status && $trainer->ind_status) {
@@ -196,7 +201,7 @@ class PartnerBatchController extends Controller
             
             $centers = $partner->centers;
             foreach ($centers as $center) {
-                if ($center->status &&  $center->ind_status && $center->verified && $center->scheme_status) {
+                if ($center->verified && $center->status && $this->partnerscheme($center, 'center')) {
                     foreach ($center->center_jobroles as $centerJob) {
                         if ($centerJob->tp_job_id == (int)$request->jobid) {
                             $filteredCenters->push($center);
@@ -214,7 +219,7 @@ class PartnerBatchController extends Controller
                 if ($center->partner->id == $partner->id) {
                     $candidateRow = [[]];
                     foreach ($center->candidates as $candidate) {
-                        if ($candidate->status && $this->partnerscheme($candidate)) {
+                        if ($candidate->status && $this->partnerscheme($candidate,'candidate')) {
                             if (count($candidate->batchmap) == 0) {
                                 $candidateRow[0] = '<input type="checkbox">';
                                 $candidateRow[1] = $candidate->name;

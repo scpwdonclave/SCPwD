@@ -90,8 +90,6 @@ class AdminCenterController extends Controller
         $center->tc_id=$new_tcid;
         $center->password=Hash::make($center_password);
         $center->status=1;
-        $center->ind_status=1;
-        $center->scheme_status=1;
         $center->verified=1;
         $center->save();
 
