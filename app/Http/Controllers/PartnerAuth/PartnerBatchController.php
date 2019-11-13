@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\BatchCandidateMap;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
 use App\Notification;
-use Carbon\Carbon;
-use App\Center;
-use App\Holiday;
 use App\BatchUpdate;
+use Carbon\Carbon;
+use App\Holiday;
+use App\Center;
 use App\Batch;
 use Config;
 use Crypt;
-use App\BatchCandidateMap;
 use Auth;
 use DB;
-use Storage;
 
 class PartnerBatchController extends Controller
 {
@@ -51,17 +50,17 @@ class PartnerBatchController extends Controller
     }
 
     protected function trainer_availability($trainer_id, $starttime, $endtime){
-        $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
+        $trainer_batches = Batch::where([['completed', 0],['tr_id', $trainer_id]])->get();
         if ($trainer_batches) {
             foreach ($trainer_batches as $trainer_batch) {
                 $start = Carbon::parse($trainer_batch->start_time); 
                 $end = Carbon::parse($trainer_batch->end_time); 
                 if ($starttime->lessThan($start)) {
-                    if (!$endtime->lessThanOrEqualTo($start)) {
+                    if ($endtime->greaterThan($start)) {
                         return false;
                     }
                 } else {
-                    if (!$starttime->greaterThanOrEqualTo($end)) {
+                    if ($starttime->lessThan($end)) {
                         return false;
                     }                
                 }
@@ -205,22 +204,36 @@ class PartnerBatchController extends Controller
         if ($request->has('centerid')) {
             $partner = $this->guard()->user();
             $center = Center::find($request->centerid);
-            $candidateArray = [];
+                        $candidateArray = [];
             if ($center) {
                 if ($center->partner->id == $partner->id) {
-                    $candidates = $center->candidates;
+                    $candidateRow = [[]];
                     foreach ($center->candidates as $candidate) {
                         if ($candidate->status && $candidate->ind_status) {
-                            $candidateRow = [[]];
-                            $candidateRow[0] = '<input type="checkbox">';
-                            $candidateRow[1] = $candidate->name;
-                            $candidateRow[2] = $candidate->contact;
-                            $candidateRow[3] = $candidate->category;
-                            $candidateRow[4] = $candidate->disability->e_expository;
-                            $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                            $candidateRow[6] = $candidate->id;
+                            if (count($candidate->batchmap) == 0) {
+                                $candidateRow[0] = '<input type="checkbox">';
+                                $candidateRow[1] = $candidate->name;
+                                $candidateRow[2] = $candidate->contact;
+                                $candidateRow[3] = $candidate->category;
+                                $candidateRow[4] = $candidate->disability->e_expository;
+                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                $candidateRow[6] = $candidate->id;
+                                array_push($candidateArray, $candidateRow);
+                            } else {
+                                foreach ($candidate->batchmap as $batchmap) {
+                                    if ($batchmap->batch->completed) {
+                                        $candidateRow[0] = '<input type="checkbox">';
+                                        $candidateRow[1] = $candidate->name;
+                                        $candidateRow[2] = $candidate->contact;
+                                        $candidateRow[3] = $candidate->category;
+                                        $candidateRow[4] = $candidate->disability->e_expository;
+                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                        $candidateRow[6] = $candidate->id;
+                                        array_push($candidateArray, $candidateRow);
+                                    }
+                                }
+                            }
                         }
-                        array_push($candidateArray, $candidateRow);
                     }
                     return response()->json(['success' => true, 'candidates' => $candidateArray],200);               
                 } else {
@@ -294,10 +307,7 @@ class PartnerBatchController extends Controller
         }
 
         if ($request->has('starttime') && $request->has('trainer') && $request->has('hour')) {
-            $starttime = Carbon::parse($request->starttime);
-            $endtime = Carbon::parse($request->starttime)->add($request->hour.' hours');
-            
-            if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
+            if ($this->trainer_availability($request->trainer, Carbon::parse($request->starttime), Carbon::parse($request->starttime)->add($request->hour.' hours'))) {
                 return response()->json(['success' => true], 200);
             } else {
                 return response()->json(['success' => false], 200);

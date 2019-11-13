@@ -16,7 +16,7 @@ class CreateCandidatesTable extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tc_id');
-            $table->string('tc_job_id');
+            $table->unsignedBigInteger('tc_job_id');
 
             $table->string('name');
             $table->string('gender');

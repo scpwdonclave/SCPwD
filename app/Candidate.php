@@ -19,7 +19,7 @@ class Candidate extends Model
     }
 
     public function batchmap(){
-        return $this->belongsTo('App\BatchCandidateMap', 'candidate_id');
+        return $this->hasMany('App\BatchCandidateMap', 'candidate_id');
     }
     
 }

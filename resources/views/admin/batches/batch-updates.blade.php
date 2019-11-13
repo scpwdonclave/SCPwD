@@ -209,11 +209,11 @@
                 },
             closeModal: false,
             closeOnEsc: false,
-        }).then(function(val){
+        }).then(function(note){
             if (note!='' && note!=null) {
                 let route = '{{route("admin.batch.bu.submit", [":id", "reject", ":reason"])}}';
                 route = route.replace(':id',id);
-                route = route.replace(':reason',val);
+                route = route.replace(':reason',note);
                 location.href=route;
             } else if(note != null) {
                 swal('Attention', 'Write Something Before you Submit','info');

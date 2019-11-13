@@ -53,6 +53,38 @@ class AdminBatchController extends Controller
         return $date->format('d-m-Y');
     }
 
+    protected function trainer_availability($trainer_id, $starttime, $endtime){
+        $trainer_batches = Batch::where([['verified', 1],['completed', 0],['tr_id', $trainer_id]])->get();
+        if ($trainer_batches) {
+            foreach ($trainer_batches as $trainer_batch) {
+                $start = Carbon::parse($trainer_batch->start_time); 
+                $end = Carbon::parse($trainer_batch->end_time); 
+                if ($starttime->lessThan($start)) {
+                    if ($endtime->greaterThan($start)) {
+                        return false;
+                    }
+                } else {
+                    if ($starttime->lessThan($end)) {
+                        return false;
+                    }                
+                }
+            }
+        } else {
+            return true;
+        }
+        return true;
+    }
+
+    protected function candidate_availability($batchid){
+        $batch = Batch::find($batchid);
+        foreach ($batch->candidatesmap as $candidate) {
+            if (!$candidate->status || !$candidate->ind_status) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function batches(){
         $data=Batch::where('verified',1)->get();
         return view('common.batches')->with(compact('data')); 
@@ -79,35 +111,40 @@ class AdminBatchController extends Controller
             $data=Batch::findOrFail($id);
             if (!$data->verified) {
                 if ($request->action === 'accept') {
-                    $records=DB::table('batches')->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
-                    $year = date('Y');
-                    if (count($records) > 0) {
-                        $priceprod = array();
-                        foreach ($records as $key=>$record) {
-                            $priceprod[$key]=$record->batch_id;
+
+                    if ($this->trainer_availability($data->tr_id, Carbon::parse($data->start_time), Carbon::parse($data->end_time)) && $this->candidate_availability($data->id)) {
+                        $records=DB::table('batches')->select(\DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
+                        $year = date('Y');
+                        if (count($records) > 0) {
+                            $priceprod = array();
+                            foreach ($records as $key=>$record) {
+                                $priceprod[$key]=$record->batch_id;
+                            }
+                            $lastid= max($priceprod);
+                            $new_batchid = (substr($lastid, 0, 4)== $year) ? 'BT'.($lastid + 1) : 'BT'.$year.'000001' ;
+                        } else {
+                            $new_batchid = 'BT'.$year.'000001';
                         }
-                        $lastid= max($priceprod);
-                        $new_batchid = (substr($lastid, 0, 4)== $year) ? 'BT'.($lastid + 1) : 'BT'.$year.'000001' ;
-                    } else {
-                        $new_batchid = 'BT'.$year.'000001';
+                
+                        $data->batch_id=$new_batchid;
+                        $data->status=1;
+                        $data->ind_status=1;
+                        $data->verified=1;
+                        $data->save();
+                
+                        /* Notification For Partner */
+                        $notification = new Notification;
+                        $notification->rel_id = $data->tp_id;
+                        $notification->rel_with = 'partner';
+                        $notification->title = 'Batch has been Approved';
+                        $notification->message = "Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved";
+                        $notification->save();
+                        /* End Notification For Partner */
+                
+                        alert()->success("Batch has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);   
+                    } else{
+                        alert()->error("Either this Trainer is <span style='color:red;'>Pre-Occupied</span> at Provided Time or Candidate associated with This Batch is <span style='color:red;'>Inactive</span>, Cannot Proceed!", 'Attention')->html()->autoclose(6000);
                     }
-            
-                    $data->batch_id=$new_batchid;
-                    $data->status=1;
-                    $data->ind_status=1;
-                    $data->verified=1;
-                    $data->save();
-            
-                    /* Notification For Partner */
-                    $notification = new Notification;
-                    $notification->rel_id = $data->tp_id;
-                    $notification->rel_with = 'partner';
-                    $notification->title = 'Batch has been Approved';
-                    $notification->message = "Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved";
-                    $notification->save();
-                    /* End Notification For Partner */
-            
-                    alert()->success("Batch has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
                 } elseif ($request->action === 'reject') {
                     if (!is_null($request->reason)) {
                         $data['note'] = $request->reason;
@@ -188,9 +225,12 @@ class AdminBatchController extends Controller
                     if (!is_null($request->reason)) {
                         $batchupdate->reason = $request->reason;
                         $batchupdate->action = 1;
-                        $batchupdate->reason = $request->reason;
                         $batchupdate->approved = 0;
                         $batchupdate->save();
+
+                        $batchupdate['note'] = $request->reason;
+                        Mail::to($batchupdate->partner->email)->send(new BTRejectMail($batchupdate));
+
                         alert()->success('Batch Update Request has been <span style="color:red">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
                     } else {
                         alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
