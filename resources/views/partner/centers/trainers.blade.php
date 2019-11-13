@@ -25,6 +25,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Trainer ID</th>
                                     <th>Trainer Name</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
@@ -33,9 +34,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($partner->trainers as $trainer)
+                                @foreach ($partner->trainers as $key => $trainer)
                                     <tr>
-                                        <td><i class="zmdi zmdi-circle text-{{$trainer->status?'success':'danger'}}"></td>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{is_null($trainer->trainer_id)?'NULL':$trainer->trainer_id}}</td>
                                         <td>{{$trainer->name}}</td>
                                         <td>{{$trainer->email}}</td>
                                         <td>{{$trainer->mobile}}</td>

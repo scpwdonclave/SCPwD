@@ -12,16 +12,13 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="body">
-                    {{-- @if (!is_null($candidate->doc_no))
                         <div class="text-center">
                             <h6>
-                                Aadhaar/Voter Number: <span style='color:blue'>{{$candidate->doc_no}}</span>
+                                {{-- This Candidate is <span style='color:#ec3b57'>Inactive</span> --}}
                             </h6>
                         </div>
                         <br>
-                    @endif --}}
                     <ul class="cbp_tmtimeline">
-                        
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Identity</span></time>
                             <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
@@ -101,33 +98,36 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                        <div class="col-sm-6">
-                                                <small class="text-muted">Sector/Job Role/NSQF/QP Code</small>
-                                                <p>{{$candidate->jobrole->partnerjobrole->scheme->scheme}}|
-                                                    {{$candidate->jobrole->partnerjobrole->jobrole->job_role}}|
-                                                    {{$candidate->jobrole->partnerjobrole->jobrole->nsqf_level}}|
-                                                    {{$candidate->jobrole->partnerjobrole->jobrole->qp_code}}
-                                                </p>
-                                                <hr>
-                                        </div>
-                                    
-                                        <div class="col-sm-3">
-                                                <small class="text-muted">Disability Type</small>
-                                                <p>{{$candidate->disability->e_expository}}</p>
-                                                <hr>
-                                        </div>
-                                        <div class="col-sm-3">
-                                                <small class="text-muted">Disability Certificate</small>
-                                                @if (!is_null($candidate->d_cert))
-                                                    <p>Document &nbsp;&nbsp;
-                                                        <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'cert'])}}" download="{{basename($candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
-                                                    </p>
-                                                @else
-                                                    <p>No Document Provided</p>                                                 
-                                                @endif
-                                                <hr>
-                                        </div>
+                                    <div class="col-sm-12">
+                                            <small class="text-muted">Scheme/Sector/Job Role/NSQF/QP Code</small>
+                                            <p>{{$candidate->jobrole->partnerjobrole->scheme->scheme}} |
+                                                {{$candidate->jobrole->partnerjobrole->sector->sector}} |
+                                                {{$candidate->jobrole->partnerjobrole->jobrole->job_role}} |
+                                                {{$candidate->jobrole->partnerjobrole->jobrole->nsqf_level}} |
+                                                {{$candidate->jobrole->partnerjobrole->jobrole->qp_code}}
+                                            </p>
+                                            <hr>
                                     </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                            <small class="text-muted">Disability Type</small>
+                                            <p>{{$candidate->disability->e_expository}}</p>
+                                            <hr>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Disability Certificate</small>
+                                        @if (!is_null($candidate->d_cert))
+                                            <p>Document &nbsp;&nbsp;
+                                                <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'cert'])}}" download="{{basename($candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
+                                            </p>
+                                        @else
+                                            <p>No Document Provided</p>                                                 
+                                        @endif
+                                        <hr>
+                                    </div>
+                                </div>
                                 <div class="row">
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Address</small>

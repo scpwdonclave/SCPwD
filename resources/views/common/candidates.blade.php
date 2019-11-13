@@ -26,7 +26,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    @if (Request::segment(1) === 'partner')
+                                    @if (Request::segment(1) === 'admin')
+                                        <th>TP</th>
+                                    @endif
+                                    @if (Request::segment(1) !== 'center')
                                         <th>TC</th>
                                     @endif
                                     <th>Candidate Name</th>
@@ -34,15 +37,20 @@
                                     <th>Category</th>
                                     <th>Date of Birth</th>
                                     <th>View</th>
-                                    <th>Action</th>
+                                    @if (Request::segment(1) === 'admin')
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($candidates as $candidate)
+                                @foreach ($candidates as $key => $candidate)
                                     
                                 <tr>
-                                <td><i class="zmdi zmdi-circle text-{{$candidate->status?'success':'danger'}}"></td>
-                                @if (Request::segment(1) === 'partner')
+                                <td>{{$key+1}}</td>
+                                @if (Request::segment(1) === 'admin')
+                                    <td>{{$candidate->center->partner->tp_id}}</td>
+                                @endif
+                                @if (Request::segment(1) !== 'center')
                                     <td>{{$candidate->center->tc_id}}</td>
                                 @endif
                                 <td>{{$candidate->name}}</td>
@@ -50,10 +58,12 @@
                                 <td>{{$candidate->category}}</td>
                                 <td>{{$candidate->dob}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',$candidate->id)}}" >View</a></td>
-                                @if($candidate->status==1)
-                                <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$candidate->id}})">Deactivate</a></td>
-                                @elseif($candidate->status==0)
-                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.candidate.active',['id'=>Crypt::encrypt($candidate->id)])}}" >Activate</a></td>
+                                @if (Request::segment(1)==='admin')
+                                    @if($candidate->status==1)
+                                        <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$candidate->id}})">Deactivate</a></td>
+                                    @elseif($candidate->status==0)
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.candidate.active',['id'=>Crypt::encrypt($candidate->id)])}}" >Activate</a></td>
+                                    @endif
                                 @endif
                                 </tr>
                                 @endforeach
