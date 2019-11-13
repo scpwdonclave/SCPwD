@@ -74,16 +74,20 @@ class AdminBatchController extends Controller
         }
         return true;
     }
-
+    
+    protected function partnerscheme($candidate){
+        return $candidate->jobrole->partnerjobrole->status;
+    }
     protected function candidate_availability($batchid){
         $batch = Batch::find($batchid);
         foreach ($batch->candidatesmap as $candidate) {
-            if (!$candidate->status || !$candidate->ind_status) {
-                return false;
+            if (!$candidate->candidate->status || !$this->partnerscheme($candidate->candidate)) {
+                    return false;
             }
         }
         return true;
     }
+
 
     public function batches(){
         $data=Batch::where('verified',1)->get();

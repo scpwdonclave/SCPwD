@@ -71,6 +71,11 @@ class PartnerBatchController extends Controller
         return true;
     }
 
+    
+    protected function partnerscheme($candidate){
+        return $candidate->jobrole->partnerjobrole->status;
+    }
+
     public function batches(){
 
         $data = [
@@ -209,7 +214,7 @@ class PartnerBatchController extends Controller
                 if ($center->partner->id == $partner->id) {
                     $candidateRow = [[]];
                     foreach ($center->candidates as $candidate) {
-                        if ($candidate->status && $candidate->ind_status) {
+                        if ($candidate->status && $this->partnerscheme($candidate)) {
                             if (count($candidate->batchmap) == 0) {
                                 $candidateRow[0] = '<input type="checkbox">';
                                 $candidateRow[1] = $candidate->name;
