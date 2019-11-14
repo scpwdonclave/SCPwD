@@ -17,6 +17,7 @@ class CreateSchemesTable extends Migration
             $table->bigIncrements('id');
             $table->string('scheme');
             $table->string('year');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

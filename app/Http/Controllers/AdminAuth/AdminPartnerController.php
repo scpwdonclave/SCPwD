@@ -78,10 +78,13 @@ class AdminPartnerController extends Controller
             $partnerData->status=1;
             $partnerData->save();
             foreach ($partnerData->partner_jobroles as $partnerjob) {
-                $partnerjob->status = 1;
-                $partnerjob->save();
+                if ($partnerjob->scheme->status) {
+                    $partnerjob->status = 1;
+                    $partnerjob->save();
+                }
             }
         });
+        // ! All Inactive Schemes Under Any Partner Will be Auto Re-Activated (IF THEY WERE PREVIOUSLY DEACTIVATED WITH PARTNER-SCHEME DEACTIVATION PROCESS)
         alert()->success("Partner and all its <span style='color:blue;'>Schemes, Jobroles</span> are now <span style='color:blue;'>Activated</span>", "Done")->autoclose(2000);
         return redirect()->back();
     }
