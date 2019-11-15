@@ -89,9 +89,9 @@
                                                             <label for="gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
-                                                                    <option value="Male">Male</option>
-                                                                    <option value="Female">Female</option>
-                                                                    <option value="Transgender">Transgender</option>
+                                                                    <option>Male</option>
+                                                                    <option>Female</option>
+                                                                    <option>Transgender</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -219,9 +219,9 @@
                                                     <label for="ceo_gender">Gender *</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="ceo_gender" data-dropup-auto='false' required>
-                                                            <option value="Male">Male</option>
-                                                            <option value="Female">Female</option>
-                                                            <option value="Transgender">Transgender</option>
+                                                            <option>Male</option>
+                                                            <option>Female</option>
+                                                            <option>Transgender</option>
                                                         </select>
                                                     </div>
                                                 </div>

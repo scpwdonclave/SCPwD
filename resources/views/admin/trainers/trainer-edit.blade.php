@@ -112,6 +112,52 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
+                                                    <label for="qualification">Qualification</label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="qualification" data-show-subtext="true" data-dropup-auto='false'>
+                                                            @foreach (config('constants.qualifications') as $key=>$qualification)
+                                                                <option value="{{$key}}" {{ ( $key ==$trainer->qualification) ? 'selected' : '' }}>{{ $qualification }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            <div class="col-sm-4">
+                                                <label for="qualification_doc">Qualification Certificate </label>
+                                                <div class="form-group form-float">
+                                                    <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" >
+                                                    <span id="qualification_doc_error"  style="color:red;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-3">
+                                                <label for="ssc_doc">SSC Certificate Upload</label>
+                                                <div class="form-group form-float">
+                                                    <input type="file" id="ssc_doc" class="form-control" name="ssc_doc" >
+                                                    <span id="ssc_doc_error"  style="color:red;"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="ssc_no">SSC Certificate No</label>
+                                                <div class="form-group form-float">
+                                                    <input type="text" class="form-control" placeholder="SSC Certificate No" value="{{$trainer->ssc_no}}" name="ssc_no">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="ssc_start">SSC Certificate Issued On </label>
+                                                <div class="form-group form-float month_range_picker">
+                                                    <input type="text" id="ssc_start" onchange="startchangessc()" class="form-control" value="{{$trainer->ssc_issued}}" name="ssc_start" >
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="ssc_end">SSC Certificate Valid Upto </label>
+                                                <div class="form-group form-float month_range_picker">
+                                                    <input type="text" id="ssc_end" class="form-control" value="{{$trainer->ssc_valid}}" name="ssc_end" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-4">
                                                 <label for="resume">Resume </label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="resume" class="form-control" name="resume" >
@@ -143,7 +189,7 @@
                                             <div class="col-sm-4">
                                                 <label for="scpwd_start">SCPwD Certificate Issued On </label>
                                                 <div class="form-group form-float month_range_picker">
-                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" value="{{$trainer->scpwd_issued}}" name="scpwd_start" >
+                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd()" class="form-control" value="{{$trainer->scpwd_issued}}" name="scpwd_start" >
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
@@ -153,25 +199,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                    <label for="qualification">Qualification</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="qualification" data-show-subtext="true" data-dropup-auto='false'>
-                                                            @foreach (config('constants.qualifications') as $key=>$qualification)
-                                                                <option value="{{$key}}" {{ ( $key ==$trainer->jobroles[0]->qualification) ? 'selected' : '' }}>{{ $qualification }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            <div class="col-sm-4">
-                                                <label for="scpwd_doc">Qualification Certificate </label>
-                                                <div class="form-group form-float">
-                                                    <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" >
-                                                    <span id="qualification_doc_error"  style="color:red;"></span>
-                                                </div>
-                                            </div>
-                                          </div>
+                                        
                                         
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
@@ -280,7 +308,6 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
-<script src="{{asset('assets/js/jquery.repeatable.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -300,16 +327,9 @@ $(function () {
         $('.month_range_picker .form-control').datepicker({
             autoclose: true,
             format: 'dd MM yyyy',
-            endDate: new Date()
+            // endDate: new Date()
         });
 
-        // $('#ssc_start_new')
-        // .datepicker()
-        // .on('changeDate', function(selected){
-        //     startDate = new Date(selected.date.valueOf());
-        //     startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-        //     $('#ssc_end_new').datepicker('setStartDate', startDate);
-        // });
 
         $('#scpwd_start')
         .datepicker()
@@ -324,11 +344,11 @@ $(function () {
 });
 
     /* Date Range Picker Operations */
-        function startchange(id){
-            $('#ssc_end_'+id).val('');
+        function startchangessc(){
+            $('#ssc_end').val('');
         }
         function startchangescpwd(){
-            $('#scpwd_end').val($('#scpwd_end').val());
+            $('#scpwd_end').val('');
         }
     /* End Date Range Picker Operations */
 

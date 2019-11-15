@@ -14,7 +14,7 @@
                     @php
                         $partnerCount = $partners->count();
                         $activePartner = 0; $inactivePartner = 0;
-                        foreach ($partners as $partner) { ($partner->status && $partner->ind_status) ? $activePartner++ : $inactivePartner++ ; }
+                        foreach ($partners as $partner) { ($partner->status) ? $activePartner++ : $inactivePartner++ ; }
                     @endphp
                     @if ($partnerCount > 0)
                         <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$partnerCount}}" data-speed="2000" data-fresh-interval="700">{{$partnerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
@@ -38,7 +38,7 @@
                     @php
                         $centerCount = $centers->count();
                         $activeCenter = 0; $inactiveCenter = 0;
-                        foreach ($centers as $center) { ($center->status && $center->ind_status) ? $activeCenter++ : $inactiveCenter++ ; }
+                        foreach ($centers as $center) { ($center->status) ? $activeCenter++ : $inactiveCenter++ ; }
                     @endphp
                     @if ($centerCount>0)
                         <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$centerCount}}" data-speed="2000" data-fresh-interval="700">{{$centerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
@@ -74,7 +74,7 @@
                     @php
                         $candidateCount = $candidates->count();
                         $activeCandidate = 0; $inactiveCandidate = 0;
-                        foreach ($candidates as $candidate) { ($candidate->status && $candidate->ind_status) ? $activeCandidate++ : $inactiveCandidate++ ; }
+                        foreach ($candidates as $candidate) { ($candidate->status) ? $activeCandidate++ : $inactiveCandidate++ ; }
                     @endphp
                     @if ($candidateCount>0)
                         <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidateCount}}" data-speed="2000" data-fresh-interval="700">{{$candidateCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>

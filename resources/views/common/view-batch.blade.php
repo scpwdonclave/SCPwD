@@ -18,7 +18,8 @@
                     @if (!is_null($batchData->batch_id))
                         <div class="text-center">
                             <h6>
-                                Batch ID: <span style='color:blue'>{{$batchData->batch_id}}</span>
+                                Batch ID: <span style='color:blue'>{{$batchData->batch_id}}</span> <br> <br>
+                                <span style='color:{{($batchData->status)?"green":"red"}}'>{{($batchData->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -51,7 +52,7 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Scheme</small>
-                                        <p>{{$batchData->scheme->scheme}}</p>
+                                        <p>{{$batchData->scheme->scheme}} <span style='color:{{($batchData->tpjobrole->status)?"green":"red"}}'><strong>{{($batchData->tpjobrole->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
@@ -136,6 +137,7 @@
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Aadhaar/Voter</th>
+                                    <th>Status</th>
                                     <th>View</th>
                                 </tr>
                             </thead>
@@ -147,10 +149,11 @@
                                     <td>{{$item->candidate->contact}}</td>
                                     <td>{{$item->candidate->email}}</td>
                                     <td>{{$item->candidate->doc_no}}</td>
+                                    <td style="color:{{($item->candidate->status)?'green':'red'}}">{{($item->candidate->status)?'Active':'Inactive'}}</td>
                                     @if (Request::segment(1)==='center')
-                                        <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>                                                                                
+                                        <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>                                                                                
                                     @else
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',['id'=>$item->candidate->id])}}" >View</a></<td>
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>
                                     @endif
                                 </tr>
                                 @endforeach     

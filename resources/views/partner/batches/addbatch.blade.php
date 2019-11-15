@@ -52,7 +52,7 @@ table.dataTable thead th:first-child {
                                     <div class="form-group form-float">
                                         <select id="scheme" class="form-control show-tick" data-live-search="true" name="scheme" onchange="update('job')" data-dropup-auto='false' required>
                                             @foreach ($partner->partner_jobroles->unique("scheme_id") as $scheme)
-                                                @if ($scheme->status && $scheme->scheme_status)
+                                                @if ($scheme->status)
                                                     <option value="{{$scheme->scheme->id}}">{{$scheme->scheme->scheme}}</option>
                                                 @endif
                                             @endforeach
@@ -225,9 +225,6 @@ table.dataTable thead th:first-child {
                     var job = $('#jobrole :selected').val();
                     job.split(',');
                     var jobid = job[0];
-                    // $('#batch_start').val('');
-                    // $('#batch_end').val('');
-                    // $('#assessment').val('');
                     if (jobid!='') {
                         $.ajax({
                             url: "{{ route('partner.addbatch.api') }}",
@@ -238,12 +235,16 @@ table.dataTable thead th:first-child {
                                 $("#center").prepend("<option value='' selected='selected'>Select Center</option>");
                                 $('#trainer').empty();
                                 $("#trainer").prepend("<option value='' selected='selected'>Select Trainer</option>");
-                                data.centers.forEach(value => {
-                                    $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
-                                });
-                                data.trainers.forEach(value => {
-                                    $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
-                                });
+                                if (data.centers !== undefined) {
+                                    data.centers.forEach(value => {
+                                        $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
+                                    });
+                                }
+                                if (data.trainers !== undefined) {
+                                    data.trainers.forEach(value => {
+                                        $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
+                                    });
+                                }
                                 $('#center').selectpicker('refresh');
                                 $('#trainer').selectpicker('refresh');
                                 calculate_enddate();

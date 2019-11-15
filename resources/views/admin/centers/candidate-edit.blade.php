@@ -97,9 +97,9 @@
                                                 <label for="gender">Gender *</label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                        <option value="male" {{ ( $candidate->gender =="male") ? 'selected' : '' }}>Male</option>
-                                                        <option value="female" {{ ( $candidate->gender =="female") ? 'selected' : '' }}>Female</option>
-                                                        <option value="other" {{ ( $candidate->gender =="other") ? 'selected' : '' }}>Other</option>
+                                                        <option {{($candidate->gender=="Male")?'selected':null}}>Male</option>
+                                                        <option {{($candidate->gender=="Female")?'selected':null}}>Female</option>
+                                                        <option {{($candidate->gender=="Transgender")?'selected':null}}>Transgender</option>
                                                     </select>
                                                 </div>
                                             </div>

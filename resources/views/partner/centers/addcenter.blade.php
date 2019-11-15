@@ -192,7 +192,7 @@
                                                     <div class="form-group form-float">
                                                         <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles as $job)
-                                                                @if ($job->status && $job->scheme_status)
+                                                                @if ($job->status)
                                                                     <option value="{{$job->id}}">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</option>
                                                                 @endif
                                                             @endforeach

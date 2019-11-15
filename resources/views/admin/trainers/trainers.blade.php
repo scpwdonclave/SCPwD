@@ -40,15 +40,12 @@
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
-                                              
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',['id'=>$item->id])}}">View</a></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',Crypt::encrypt($item->id))}}">View</a></td>
                                                 <td><button class="badge bg-blue margin-0" onclick="dlink({{$item->id}})">DeLink</button></td>
-                                                @if($item->status==1 && $item->ind_status==1)
-                                                <td><button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Deactivate</button></td>
-                                                @elseif($item->ind_status==0)
-                                                <td><button class="badge bg-grey margin-0" >Activate</button></td>
-                                                @elseif($item->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tr.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                                @if($item->status)
+                                                    <td><button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Deactivate</button></td>
+                                                @else
+                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tr.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
                                                 @endif
                                             </tr>
                                           

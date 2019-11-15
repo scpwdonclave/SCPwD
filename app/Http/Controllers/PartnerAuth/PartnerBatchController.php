@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
@@ -30,6 +31,14 @@ class PartnerBatchController extends Controller
     protected function guard()
     {
         return Auth::guard('partner');
+    }
+
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
     }
 
     protected function getHolidays(){
@@ -72,7 +81,7 @@ class PartnerBatchController extends Controller
     }
 
     
-    protected function partnerscheme($collection, $flag){
+    protected function partnerscheme($collection, $flag, $partnerJob = NULL){
         switch ($flag) {
             case 'candidate':
                 return $collection->jobrole->partnerjobrole->status;
@@ -80,6 +89,13 @@ class PartnerBatchController extends Controller
             case 'center':
                 foreach ($collection->center_jobroles as $centerjob) {
                     if ($centerjob->partnerjobrole->status) {
+                        return true;
+                    }
+                }
+                return false;
+            case 'trainer':
+                foreach ($collection->trainer_jobroles as $trainerjob) {
+                    if ($trainerjob->partnerjobrole->id == $partnerJob->id && $partnerJob->status) {
                         return true;
                     }
                 }
@@ -98,64 +114,48 @@ class PartnerBatchController extends Controller
     }
 
     public function viewBatch($id){
-        $id = Crypt::decrypt($id);
-        $batchData=Batch::findOrFail($id);
-        if ($batchData->partner->id==$this->guard()->user()->id) {
-            $partner = $this->guard()->user();
-            return view('common.view-batch')->with(compact('batchData','partner'));
-        } else {
-            return abort(401);
+        if ($id=$this->decryptThis($id)) {
+            $batchData=Batch::findOrFail($id);
+            if ($batchData->partner->id==$this->guard()->user()->id) {
+                $partner = $this->guard()->user();
+                return view('common.view-batch')->with(compact('batchData','partner'));
+            } else {
+                return abort(401);
+            }
         }
     }
 
     public function editBatch($id){
-        try {
-            $id = Crypt::decrypt($id);  
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-        $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['ind_status', 1],['verified', 1],['completed', 0]])->first();
-        if ($batchData) {
-
-            $partnerJob = $batchData->tpjobrole;
-            $filteredTrainers = collect([]);
-
-            $partner = $this->guard()->user();
-            $trainers = $partner->trainers;
-                foreach ($trainers as $trainer) {
-                    if ($trainer->status && $trainer->ind_status) {
-                        foreach ($trainer->jobroles as $trainerJob) {
-                            if ($trainerJob->status && $trainerJob->scheme_status) {
-                                foreach ($trainerJob->schemes as $scheme) {
-                                    if ($scheme->scheme_id == $partnerJob->scheme_id) {
-                                        $filteredTrainers->push($trainer);
-                                    }
-                                }
-                            }
+        if ($id=$this->decryptThis($id)) {
+            $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['verified', 1],['completed', 0]])->first();
+            if ($batchData) {
+    
+                $partnerJob = $batchData->tpjobrole;
+                $filteredTrainers = collect([]);
+    
+                $partner = $this->guard()->user();
+                $trainers = $partner->trainers;
+                    foreach ($trainers as $trainer) {
+                        if ($trainer->status && $this->partnerscheme($trainer,'trainer', $partnerJob)) {
+                            $filteredTrainers->push($trainer);
                         }
                     }
-                }
-
-
-
-            $data = [
-                'partner' => $partner,
-                'batchData' => $batchData,
-                'trainers' => $filteredTrainers,
-                'holidays' => $this->getHolidays()
-            ];
-            return view('partner.batches.edit-batch')->with($data);
-        } else {
-            return abort(404);
-        }        
+    
+                $data = [
+                    'partner' => $partner,
+                    'batchData' => $batchData,
+                    'trainers' => $filteredTrainers,
+                    'holidays' => $this->getHolidays()
+                ];
+                return view('partner.batches.edit-batch')->with($data);
+            } else {
+                return abort(404);
+            }
+        }
     }
     
     public function addbatch(){
-        // $hds = Holiday::all();
-        // $holidays = [];
-        // foreach ($hds as $hd) {
-        //     array_push($holidays, $hd->holiday_date);
-        // }
+
         $data = [
             'partner' => $this->guard()->user(),
             'holidays' => $this->getHolidays()
@@ -183,16 +183,8 @@ class PartnerBatchController extends Controller
 
                 $trainers = $partner->trainers;
                 foreach ($trainers as $trainer) {
-                    if ($trainer->status && $trainer->ind_status) {
-                        foreach ($trainer->jobroles as $trainerJob) {
-                            if ($trainerJob->status && $trainerJob->scheme_status) {
-                                foreach ($trainerJob->schemes as $scheme) {
-                                    if ($scheme->scheme_id == $partnerJob->scheme_id) {
-                                        $filteredTrainers->push($trainer);
-                                    }
-                                }
-                            }
-                        }
+                    if ($trainer->status && $this->partnerscheme($trainer,'trainer', $partnerJob)) {
+                        $filteredTrainers->push($trainer);
                     }
                 }
 
@@ -264,27 +256,11 @@ class PartnerBatchController extends Controller
             $jobrole = PartnerJobrole::find($request->jobrole);
             if ($jobrole) {
                 $total_hours = $jobrole->jobrole->hours;
-                /* Custom Holiday List */
-                // $hds = Holiday::all();
-                // $holidays = [];
-                // foreach ($hds as $hd) {
-                //     array_push($holidays, Carbon::parse($hd->holiday_date)->toDateString());
-                // }
-                /* End Custom Holiday List */
-
-
-                        
                 $total_days = ceil($total_hours/$request->hour);
-
-
                 $start_date = Carbon::parse($request->startdate);
-                // $end_date_approx = $start_date->copy()->addDays($total_days-1);
-                
-                            
                 if ($this->isHoliday($start_date)) {
                     return response()->json(['success' => false, 'message' => 'Start Date Cannot be on a Holiday'],200);                    
                 }
-                // $end_date = $end_date_approx->copy();
                 
                 $date = $start_date->copy(); // 15-11-2019
                 $count = 0;

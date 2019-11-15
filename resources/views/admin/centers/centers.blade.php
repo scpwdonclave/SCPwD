@@ -4,61 +4,56 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
 <div class="container-fluid">
-        <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>All</strong>Verified Centers </h2>
-                           
-                        </div>
-                        <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                            <tr>
-                                            <th>#</th>
-                                            <th>TP ID</th>
-                                            <th>TC ID</th>
-                                            <th>Spoc Name</th>
-                                            <th>Spoc Email</th>
-                                            <th>Spoc Mobile</th>
-                                            <th>View</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            @foreach ($data as $key=>$item)
-                                                
-                                            <tr>
-                                            <td>{{$key+1}}</td>
-                                            <td>{{$item->partner->tp_id}}</td>
-                                            <td>{{$item->tc_id}}</td>
-                                            <td>{{$item->spoc_name}}</td>
-                                            <td>{{$item->email}}</td>
-                                            <td>{{$item->mobile}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',['id'=>$item->id])}}" >View</a></td>
-                                            @if($item->status==1 && $item->ind_status==1)
-                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                            @elseif($item->ind_status==0)
-                                            <td><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
-                                            @elseif($item->status==0)
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                            @endif
-                                            </tr>
-                                          
-                                            @endforeach
-                                           
-                                        </tbody>
-                                </table>
-                                </div>
-                        </div>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>All</strong>Verified Centers </h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TP ID</th>
+                                    <th>TC ID</th>
+                                    <th>SPOC Name</th>
+                                    <th>SPOC Email</th>
+                                    <th>SPOC Mobile</th>
+                                    <th>View</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($data as $key=>$item)
+                                <tr>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$item->partner->tp_id}}</td>
+                                    <td>{{$item->tc_id}}</td>
+                                    <td>{{$item->spoc_name}}</td>
+                                    <td>{{$item->email}}</td>
+                                    <td>{{$item->mobile}}</td>
+                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',Crypt::encrypt($item->id))}}" >View</a></td>
+                                    @if($item->status)
+                                        <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
+                                    @else
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 @stop
 @section('page-script')

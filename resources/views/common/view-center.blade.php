@@ -326,6 +326,7 @@
                                         <th>Target Allocated</th>
                                         <th>Student Enrolled</th>
                                         <th>Target Achieved</th>
+                                        <th>Scheme Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -338,6 +339,7 @@
                                         <td>{{$target->target}}</td>
                                         <td>{{$target->enrolled}}</td>
                                         <td>0</td>
+                                        <td class="text-{{($target->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($target->partnerjobrole->status)?'Active':'Inactive'}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -365,19 +367,20 @@
                                         <th>Contact</th>
                                         <th>Category</th>
                                         <th>Date of Birth</th>
+                                        <th>Status</th>
                                         <th>View</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($centerData->candidates as $candidate)
+                                    @foreach ($centerData->candidates as $key => $candidate)
                                     <tr>
-                                        <td><i class="zmdi zmdi-circle text-{{$candidate->status?'success':'danger'}}"></td>
+                                        <td>{{$key+1}}</td>
                                         <td>{{$candidate->name}}</td>
                                         <td>{{$candidate->contact}}</td>
                                         <td>{{$candidate->category}}</td>
                                         <td>{{$candidate->dob}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}" >View</a></td>
-                                        {{-- <td> <a href="{{route(Request::segment(1).'.tc.candidate.view', $candidate->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td> --}}
+                                        <td style="color:{{($candidate->status)?'green':'red'}}">{{($candidate->status)?'Active':'Inactive'}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($candidate->id))}}" >View</a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

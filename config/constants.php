@@ -41,4 +41,9 @@ return [
         ],
     ],
 
+    'note' => "<h6>NOTE:</h6>
+    <span style='color:green'><strong>Active</strong></span>: This Record is Currently in Active State
+    <span style='color:red'><strong>Inactive</strong></span>: This Record is Currently in Inactive State
+    <span style='color:red'><strong>Not Verified</strong></span>: Admin have not Verified This Entry yet",
+
 ];

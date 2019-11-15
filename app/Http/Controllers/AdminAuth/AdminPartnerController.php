@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\TPConfirmationMail;
+use App\PartnerJobRoleReason;
 use App\Mail\TPUpdateAccept;
 use App\Mail\TPUpdateReject;
 use Illuminate\Http\Request;
 use App\Mail\TPRejectMail;
+use App\PartnerJobrole;
+use App\CenterJobRole;
 use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
 use App\Reason;
-use App\PartnerJobRoleReason;
 use App\Center;
-use App\PartnerJobrole;
-use App\CenterJobRole;
 use App\Sector;
 use App\Scheme;
 use Crypt;
@@ -54,7 +54,7 @@ class AdminPartnerController extends Controller
 
     public function partnerDeactive(Request $request){
         $partnerData=Partner::findOrFail($request->id);
-            DB::transaction(function($partnerData){
+            DB::transaction(function() use ($partnerData){
                 $partnerData->status=0;
                 $partnerData->save();
 
@@ -74,7 +74,7 @@ class AdminPartnerController extends Controller
     }
     public function partnerActive($id){
         $partnerData=Partner::findOrFail($id);
-        DB::transaction(function($partnerData){
+        DB::transaction(function() use ($partnerData){
             $partnerData->status=1;
             $partnerData->save();
             foreach ($partnerData->partner_jobroles as $partnerjob) {
@@ -502,7 +502,6 @@ class AdminPartnerController extends Controller
         
         foreach ($partnerScheme as  $scheme) {
             
-            $scheme->scheme_status=0;
             $scheme->save();
 
            $p_job_reason= new PartnerJobRoleReason;
@@ -513,7 +512,6 @@ class AdminPartnerController extends Controller
             $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
             
             foreach ($get_tc_job as  $tcid) {
-                $tcid->scheme_status=0;
                 $tcid->save();
                
             }
@@ -552,13 +550,11 @@ class AdminPartnerController extends Controller
 
         foreach ($partnerScheme as  $scheme) {
             
-            $scheme->scheme_status=1;
             $scheme->save();
             
             $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
             
             foreach ($get_tc_job as  $tcid) {
-                $tcid->scheme_status=1;
                 $tcid->save();
                 
             }

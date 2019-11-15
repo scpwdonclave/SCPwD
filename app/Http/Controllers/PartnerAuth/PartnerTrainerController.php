@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Http\Requests\TRFormValidation;
+use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
+use App\TrainerJobroleScheme;
 use Illuminate\Http\Request;
+use App\TrainerJobRole;
+use App\PartnerJobrole;
 use App\TrainerStatus;
 use App\Notification;
-use Validator;
-use Config;
-use App\Trainer;
 use App\Candidate;
 use App\JobRole;
-use App\PartnerJobrole;
-use App\TrainerJobRole;
-use App\TrainerJobroleScheme;
+use App\Trainer;
+use Validator;
 use Storage;
+use Config;
+use Crypt;
 use Gate;
 use Auth;
 use DB;
@@ -33,11 +35,19 @@ class PartnerTrainerController extends Controller
         return Auth::guard('partner');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function trainers(){
         $partner = $this->guard()->user();
         $trainers = Trainer::where('tp_id', $partner->id)->get();
 
-        return view('partner.centers.trainers')->with(compact('trainers','partner'));
+        return view('partner.trainers')->with(compact('trainers','partner'));
     }
 
     public function addtrainer_api(Request $request){
@@ -84,10 +94,10 @@ class PartnerTrainerController extends Controller
             /* End Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
         } elseif ($request->has('sectorid')) {
             
-            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sectorid]])->select('jobrole_id','status','scheme_status')->groupBy('jobrole_id')->get();
+            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sectorid]])->select('jobrole_id','status')->groupBy('jobrole_id')->get();
             
             foreach ($jobs as $job) {
-                if ($job->status && $job->scheme_status) {
+                if ($job->status) {
                     $job->jobrole->job_role;
                 }
             }
@@ -102,10 +112,10 @@ class PartnerTrainerController extends Controller
                 return response()->json(['success' => false],400);
             }
         } elseif ($request->has('sid')){
-            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sid],['jobrole_id', '=', $request->jid]])->select('scheme_id','status','scheme_status')->get();
+            $jobs = PartnerJobrole::where([['tp_id', '=', $this->guard()->user()->id],['sector_id', '=', $request->sid],['jobrole_id', '=', $request->jid]])->select('id','scheme_id','status')->get();
             
             foreach ($jobs as $job) {
-                if ($job->status && $job->scheme_status) {
+                if ($job->status) {
                     $job->scheme->scheme;
                 }
             }
@@ -130,26 +140,33 @@ class PartnerTrainerController extends Controller
     }
     
     public function submittrainer(TRFormValidation $request){
+
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
+
+            // * Declaring Variables for Freash Trainer Entry
             $doc_file = '';
+            $reassign = $status = 0;                
+            $trainer_id = NULL;
             
             $result = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
             if ($result) {
+
+                // * A Trainer is Present with Same DOC No. So Fetching Exsting Trainer ID and Doc File
                 if ($result->attached) {
+                    // * Trainer is Currently Linked With a TP, So Aborting with Bad Request Code
                     return abort(400);
                 } else {
+
                     if ($result->status) {
+                        // * Trainer is in De-Linked & Activated State
                         $trainer_id = $result->trainer_id;
                         $doc_file = $result->doc_file;
                         $reassign = $status = 1;
                     } else {
+                        // * Trainer is Currently in De-Linked & Deactivated State, So Aborting with Bad Request Code
                         return abort(400);
                     }
                 }
-            } else {
-                $reassign = $status = 0;                
-                $trainer_id = NULL;
-                // return $trainer_id;
             }
             
             DB::transaction(function() use ($request, $trainer_id, $reassign, $status, $doc_file){
@@ -161,19 +178,34 @@ class PartnerTrainerController extends Controller
                 $trainer->mobile = $request->mobile;
                 $trainer->doc_no = $request->doc_no;
                 $trainer->doc_type = (strlen($request->doc_no) == 12)? 'Aadhaar':'Voter';
+                
                 if ($request->has('doc_file')) {
                     $trainer->doc_file = Storage::disk('myDisk')->put('/trainers', $request->doc_file);
                 } else {
                     $trainer->doc_file = $doc_file;
                 }
                 
-
                 $trainer->scpwd_no = $request->scpwd_doc_no;
+                
                 if ($request->has('scpwd_doc')) {
                     $trainer->scpwd_doc = Storage::disk('myDisk')->put('/trainers', $request->scpwd_doc);
                 }
+                
                 $trainer->scpwd_issued = $request->scpwd_start;
                 $trainer->scpwd_valid = $request->scpwd_end;
+
+
+                $trainer->qualification = $request->qualification;
+                $trainer->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request->qualification_doc);
+                $trainer->ssc_no = $request->ssc_doc_no;
+                if ($request->hasFile('ssc_doc')) {
+                    $trainer->ssc_doc = Storage::disk('myDisk')->put('/trainers', $request->ssc_doc);
+                }
+                $trainer->ssc_issued = $request->ssc_start;
+                $trainer->ssc_valid = $request->ssc_end;
+
+
+
                 if ($request->has('resume')) {
                     $trainer->resume = Storage::disk('myDisk')->put('/trainers', $request->resume);
                 }
@@ -182,31 +214,18 @@ class PartnerTrainerController extends Controller
                 }
                 $trainer->reassign = $reassign;
                 $trainer->status = $status;
-                $trainer->save();
-                
+                $trainer->save();     
 
-                $trainerJob = new TrainerJobRole;
-                $trainerJob->tr_id = $trainer->id;
-                $trainerJob->sector_id = $request->sector;
-                $trainerJob->jobrole_id = $request->jobrole;
-                $trainerJob->qualification = $request->qualification;
-                $trainerJob->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request->qualification_doc);
-                $trainerJob->ssc_no = $request->ssc_doc_no;
-                if ($request->hasFile('ssc_doc')) {
-                    $trainerJob->ssc_doc = Storage::disk('myDisk')->put('/trainers', $request->ssc_doc);
-                }
-                $trainerJob->ssc_issued = $request->ssc_start;
-                $trainerJob->ssc_valid = $request->ssc_end;
-                $trainerJob->save();
-
-                foreach ($request->scheme as $scheme) {
-                    $trScheme = new TrainerJobroleScheme;
-                    $trScheme->tr_job_id = $trainerJob->id;
-                    $trScheme->scheme_id = $scheme;
-                    $trScheme->save();
+                foreach ($request->scheme as $job) {
+                    $trainerJob = new TrainerJobRole;
+                    $trainerJob->tp_id = $this->guard()->user()->id;
+                    $trainerJob->tr_id = $trainer->id;
+                    $trainerJob->tp_job_id = $job;
+                    $trainerJob->save();
                 }
 
                 $pid = $trainer->partner->tp_id;
+
                 /* Notification For Partner */
                 $notification = new Notification;
                 $notification->rel_id = 1;
@@ -228,12 +247,17 @@ class PartnerTrainerController extends Controller
     }
 
     public function viewtrainer($id){
-        $data = [
-            'trainerData' => Trainer::findOrFail($id),
-            'partner' => $this->guard()->user(),
-            'trainerdoc' => TrainerJobRole::where('tr_id',$id)->get(),
-        ];
-        return view('common.view-trainer')->with($data);
-        // return view('admin.trainers.view-trainer')->with(compact('trainerData','trainerdoc'));
+        if ($id=$this->decryptThis($id)) {
+            $trainer = Trainer::findOrFail($id);
+            if ($this->guard()->user()->id === $trainer->partner->id) {
+                $data = [
+                    'trainerData' => $trainer,
+                    'partner' => $this->guard()->user()
+                ];
+                return view('common.view-trainer')->with($data);
+            } else {
+                return abort(401);
+            }
+        }
     }
 }

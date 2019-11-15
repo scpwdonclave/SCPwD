@@ -9,7 +9,7 @@ class TrainerStatus extends Model
     public function partner(){
         return $this->belongsTo('App\Partner', 'tp_id');
     }
-    public function jobroles(){
+    public function trainer_jobroles(){
         return $this->hasMany('App\TrainerJobRole', 'tr_id');
     }
 }

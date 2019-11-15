@@ -35,7 +35,7 @@
                                             <th>Target Allocated</th>
                                             <th>Student Enroll</th>
                                             <th>Target Achieve</th>
-                                            <th>Action</th>
+                                            <th>Scheme Status</th>
                                             <th>Edit</th>
                                             </tr>
                                     </thead>
@@ -50,23 +50,12 @@
                                                 <td class="text-center">{{$job->target}}</td>
                                                 <td class="text-center">{{$job->assigned}}</td>
                                                 <td class="text-center">{{$job->target}}</td>
-                                                @if($job->status==1 && $job->scheme_status==1)
-                                                <td class="text-center"><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})">Deactivate</a></td>
-                                                <td class="text-center"><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
-                                                @elseif($job->scheme_status==0)
-                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#" >Activate</a></td>
-                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
-                                                @elseif($job->status==0)
-                                                <td class="text-center"><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
-                                                <td class="text-center"><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
-                                                @endif
-                                                {{-- @if($job->status)
-                                                    <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$job->id}})" >Deactivate</a></td>
-                                                    <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})"  >Edit</a></td>
+                                                <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
+                                                @if($job->status)
+                                                    <td class="text-center"><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})">Edit</a></td>
                                                 @else
-                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.jobrole.active',['id'=>$job->id])}}" >Activate</a></td>
-                                                    <td><a class="badge bg-grey margin-0" href="#"  >Edit</a></td>
-                                                @endif --}}
+                                                    <td class="text-center"><a class="badge bg-grey margin-0" href="#" onclick="return false">Edit</a></td>
+                                                @endif
                                              </tr>
                                             @endforeach
                                            

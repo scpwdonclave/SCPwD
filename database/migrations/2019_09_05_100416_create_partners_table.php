@@ -84,7 +84,6 @@ class CreatePartnersTable extends Migration
             
             /* Flag Secion */
             $table->boolean('status')->default(1)->comment = 'Active or Deactive';
-            $table->boolean('ind_status')->default(1)->comment = 'Indirect Active or Deactive';
             $table->boolean('complete_profile')->default(0)->comment = 'Profile is Completed';
             $table->boolean('pending_verify')->nullable()->comment = 'Completed Profile Verification';
             /* End Flag Secion */

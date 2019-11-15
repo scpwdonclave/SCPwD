@@ -21,14 +21,14 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
-                                    <th>Verified</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -40,14 +40,23 @@
                                 <td>{{$center->spoc_name}}</td>
                                 <td>{{$center->email}}</td>
                                 <td>{{$center->mobile}}</td>
-                                <td class="text-{{$center->verified?'success':'danger'}}">{{$center->verified?'Verified':'Not Verified'}}</td>
-                                <td class="text-center"><a href="{{route('partner.tc.center.view',$center->id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td>
+                                @if ($center->verified)
+                                    <td style="color:{{($center->status)?'green':'red'}}">{{($center->status)?'Active':'Inactive'}}</td>
+                                @else
+                                    <td style="color:red">Not Verified</td>
+                                @endif
+                                <td><a class="badge bg-green margin-0" href="{{route('partner.tc.center.view',Crypt::encrypt($center->id))}}" >View</a></td>
                                 </tr>
                                 @endforeach
                                
                             </tbody>
                         </table>
-                    </div> 
+                    </div>
+                    @can('partner-has-jobrole', Auth::shouldUse('partner'))
+                        <div class="text-muted">
+                            {!!Config::get('constants.note')!!}
+                        </div>
+                    @endcan
                     <div class="text-center">
                         @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
                             <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>

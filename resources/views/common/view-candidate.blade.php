@@ -14,7 +14,7 @@
                 <div class="body">
                         <div class="text-center">
                             <h6>
-                                {{-- This Candidate is <span style='color:#ec3b57'>Inactive</span> --}}
+                                This Candidate is <span style='color:{{($candidate->status)?"green":"red"}}'>{{($candidate->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -98,7 +98,7 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-8">
                                             <small class="text-muted">Scheme/Sector/Job Role/NSQF/QP Code</small>
                                             <p>{{$candidate->jobrole->partnerjobrole->scheme->scheme}} |
                                                 {{$candidate->jobrole->partnerjobrole->sector->sector}} |
@@ -107,6 +107,11 @@
                                                 {{$candidate->jobrole->partnerjobrole->jobrole->qp_code}}
                                             </p>
                                             <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Scheme Status </small>
+                                            <p class="text-{{($candidate->jobrole->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</p>
+                                        <hr>
                                     </div>
                                 </div>
                                 

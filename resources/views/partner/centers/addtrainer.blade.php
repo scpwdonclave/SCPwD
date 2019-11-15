@@ -131,7 +131,7 @@
                                                     <div class="form-group form-float">
                                                         <select id="sector" class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
-                                                                @if ($job->status && $job->scheme_status)
+                                                                @if ($job->status)
                                                                     <option value="{{$job->sector_id}}">{{$job->sector->sector}}</option>
                                                                 @endif
                                                             @endforeach
@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification">Qualification *</label>
+                                                    <label for="qualification">Highest Qualification *</label>
                                                     <div class="form-group form-float">
                                                         <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" data-dropup-auto='false' required>
                                                         </select>
@@ -197,7 +197,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="repeatable-container"></div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
                                                 <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
@@ -308,51 +307,6 @@
     /* End Onload Function */
 
 
-
-
-    /* Duplicate Email Checking */
-    // var dup_email_tag = true;
-    // var dup_mobile_tag = true;
-    // function checkduplicacy(val){
-    //     var _token = $('[name=_token]').val();
-    //     // console.log('Token :'+ _token);
-         
-    //     let value = $('[name='+val+']').val();
-    //     let dataString = { checkredundancy : value, section: val, _token: _token};
-    //     console.log(dataString);
-        
-    //     $.ajax({
-    //         url: "{{ route('partner.addtrainer.api') }}",
-    //         method: "POST",
-    //         data: dataString,
-    //         success: function(data){
-    //             console.log(data.success);
-                
-    //             if (data.success) {
-    //                 $('#'+val+'_error').html('');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = true;
-    //                 } else {
-    //                     dup_mobile_tag = true;
-    //                 } 
-    //             } else {
-    //                 $('#'+val+'_error').html(val+' already exists');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = false;                        
-    //                 } else {
-    //                     dup_mobile_tag = false;
-    //                 } 
-    //             }
-    //         },
-    //         error:function(data){
-    //             $('#'+val+'_error').html(val+' already exists');
-    //             dup_email_tag = false;
-    //             dup_email_tag = false;
-    //         } 
-    //     });
-    // }
-    /* End Duplicate Email Checking */
-
     /* Validation of Each Sections */
 
     function checkIfDuplicateExists(w){
@@ -461,28 +415,7 @@
                                 ajaxresponse = true;
                                 return true;
                             }
-                            
-                            // if (!data.success) {
-                            //     var swalText = document.createElement("div");
-                            //     if (!data.mobile && !data.email) {
-                            //         swalText.innerHTML = 'This Email & Mobile Already Linked With Another Trainer'; 
-                            //     } else if(!data.mobile) {
-                            //         swalText.innerHTML = 'This Mobile is Already Linked With Another Trainer'; 
-                            //     } else if (!data.email) {
-                            //         swalText.innerHTML = 'This Email is Already Linked With Another Trainer'; 
-                            //     }    
-                            //     swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
-                            //     $("#btnTwo").prop("disabled", false);
-                            //     $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                            //     ajaxresponse = false;
-                            //     return false;
-                            // }
-                            // $("#btnTwo").prop("disabled", false);
-                            // $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                            // // ajaxresponse = true;
-                            // // return true;
-                            // ajaxresponse = false;
-                            // return false;
+
                         },
                         error: function(data){
                             swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
@@ -565,9 +498,9 @@
                 data: { _token, sid, jid },
                 success: function(data){
                     $('#scheme').empty();
-                    // $('#scheme').prepend("<option value=''>Select Schemes</option>");
                     data.jobs.forEach(value => {
-                        $('#scheme').append('<option value='+value.scheme_id+'>'+value.scheme.scheme+'</option>');
+                        /* Setting partner_job_id Instead of set jobid as value of selection  */
+                        $('#scheme').append('<option value='+value.id+'>'+value.scheme.scheme+'</option>');
                     });
                     $('#scheme').selectpicker('refresh');
                 } 
@@ -581,17 +514,12 @@
         function updatejob(){
             var _token = $('[name=_token]').val();
             var sectorid = $("#sector :selected").val();
-            // console.log(sectorid);
-            
             $.ajax({
                 url: "{{ route('partner.addtrainer.api') }}",
                 method: "POST",
                 data: { _token, sectorid },
                 success: function(data){
-                    // console.log(data);
-                    
                     $('#jobrole').empty();
-                    // $('#jobrole').prepend("<option value=''>Select Job Role</option>");
                     data.jobs.forEach(value => {
                         $('#jobrole').append('<option value='+value.jobrole_id+'>'+value.jobrole.job_role+'</option>');
                     });
@@ -614,13 +542,10 @@
                 url: "{{ route('partner.addtrainer.api') }}",
                 data: {_token, jobroleid},
                 success: function (response) {
-                    // console.log(response);
-                    
                     qualifications = '<?php echo json_encode($config)?>';
                     data = JSON.parse(qualifications);
 
                     $('#qualification').empty();
-                    // $('#qualification').prepend("<option value=''>Select Qualificaton</option>");
                     Object.keys(data).forEach(function(k){
                         if (k >= response.qualification) {
                             $('#qualification').append('<option value="'+k+'">'+data[k]+'</option>');
@@ -638,53 +563,6 @@
         }
     /* End Qualification DropDown Item Section */
 
-
-    /* Repeatable Section for JobRole */
-    $(function() {
-            $("form .repeatable-container").repeatable({
-            template: "#jobroleform",
-            max: {{count($partner->partner_jobroles->unique("sector_id"))-1}},
-            afterAdd: function(id){
-                var temp = id[0].id.split('_');
-                var last = temp[temp.length - 1];
-                $('.jobrole').selectpicker();
-                $('.qualification').selectpicker('refresh');
-                
-                /* Fetch SelectPicker Data */
-                
-                var $options = $("#sector_new > option").sort().clone();
-                $('#sector_'+last).append($options);
-                $('#sector_'+last).selectpicker('refresh');
-                updatejob(last);
-
-                $('.month_range_picker_start .form-control').datepicker({
-                    autoclose: true,
-                    format: 'dd MM yyyy',
-                    endDate: new Date()
-                });
-
-                $('.month_range_picker_end .form-control').datepicker({
-                    autoclose: true,
-                    format: 'dd MM yyyy',
-                    startDate: new Date()
-                });
-
-                $('#ssc_start_'+last)
-                .datepicker()
-                .on('changeDate', function(selected){
-                    startDate = new Date(selected.date.valueOf());
-                    startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-                    $('#ssc_end_'+last).datepicker('setStartDate', startDate);
-                });
-
-                filevalidate();
-
-                /* End Fetch SelectPicker Data */
-                }
-            });
-            
-        });
-    /* End Repeatable Section for JobRole */
 
     /* File Type Validation */
         function filevalidate(){
@@ -716,7 +594,6 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
-<script src="{{asset('assets/js/jquery.repeatable.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

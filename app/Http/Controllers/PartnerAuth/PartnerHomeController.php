@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Http\Requests\TPFormValidation;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use App\Partner;
 use App\Holiday;
+use Crypt;
 use Alert;
 use Auth;
 
@@ -45,27 +47,36 @@ class PartnerHomeController extends Controller
         return Auth::guard('partner');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function index() {
-        return view('partner.home')->with('partner',Auth::guard('partner')->user());
+        return view('partner.home')->with('partner',$this->guard()->user());
     }
 
     public function jobroles(){
         $data = [
-            'partner' => Auth::guard('partner')->user(),
-            'jobroles' => PartnerJobrole::where('tp_id',Auth::guard('partner')->user()->id)->get()
+            'partner' => $this->guard()->user(),
+            'jobroles' => PartnerJobrole::where('tp_id',$this->guard()->user()->id)->get()
         ];
         return view('common.jobroles')->with($data);
     }
 
     public function viewjobrole($id){
-
-        $partner_job = PartnerJobrole::where('tp_id',Auth::guard('partner')->user()->id)->findOrFail($id);
-        $data = [
-            'partner' => Auth::guard('partner')->user(),
-            'schemesectorjobrole' => $partner_job->scheme->scheme.'/'.$partner_job->sector->sector.'/'.$partner_job->jobrole->job_role,
-            'centers' => CenterJobRole::where('tp_job_id', $partner_job->id)->get()
-        ];
-        return view('partner.viewjobrole')->with($data);
+        if ($id=$this->decryptThis($id)) {
+            $partner_job = PartnerJobrole::where('tp_id',$this->guard()->user()->id)->findOrFail($id);
+            $data = [
+                'partner' => $this->guard()->user(),
+                'schemesectorjobrole' => $partner_job->scheme->scheme.'/'.$partner_job->sector->sector.'/'.$partner_job->jobrole->job_role,
+                'centers' => CenterJobRole::where('tp_job_id', $partner_job->id)->get()
+            ];
+            return view('partner.viewjobrole')->with($data);
+        }
     }
 
 
@@ -73,21 +84,21 @@ class PartnerHomeController extends Controller
     /* View The Complete Registrattion Form */
     public function showCompleteRegistrationForm(){
         $data = [
-            'partner'  => Auth::guard('partner')->user(),
+            'partner'  => $this->guard()->user(),
             'parliaments'   => DB::table('parliament')->get(),
             'states'   => DB::table('state_district')->get(),
         ];
-        return (Auth::guard('partner')->user()->complete_profile) ? redirect(route('partner.dashboard.dashboard')) : view('partner.completeregistration')->with($data);
+        return ($this->guard()->user()->complete_profile) ? redirect(route('partner.dashboard.dashboard')) : view('partner.completeregistration')->with($data);
     }
 
     /* Submit Complete Registration Form Data */
     public function submitCompleteRegistrationForm(TPFormValidation $request){
 
-        // $this->authorize('partner-profile-verified', Auth::guard('partner')->user()); 
+        // $this->authorize('partner-profile-verified', $this->guard()->user()); 
 
-        if (!Auth::guard('partner')->user()->can('partner-profile-verified')) {
+        if (!$this->guard()->user()->can('partner-profile-verified')) {
             $initial_year = (Carbon::now()->format('m') <= 3)?(Carbon::now()->format('Y')-1):Carbon::now()->format('Y');
-            $partner = Auth::guard('partner')->user();
+            $partner = $this->guard()->user();
             $partner->org_name = $request->org_name;
             $partner->org_type = $request->org_type;
             $partner->estab_year = $request->estab_year;
@@ -176,7 +187,7 @@ class PartnerHomeController extends Controller
     }
 
     public function profile(){
-        $partner = Auth::guard('partner')->user();
+        $partner = $this->guard()->user();
         return view('common.profile')->with(compact('partner'));
     }
 
@@ -184,14 +195,14 @@ class PartnerHomeController extends Controller
 
         if (Gate::allows('partner-profile-verified', Auth::shouldUse('partner'))) {
 
-            $partner = Auth::guard('partner')->user();
+            $partner = $this->guard()->user();
             if ($partner->spoc_name == $request->spoc_name && $partner->email == $request->email && $partner->spoc_mobile == $request->spoc_mobile && is_null($request->password)) {
                 alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
                 return redirect()->back();
             } else {
                 $request->validate([
                     'spoc_name' => 'required',
-                    'email' => 'required|email|unique:partners,email,'.Auth::guard('partner')->user()->id,
+                    'email' => 'required|email|unique:partners,email,'.$this->guard()->user()->id,
                     'spoc_mobile' => 'required|numeric',
                     'password' => 'nullable',
                 ]);

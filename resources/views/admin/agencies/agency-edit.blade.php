@@ -89,9 +89,9 @@
                                                             <label for="spoc_gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
-                                                                    <option value="Male" {{ ( $agency->spoc_gender =="Male") ? 'selected' : '' }}>Male</option>
-                                                                    <option value="Female" {{ ( $agency->spoc_gender =="Female") ? 'selected' : '' }}>Female</option>
-                                                                    <option value="Transgender" {{ ( $agency->spoc_gender =="Transgender") ? 'selected' : '' }}>Transgender</option>
+                                                                    <option {{($agency->spoc_gender=="Male")?'selected':null}}>Male</option>
+                                                                    <option {{($agency->spoc_gender=="Female")?'selected':null}}>Female</option>
+                                                                    <option {{($agency->spoc_gender=="Transgender")?'selected':null}}>Transgender</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -219,9 +219,9 @@
                                                     <label for="gender">Gender *</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                            <option value="male">Male</option>
-                                                            <option value="female">Female</option>
-                                                            <option value="other">Other</option>
+                                                            <option>Male</option>
+                                                            <option>Female</option>
+                                                            <option>Transgender</option>
                                                         </select>
                                                     </div>
                                                 </div>

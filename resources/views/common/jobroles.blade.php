@@ -18,7 +18,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>Scheme</th>
@@ -26,6 +26,7 @@
                                     <th>Job Role</th>
                                     <th>Target</th>
                                     <th>{{(Request::segment(1) === 'partner')?'Assigned':'Enrolled'}}</th>
+                                    <th>Scheme Status</th>
                                     @if (Request::segment(1) === 'partner')
                                         <th>Action</th>
                                     @endif
@@ -41,20 +42,22 @@
                                                 <td>{{$jobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->assigned}}</td>
-                                                <td class="text-center"> <a href="{{route('partner.dashboard.jobroles.view',$jobrole->id)}}"><button class="btn btn-primary waves-effect btn-round">View</button></a></td>
+                                                <td class="text-{{($jobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->status)?'Active':'Inactive'}}</td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('partner.dashboard.jobroles.view',Crypt::encrypt($jobrole->id))}}" >View</a></td>
                                             </tr>
-                                        @endforeach
-                                    @endif
-                                @endauth
-                                @auth('center')
-                                    @if (Request::segment(1) === 'center')
-                                        @foreach ($jobroles as $jobrole)
+                                            @endforeach
+                                            @endif
+                                            @endauth
+                                            @auth('center')
+                                            @if (Request::segment(1) === 'center')
+                                            @foreach ($jobroles as $jobrole)
                                             <tr>
                                                 <td>{{$jobrole->partnerjobrole->scheme->scheme}}</td>
                                                 <td>{{$jobrole->partnerjobrole->sector->sector}}</td>
                                                 <td>{{$jobrole->partnerjobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->enrolled}}</td>
+                                                <td class="text-{{($jobrole->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->partnerjobrole->status)?'Active':'Inactive'}}</td>
                                             </tr>
                                         @endforeach
                                     @endif

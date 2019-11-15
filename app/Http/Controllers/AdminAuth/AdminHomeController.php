@@ -103,6 +103,10 @@ class AdminHomeController extends Controller
             return $this->dispatchNow(new \App\Jobs\AddScheme($request));
         } else if ($request->has('name')) {
             return $this->dispatchNow(new \App\Jobs\UpdateScheme($request));
+        } else if ($request->has('id')) {
+
+            // TODO Working On This Section
+        
         }
     }
 
@@ -125,7 +129,5 @@ class AdminHomeController extends Controller
         $data=Holiday::findOrFail($request->id);
         $data->delete();
         return response()->json(['status' => 'done'],200);
-
     }
-
 }

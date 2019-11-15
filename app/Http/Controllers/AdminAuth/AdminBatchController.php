@@ -28,6 +28,14 @@ class AdminBatchController extends Controller
         return Auth::guard('admin');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     protected function getHolidays(){
         $hds = Holiday::all();
         $holidays = [];
@@ -99,19 +107,15 @@ class AdminBatchController extends Controller
         return view('admin.batches.pending-batches')->with(compact('data'));
     }
     public function viewBatch($id){
-        try {
-            $id = Crypt::decrypt($id);  
+        if ($id=$this->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
             return view('common.view-batch')->with(compact('batchData'));
-        } catch (DecryptException $e) {
-            return abort(404);
         }
     }
 
 
     public function batchAction(Request $request){
-        try {
-            $id = Crypt::decrypt($request->id); 
+        if ($id=$this->decryptThis($request->id)) {
             $data=Batch::findOrFail($id);
             if (!$data->verified) {
                 if ($request->action === 'accept') {
@@ -132,7 +136,6 @@ class AdminBatchController extends Controller
                 
                         $data->batch_id=$new_batchid;
                         $data->status=1;
-                        $data->ind_status=1;
                         $data->verified=1;
                         $data->save();
                 
@@ -175,8 +178,6 @@ class AdminBatchController extends Controller
             } else {
                 return redirect()->route('admin.batch.batches');
             }
-        } catch (DecryptException $e) {
-            return abort(404);
         }
     }
 
@@ -189,9 +190,7 @@ class AdminBatchController extends Controller
     }
 
     public function batchUpdateAction(Request $request){
-        
-        try {
-            $id = Crypt::decrypt($request->id);
+        if ($id=$this->decryptThis($request->id)) {
             $batchupdate = BatchUpdate::findOrFail($id);
             if (!$batchupdate->action) {
                 if ($request->action === 'accept') {
@@ -242,9 +241,6 @@ class AdminBatchController extends Controller
                 }
             }
             return redirect()->route('admin.batch.bu');
-            
-        } catch (DecryptException $e) {
-            return abort(404);
         }
     }
 }

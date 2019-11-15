@@ -28,6 +28,14 @@ class CreateTrainerStatusesTable extends Migration
             $table->string('scpwd_doc')->nullable();
             $table->string('scpwd_issued')->nullable();
             $table->string('scpwd_valid')->nullable();
+
+            $table->string('qualification');
+            $table->string('qualification_doc');
+            $table->string('ssc_no')->nullable();
+            $table->string('ssc_doc')->nullable();
+            $table->string('ssc_issued')->nullable();
+            $table->string('ssc_valid')->nullable();
+
             $table->string('resume')->nullable();
             $table->string('other_doc')->nullable();
             $table->string('dlink_reason')->nullable();

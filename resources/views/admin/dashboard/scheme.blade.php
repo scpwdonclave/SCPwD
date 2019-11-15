@@ -33,6 +33,7 @@
                                     <th>Scheme</th>
                                     <th>Year</th>
                                     <th>Action</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,6 +43,7 @@
                                 <td>{{$scheme->scheme}}</td>
                                 <td>{{$scheme->year}}</td>
                                 <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
+                                <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -127,7 +129,59 @@
                         var SuccessResponseText = document.createElement("div");
                         SuccessResponseText.innerHTML = data['message'];
                         setTimeout(function () {
-                            swal({title: "Job Done", content: SuccessResponseText, icon: "success", closeOnEsc: false}).then(function(){
+                            swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeOnEsc: false}).then(function(){
+                                setTimeout(function(){location.reload()},150);
+                            });
+                        }, 2000);
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
+                });
+            } else if (val!=null) {
+                swal('Attention', 'You Have not Changed anything yet', 'info');
+            }
+        });
+        
+    });
+
+    function popup(v){
+        var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        var color=''; var text='';
+        var _token=$('[name=_token]').val();
+        if (data[1]) {color = 'red'; text = 'Disable';} else {color = 'green'; text = 'Enable';}
+        var scheme=data[2];
+        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> This <span style='font-weight:bold; color:blue;'>"+scheme+"</span> Scheme";
+        swal({
+            text: "Are you Sure ?",
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Update Status",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            var dataString = {_token, id:data[0]};
+            if (val) {
+                $.ajax({
+                    url: "{{ route('admin.dashboard.scheme_action') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML = data['message'];
+                        setTimeout(function () {
+                            swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeOnEsc: false}).then(function(){
                                 setTimeout(function(){location.reload()},150);
                             });
                         }, 2000);
@@ -141,8 +195,10 @@
                 });
             }
         });
-        
-    });
+    }
+
+
+
 
     $('#scheme_table').attr('data-page-length',5);
 

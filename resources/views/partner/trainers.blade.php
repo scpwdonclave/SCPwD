@@ -21,7 +21,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -41,13 +41,22 @@
                                         <td>{{$trainer->name}}</td>
                                         <td>{{$trainer->email}}</td>
                                         <td>{{$trainer->mobile}}</td>
-                                        <td class="text-{{$trainer->verified?'success':'danger'}}">{{$trainer->verified?'Verified':'Not Verified'}}</td>
-                                        <td> <a href="{{route('partner.trainer.view',$trainer->id)}}"> <button class="btn btn-primary waves-effect btn-round">View</button> </a> </td>
+                                        @if ($trainer->verified)
+                                            <td style="color:{{($trainer->status)?'green':'red'}}">{{($trainer->status)?'Active':'Inactive'}}</td>
+                                        @else
+                                            <td style="color:red">Not Verified</td>
+                                        @endif
+                                        <td><a class="badge bg-green margin-0" href="{{route('partner.trainer.view',Crypt::encrypt($trainer->id))}}">View</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div> 
+                    @can('partner-has-jobrole', Auth::shouldUse('partner'))
+                        <div class="text-muted">
+                            {!!Config::get('constants.note')!!}
+                        </div>
+                    @endcan
                     <div class="text-center">
                         @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
                             <h6>You Can Add New Trainers Once Admin Assign you Job Roles</h6>

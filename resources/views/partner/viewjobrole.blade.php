@@ -4,7 +4,6 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
@@ -21,7 +20,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>TC ID</th>
@@ -43,7 +42,7 @@
                                 <td>{{$center->target}}</td>
                                 <td>{{$center->enrolled}}</td>
                                 <td>{{$center->enrolled}}</td>
-                                <td class="text-center"> <a href="{{route('partner.tc.center.view',$center->tc_id)}}"><button class="btn btn-primary btn-round waves-effect">View</button></a></td>
+                                <td> <a class="badge bg-green margin-0" href="{{route('partner.tc.center.view',Crypt::encrypt($center->tc_id))}}">View</a></td>
                                 </tr>
                                 @endforeach
                                

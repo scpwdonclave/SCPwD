@@ -105,30 +105,30 @@
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Trainer Job Role</span></time>
                             <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-pin"></i></div>
                             <div class="cbp_tmlabel">
-                                    <div class="table-responsive">
-                                            <table class="table m-b-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Scheme</th>
-                                                        <th>Sector</th>
-                                                        <th>Job</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($trainerData->jobroles[0]->schemes as $key=>$scheme)
-                                                    <tr>
-                                                        <td>{{$key+1}}</td>
-                                                        <td>{{$scheme->scheme->scheme}}</td>
-                                                        <td >{{$trainerData->jobroles[0]->sector->sector}}</td>
-                                                        <td>{{$trainerData->jobroles[0]->jobrole->job_role}}</td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                               
-                                
+                                <div class="table-responsive">
+                                    <table class="table m-b-0">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Scheme</th>
+                                                <th>Sector</th>
+                                                <th>Job</th>
+                                                <th>Scheme Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($trainerData->trainer_jobroles as $key=>$trainerJob)
+                                            <tr>
+                                                <td>{{$key+1}}</td>
+                                                <td>{{$trainerJob->partnerjobrole->scheme->scheme}}</td>
+                                                <td>{{$trainerJob->partnerjobrole->sector->sector}}</td>
+                                                <td>{{$trainerJob->partnerjobrole->jobrole->job_role}}</td>
+                                                <td class="text-{{($trainerJob->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($trainerJob->partnerjobrole->status)?'Active':'Inactive'}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </li>
                         <li>
@@ -174,8 +174,8 @@
                                             <small class="text-muted">Qualification</small>
                                                 <p>
                                                    
-                                                    {{config('constants.qualifications.'.$trainerData->jobroles[0]->qualification)}} &nbsp;&nbsp;                                                    
-                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->jobroles[0]->qualification_doc)])}}" download="{{basename($trainerData->jobroles[0]->qualification_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                                    {{config('constants.qualifications.'.$trainerData->qualification)}} &nbsp;&nbsp;                                                    
+                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->qualification_doc)])}}" download="{{basename($trainerData->qualification_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
                                                 </p>
                                           
                                             <hr>
@@ -183,9 +183,9 @@
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">SSC No</small>
-                                                @if (!is_null($trainerData->jobroles[0]->ssc_doc))
-                                                <p>{{$trainerData->jobroles[0]->ssc_no}}&nbsp;&nbsp; 
-                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->jobroles[0]->ssc_doc)])}}" download="{{basename($trainerData->jobroles[0]->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                                @if (!is_null($trainerData->ssc_doc))
+                                                <p>{{$trainerData->ssc_no}}&nbsp;&nbsp; 
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->ssc_doc)])}}" download="{{basename($trainerData->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
                                                 </p>
                                                 @else
                                                 <p>No Document Provided</p>
@@ -195,12 +195,12 @@
                                         </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">SSC Issued</small>
-                                                <p>{{$trainerData->jobroles[0]->ssc_issued}}</p>
+                                                <p>{{$trainerData->ssc_issued}}</p>
                                                 <hr>
                                         </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">SSC Valid</small>
-                                                <p>{{$trainerData->jobroles[0]->ssc_valid}}</p>
+                                                <p>{{$trainerData->ssc_valid}}</p>
                                                 <hr>
                                         </div>
                                     </div>
@@ -212,11 +212,11 @@
                         <div class="text-center" >
                             @if (Request::segment(1)==='admin')
                                 @if (is_null($trainerData->attached))
-                                    @if (!$trainerData->verified )
+                                    @if (!$trainerData->verified)
                                         <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
                                         <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                                    @elseif ( $trainerData->verified==1)
-                                        <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>                         
+                                    @else
+                                        <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>
                                     @endif
                                 @endif
                             @endif

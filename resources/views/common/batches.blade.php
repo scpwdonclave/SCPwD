@@ -40,6 +40,7 @@
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
                                     <th>Status</th>
+                                    <th>Scheme Status</th>
                                     <th>View</th>
                                 </tr>
                                
@@ -60,13 +61,21 @@
                                 <td>{{$item->batch_start}}</td>
                                 <td>{{$item->batch_end}}</td>
                                 <td>{{$item->assessment}}</td>
-                                <td class="text-{{($item->verified)?'success':'danger'}}">{{($item->verified)?'Verified':'Not Verified'}}</td>
+                                @if ($item->verified)
+                                    <td style="color:{{($item->status)?'green':'red'}}">{{($item->status)?'Active':'Inactive'}}</td>
+                                @else
+                                    <td style="color:red">Not Verified</td>
+                                @endif
+                                    <td style="color:{{($item->tpjobrole->status)?'green':'red'}}">{{($item->tpjobrole->status)?'Active':'Inactive'}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                               
+                                    
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="text-muted">
+                            {!!Config::get('constants.note')!!}
+                        </div>
                     </div>
                 </div>
             </div>

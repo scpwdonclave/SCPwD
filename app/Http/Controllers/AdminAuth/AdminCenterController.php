@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use App\Mail\TCConfirmationMail;
 use Illuminate\Validation\Rule;
-use Validator;
+use Illuminate\Http\Request;
+use App\Mail\TCRejectMail;
+use App\CenterJobRole;
 use App\Notification;
-use App\Center;
-use App\Reason;
 use App\CenterDoc;
 use App\Candidate;
-use App\CenterJobRole;
-use App\Mail\TCRejectMail;
-use App\Mail\TCConfirmationMail;
+use App\Reason;
+use App\Center;
+use Validator;
 use Crypt;
 use Auth;
 use Mail;
@@ -35,6 +35,14 @@ class AdminCenterController extends Controller
         return Auth::guard('admin');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function centers(){ 
 
         $data=Center::where('verified',1)->get();
@@ -48,65 +56,62 @@ class AdminCenterController extends Controller
 
     public function centerView($id){
 
-        $centerData=Center::findOrFail($id);
-        $state_district=DB::table('centers AS c')
-        ->join('state_district AS s','c.state_district','=','s.id')
-        ->join('parliament AS p','c.parliament','=','p.id')
-        ->where('c.id',$id)->first();
-        $tc_target=CenterJobRole::where('tc_id',$id)->get();
-        return view('common.view-center')->with(compact('centerData','state_district', 'tc_target'));
+        if ($id = $this->decryptThis($id)) {
+            $centerData=Center::findOrFail($id);
+            $state_district=DB::table('centers AS c')
+            ->join('state_district AS s','c.state_district','=','s.id')
+            ->join('parliament AS p','c.parliament','=','p.id')
+            ->where('c.id',$id)->first();
+            $tc_target=CenterJobRole::where('tc_id',$id)->get();
+            return view('common.view-center')->with(compact('centerData','state_district', 'tc_target'));
+        }
         
     }
     public function centerAccept($id){
-        try {
-            $center_id = Crypt::decrypt($id); 
-        } catch (DecryptException $e) {
-            abort(404);
+        if ($center_id=$this->decryptThis($id)) {
+            $center=Center::findOrFail($center_id);
+            if($center->verified==1){
+                alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+                return Redirect()->back(); 
+            }
+            $data=DB::table('centers')
+            ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
+            ->where("tc_id", "LIKE", "TC%")->get();
+            $year = date('Y');
+            if (count($data) > 0) {
+    
+                $priceprod = array();
+                    foreach ($data as $key=>$data) {
+                        $priceprod[$key]=$data->tc_id;
+                    }
+                    $lastid= max($priceprod);
+                   
+                    $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
+                //dd($new_tpid);
+            } else {
+                $new_tcid = 'TC'.$year.'000001';
+            }
+            $center_password = str_random(8);
+            $center->tc_id=$new_tcid;
+            $center->password=Hash::make($center_password);
+            $center->status=1;
+            $center->verified=1;
+            $center->save();
+    
+             /* Notification For Partner */
+             $notification = new Notification;
+             $notification->rel_id = $center->tp_id;
+             $notification->rel_with = 'partner';
+             $notification->title = 'TC has been Approved';
+             $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
+             $notification->save();
+             /* End Notification For Partner */
+             $center['password']=$center_password;
+             Mail::to($center['email'])->send(new TCConfirmationMail($center));
+    
+             alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
+             return redirect()->back();
         }
-        $center=Center::findOrFail($center_id);
-        if($center->verified==1){
-            alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-            return Redirect()->back(); 
-        }
-        $data=DB::table('centers')
-        ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
-        ->where("tc_id", "LIKE", "TC%")->get();
-       // dd(count($data));
-        $year = date('Y');
-        if (count($data) > 0) {
-
-            $priceprod = array();
-                foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->tc_id;
-                }
-                $lastid= max($priceprod);
-               
-                $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
-            //dd($new_tpid);
-        } else {
-            $new_tcid = 'TC'.$year.'000001';
-        }
-        $center_password = str_random(8);
-        $center->tc_id=$new_tcid;
-        $center->password=Hash::make($center_password);
-        $center->status=1;
-        $center->verified=1;
-        $center->save();
-
-         /* Notification For Partner */
-         $notification = new Notification;
-         $notification->rel_id = $center->tp_id;
-         $notification->rel_with = 'partner';
-         $notification->title = 'TC has been Approved';
-         $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
-         $notification->save();
-         /* End Notification For Partner */
-         $center['password']=$center_password;
-         Mail::to($center['email'])->send(new TCConfirmationMail($center));
-
-         alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
-         return Redirect()->back();
-
     }
 
     public function centerReject(Request $request){
@@ -130,18 +135,14 @@ class AdminCenterController extends Controller
     }
     
     public function centerEdit($id){
-        try {
-            $center_id = Crypt::decrypt($id); 
-            
-        } catch (DecryptException $e) {
-            abort(404);
+        if ($id = $this->decryptThis($id)) {
+            $data = [
+                'center'=>Center::findOrFail($id),
+                'states'=>DB::table('state_district')->get(),
+                'parliaments'=>DB::table('parliament')->get(),
+            ];
+            return view('admin.centers.center-edit')->with($data);
         }
-     $center=Center::findOrFail($center_id);
-     $states=DB::table('state_district')->get();
-     $parliaments=DB::table('parliament')->get();
-
-     return view('admin.centers.center-edit')->with(compact('center','states','parliaments'));
-
     }
 
     public function centerDetailsUpdate(Request $request){
@@ -161,7 +162,7 @@ class AdminCenterController extends Controller
         if($request->hasFile('addr_doc')){
             Storage::disk('myDisk')->delete($center->addr_doc);
             $center->addr_doc = Storage::disk('myDisk')->put('/centers', $request['addr_doc']);
-            }
+        }
         $center->state_district = $request->state_district;
         $center->parliament = $request->parliament;
         $center->city = $request->city;
@@ -171,11 +172,11 @@ class AdminCenterController extends Controller
         if($request->hasFile('center_front_view')){
             Storage::disk('myDisk')->delete($center->center_front_view);
             $center->center_front_view = Storage::disk('myDisk')->put('/centers', $request['center_front_view']);
-            }
+        }
         if($request->hasFile('center_back_view')){
             Storage::disk('myDisk')->delete($center->center_back_view);
             $center->center_back_view = Storage::disk('myDisk')->put('/centers', $request['center_back_view']);
-            }
+        }
         if($request->hasFile('center_right_view')){
             Storage::disk('myDisk')->delete($center->center_right_view);
             $center->center_right_view = Storage::disk('myDisk')->put('/centers', $request['center_right_view']);
@@ -183,13 +184,12 @@ class AdminCenterController extends Controller
         if($request->hasFile('center_left_view')){
             Storage::disk('myDisk')->delete($center->center_left_view);
             $center->center_left_view = Storage::disk('myDisk')->put('/centers', $request['center_left_view']);
-            }
+        }
 
            
         if($request->hasFile('class_room')){
             foreach ($center_doc_class as  $doc) {
                 Storage::disk('myDisk')->delete($doc->doc);
-               
             }
             CenterDoc::where([['tc_id','=',$request->centerid],['room','=','class']])->delete();
             foreach ($request->class_room as $class) {
@@ -198,9 +198,8 @@ class AdminCenterController extends Controller
                $class_doc->room='class';
                $class_doc->doc=Storage::disk('myDisk')->put('/centers', $class);
                $class_doc->save();
-            }
-           
-            }
+            }   
+        }
         if($request->hasFile('lab_room')){
             foreach ($center_doc_lab as  $doc) {
                 Storage::disk('myDisk')->delete($doc->doc);
@@ -215,7 +214,7 @@ class AdminCenterController extends Controller
                $class_doc->save();
             }
            
-            }
+        }
         if($request->hasFile('equipment_room')){
             foreach ($center_doc_equip as  $doc) {
                 Storage::disk('myDisk')->delete($doc->doc);
@@ -230,7 +229,7 @@ class AdminCenterController extends Controller
                $class_doc->save();
             }
            
-            }
+        }
         if($request->hasFile('wash_room')){
             foreach ($center_doc_wash as  $doc) {
                 Storage::disk('myDisk')->delete($doc->doc);
@@ -245,34 +244,34 @@ class AdminCenterController extends Controller
                $class_doc->save();
             }
            
-            }
+        }
 
-            if($request->hasFile('bio_room')){
-                $center->biometric = Storage::disk('myDisk')->put('/centers', $request['bio_room']);
-                }
-            if($request->hasFile('drink_room')){
-                $center->drinking = Storage::disk('myDisk')->put('/centers', $request['drink_room']);
-                }
-            if($request->hasFile('safety')){
-                $center->safety = Storage::disk('myDisk')->put('/centers', $request['safety']);
-                }
+        if($request->hasFile('bio_room')){
+            $center->biometric = Storage::disk('myDisk')->put('/centers', $request['bio_room']);
+        }
+        if($request->hasFile('drink_room')){
+            $center->drinking = Storage::disk('myDisk')->put('/centers', $request['drink_room']);
+        }
+        if($request->hasFile('safety')){
+            $center->safety = Storage::disk('myDisk')->put('/centers', $request['safety']);
+        }
 
-                 /* Notification For center */
-                $notification = new Notification;
-                $notification->rel_id = $center->id;
-                $notification->rel_with = 'center';
-                $notification->title = 'Account Updated';
-                $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
-                $notification->save();
-                /* End Notification For center */
-                 /* Notification For Partner */
-                $notification = new Notification;
-                $notification->rel_id = $center->tp_id;
-                $notification->rel_with = 'partner';
-                $notification->title = 'Account Updated';
-                $notification->message = "Your Center has been <span style='color:blue;'>Updated</span>.";
-                $notification->save();
-                /* End Notification For Partner */
+            /* Notification For center */
+            $notification = new Notification;
+            $notification->rel_id = $center->id;
+            $notification->rel_with = 'center';
+            $notification->title = 'Account Updated';
+            $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
+            $notification->save();
+            /* End Notification For center */
+            /* Notification For Partner */
+            $notification = new Notification;
+            $notification->rel_id = $center->tp_id;
+            $notification->rel_with = 'partner';
+            $notification->title = 'Account Updated';
+            $notification->message = "Your Center has been <span style='color:blue;'>Updated</span>.";
+            $notification->save();
+            /* End Notification For Partner */
 
             $center->save();
             alert()->success('Center Details Updated', 'Done')->autoclose(2000);
@@ -299,76 +298,62 @@ class AdminCenterController extends Controller
           $notification->save();
           /* End Notification For Partner */
 
-        // foreach ($center->trainers as $trainer) {
-        //     $trainer->ind_status = 0;
-        //     $trainer->save();
-        // }
-
         return response()->json(['status' => 'done'],200);
     }
     public function centerActive($id){
-        try {
-            $id=Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
+        
+        if ($id = $this->decryptThis($id)) {
+            $center=Center::findOrFail($id);
+            $center->status=1;
+            $center->save();
+    
+             /* Notification For Partner */
+             $notification = new Notification;
+             $notification->rel_id = $center->tp_id;
+             $notification->rel_with = 'partner';
+             $notification->title = 'Training Center Active';
+             $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
+             $notification->save();
+             /* End Notification For Partner */
+    
+            alert()->success('Center Activated', 'Done')->autoclose(2000);
+            return redirect()->back();
         }
-        $center=Center::findOrFail($id);
-        $center->status=1;
-        $center->save();
-
-         /* Notification For Partner */
-         $notification = new Notification;
-         $notification->rel_id = $center->tp_id;
-         $notification->rel_with = 'partner';
-         $notification->title = 'Training Center Active';
-         $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
-         $notification->save();
-         /* End Notification For Partner */
-
-        // foreach ($center->trainers as $trainer) {
-        //     $trainer->ind_status =1;
-        //     $trainer->save();
-        // }
-
-        alert()->success('Center Activated', 'Done')->autoclose(2000);
-            return Redirect()->back();
     }
 
     public function candidates(){
-        $admin = Auth::guard('admin')->user();
         $data = [
-            'admin'  => $admin,
+            'admin'  => $this->guard()->user(),
             'candidates' => Candidate::all(),
         ];
         return view('common.candidates')->with($data);
     }
 
     public function view_candidate($id){
-        $candidate = Candidate::findOrFail($id);
-        $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
-        return view('common.view-candidate')->with(compact('candidate','state_dist'));
+        if ($id = $this->decryptThis($id)) {
+            $candidate = Candidate::findOrFail($id);
+            $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
+            return view('common.view-candidate')->with(compact('candidate','state_dist'));
+        }
     }
     public function candidateActive($id){
-        try {
-            $id=Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
+        if ($id=$this->decryptThis($id)) {
+            $candidate=Candidate::findOrFail($id);
+            $candidate->status=1;
+            $candidate->save();
+    
+            /* Notification For Center */
+            $notification = new Notification;
+            $notification->rel_id = $candidate->tc_id;
+            $notification->rel_with = 'center';
+            $notification->title = 'Candidate Active';
+            $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
+            $notification->save();
+            /* End Notification For Center */
+    
+            alert()->success('Candidate Activated', 'Done')->autoclose(2000);
+            return redirect()->back();
         }
-        $candidate=Candidate::findOrFail($id);
-        $candidate->status=1;
-        $candidate->save();
-
-         /* Notification For Center */
-         $notification = new Notification;
-         $notification->rel_id = $candidate->tc_id;
-         $notification->rel_with = 'center';
-         $notification->title = 'Candidate Active';
-         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
-         $notification->save();
-         /* End Notification For Center */
-
-         alert()->success('Candidate Activated', 'Done')->autoclose(2000);
-            return Redirect()->back();
     }
 
     public function candidateDeactive(Request $request){
@@ -397,15 +382,12 @@ class AdminCenterController extends Controller
     }
 
     public function candidateEdit($id){
-        try {
-           $id=Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
+        if ($id = $this->decryptThis($id)) {
+            $candidate=Candidate::findOrFail($id);
+            $center=Center::where('id',$candidate->tc_id)->first();
+            $states=DB::table('state_district')->get();
+            return view('admin.centers.candidate-edit')->with(compact('candidate','center','states'));
         }
-        $candidate=Candidate::findOrFail($id);
-        $center=Center::where('id',$candidate->tc_id)->first();
-        $states=DB::table('state_district')->get();
-        return view('admin.centers.candidate-edit')->with(compact('candidate','center','states'));
     }
 
     public function candidateUpdate(Request $request){

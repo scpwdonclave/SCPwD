@@ -338,99 +338,87 @@
 </div>
 {{-- ========================= --}}
 <div class="container-fluid">
-        <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>Schemes For</strong> Partner </h2>
-                           
-                        </div>
-                        <div class="body">
-                                <div class="text-center">
-                                        <h4 class="margin-0">{{$partnerData->spoc_name}}</h4>
-                                        <h6 class="m-b-20">{{$partnerData->tp_id}}</h6>
-                                </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                            <tr>
-                                            <th>#</th>
-                                            <th>Scheme Name</th>
-                                            <th>Year</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            @foreach ($partner_scheme as $key=>$scheme)
-                                                
-                                            <tr>
-                                            <td>{{$key+1}}</td>
-                                            <td>{{$scheme->scheme->scheme}}</td>
-                                            <td>{{$scheme->scheme->year}}</td>
-                                           
-                                            @if($scheme->scheme_status==1)
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>Schemes For</strong> Partner </h2>
+                </div>
+                <div class="body">
+                    <div class="text-center">
+                        <h4 class="margin-0">{{$partnerData->spoc_name}}</h4>
+                        <h6 class="m-b-20">{{$partnerData->tp_id}}</h6>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Scheme Name</th>
+                                    <th>Year</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($partner_scheme as $key=>$scheme)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$scheme->scheme->scheme}}</td>
+                                        <td>{{$scheme->scheme->year}}</td>
+                                        @if($scheme->status)
                                             <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$scheme->scheme->id}},{{$partnerData->id}})">Deactivate</a></td>
-                                           
-                                            @elseif($scheme->scheme_status==0)
+                                        @else
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.scheme.active',['id'=>Crypt::encrypt($scheme->id),'pid'=>Crypt::encrypt($partnerData->id)])}}" >Activate</a></td>
-                                            @endif
-                                            </tr>
-                                          
-                                            @endforeach
-                                           
-                                        </tbody>
-                                </table>
-                                </div>
-                        </div>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
+</div>
 {{-- =================== --}}
 <div class="container-fluid">
-        <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="header">
-                        <h2><strong>All</strong> Centers For Partner <strong>{{$partnerData->tp_id}}</strong></h2>
-                           
-                        </div>
-                        <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                            <tr>
-                                            <th>#</th>
-                                            
-                                            <th>TC ID</th>
-                                            <th>Spoc Name</th>
-                                            <th>Spoc Email</th>
-                                            <th>Spoc Mobile</th>
-                                            <th>Action</th>
-                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            @foreach ($centers as $key=>$center)
-                                                
-                                            <tr>
-                                            <td>{{$key+1}}</td>
-                                            <td>{{$center->tc_id}}</td>
-                                            <td>{{$center->spoc_name}}</td>
-                                            <td>{{$center->email}}</td>
-                                            <td>{{$center->mobile}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',['id'=>$center->id])}}" >View</a></td>
-                                            </tr>
-                                          
-                                            @endforeach
-                                           
-                                        </tbody>
-                                </table>
-                                </div>
-                        </div>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>All</strong> Centers For Partner <strong>{{$partnerData->tp_id}}</strong></h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TC ID</th>
+                                    <th>Spoc Name</th>
+                                    <th>Spoc Email</th>
+                                    <th>Spoc Mobile</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($centers as $key=>$center)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$center->tc_id}}</td>
+                                        <td>{{$center->spoc_name}}</td>
+                                        <td>{{$center->email}}</td>
+                                        <td>{{$center->mobile}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',Crypt::encrypt($center->id))}}" >View</a></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 {{-- =================== --}}
 

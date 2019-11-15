@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\TrainerJobRole;
 use App\Partner;
 use App\Trainer;
+use App\Center;
 use App\BatchUpdate;
 
 class PartnerPolicy
@@ -21,6 +22,16 @@ class PartnerPolicy
     public function __construct()
     {
         //
+    }
+
+    protected function partnerscheme($id){
+        $c = Center::find($id);
+        foreach ($c->center_jobroles as $cjob) {
+            if ($cjob->partnerjobrole->status) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function PartnerProfileVerified($user){
@@ -50,7 +61,7 @@ class PartnerPolicy
     }
 
     public function CenterProfileVerifiedAndActive($partner, $center){
-        if (($center->tp_id == $partner->id) && $center->verified && $center->status && $center->ind_status) {
+        if (($center->tp_id == $partner->id) && $center->verified && $center->status && $this->partnerscheme($center->id)) {
             return true;
         } else {
             return false;

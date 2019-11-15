@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\CenterAuth;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Batch;
-use Auth;
 use Crypt;
+use Auth;
 
 class CenterBatchController extends Controller
 {
@@ -20,6 +21,14 @@ class CenterBatchController extends Controller
         return Auth::guard('center');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function batches(){
         $data = [
             'data' => Batch::where('tc_id',$this->guard()->user()->id)->get()
@@ -28,12 +37,11 @@ class CenterBatchController extends Controller
     }
 
     public function viewBatch($id){
-        $id = Crypt::decrypt($id);
-        $batchData=Batch::findOrFail($id);
-        if ($batchData->center->id==$this->guard()->user()->id) {
-            return view('common.view-batch')->with(compact('batchData'));
-        } else {
-            return abort(401);
+        if ($id=$this->decryptThis($id)) {
+            $batchData=Batch::findOrFail($id);
+            if ($batchData->center->id==$this->guard()->user()->id) {
+                return view('common.view-batch')->with(compact('batchData'));
+            }
         }
     }
 }

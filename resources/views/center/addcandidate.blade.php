@@ -100,9 +100,9 @@
                                                 <label for="gender">Gender *</label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                        <option value="male">Male</option>
-                                                        <option value="female">Female</option>
-                                                        <option value="other">Other</option>
+                                                        <option>Male</option>
+                                                        <option>Female</option>
+                                                        <option>Transgender</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -155,7 +155,7 @@
                                                     <div class="form-group form-float">
                                                         <select id="job" class="form-control show-tick" data-live-search="true" name="job" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($center->center_jobroles as $centerjob)
-                                                                @if ($centerjob->status)
+                                                                @if ($centerjob->partnerjobrole->status)
                                                                     <option value="{{$centerjob->id}}">{{$centerjob->partnerjobrole->sector->sector .' | '. $centerjob->partnerjobrole->jobrole->job_role .' | '. $centerjob->partnerjobrole->jobrole->nsqf_level .' | '. $centerjob->partnerjobrole->jobrole->qp_code}}</option>
                                                                 @endif
                                                             @endforeach
@@ -429,23 +429,25 @@
         function updatejob(){
             var _token = $('[name=_token]').val();
             var jobid = $("#job :selected").val();
-            $.ajax({
-                url: "{{ route('center.addcandidate.api') }}",
-                method: "POST",
-                data: { _token, jobid },
-                success: function(data){
-                    if (data.success) {
-                        $('#d_type').empty();
-                        data.disabilities.forEach(value => {
-                            $('#d_type').append('<option value="'+value.id+'">'+value.e_expository+'</option>');
-                        });
-                        $('#d_type').selectpicker('refresh');
-                    } else {
-                        swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
-                    }
-                    
-                } 
-            });
+            if (jobid != undefined) {
+                $.ajax({
+                    url: "{{ route('center.addcandidate.api') }}",
+                    method: "POST",
+                    data: { _token, jobid },
+                    success: function(data){
+                        if (data.success) {
+                            $('#d_type').empty();
+                            data.disabilities.forEach(value => {
+                                $('#d_type').append('<option value="'+value.id+'">'+value.e_expository+'</option>');
+                            });
+                            $('#d_type').selectpicker('refresh');
+                        } else {
+                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                        }
+                        
+                    } 
+                });
+            }            
         }
 
     /* End Fetch SelectPicker Data */

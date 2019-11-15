@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\Http\Requests\TCFormValidation;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Candidate;
 use App\PartnerJobrole;
 use App\CenterDoc;
 use App\Center;
+use Crypt;
 use Auth;
 use DB;
 
@@ -29,26 +31,35 @@ class PartnerCenterController extends Controller
         return Auth::guard('partner');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function centers(){
 
-        $partner = Auth::guard('partner')->user();
+        $partner = $this->guard()->user();
         $centers = Center::where('tp_id', $partner->id)->get();
 
         return view('partner.centers.centers')->with(compact('centers','partner'));
     }
 
     public function viewcenter($id){
-        $data = [
-            'partner' => Auth::guard('partner')->user(),
-            'centerData' => Center::where('tp_id',Auth::guard('partner')->user()->id)->findOrFail($id),
-            'tc_target' => CenterJobRole::where('tc_id',$id)->get(),
-            'state_district' => DB::table('centers AS c')
-                ->join('state_district AS s','c.state_district','=','s.id')
-                ->join('parliament AS p','c.parliament','=','p.id')
-                ->where('c.id',$id)->first()
-        ];
-        return view('common.view-center')->with($data);
-
+        if ($id=$this->decryptThis($id)) {
+            $data = [
+                'partner' => $this->guard()->user(),
+                'centerData' => Center::where('tp_id',$this->guard()->user()->id)->findOrFail($id),
+                'tc_target' => CenterJobRole::where('tc_id',$id)->get(),
+                'state_district' => DB::table('centers AS c')
+                    ->join('state_district AS s','c.state_district','=','s.id')
+                    ->join('parliament AS p','c.parliament','=','p.id')
+                    ->where('c.id',$id)->first()
+            ];
+            return view('common.view-center')->with($data);
+        }
     }
 
     public function updatecenter(Request $request){
@@ -58,7 +69,7 @@ class PartnerCenterController extends Controller
             'value' => 'required',
         ]);
         $center = Center::find($request->id);
-        if ($center->partner->id == Auth::guard('partner')->user()->id) {
+        if ($center->partner->id == $this->guard()->user()->id) {
             $field = $request->name;
             switch ($request->name) {
                 case 'name':
@@ -95,10 +106,10 @@ class PartnerCenterController extends Controller
 
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
             $data = [
-                'partner'  => Auth::guard('partner')->user(),
+                'partner'  => $this->guard()->user(),
                 'parliaments'   => DB::table('parliament')->get(),
                 'states'   => DB::table('state_district')->get(),
-                // 'centers'   => Center::where('tp_id', Auth::guard('partner')->user()->id)->get()
+                // 'centers'   => Center::where('tp_id', $this->guard()->user()->id)->get()
             ];
             return view('partner.centers.addcenter')->with($data);
         } else {   
@@ -168,14 +179,14 @@ class PartnerCenterController extends Controller
             //         $lastid= max($priceprod);
                 
             //         $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001';
-            //     //dd($new_TCid);
+            //    // dd($new_TCid);
             // } else {
             //     $new_tcid = 'TC'.$year.'000001';
             // }
         
 
             $center = new Center;
-            $center->tp_id = Auth::guard('partner')->user()->id;
+            $center->tp_id = $this->guard()->user()->id;
             // $center->tc_id = $new_tcid;
             $center->spoc_name = $request->spoc_name;
             $center->email = $request->email;
@@ -255,7 +266,7 @@ class PartnerCenterController extends Controller
             
             foreach ($request->jobrole as $key => $job) {
                 $centerJobRole = new CenterJobRole;
-                $centerJobRole->tp_id = Auth::guard('partner')->user()->id;
+                $centerJobRole->tp_id = $this->guard()->user()->id;
                 $centerJobRole->tc_id = $center->id;
                 $centerJobRole->tp_job_id = $job;
                 $centerJobRole->target = $request->target[$key];
@@ -268,7 +279,7 @@ class PartnerCenterController extends Controller
 
 
             /* Notification For Partner */
-            $partner_name = Auth::guard('partner')->user()->spoc_name;
+            $partner_name = $this->guard()->user()->spoc_name;
             $notification = new Notification;
             $notification->rel_id = 1;
             $notification->rel_with = 'admin';
@@ -285,8 +296,8 @@ class PartnerCenterController extends Controller
     }
 
     public function candidates(){
-        $partner = Auth::guard('partner')->user();
-        $centers = Auth::guard('partner')->user()->centers;
+        $partner = $this->guard()->user();
+        $centers = $this->guard()->user()->centers;
         $candidates = collect();
         foreach ($centers as $center) {
             $candidates = $center->candidates;
@@ -299,14 +310,15 @@ class PartnerCenterController extends Controller
     }
 
     public function view_candidate($id){
-        $candidate = Candidate::findOrFail($id);
-        if ($candidate->center->partner->id == Auth::guard('partner')->user()->id) {
-            $partner = $this->guard()->user();
-            $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
-            return view('common.view-candidate')->with(compact('candidate','state_dist','partner'));
-        } else {
-            return abort(404);
+        if ($id=$this->decryptThis($id)) {
+            $candidate = Candidate::findOrFail($id);
+            if ($candidate->center->partner->id == $this->guard()->user()->id) {
+                $partner = $this->guard()->user();
+                $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
+                return view('common.view-candidate')->with(compact('candidate','state_dist','partner'));
+            } else {
+                return abort(404);
+            }
         }
     }
-
 }

@@ -27,11 +27,18 @@ class CreateTrainersTable extends Migration
             $table->string('scpwd_doc')->nullable();
             $table->string('scpwd_issued')->nullable();
             $table->string('scpwd_valid')->nullable();
+
+            $table->string('qualification');
+            $table->string('qualification_doc');
+            $table->string('ssc_no')->nullable();
+            $table->string('ssc_doc')->nullable();
+            $table->string('ssc_issued')->nullable();
+            $table->string('ssc_valid')->nullable();
+
             $table->string('resume')->nullable();
             $table->string('other_doc')->nullable();
 
             $table->boolean('status')->default(0);
-            $table->boolean('ind_status')->default(0);
             $table->boolean('reassign')->default(0);
             $table->boolean('verified')->default(0);
             $table->timestamps();
