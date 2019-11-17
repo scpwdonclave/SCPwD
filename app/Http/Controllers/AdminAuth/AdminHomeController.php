@@ -101,12 +101,8 @@ class AdminHomeController extends Controller
     public function scheme_action(Request $request){
         if ($request->has('scheme')) {
             return $this->dispatchNow(new \App\Jobs\AddScheme($request));
-        } else if ($request->has('name')) {
+        } else if ($request->has('name') || $request->has('id')) {
             return $this->dispatchNow(new \App\Jobs\UpdateScheme($request));
-        } else if ($request->has('id')) {
-
-            // TODO Working On This Section
-        
         }
     }
 

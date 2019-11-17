@@ -22,6 +22,7 @@ class CreatePartnerJobrolesTable extends Migration
             $table->string('target');
             $table->string('assigned')->default(0);
             $table->boolean('status')->default(1);
+            $table->boolean('direct_action')->default(0)->comment='status_flag for changes here';
             $table->timestamps();
         });
     }

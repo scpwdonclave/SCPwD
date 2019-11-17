@@ -14,7 +14,7 @@ Route::get('training_partners', function () { return redirect(route('admin.tp.pa
 Route::get('training_partners/partners', 'AdminAuth\AdminPartnerController@partners')->name('tp.partners');
 Route::post('training_partners/partners/api', 'AdminAuth\AdminPartnerController@update_partner_api')->name('tp.partner.api');
 Route::get('training_partners/pending-partners', 'AdminAuth\AdminPartnerController@pendingpartners')->name('tp.pp');
-Route::get('training_partners/partners/{id}', 'AdminAuth\AdminPartnerController@partnerVerify')->name('training_partner.partner.verify');
+Route::get('training_partners/partners/{id}', 'AdminAuth\AdminPartnerController@partnerView')->name('training_partner.partner.view');
 Route::get('training_partners/partner-accept/{id}', 'AdminAuth\AdminPartnerController@partnerAccept')->name('training_partner.accept.partner');
 Route::get('training_partners/partner-update/{id}', 'AdminAuth\AdminPartnerController@partnerUpdate')->name('training_partner.update.partner');
 Route::post('partner-reject', 'AdminAuth\AdminPartnerController@partnerReject')->name('reject.partner');
@@ -31,8 +31,8 @@ Route::post('training_partners/partner-jobtarget-update', 'AdminAuth\AdminPartne
 Route::post('training_partners/partner-jobrole-Deactive', 'AdminAuth\AdminPartnerController@jobroleDeactive')->name('tp.partner.jobrole.deactive');
 Route::get('training_partners/partner-jobrole-Active/{id}', 'AdminAuth\AdminPartnerController@jobroleActive')->name('tp.partner.jobrole.active');
 // Route::get('training_partners/partner-scheme/{id}', 'AdminAuth\AdminPartnerController@partnerScheme')->name('training_partner.partner.scheme');
-Route::post('training_partners/partner-scheme-deactive', 'AdminAuth\AdminPartnerController@partnerSchemeDeactive')->name('tp.partner.scheme.deactive');
-Route::get('training_partners/partner-scheme-active/{id}/{pid}', 'AdminAuth\AdminPartnerController@partnerSchemeActive')->name('tp.partner.scheme.active');
+Route::post('training_partners/partner-scheme-deactive', 'AdminAuth\AdminPartnerController@partnerSchemeAction')->name('tp.partner.scheme_action');
+// Route::get('training_partners/partner-scheme-active/{id}/{pid}', 'AdminAuth\AdminPartnerController@partnerSchemeActive')->name('tp.partner.scheme.active');
 
 Route::get('training_centers', function () { return redirect(route('admin.tc.centers')); });
 Route::get('training_centers/centers', 'AdminAuth\AdminCenterController@centers')->name('tc.centers');

@@ -4,7 +4,9 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
+
 @stop
 @section('content')
 <div class="container-fluid">
@@ -365,11 +367,7 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$scheme->scheme->scheme}}</td>
                                         <td>{{$scheme->scheme->year}}</td>
-                                        @if($scheme->status)
-                                            <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$scheme->scheme->id}},{{$partnerData->id}})">Deactivate</a></td>
-                                        @else
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.scheme.active',['id'=>Crypt::encrypt($scheme->id),'pid'=>Crypt::encrypt($partnerData->id)])}}" >Activate</a></td>
-                                        @endif
+                                        <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($partnerData->id.','.$scheme->scheme_id).','.$scheme->status.','.$scheme->scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -390,7 +388,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -425,6 +423,52 @@
 
 @stop
 @section('page-script')
+<script>
+    function popup(v){
+        var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        var color=''; var text='';
+        var _token=$('[name=_token]').val();
+        if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
+        var scheme=data[2];
+        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> This <span style='font-weight:bold; color:blue;'>"+scheme+"</span> Scheme";
+        swal({
+            text: "Are you Sure ?",
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Update Status",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            var dataString = {_token, data:data[0]};
+            if (val) {
+                $.ajax({
+                    url: "{{ route('admin.tp.partner.scheme_action') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML = data['message'];
+                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    },
+                    error:function(data){
+                        swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+
+
 <script>
 function showPromptMessage() {
     swal({
@@ -473,99 +517,7 @@ function showPromptMessage() {
     });
 }
 </script>
-<script>
-        function showCancelMessage(f,p) {
-            swal({
-                title: "Deactive!",
-                text: "Write Reason for Deactivation:",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Write reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
-                }
-                var id=f;
-                var pid=p;
-                var reason=inputValue;
-                let _token = $("input[name='_token']").val();
-           
-                $.ajax({
-                type: "POST",
-                url: "{{route('admin.tp.partner.scheme.deactive')}}",
-                data: {_token,id,pid,reason},
-                success: function(data) {
-                  // console.log(data.url);
-                   swal({
-                title: "Deactive",
-                text: "Scheme Record Deactive",
-                type:"success",
-                
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-               
-                window.location="{{route('admin.tp.partners')}}";
-        
-                } 
-                });
-            
-                }
-            });
-                
-            });
-        }
-        
-        // function showCancelMessage(f) {
-        //     let _token = $("input[name='_token']").val();
-        //     var id=f;
-        //     swal({
-        //         title: "Are you sure?",
-        //         text: "Center will not be able to Access!",
-        //         type: "warning",
-        //         showCancelButton: true,
-        //         confirmButtonColor: "#DD6B55",
-        //         confirmButtonText: "Yes",
-        //         cancelButtonText: "No, cancel",
-        //         closeOnConfirm: false,
-        //         closeOnCancel: false
-        //     }, function (isConfirm) {
-        //         if (isConfirm) {
-        //             $.ajax({
-        //                 type: "POST",
-        //                 url: "{{route('admin.tc.center.deactive')}}",
-        //                 data:{_token,id},
-        //                 success: function(data) {
-                           
-        //                    swal({
-        //                 title: "Done",
-        //                 text: "Center Deactivated",
-        //                 type:"success",
-                        
-        //             },function(isConfirm){
-                
-        //                 if (isConfirm){
-                       
-        //                 window.location="{{route('admin.tc.centers')}}";
-                
-        //                 } 
-        //                 });
-                    
-        //                 }
-        //             });
-                   
-        //         } else {
-        //             swal("Cancelled", "Your Partner is safe :)", "error");
-        //         }
-        //     });
-        // }
-        </script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

@@ -21,9 +21,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Scheme</th>
-                                    <th>Sector</th>
-                                    <th>Job Role</th>
+                                    <th>Scheme | Sector | Job Role</th>
                                     <th>Target</th>
                                     <th>{{(Request::segment(1) === 'partner')?'Assigned':'Enrolled'}}</th>
                                     <th>Scheme Status</th>
@@ -37,9 +35,7 @@
                                     @if (Request::segment(1) === 'partner')
                                         @foreach ($jobroles as $jobrole)
                                             <tr>
-                                                <td>{{$jobrole->scheme->scheme}}</td>
-                                                <td>{{$jobrole->sector->sector}}</td>
-                                                <td>{{$jobrole->jobrole->job_role}}</td>
+                                                <td>{{$jobrole->scheme->scheme.' | '.$jobrole->sector->sector.' | '.$jobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->assigned}}</td>
                                                 <td class="text-{{($jobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->status)?'Active':'Inactive'}}</td>

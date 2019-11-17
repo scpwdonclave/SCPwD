@@ -37,6 +37,13 @@ class AdminPartnerController extends Controller
         return Auth::guard('admin');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
 
     public function partners(){
         $data=Partner::where([['pending_verify','=',0]])->get();
@@ -89,26 +96,26 @@ class AdminPartnerController extends Controller
         return redirect()->back();
     }
 
-    public function partnerVerify($id){
-
-        $partnerData=Partner::findOrFail($id); 
-        $partnerState=DB::table('partners')
-        ->join('state_district','partners.state_district','=','state_district.id')
-        ->join('parliament','partners.parliament','=','parliament.id')
-        ->first();
-
-        
-
-        $centers=DB::table('centers')->where('tp_id',$id)->get();
-        $partner_scheme=PartnerJobrole::where('tp_id',$id)
-        ->groupBy('scheme_id')->get();
-
-        if ($partnerData->complete_profile && $partnerData->status==1) {
-            return view('admin.partners.partner-verify')->with(compact('partnerData','partnerState','centers','partner_scheme'));
-        } else {
-            return redirect()->route('admin.tp.partners');
-        }
-        
+    public function partnerView($id){
+        if ($id=$this->decryptThis($id)) {
+            $partnerData=Partner::findOrFail($id); 
+            $partnerState=DB::table('partners')
+            ->join('state_district','partners.state_district','=','state_district.id')
+            ->join('parliament','partners.parliament','=','parliament.id')
+            ->first();
+    
+            
+    
+            $centers=DB::table('centers')->where('tp_id',$id)->get();
+            $partner_scheme=PartnerJobrole::where('tp_id',$id)
+            ->groupBy('scheme_id')->get();
+    
+            if ($partnerData->complete_profile && $partnerData->status==1) {
+                return view('admin.partners.partner-view')->with(compact('partnerData','partnerState','centers','partner_scheme'));
+            } else {
+                return redirect()->route('admin.tp.partners');
+            }
+        }   
     }
 
     public function partnerUpdate($id){
@@ -495,6 +502,31 @@ class AdminPartnerController extends Controller
     //     return view('admin.partners.partner-scheme')->with(compact('partner_scheme','partner_dtl'));
         
     // }
+
+    public function partnerSchemeAction(Request $request){
+        
+        if ($request->has('data')) {
+
+            if ($id=$this->decryptThis($request->data)) {
+                $data = explode(',',$id);
+                $partnerJob = PartnerJobrole::where([['tp_id',$data[0]],['scheme_id',$data[1]]])->get();
+                if ($partnerJob[0]->scheme->status) {
+                    foreach ($partnerJob as $job) {
+                        $job->direct_action = $job->status;
+                        $job->status = !$job->status;
+                        $job->save();
+                    }
+                    return response()->json(array('type' => 'success', 'message' => "Scheme has been <span style='font-weight:bold;color:blue'>Updated</span> Successfully"),200);
+
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "Scheme Cannot be <span style='font-weight:bold;color:blue'>Modified</span>, as Scheme Origin is <span style='font-weight:bold;color:red'>Deactivated</span>"),200);
+                }
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Reqested Scheme is not Found"),400);
+            }
+        }
+    }
+
 
     public function partnerSchemeDeactive(Request $request){
 

@@ -27,11 +27,7 @@
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                             <tr>
-                                            <th>#</th>
-                                            
-                                            <th>Scheme</th>
-                                            <th>Sector</th>
-                                            <th>Job Role</th>
+                                            <th>Scheme | Sector | Job Role</th>
                                             <th>Target Allocated</th>
                                             <th>Student Enroll</th>
                                             <th>Target Achieve</th>
@@ -42,11 +38,7 @@
                                     <tbody>
                                             @foreach ($partner->partner_jobroles as $key=>$job)
                                             <tr>
-                                                <td class="text-center">{{$key+1}}</td>
-                                               
-                                                <td class="text-center">{{$job->scheme->scheme}}</td>
-                                                <td class="text-center">{{$job->sector->sector}}</td>
-                                                <td class="text-center">{{$job->jobrole->job_role}}</td>
+                                                <td class="text-center">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
                                                 <td class="text-center">{{$job->target}}</td>
                                                 <td class="text-center">{{$job->assigned}}</td>
                                                 <td class="text-center">{{$job->target}}</td>

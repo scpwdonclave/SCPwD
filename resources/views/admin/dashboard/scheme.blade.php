@@ -128,11 +128,7 @@
                     success: function(data){
                         var SuccessResponseText = document.createElement("div");
                         SuccessResponseText.innerHTML = data['message'];
-                        setTimeout(function () {
-                            swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeOnEsc: false}).then(function(){
-                                setTimeout(function(){location.reload()},150);
-                            });
-                        }, 2000);
+                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                     },
                     error:function(data){
                         var errors = JSON.parse(data.responseText);
@@ -153,7 +149,7 @@
         var confirmatonText = document.createElement("div");
         var color=''; var text='';
         var _token=$('[name=_token]').val();
-        if (data[1]) {color = 'red'; text = 'Disable';} else {color = 'green'; text = 'Enable';}
+        if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
         var scheme=data[2];
         confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> This <span style='font-weight:bold; color:blue;'>"+scheme+"</span> Scheme";
         swal({
@@ -181,9 +177,7 @@
                         var SuccessResponseText = document.createElement("div");
                         SuccessResponseText.innerHTML = data['message'];
                         setTimeout(function () {
-                            swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeOnEsc: false}).then(function(){
-                                setTimeout(function(){location.reload()},150);
-                            });
+                            swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                         }, 2000);
                     },
                     error:function(data){
