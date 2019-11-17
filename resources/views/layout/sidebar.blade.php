@@ -25,6 +25,10 @@
                                 <h4>{{Auth::guard('agency')->user()->name}}</h4>
                                 <p class="m-b-0">{{Auth::guard('agency')->user()->aa_id}}</p>
                                 @break
+                             @case('assessor')
+                                <h4>{{Auth::guard('assessor')->user()->name}}</h4>
+                                <p class="m-b-0">{{Auth::guard('assessor')->user()->aa_id}}</p>
+                                @break
                             @default
                         @endswitch
                     </div>
@@ -35,14 +39,13 @@
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::segment(3) === 'dashboard' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.dashboard')}}">Dashboard</a></li>
-                    @if (Request::segment(1) != 'agency')
+                    @if (Request::segment(1) != 'agency' && Request::segment(1) != 'assessor')
                         <li class="{{ Request::segment(3) === 'job_roles' ? 'active' : null }}"><a href="{{route(Request::segment(1).'.dashboard.jobroles')}}">Job Roles</a></li>
                     @endif
                     
                     @if (Request::segment(1) === 'admin')
-                        
-                    <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
-                    <li class="{{ Request::segment(3) === 'holiday' ? 'active' : null }}"><a href="{{route('admin.dashboard.holiday')}}">Holidays</a></li>
+                        <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
+                        <li class="{{ Request::segment(3) === 'holiday' ? 'active' : null }}"><a href="{{route('admin.dashboard.holiday')}}">Holidays</a></li>
                     @endif
                     
                 </ul>
@@ -116,7 +119,7 @@
                     
                 @endif
             @endauth
-            @if (Request::segment(1) != 'admin' && Request::segment(1) != 'agency')
+            @if (Request::segment(1) != 'admin' && Request::segment(1) != 'agency' && Request::segment(1) != 'assessor')
                 <li class="{{ Request::segment(2)==='batches' ? 'active open' : (Request::is('partner/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
             @endif
         </ul>

@@ -36,6 +36,11 @@ return [
     */
 
     'guards' => [
+        'assessor' => [
+            'driver' => 'session',
+            'provider' => 'assessors',
+        ],
+
         'agency' => [
             'driver' => 'session',
             'provider' => 'agencies',
@@ -86,6 +91,11 @@ return [
     */
 
     'providers' => [
+        'assessors' => [
+            'driver' => 'eloquent',
+            'model' => App\Assessor::class,
+        ],
+
         'agencies' => [
             'driver' => 'eloquent',
             'model' => App\Agency::class,
@@ -133,6 +143,12 @@ return [
     */
 
     'passwords' => [
+        'assessors' => [
+            'provider' => 'assessors',
+            'table' => 'assessor_password_resets',
+            'expire' => 60,
+        ],
+
         'agencies' => [
             'provider' => 'agencies',
             'table' => 'agency_password_resets',

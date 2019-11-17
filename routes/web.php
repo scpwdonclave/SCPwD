@@ -84,11 +84,23 @@ Route::group(['prefix' => 'agency'], function () {
 });
 /* End Agency Routes */
 
+/* Assessor Routes */
+Route::group(['prefix' => 'assessor'], function () {
+  Route::get('/', function () { return redirect('assessor/login'); });
+  Route::get('/login', 'AssessorAuth\LoginController@showLoginForm')->name('assessor.login');
+  Route::post('/login', 'AssessorAuth\LoginController@login');
+  Route::post('/logout', 'AssessorAuth\LoginController@logout')->name('assessor.logout');
+
+  Route::get('/password', function () { return redirect('assessor/password/reset'); });
+  Route::post('/password/email', 'AssessorAuth\ForgotPasswordController@sendResetLinkEmail')->name('assessor.password.email');
+  Route::get('/password/reset', 'AssessorAuth\ForgotPasswordController@showLinkRequestForm')->name('assessor.password.request');
+  Route::post('/password/reset', 'AssessorAuth\ResetPasswordController@reset');
+  Route::get('/password/reset/{token}', 'AssessorAuth\ResetPasswordController@showResetForm')->name('assessor.password.reset');
+});
+/* End Assessor Routes */
+
 /* File Access */
 Route::get('partner/files/{action}/{filename}', 'PartnerAuth\FileController@partnerFiles')->where('action', 'view|download')->name('partner.files.partner-file');
 Route::get('trainer/files/{id}/{action}/{filename}', 'PartnerAuth\FileController@trainerFiles')->where('action', 'view|download')->name('trainer.files.trainer-file');
 Route::get('center/files/{action}/{filename}', 'CenterAuth\FileController@centerFiles')->where('action', 'view|download')->name('center.files.center-file');
 Route::get('candidate/files/{action}/{id}/{file}', 'FileController@candidateFiles')->where('action', 'view|download')->where('file', 'doc|cert')->name('center.files.candidate-file');
-
-
-

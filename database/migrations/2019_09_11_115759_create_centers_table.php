@@ -35,16 +35,10 @@ class CreateCentersTable extends Migration
             $table->string('addr_proof');
             $table->string('addr_doc');
 
-            // $table->string('job_role');
-
             $table->string('center_front_view')->nullable();
             $table->string('center_back_view')->nullable();
             $table->string('center_right_view')->nullable();
             $table->string('center_left_view')->nullable();
-            // $table->string('class_room_1')->nullable();
-            // $table->string('lab_room_1')->nullable();
-            // $table->string('equipment_1')->nullable();
-            // $table->string('washroom_1')->nullable();
             $table->string('biometric')->nullable();
             $table->string('drinking')->nullable();
             $table->string('safety')->nullable();
