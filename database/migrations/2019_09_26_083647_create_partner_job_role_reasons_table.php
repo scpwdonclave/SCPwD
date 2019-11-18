@@ -15,8 +15,9 @@ class CreatePartnerJobRoleReasonsTable extends Migration
     {
         Schema::create('partner_job_role_reasons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('partner_job_id');
-            $table->string('reason');
+            $table->unsignedBigInteger('tp_id');
+            $table->unsignedBigInteger('scheme_id');
+            $table->text('reason');
             $table->timestamps();
         });
     }

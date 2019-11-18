@@ -493,16 +493,6 @@ class AdminPartnerController extends Controller
         return Redirect()->back();
     }
 
-    // public function partnerScheme($id){
-    //     $partner_id = Crypt::decrypt($id);
-    //     $partner_dtl=Partner::findOrFail($partner_id);
-    //     $partner_scheme=PartnerJobrole::where('tp_id',$partner_id)
-    //     ->groupBy('scheme_id')->get();
-
-    //     return view('admin.partners.partner-scheme')->with(compact('partner_scheme','partner_dtl'));
-        
-    // }
-
     public function partnerSchemeAction(Request $request){
         
         if ($request->has('data')) {
@@ -511,11 +501,39 @@ class AdminPartnerController extends Controller
                 $data = explode(',',$id);
                 $partnerJob = PartnerJobrole::where([['tp_id',$data[0]],['scheme_id',$data[1]]])->get();
                 if ($partnerJob[0]->scheme->status) {
-                    foreach ($partnerJob as $job) {
-                        $job->direct_action = $job->status;
-                        $job->status = !$job->status;
-                        $job->save();
-                    }
+
+                    DB::transaction(function() use($request,$data,$partnerJob){
+                        foreach ($partnerJob as $job) {
+                            $job->direct_action = $job->status;
+                            $job->status = !$job->status;
+                            $job->save();
+                        }
+
+                        if (!is_null($request->reason)) {
+                            $p_job_reason= new PartnerJobRoleReason;
+                            $p_job_reason->tp_id=$data[0];
+                            $p_job_reason->scheme_id=$data[1];
+                            $p_job_reason->reason=$request->reason;
+                            $p_job_reason->save();
+                        }
+    
+                        $partner = Partner::find($data[0]);
+                        foreach($partner->centers as $center){
+                            $notification = new Notification;
+                            $notification->rel_id =$center->id;
+                            $notification->rel_with = 'center';
+                            $notification->title = 'Scheme Modified';
+                            $notification->message = "Your Training Partner Scheme has been Status Updated, Please Check your Job Roles";
+                            $notification->save();
+                        }
+                        $notification = new Notification;
+                        $notification->rel_id =$data[0];
+                        $notification->rel_with = 'partner';
+                        $notification->title = 'Scheme Modified';
+                        $notification->message = "One of Your Scheme Status Has been Updated, Please Check your Job Roles";
+                        $notification->save();
+                    });
+
                     return response()->json(array('type' => 'success', 'message' => "Scheme has been <span style='font-weight:bold;color:blue'>Updated</span> Successfully"),200);
 
                 } else {

@@ -424,16 +424,40 @@
 @stop
 @section('page-script')
 <script>
+    function callajax(val, dataString){
+        $.ajax({
+            url: "{{ route('admin.tp.partner.scheme_action') }}",
+            method: "POST",
+            data: dataString,
+            success: function(data){
+                var SuccessResponseText = document.createElement("div");
+                SuccessResponseText.innerHTML = data['message'];
+                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+            },
+            error:function(data){
+                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+            }
+        });
+    }
+
     function popup(v){
         var data = v.split(',');
         var confirmatonText = document.createElement("div");
-        var color=''; var text='';
+        var color=''; var text=''; var displayText='';
         var _token=$('[name=_token]').val();
-        if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
         var scheme=data[2];
-        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> This <span style='font-weight:bold; color:blue;'>"+scheme+"</span> Scheme";
+        if (data[1]==1) {
+                color = 'red'; text = 'Deactivate'; 
+                displayText='Please Provide the Reason of this Deactivation';
+                confirmatonText="input"
+            } else {
+                color = 'green'; text = 'Activate';
+                displayText = "Are you Sure ?";
+                confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> This <span style='font-weight:bold; color:blue;'>"+scheme+"</span> Scheme";
+            }
+        
         swal({
-            text: "Are you Sure ?",
+            text: displayText,
             content: confirmatonText,
             icon: "info",
             buttons: true,
@@ -447,21 +471,16 @@
             closeModal: false,
             closeOnEsc: false,
         }).then(function(val){
-            var dataString = {_token, data:data[0]};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('admin.tp.partner.scheme_action') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML = data['message'];
-                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                    },
-                    error:function(data){
-                        swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
-                    }
-                });
+            if (val != null) {
+                if (val === '') {
+                    swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                } else if (val === true) {
+                    var dataString = {_token, data:data[0], reason:null};
+                    callajax(val,dataString);
+                } else {
+                    var dataString = {_token, data:data[0], reason:val};
+                    callajax(val,dataString);
+                }
             }
         });
     }
