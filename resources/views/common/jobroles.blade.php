@@ -48,9 +48,7 @@
                                             @if (Request::segment(1) === 'center')
                                             @foreach ($jobroles as $jobrole)
                                             <tr>
-                                                <td>{{$jobrole->partnerjobrole->scheme->scheme}}</td>
-                                                <td>{{$jobrole->partnerjobrole->sector->sector}}</td>
-                                                <td>{{$jobrole->partnerjobrole->jobrole->job_role}}</td>
+                                                <td>{{$jobrole->partnerjobrole->scheme->scheme.' | '.$jobrole->partnerjobrole->sector->sector.' | '.$jobrole->partnerjobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->enrolled}}</td>
                                                 <td class="text-{{($jobrole->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->partnerjobrole->status)?'Active':'Inactive'}}</td>

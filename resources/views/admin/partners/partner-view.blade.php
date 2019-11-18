@@ -400,7 +400,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($centers as $key=>$center)
+                                @foreach ($partnerData->centers as $key=>$center)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$center->tc_id}}</td>

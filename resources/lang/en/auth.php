@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'failed' => 'Wrong Credentials or Your Account is Deactivated.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'inactive' => 'Your Partner Account is Inactive. Contact Training Partner',
 
 ];
