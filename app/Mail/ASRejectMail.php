@@ -5,9 +5,9 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue; 
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class TCConfirmationMail extends Mailable
+class ASRejectMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,10 +16,10 @@ class TCConfirmationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($center) 
+    public function __construct($assessor)
     {
-        // dd($partner);
-        $this->center = $center;
+        //
+        $this->assessor = $assessor;
     }
 
     /**
@@ -29,6 +29,6 @@ class TCConfirmationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.tcconfirm')->subject("Training Center Account Confirmation | SCPwD")->with(['center' => $this->center]);
+        return $this->view('emails.asreject')->subject("Assessor Request Rejected | SCPwD")->with(['assessor' => $this->assessor]);
     }
 }

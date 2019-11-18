@@ -115,7 +115,7 @@
                             </div>
                         </li>
                         <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Agency Sector</span></time>
+                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Agency Sector</span></time> 
                             <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-pin"></i></div>
                             <div class="cbp_tmlabel">
                                     <div class="table-responsive">
@@ -129,10 +129,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($agency->agencySector as $key=>$item)
+                                                    @php
+                                                        $i=0;
+                                                    @endphp
+                                                    @foreach ($agency->agencySector as $item) 
                                                     <tr>
-                                                        <td>{{$key+1}}</td>
+                                                        @if ($item->status)
+                                                        @php
+                                                            $i++;
+                                                        @endphp
+                                                        <td>{{$i}}</td>
                                                         <td>{{$item->sectors->sector}}</td>
+                                                        @endif
                                                        
                                                     </tr>
                                                     @endforeach
@@ -219,7 +227,7 @@
                                                 <hr>
                                         </div>
                                         <div class="col-sm-4">
-                                                <small class="text-muted">State - District</small>
+                                                <small class="text-muted">State - District</small> 
                                                 <p>{{$agencyState->state}} ({{$agencyState->district}})</p>
                                                 <hr>
                                         </div>

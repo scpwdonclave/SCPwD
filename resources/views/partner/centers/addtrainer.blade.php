@@ -757,7 +757,7 @@ $(function () {
         .datepicker()
         .on('changeDate', function(selected){
             startDate = new Date(selected.date.valueOf());
-            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf()))); 
             $('#scpwd_end').datepicker('setStartDate', startDate);
         });
     

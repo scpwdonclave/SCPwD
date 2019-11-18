@@ -88,7 +88,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
-                                                                <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
+                                                                <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                                     <option value="Male">Male</option>
                                                                     <option value="Female">Female</option>
                                                                     <option value="Transgender">Transgender</option>
@@ -403,7 +403,7 @@ function yearAdd(){
     if(date!=""){
     var newdate = date.split("-").reverse().join("-");
     var d = new Date(newdate);
-    console.log(d);
+    //console.log(d);
     
     var year = d.getFullYear();
     var month = d.getMonth();

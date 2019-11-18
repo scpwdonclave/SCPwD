@@ -22,7 +22,7 @@ class CreateAgenciesTable extends Migration
             $table->string('mobile')->unique();
             $table->string('gender');
             $table->string('designation');
-            $table->string('landline')->nullable();
+            $table->string('landline')->nullable(); 
 
 
 
@@ -33,9 +33,9 @@ class CreateAgenciesTable extends Migration
             $table->string('sla_end_date');
 
             $table->string('ceo_name');
-            $table->string('ceo_aadhaar')->unique();
-            $table->string('ceo_email')->unique();
-            $table->string('ceo_mobile')->unique();
+            $table->string('ceo_aadhaar');
+            $table->string('ceo_email');
+            $table->string('ceo_mobile');
             $table->string('ceo_gender');
             $table->string('ceo_designation');
             $table->string('ceo_landline')->nullable();

@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Agency Edit')
+@section('title', 'Agency Update')
 @section('page-style')
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
@@ -31,8 +31,8 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>Agency</strong> Edit</h2>
-                {{-- <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.agency.agencies')}}">My Agencies</a>  --}}
+                    <h2><strong>Agency</strong> Registration</h2>
+                <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.agency.agencies')}}">My Agencies</a> 
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -45,7 +45,7 @@
                 @endif
                 <div class="body">
                     
-                <form id="form2" method="POST" action="{{route('admin.aa.insert-agency')}}" onsubmit="event.preventDefault();return myFunction2()">
+                <form id="form2" method="POST" action="{{route('admin.aa.update.agency')}}" onsubmit="event.preventDefault();return myFunction2()">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                     <div class="panel panel-primary">
@@ -56,16 +56,17 @@
                                                 <div class="panel-body">
                                                     <div class="row d-flex justify-content-around">
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_name">SPOC Name *</label>
+                                                            <label for="name">SPOC Name *</label>
                                                             <div class="form-group form-float">
-                                                            <input type="text" class="form-control" placeholder="SPOC Name" value="{{$agency->spoc_name}}" name="spoc_name" required>
+                                                            <input type="text" class="form-control" placeholder="SPOC Name" value="{{$agency->name}}" name="name" required>
+                                                            <input type="hidden"  value="{{$agency->id}}" name="aa_id" >
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_aadhaar_no">SPOC Aadhaar *</label>
+                                                            <label for="aadhaar">SPOC Aadhaar *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" value="{{$agency->spoc_aadhaar_no}}" onchange="checkduplicacy('spoc_aadhaar_no')" placeholder="Enter Aadhaar No" name="spoc_aadhaar_no" required>
-                                                                <span id="spoc_aadhaar_no_error" style="color:red"></span>
+                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" value="{{$agency->aadhaar}}" onchange="checkduplicacy('aadhaar')" placeholder="Enter Aadhaar No" name="aadhaar" required>
+                                                                <span id="aadhaar_error" style="color:red"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -86,25 +87,25 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_gender">SPOC Gender *</label>
+                                                            <label for="gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
-                                                                <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
-                                                                    <option value="Male" {{ ( $agency->spoc_gender =="Male") ? 'selected' : '' }}>Male</option>
-                                                                    <option value="Female" {{ ( $agency->spoc_gender =="Female") ? 'selected' : '' }}>Female</option>
-                                                                    <option value="Transgender" {{ ( $agency->spoc_gender =="Transgender") ? 'selected' : '' }}>Transgender</option>
+                                                                <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
+                                                                    <option value="Male" {{ ( $agency->gender =='Male') ? 'selected' : '' }}>Male</option>
+                                                                    <option value="Female" {{ ( $agency->gender =='Female') ? 'selected' : '' }}>Female</option>
+                                                                    <option value="Transgender" {{ ( $agency->gender =='Transgender') ? 'selected' : '' }}>Transgender</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_designation">SPOC Designation *</label>
+                                                            <label for="designation">SPOC Designation *</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Designation" value="{{$agency->spoc_designation}}"  name="spoc_designation" required>
+                                                                <input type="text" class="form-control" placeholder="Designation" value="{{$agency->designation}}" name="designation" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_landline">SPOC Landline Number</label>
+                                                            <label for="landline">SPOC Landline Number</label>
                                                             <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Landline"  value="{{$agency->spoc_landline}}" name="spoc_landline">
+                                                                <input type="text" class="form-control" placeholder="Landline No" value="{{$agency->landline}}" name="landline">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +124,7 @@
                                                 <div class="col-sm-3">
                                                     <label for="agency_name">Assesment Agency Name * </label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name of the Agency" value="{{$agency->spoc_landline}}" name="agency_name" required>
+                                                        <input type="text" class="form-control" placeholder="Name of the Agency" value="{{$agency->agency_name}}" name="agency_name" required>
                                                        
                                                     </div>
                                                 </div>
@@ -131,14 +132,14 @@
                                                     <label for="org_type">Type of Oganization</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option >NGO</option>
-                                                            <option >Private Limited</option>
-                                                            <option >Partnership Firm</option>
-                                                            <option >Proprietorship</option>
-                                                            <option >Limited Company</option>
-                                                            <option >One Person Company</option>
-                                                            <option >LLP</option>
-                                                            <option >LLC</option>
+                                                            <option {{ ( $agency->org_type =='NGO') ? 'selected' : '' }} >NGO</option>
+                                                            <option {{ ( $agency->org_type =='Private Limited') ? 'selected' : '' }}>Private Limited</option>
+                                                            <option {{ ( $agency->org_type =='Partnership Firm') ? 'selected' : '' }} >Partnership Firm</option>
+                                                            <option {{ ( $agency->org_type =='Proprietorship') ? 'selected' : '' }} >Proprietorship</option>
+                                                            <option {{ ( $agency->org_type =='Limited Company') ? 'selected' : '' }} >Limited Company</option>
+                                                            <option {{ ( $agency->org_type =='One Person Company') ? 'selected' : '' }} >One Person Company</option>
+                                                            <option {{ ( $agency->org_type =='LLP') ? 'selected' : '' }} >LLP</option>
+                                                            <option {{ ( $agency->org_type =='LLC') ? 'selected' : '' }} >LLC</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -146,7 +147,7 @@
                                                 <div class="col-sm-3">
                                                     <label for="org_id">Organization ID / Registration No *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Organization ID"  name="org_id" required>
+                                                        <input type="text" class="form-control" placeholder="Organization ID" value="{{$agency->org_id}}" name="org_id" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -155,21 +156,26 @@
                                                 <div class="col-sm-4">
                                                     <label for="sla_date">SLA Start Date *</label>
                                                     <div class="form-group form-float date_picker">
-                                                        <input type="text" class="form-control date_datepicker" placeholder="SLA Start Date" id="sla_date" name="sla_date" onchange="yearAdd()" required>
+                                                        <input type="text" class="form-control date_datepicker" placeholder="SLA Start Date" id="sla_date" name="sla_date" value="{{$agency->sla_date}}" onchange="yearAdd()" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="sla_end_date">SLA End Date *</label>
                                                     <div class="form-group form-float ">
-                                                        <input type="text" class="form-control" placeholder="SLA End Date"  id="sla_end_date" name="sla_end_date" readonly required>
+                                                        <input type="text" class="form-control" placeholder="SLA End Date"  id="sla_end_date" name="sla_end_date" value="{{$agency->sla_end_date}}" readonly required>
                                                     </div>
                                                 </div>
+                                               
+
                                                 <div class="col-sm-4">
                                                     <label for="sector">Sector *</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="sector[]"  data-dropup-auto='false' multiple required>
+                                                               
                                                             @foreach ($sectors as $sector)
-                                                                <option value="{{$sector->id}}" >{{ $sector->sector }}</option>
+                                                               
+                                                                <option value="{{$sector->id}}"  {{ (in_array($sector->id,$selSector)) ? 'selected' : '' }} >{{ $sector->sector }}</option>
+                                                               
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -191,19 +197,19 @@
                                                 <div class="col-sm-4">
                                                     <label for="ceo_name">CEO/Head's Name *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Name"  name="ceo_name" required>
+                                                        <input type="text" class="form-control" placeholder="Name" value="{{$agency->ceo_name}}" name="ceo_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="aadhaar_no">Aadhaar *</label>
+                                                    <label for="ceo_aadhaar">Aadhaar *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="aadhaar_no" required>
+                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" value="{{$agency->ceo_aadhaar}}" name="ceo_aadhaar" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="ceo_email">CEO/Head's Email Address *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="email" class="form-control" placeholder="Email"  name="ceo_email" required>
+                                                        <input type="email" class="form-control" placeholder="Email"  name="ceo_email" value="{{$agency->ceo_email}}" required>
                                                     </div>
                                                 </div>
                                                
@@ -212,29 +218,29 @@
                                                 <div class="col-sm-3">
                                                     <label for="ceo_mobile">CEO/Head's Mobile Number *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Mobile"  name="ceo_mobile" required>
+                                                        <input type="text" class="form-control" placeholder="Mobile"  name="ceo_mobile" value="{{$agency->ceo_mobile}}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="gender">Gender *</label>
+                                                    <label for="ceo_gender">Gender *</label>
                                                     <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                            <option value="male">Male</option>
-                                                            <option value="female">Female</option>
-                                                            <option value="other">Other</option>
+                                                        <select class="form-control show-tick" data-live-search="true" name="ceo_gender" data-dropup-auto='false' required>
+                                                                <option value="Male" {{ ( $agency->ceo_gender =='Male') ? 'selected' : '' }}>Male</option>
+                                                                <option value="Female" {{ ( $agency->ceo_gender =='Female') ? 'selected' : '' }}>Female</option>
+                                                                <option value="Transgender" {{ ( $agency->ceo_gender =='Transgender') ? 'selected' : '' }}>Transgender</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <label for="ceo_designation">Designation *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Designation"  name="ceo_designation" required>
+                                                        <input type="text" class="form-control" placeholder="Designation"  name="ceo_designation" value="{{$agency->ceo_designation}}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <label for="ceo_landline">Landline Number</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Landline"  name="ceo_landline">
+                                                        <input type="text" class="form-control" placeholder="Landline No"  name="ceo_landline" value="{{$agency->ceo_landline}}" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,13 +261,13 @@
                                                 <div class="col-sm-6">
                                                     <label for="org_address">Address of the Organization *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Organization Address"  name="org_address" required>
+                                                        <input type="text" class="form-control" placeholder="Organization Address"  name="org_address" value="{{$agency->org_address}}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label for="post_office">Post Office *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Post Office"  name="post_office" required>
+                                                        <input type="text" class="form-control" placeholder="Post Office"  name="post_office" value="{{$agency->post_office}}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -272,7 +278,7 @@
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                             @foreach ($states as $state)
-                                                                <option value="{{$state->id}}"  data-subtext="{{ $state->state }}">{{ $state->district }}</option>
+                                                                <option value="{{$state->id}}"  data-subtext="{{ $state->state }}" {{($state->id==$agency->state_district) ? 'selected' : ''}}>{{ $state->district }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -282,7 +288,7 @@
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" data-dropup-auto='false' required>
                                                             @foreach ($parliaments as $parliament)
-                                                                <option value="{{$parliament->id}}"  data-subtext="{{ $parliament->state_ut }}">{{ $parliament->constituency }}</option>
+                                                                <option value="{{$parliament->id}}"  data-subtext="{{ $parliament->state_ut }}" {{($parliament->id==$agency->parliament) ? 'selected' : ''}}>{{ $parliament->constituency }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -292,51 +298,42 @@
                                                 <div class="col-sm-4">
                                                     <label for="city">City/Town/Village *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="City/Town/Village"  name="city" required >
+                                                        <input type="text" class="form-control" placeholder="City/Town/Village"  name="city" value="{{$agency->city}}" required >
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="sub_district">Sub-District *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Sub-District"  name="sub_district" required>
+                                                        <input type="text" class="form-control" placeholder="Sub-District"  name="sub_district" value="{{$agency->sub_district}}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="pin">PIN code *</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="PIN Code"  name="pin" required>
+                                                        <input type="text" class="form-control" placeholder="PIN Code"  name="pin" value="{{$agency->pin}}" required>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="landline">Landline</label>
+                                                    <label for="org_landline">Landline</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Landline Number"  name="landline"  >
+                                                        <input type="text" class="form-control" placeholder="Landline No"  name="org_landline" value="{{$agency->org_landline}}" >
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="website">Website</label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="Website"  name="website" >
+                                                        <input type="text" class="form-control" placeholder="Website"  name="website" value="{{$agency->website}}" >
                                                     </div>
                                                 </div>
                                                
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12 text-right">
-                                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> SUBMIT</button>
+                                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>UPDATE</button>
                                                 </div>
                                             </div>
-                                            
-                                            {{-- <div class="row">
-                                                <div class="col-sm-6">
-                                                    <button type="button" onclick="validatedata('collapseFour,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                                </div>
-                                                <div class="col-sm-6 text-right">
-                                                    <button type="button" onclick="validatedata('collapseFour,collapseFive');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                                                </div>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -389,10 +386,11 @@
     
     jQuery("#form2").validate({
             rules: {
-            
-            spoc_aadhaar_no: { aadhaar: true },
-            aadhaar_no: { aadhaar: true },
-            "[type=email]": { email: true }
+                aadhaar: { aadhaar: true },
+                website: { website: true },
+                pin: { pin: true },
+                ceo_aadhaar: { aadhaar: true },
+                "[type=email]": { email: true }
             }
         });
     
@@ -413,18 +411,17 @@ function yearAdd(){
 }
 
 /* Check Redundancy */
-        var dup_email_tag = false;
-        var dup_mobile_tag = false;
-        var dup_aadhaar_tag = false;
-        function checkduplicacy(val){
         var dup_email_tag = true;
         var dup_mobile_tag = true;
         var dup_aadhaar_tag = true;
+        function checkduplicacy(val){
+       
             var _token = $('[name=_token]').val();
             
             let value = $('[name='+val+']').val();
+            let aa_id = $('[name=aa_id]').val();
            
-            let dataString = { checkredundancy : value, section: val, _token: _token};
+            let dataString = { checkredundancy : value, section: val,aa_id:aa_id, _token: _token};
             $.ajax({
                 url: "{{route('admin.aa.agency.api')}}",
                 method: "POST",
@@ -441,7 +438,7 @@ function yearAdd(){
                             dup_aadhaar_tag = true;
                         }
                     } else {
-                        if(val=='spoc_aadhaar_no'){
+                        if(val=='aadhaar'){
 
                         $('#'+val+'_error').html('Aadhaar already exists');
                         }else{
@@ -469,8 +466,7 @@ function yearAdd(){
     /* End Check Redundancy */
 
     function myFunction2(){
-        
-        if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
+         if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
            
             return false;
         }
