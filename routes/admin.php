@@ -85,4 +85,18 @@ Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDea
 Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
 Route::get('agency/agency-view/{id}', 'AdminAuth\AdminAgencyController@agencyView')->name('aa.agency.view');
 Route::get('agency/agency-edit/{id}', 'AdminAuth\AdminAgencyController@agencyEdit')->name('aa.edit.agency');
+Route::post('agency/agency-update', 'AdminAuth\AdminAgencyController@agencyUpdate')->name('aa.update.agency');
 Route::post('agency/agency-api', 'AdminAuth\AdminAgencyController@agencyApi')->name('aa.agency.api');
+
+/* Assessors */
+Route::get('assessor/assessors', 'AdminAuth\AdminAssessorController@assessor')->name('assessor.assessors');
+Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pendingAssessors')->name('as.pending-assessors');
+Route::get('assessor/assessor-view/{id}', 'AdminAuth\AdminAssessorController@assessorView')->name('as.assessor.view');
+Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
+Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');
+Route::get('assessor/assessor-verify/{id}', 'AdminAuth\AdminAssessorController@assessorAccept')->name('as.assessor.verify');
+Route::post('assessor/assessor-reject', 'AdminAuth\AdminAssessorController@assessorReject')->name('as.reject.assessor');
+Route::post('assessors/fetch-jobrole', 'AdminAuth\AdminAssessorController@fetchJobrole')->name('aa.fetch-jobrole'); 
+Route::get('assessor/assessor-edit/{id}', 'AdminAuth\AdminAssessorController@assessorEdit')->name('as.edit.assessor');
+Route::post('assessor/assessor-update', 'AdminAuth\AdminAssessorController@assessorUpdate')->name('as.update.assessor');
+Route::post('assessors/assessor-api', 'AssessorApiController@assessorApi')->name('as.assessor.api'); 

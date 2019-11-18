@@ -403,7 +403,7 @@ function yearAdd(){
     if(date!=""){
     var newdate = date.split("-").reverse().join("-");
     var d = new Date(newdate);
-    console.log(d);
+    //console.log(d);
     
     var year = d.getFullYear();
     var month = d.getMonth();

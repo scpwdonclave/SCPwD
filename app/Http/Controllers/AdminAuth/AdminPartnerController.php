@@ -405,7 +405,7 @@ class AdminPartnerController extends Controller
 
     public function fetchJobrole(Request $request){
 
-        $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get();
+        $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get(); 
         return response()->json(['jobroles' => $jobroles],200); 
     }
 

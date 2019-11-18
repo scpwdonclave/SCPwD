@@ -377,7 +377,7 @@
             var e_id=e_id;
             
             $.ajax({
-                    url:"{{route('admin.tp.fetch-prvdata')}}",
+                    url:"{{route('admin.tp.fetch-prvdata')}}", 
                     data:{_token,e_id},
                     method:'POST',
                     success: function(data){
