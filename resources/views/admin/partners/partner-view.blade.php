@@ -17,7 +17,8 @@
                         @if (!$partnerData->pending_verify)
                         <div class="text-center">
                             <h6>
-                                TP ID: <span style='color:blue'>{{$partnerData->tp_id}}</span>
+                                TP ID: <span style='color:blue'>{{$partnerData->tp_id}}</span> <br> <br>
+                                <span style='color:{{($partnerData->status)?"green":"red"}}'>{{($partnerData->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -400,7 +401,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($partnerData->centers as $key=>$center)
+                                @foreach ($centers as $key=>$center)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$center->tc_id}}</td>

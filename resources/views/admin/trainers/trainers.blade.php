@@ -21,11 +21,11 @@
                                 <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>TP ID</th>
                                             <th>Trainer Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
+                                            <th>Overall Status</th>
                                             <th>View</th>
                                             <th>DeLink</th>
                                             <th>Action</th>
@@ -35,11 +35,15 @@
                                             @foreach ($data as $key=>$item)
                                                 
                                                 <tr>
-                                                <td>{{$key+1}}</td>
                                                 <td>{{$item->partner->tp_id}}</td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
+                                                @if ($item->verified)
+                                                    <td style="color:{{($item->partner->status && $item->status)?'green':'red'}}">{{($item->partner->status && $item->status)?'Active':'Inactive'}}</td>
+                                                @else
+                                                    <td style="color:red">Not Verified</td>
+                                                @endif
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',Crypt::encrypt($item->id))}}">View</a></td>
                                                 <td><button class="badge bg-blue margin-0" onclick="dlink({{$item->id}})">DeLink</button></td>
                                                 @if($item->status)

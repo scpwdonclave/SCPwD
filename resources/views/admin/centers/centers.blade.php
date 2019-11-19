@@ -26,6 +26,7 @@
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
+                                    <th>Overall Status</th>
                                     <th>View</th>
                                     <th>Action</th>
                                 </tr>
@@ -39,6 +40,7 @@
                                     <td>{{$item->spoc_name}}</td>
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->mobile}}</td>
+                                    <td style="color:{{($item->status && $item->partner->status)?'green':'red'}}">{{($item->status && $item->partner->status)?'Active':'Inactive'}}</td>
                                     <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',Crypt::encrypt($item->id))}}" >View</a></td>
                                     @if($item->status)
                                         <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>

@@ -36,11 +36,9 @@
                                     <th>Contact</th>
                                     <th>Category</th>
                                     <th>Date of Birth</th>
-                                    <th>Scheme Status</th>
+                                    <th>Overall Status</th>
                                     @if (Request::segment(1) === 'admin')
                                         <th>Action</th>
-                                    @else
-                                        <th>Status</th>
                                     @endif
                                     <th>View</th>
                                 </tr>
@@ -60,15 +58,13 @@
                                 <td>{{$candidate->contact}}</td>
                                 <td>{{$candidate->category}}</td>
                                 <td>{{$candidate->dob}}</td>
-                                <td style="color:{{($candidate->jobrole->partnerjobrole->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</td>
+                                <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
                                 @if (Request::segment(1)==='admin')
                                     @if($candidate->status)
                                         <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$candidate->id}})">Deactivate</a></td>
                                     @else
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.tc.candidate.active',Crypt::encrypt($candidate->id))}}" >Activate</a></td>
                                     @endif
-                                @else
-                                    <td style="color:{{($candidate->status)?'green':'red'}}">{{($candidate->status)?'Active':'Inactive'}}</td>
                                 @endif
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->id))}}" >View</a></td>
                                 </tr>

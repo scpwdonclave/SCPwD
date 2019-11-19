@@ -38,7 +38,7 @@
                                                 <td>{{$jobrole->scheme->scheme.' | '.$jobrole->sector->sector.' | '.$jobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->assigned}}</td>
-                                                <td class="text-{{($jobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->status)?'Active':'Inactive'}}</td>
+                                                <td class="text-{{($jobrole->status)?'success':'danger'}}"><strong>Scheme is {{($jobrole->status)?'Active':'Inactive'}}</strong></td>
                                                 <td><a class="badge bg-green margin-0" href="{{route('partner.dashboard.jobroles.view',Crypt::encrypt($jobrole->id))}}" >View</a></td>
                                             </tr>
                                             @endforeach
@@ -48,10 +48,12 @@
                                             @if (Request::segment(1) === 'center')
                                             @foreach ($jobroles as $jobrole)
                                             <tr>
-                                                <td>{{$jobrole->partnerjobrole->scheme->scheme.' | '.$jobrole->partnerjobrole->sector->sector.' | '.$jobrole->partnerjobrole->jobrole->job_role}}</td>
+                                                <td>{{$jobrole->partnerjobrole->scheme->scheme}}</td>
+                                                <td>{{$jobrole->partnerjobrole->sector->sector}}</td>
+                                                <td>{{$jobrole->partnerjobrole->jobrole->job_role}}</td>
                                                 <td>{{$jobrole->target}}</td>
                                                 <td>{{$jobrole->enrolled}}</td>
-                                                <td class="text-{{($jobrole->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($jobrole->partnerjobrole->status)?'Active':'Inactive'}}</td>
+                                                <td class="text-{{($jobrole->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($jobrole->partnerjobrole->status)?'Active':'Inactive'}}</strong></td>
                                             </tr>
                                         @endforeach
                                     @endif

@@ -28,7 +28,7 @@
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
-                                    <th>Status</th>
+                                    <th>Overall Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -41,7 +41,7 @@
                                 <td>{{$center->email}}</td>
                                 <td>{{$center->mobile}}</td>
                                 @if ($center->verified)
-                                    <td style="color:{{($center->status)?'green':'red'}}">{{($center->status)?'Active':'Inactive'}}</td>
+                                    <td style="color:{{($center->status && $center->partner->status)?'green':'red'}}">{{($center->status && $center->partner->status)?'Active':'Inactive'}}</td>
                                 @else
                                     <td style="color:red">Not Verified</td>
                                 @endif

@@ -29,7 +29,7 @@
                                     <th>Trainer Name</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
-                                    <th>Status</th>
+                                    <th>Overall Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -42,7 +42,7 @@
                                         <td>{{$trainer->email}}</td>
                                         <td>{{$trainer->mobile}}</td>
                                         @if ($trainer->verified)
-                                            <td style="color:{{($trainer->status)?'green':'red'}}">{{($trainer->status)?'Active':'Inactive'}}</td>
+                                            <td style="color:{{($trainer->partner->status && $trainer->status)?'green':'red'}}">{{($trainer->partner->status && $trainer->status)?'Active':'Inactive'}}</td>
                                         @else
                                             <td style="color:red">Not Verified</td>
                                         @endif

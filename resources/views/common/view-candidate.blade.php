@@ -24,13 +24,25 @@
                             <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-case"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-3">
+                                        <small class="text-muted">Training Partner</small>
+                                        <p>{{$candidate->center->partner->tp_id}} <span style='color:{{($candidate->center->partner->status)?"green":"red"}}'><strong>{{($candidate->center->partner->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <hr>
+                                    </div>
+                                    
+                                    <div class="col-sm-3">
+                                        <small class="text-muted">Training Center</small>
+                                        <p>{{$candidate->center->tc_id}} <span style='color:{{($candidate->center->status)?"green":"red"}}'><strong>{{($candidate->center->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <hr>
+                                    </div>
+
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Aadhaar/Voter Number</small>
                                         <p>{{$candidate->doc_no}}</p>
                                         <hr>
                                     </div>
                                 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Aadhaar/Voter Document</small>
                                         @if (!is_null($candidate->doc_file))
                                             <p>Document &nbsp;&nbsp;
@@ -110,7 +122,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Scheme Status </small>
-                                            <p class="text-{{($candidate->jobrole->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</p>
+                                            <p class="text-{{($candidate->jobrole->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</strong></p>
                                         <hr>
                                     </div>
                                 </div>

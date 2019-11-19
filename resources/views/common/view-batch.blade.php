@@ -33,18 +33,18 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Training Partner ID</small>
-                                        <p>{{$batchData->partner->tp_id}}</p>
+                                        <p>{{$batchData->partner->tp_id}} <span style='color:{{($batchData->partner->status)?"green":"red"}}'><strong>{{($batchData->partner->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Training Center ID</small>
-                                        <p>{{$batchData->center->tc_id}}</p>
+                                        <p>{{$batchData->center->tc_id}} <span style='color:{{($batchData->center->status)?"green":"red"}}'><strong>{{($batchData->center->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Trainer ID</small>
-                                        <p>{{$batchData->trainer->trainer_id}}</p>
+                                        <p>{{$batchData->trainer->trainer_id}} <span style='color:{{($batchData->trainer->status)?"green":"red"}}'><strong>{{($batchData->trainer->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                   
@@ -137,7 +137,7 @@
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Aadhaar/Voter</th>
-                                    <th>Status</th>
+                                    <th>Overall Status</th>
                                     <th>View</th>
                                 </tr>
                             </thead>
@@ -149,7 +149,7 @@
                                     <td>{{$item->candidate->contact}}</td>
                                     <td>{{$item->candidate->email}}</td>
                                     <td>{{$item->candidate->doc_no}}</td>
-                                    <td style="color:{{($item->candidate->status)?'green':'red'}}">{{($item->candidate->status)?'Active':'Inactive'}}</td>
+                                    <td style="color:{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'green':'red'}}">{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'Active':'Inactive'}}</td>
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>                                                                                
                                     @else

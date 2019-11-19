@@ -39,8 +39,7 @@
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
-                                    <th>Status</th>
-                                    <th>Scheme Status</th>
+                                    <th>Overall Status</th>
                                     <th>View</th>
                                 </tr>
                                
@@ -62,11 +61,14 @@
                                 <td>{{$item->batch_end}}</td>
                                 <td>{{$item->assessment}}</td>
                                 @if ($item->verified)
-                                    <td style="color:{{($item->status)?'green':'red'}}">{{($item->status)?'Active':'Inactive'}}</td>
+                                    @if ($item->completed)
+                                        <td style="color:green">Completed</td>
+                                    @else
+                                        <td style="color:{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'green':'red'}}">{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'Active':'Inactive'}}</td>
+                                    @endif
                                 @else
                                     <td style="color:red">Not Verified</td>
                                 @endif
-                                    <td style="color:{{($item->tpjobrole->status)?'green':'red'}}">{{($item->tpjobrole->status)?'Active':'Inactive'}}</td>
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                     
                                 </tr>

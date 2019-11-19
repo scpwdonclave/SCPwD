@@ -16,7 +16,8 @@
                     @if (!is_null($centerData->tc_id))
                         <div class="text-center">
                             <h6>
-                                TC ID: <span style='color:blue'>{{$centerData->tc_id}}</span>
+                                TC ID: <span style='color:blue'>{{$centerData->tc_id}}</span> <br> <br>
+                                <span style='color:{{($centerData->status)?"green":"red"}}'>{{($centerData->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -78,22 +79,30 @@
                             <div class="cbp_tmlabel">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                            <small class="text-muted">Training Center Name</small>
-                                            <p>{{$centerData->center_name}}</p>
-                                            <hr>
+                                        <small class="text-muted">Training Partner</small>
+                                        <p>{{$centerData->partner->tp_id}} <span style='color:{{($centerData->partner->status)?"green":"red"}}'><strong>{{($centerData->partner->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <hr>
                                     </div>
-                                
+                                 
                                     <div class="col-sm-4">
-                                            <small class="text-muted">Training Center Address</small>
-                                            <p>{{$centerData->center_address}}</p>
-                                            <hr>
+                                        <small class="text-muted">Training Center Name</small>
+                                        <p>{{$centerData->center_name}}</p>
+                                        <hr>
                                     </div>
+                                 
                                     <div class="col-sm-4">
-                                            <small class="text-muted">Landmark</small>
-                                            <p>{{$centerData->landmark}}</p>
-                                            <hr>
+                                        <small class="text-muted">Landmark</small>
+                                        <p>{{$centerData->landmark}}</p>
+                                        <hr>
                                     </div>
                                     
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <small class="text-muted">Training Center Address</small>
+                                        <p>{{$centerData->center_address}}</p>
+                                        <hr>
+                                    </div>
                                 </div>
                                 <div class="row">
                                         <div class="col-sm-6">
@@ -339,7 +348,7 @@
                                         <td>{{$target->target}}</td>
                                         <td>{{$target->enrolled}}</td>
                                         <td>0</td>
-                                        <td class="text-{{($target->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($target->partnerjobrole->status)?'Active':'Inactive'}}</td>
+                                        <td class="text-{{($target->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($target->partnerjobrole->status)?'Active':'Inactive'}}</strong></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -367,7 +376,7 @@
                                         <th>Contact</th>
                                         <th>Category</th>
                                         <th>Date of Birth</th>
-                                        <th>Status</th>
+                                        <th>Overall Status</th>
                                         <th>View</th>
                                     </tr>
                                 </thead>
@@ -379,7 +388,7 @@
                                         <td>{{$candidate->contact}}</td>
                                         <td>{{$candidate->category}}</td>
                                         <td>{{$candidate->dob}}</td>
-                                        <td style="color:{{($candidate->status)?'green':'red'}}">{{($candidate->status)?'Active':'Inactive'}}</td>
+                                        <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
                                         <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($candidate->id))}}" >View</a></td>
                                     </tr>
                                     @endforeach

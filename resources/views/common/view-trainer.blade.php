@@ -15,7 +15,8 @@
                     @if (!is_null($trainerData->trainer_id))
                         <div class="text-center">
                             <h6>
-                                TR ID: <span style='color:blue'>{{$trainerData->trainer_id}}</span>
+                                TR ID: <span style='color:blue'>{{$trainerData->trainer_id}}</span> <br> <br>
+                                <span style='color:{{($trainerData->status)?"green":"red"}}'>{{($trainerData->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -48,7 +49,7 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Attached TP</small>
-                                        <p>{{$trainerData->partner->tp_id}}</p>
+                                        <p>{{$trainerData->partner->tp_id}} <span style='color:{{($trainerData->partner->status)?"green":"red"}}'><strong>{{($trainerData->partner->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
@@ -123,7 +124,7 @@
                                                 <td>{{$trainerJob->partnerjobrole->scheme->scheme}}</td>
                                                 <td>{{$trainerJob->partnerjobrole->sector->sector}}</td>
                                                 <td>{{$trainerJob->partnerjobrole->jobrole->job_role}}</td>
-                                                <td class="text-{{($trainerJob->partnerjobrole->status)?'success':'danger'}}">Scheme is {{($trainerJob->partnerjobrole->status)?'Active':'Inactive'}}</td>
+                                                <td class="text-{{($trainerJob->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($trainerJob->partnerjobrole->status)?'Active':'Inactive'}}</strong></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
