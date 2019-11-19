@@ -27,4 +27,10 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: .10rem;
 }
 
+/* Hover Button */
+  button[type=button] {
+    cursor:pointer;
+  }
+/* End Hover Button */
+
 /* End To Remove Arrow In Number Fields */

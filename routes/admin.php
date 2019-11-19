@@ -20,8 +20,7 @@ Route::get('training_partners/partner-update/{id}', 'AdminAuth\AdminPartnerContr
 Route::post('partner-reject', 'AdminAuth\AdminPartnerController@partnerReject')->name('reject.partner');
 Route::get('partner-accept/{id}/{tp_id}', 'AdminAuth\AdminPartnerController@partnerUpdateAccept')->name('accept.tp-updt-req');
 Route::post('partnerupdate-reject', 'AdminAuth\AdminPartnerController@partnerUpdateReject')->name('reject.tp-updt-req');
-Route::post('training_partners/partners-deactive', 'AdminAuth\AdminPartnerController@partnerDeactive')->name('training_partner.partner.deactive');
-Route::get('training_partners/partners-active/{id}', 'AdminAuth\AdminPartnerController@partnerActive')->name('training_partner.partner.active');
+Route::post('training_partners/partners-deactive', 'AdminAuth\AdminPartnerController@partnerAction')->name('tp.partner.action');
 Route::post('training_partners/partners-comp-details-update', 'AdminAuth\AdminPartnerController@partnerDetailsUpdate')->name('training_partner.comp-details-update');
 Route::get('training_partners/partner-target/{id}', 'AdminAuth\AdminPartnerController@partnerTarget')->name('training_partner.partner.target');
 Route::post('training_partners/fetch-jobrole', 'AdminAuth\AdminPartnerController@fetchJobrole')->name('tp.fetch-jobrole');

@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -24,7 +25,7 @@
                                 <button class="btn btn-primary btn-sm" style="float:right;" onclick="location.href='#largeModal1'" data-toggle="modal" data-target="#largeModal1">Add Job Role</button>
                                 <br><br>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                             <tr>
                                             <th>Scheme | Sector | Job Role</th>
@@ -38,15 +39,15 @@
                                     <tbody>
                                             @foreach ($partner->partner_jobroles as $key=>$job)
                                             <tr>
-                                                <td class="text-center">{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
-                                                <td class="text-center">{{$job->target}}</td>
-                                                <td class="text-center">{{$job->assigned}}</td>
-                                                <td class="text-center">{{$job->target}}</td>
+                                                <td>{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
+                                                <td>{{$job->target}}</td>
+                                                <td>{{$job->assigned}}</td>
+                                                <td>{{$job->target}}</td>
                                                 <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
                                                 @if($job->status)
-                                                    <td class="text-center"><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})">Edit</a></td>
+                                                    <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})">Edit</a></td>
                                                 @else
-                                                    <td class="text-center"><a class="badge bg-grey margin-0" href="#" onclick="return false">Edit</a></td>
+                                                    <td><a class="badge bg-grey margin-0" href="#" onclick="return false">Edit</a></td>
                                                 @endif
                                              </tr>
                                             @endforeach

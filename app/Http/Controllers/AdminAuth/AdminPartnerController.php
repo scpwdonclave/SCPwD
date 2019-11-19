@@ -59,43 +59,88 @@ class AdminPartnerController extends Controller
         return view('admin.partners.pending-partners')->with(compact('data'));
     }
 
-    public function partnerDeactive(Request $request){
-        $partnerData=Partner::findOrFail($request->id);
-            DB::transaction(function() use ($partnerData){
-                $partnerData->status=0;
-                $partnerData->save();
 
-                $reason = new Reason;
-                $reason->rel_id = $partnerData->id;
-                $reason->rel_with = 'partner';
-                $reason->reason = $request->reason;
-                $reason->save();
 
-                foreach ($partnerData->partner_jobroles as $partnerjob) {
-                    $partnerjob->status = 0;
-                    $partnerjob->save();
+    // * Training Partner Activation Deactvation
+    
+    public function partnerAction(Request $request){
+        if ($request->has('data')) {
+
+            if ($id=$this->decryptThis($request->data)) {
+                $data = explode(',',$id);
+                $partner = Partner::find($data[0]);
+
+                if ($partner) {
+                    if ($partner->status) {
+                        if (!is_null($request->reason) && $request->reason != '') {
+                            $partner->status = 0;
+                            $partner->save();
+                            $reason = new Reason;
+                            $reason->rel_id = $data[0];
+                            $reason->rel_with = 'partner';
+                            $reason->reason = $request->reason;
+                            $reason->save();
+                            $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
+                        } else {
+                            $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                        }
+                    } else {
+                        $partner->status = 1;
+                        $partner->save();
+                        $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
+                    }
+                    return response()->json($array,200);
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account"),400);
                 }
-            });
-        return response()->json(['status' => 'done'],200);
-        
-    }
-    public function partnerActive($id){
-        $partnerData=Partner::findOrFail($id);
-        DB::transaction(function() use ($partnerData){
-            $partnerData->status=1;
-            $partnerData->save();
-            foreach ($partnerData->partner_jobroles as $partnerjob) {
-                if ($partnerjob->scheme->status) {
-                    $partnerjob->status = 1;
-                    $partnerjob->save();
-                }
+
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
             }
-        });
-        // ! All Inactive Schemes Under Any Partner Will be Auto Re-Activated (IF THEY WERE PREVIOUSLY DEACTIVATED WITH PARTNER-SCHEME DEACTIVATION PROCESS)
-        alert()->success("Partner and all its <span style='color:blue;'>Schemes, Jobroles</span> are now <span style='color:blue;'>Activated</span>", "Done")->autoclose(2000);
-        return redirect()->back();
+        }        
     }
 
+    // * End Training Partner Activation Deactvation
+
+    // public function partnerDeactive(Request $request){
+    //     $partnerData=Partner::findOrFail($request->id);
+    //         DB::transaction(function() use ($partnerData){
+    //             $partnerData->status=0;
+    //             $partnerData->save();
+
+    //             $reason = new Reason;
+    //             $reason->rel_id = $partnerData->id;
+    //             $reason->rel_with = 'partner';
+    //             $reason->reason = $request->reason;
+    //             $reason->save();
+
+    //             foreach ($partnerData->partner_jobroles as $partnerjob) {
+    //                 $partnerjob->status = 0;
+    //                 $partnerjob->save();
+    //             }
+    //         });
+    //     return response()->json(['status' => 'done'],200);
+        
+    // }
+    // public function partnerActive($id){
+    //     $partnerData=Partner::findOrFail($id);
+    //     DB::transaction(function() use ($partnerData){
+    //         $partnerData->status=1;
+    //         $partnerData->save();
+    //         foreach ($partnerData->partner_jobroles as $partnerjob) {
+    //             if ($partnerjob->scheme->status) {
+    //                 $partnerjob->status = 1;
+    //                 $partnerjob->save();
+    //             }
+    //         }
+    //     });
+    //     // ! All Inactive Schemes Under Any Partner Will be Auto Re-Activated (IF THEY WERE PREVIOUSLY DEACTIVATED WITH PARTNER-SCHEME DEACTIVATION PROCESS)
+    //     alert()->success("Partner and all its <span style='color:blue;'>Schemes, Jobroles</span> are now <span style='color:blue;'>Activated</span>", "Done")->autoclose(2000);
+    //     return redirect()->back();
+    // }
+
+    // * Training Partner View with ID
+    
     public function partnerView($id){
         if ($id=$this->decryptThis($id)) {
             $partnerData=Partner::findOrFail($id); 
@@ -103,20 +148,19 @@ class AdminPartnerController extends Controller
             ->join('state_district','partners.state_district','=','state_district.id')
             ->join('parliament','partners.parliament','=','parliament.id')
             ->first();
-    
-            
-    
-            $centers=DB::table('centers')->where('tp_id',$id)->get();
+
             $partner_scheme=PartnerJobrole::where('tp_id',$id)
             ->groupBy('scheme_id')->get();
     
-            if ($partnerData->complete_profile && $partnerData->status==1) {
-                return view('admin.partners.partner-view')->with(compact('partnerData','partnerState','centers','partner_scheme'));
+            if ($partnerData->complete_profile) {
+                return view('admin.partners.partner-view')->with(compact('partnerData','partnerState','partner_scheme'));
             } else {
                 return redirect()->route('admin.tp.partners');
             }
         }   
     }
+    
+    // * End Training Partner View with ID
 
     public function partnerUpdate($id){
         try {
@@ -493,6 +537,8 @@ class AdminPartnerController extends Controller
         return Redirect()->back();
     }
 
+    // * Training Partner Scheme Activation Deactivation
+
     public function partnerSchemeAction(Request $request){
         
         if ($request->has('data')) {
@@ -545,91 +591,93 @@ class AdminPartnerController extends Controller
         }
     }
 
+    // * End Training Partner Scheme Activation Deactivation
 
-    public function partnerSchemeDeactive(Request $request){
 
-        $partnerScheme=PartnerJobrole::where([['scheme_id','=',$request->id],['tp_id','=',$request->pid]])->get();
+    // public function partnerSchemeDeactive(Request $request){
+
+    //     $partnerScheme=PartnerJobrole::where([['scheme_id','=',$request->id],['tp_id','=',$request->pid]])->get();
         
-        foreach ($partnerScheme as  $scheme) {
+    //     foreach ($partnerScheme as  $scheme) {
             
-            $scheme->save();
+    //         $scheme->save();
 
-           $p_job_reason= new PartnerJobRoleReason;
-           $p_job_reason->partner_job_id=$scheme->id;
-           $p_job_reason->reason=$request->reason;
-           $p_job_reason->save();
+    //        $p_job_reason= new PartnerJobRoleReason;
+    //        $p_job_reason->partner_job_id=$scheme->id;
+    //        $p_job_reason->reason=$request->reason;
+    //        $p_job_reason->save();
             
-            $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
+    //         $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
             
-            foreach ($get_tc_job as  $tcid) {
-                $tcid->save();
+    //         foreach ($get_tc_job as  $tcid) {
+    //             $tcid->save();
                
-            }
+    //         }
 
-        }
-        $partner = Partner::find($request->id);
-        foreach($partner->centers as $center){
-            $notification = new Notification;
-            $notification->rel_id =$center->id;
-            $notification->rel_with = 'center';
-            $notification->title = 'Scheme Deactivated';
-            $notification->message = "Your Training Partner Scheme has been Deactivated";
-            $notification->save();
+    //     }
+    //     $partner = Partner::find($request->id);
+    //     foreach($partner->centers as $center){
+    //         $notification = new Notification;
+    //         $notification->rel_id =$center->id;
+    //         $notification->rel_with = 'center';
+    //         $notification->title = 'Scheme Deactivated';
+    //         $notification->message = "Your Training Partner Scheme has been Deactivated";
+    //         $notification->save();
             
-        }
-            $notification = new Notification;
-            $notification->rel_id =$request->pid;
-            $notification->rel_with = 'partner';
-            $notification->title = 'Scheme Deactivated';
-            $notification->message = "One of Your Scheme has been Deactivated";
-            $notification->save();
+    //     }
+    //         $notification = new Notification;
+    //         $notification->rel_id =$request->pid;
+    //         $notification->rel_with = 'partner';
+    //         $notification->title = 'Scheme Deactivated';
+    //         $notification->message = "One of Your Scheme has been Deactivated";
+    //         $notification->save();
 
-        return response()->json(['status' => 'done'],200);
+    //     return response()->json(['status' => 'done'],200);
 
-    }
+    // }
 
-    public function partnerSchemeActive($id,$pid){
-        try {
-            $id = Crypt::decrypt($id);
-            $pid = Crypt::decrypt($pid);
+    // public function partnerSchemeActive($id,$pid){
+    //     try {
+    //         $id = Crypt::decrypt($id);
+    //         $pid = Crypt::decrypt($pid);
            
-        } catch (DecryptException $e) {
-            abort(404);
-        }
-        $partnerScheme=PartnerJobrole::where([['scheme_id','=',$id],['tp_id','=',$pid]])->get();
+    //     } catch (DecryptException $e) {
+    //         abort(404);
+    //     }
+    //     $partnerScheme=PartnerJobrole::where([['scheme_id','=',$id],['tp_id','=',$pid]])->get();
 
-        foreach ($partnerScheme as  $scheme) {
+    //     foreach ($partnerScheme as  $scheme) {
             
-            $scheme->save();
+    //         $scheme->save();
             
-            $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
+    //         $get_tc_job=CenterJobRole::where('tp_job_id',$scheme->id)->get();
             
-            foreach ($get_tc_job as  $tcid) {
-                $tcid->save();
+    //         foreach ($get_tc_job as  $tcid) {
+    //             $tcid->save();
                 
-            }
+    //         }
 
-        }
+    //     }
 
-        $partner = Partner::find($pid);
-        foreach($partner->centers as $center){
-            $notification = new Notification;
-            $notification->rel_id =$center->id;
-            $notification->rel_with = 'center';
-            $notification->title = 'Scheme Activated';
-            $notification->message = "Your Training Partner Scheme has been Activated";
-            $notification->save();
+    //     $partner = Partner::find($pid);
+    //     foreach($partner->centers as $center){
+    //         $notification = new Notification;
+    //         $notification->rel_id =$center->id;
+    //         $notification->rel_with = 'center';
+    //         $notification->title = 'Scheme Activated';
+    //         $notification->message = "Your Training Partner Scheme has been Activated";
+    //         $notification->save();
             
-        }
-            $notification = new Notification;
-            $notification->rel_id =$pid;
-            $notification->rel_with = 'partner';
-            $notification->title = 'Scheme Activated';
-            $notification->message = "One of Your Scheme has been Activated";
-            $notification->save();
-        alert()->success("Training Partner Scheme <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
-        return Redirect()->back();
-    }
+    //     }
+    //         $notification = new Notification;
+    //         $notification->rel_id =$pid;
+    //         $notification->rel_with = 'partner';
+    //         $notification->title = 'Scheme Activated';
+    //         $notification->message = "One of Your Scheme has been Activated";
+    //         $notification->save();
+    //     alert()->success("Training Partner Scheme <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
+    //     return Redirect()->back();
+    // }
 
     public function update_partner_api(Request $request){
         if ($request->has('checkredundancy')) {

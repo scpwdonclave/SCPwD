@@ -368,7 +368,7 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$scheme->scheme->scheme}}</td>
                                         <td>{{$scheme->scheme->year}}</td>
-                                        <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($partnerData->id.','.$scheme->scheme_id).','.$scheme->status.','.$scheme->scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($partnerData->id.','.$scheme->scheme_id).','.$scheme->status.','.$scheme->scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -401,7 +401,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($centers as $key=>$center)
+                                @foreach ($partnerData->centers as $key=>$center)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$center->tc_id}}</td>

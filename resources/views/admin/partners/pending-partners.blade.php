@@ -3,6 +3,7 @@
 @section('parentPageTitle', 'Partners')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -16,14 +17,14 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                             <tr>
                                             <th>#</th>
-                                            <th>Spoc Name</th>
-                                            <th>Spoc Email</th>
-                                            <th>Spoc Mobile</th>
-                                            <th style="width:20px;">Incorp. Document</th>
+                                            <th>SPOC Name</th>
+                                            <th>SPOC Email</th>
+                                            <th>SPOC Mobile</th>
+                                            <th>Incorp. Document</th>
                                             <th>Status</th>
                                             <th>View</th>
                                             
@@ -33,19 +34,17 @@
                                         @foreach ($data as $key=>$item)
                                                 
                                             <tr>
-                                                <td class="text-center">{{$key+1}}</td>
-                                                <td class="text-center">{{$item->spoc_name}}</td>
-                                                <td class="text-center">{{$item->email}}</td>
-                                                <td class="text-center">{{$item->spoc_mobile}}</td>
-                                                <td class="text-center">
-                                                    <a class="" href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a>
-                                                </td>
-                                                @if($item->status==1 && $item->complete_profile==1 && $item->pending_verify==1)
-                                                    <td class="text-center"><span class="badge badge-info">Pending</span></td>
-                                                    <td class="text-center" ><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>                                    
-                                                @elseif($item->status==1 && $item->complete_profile==0 && $item->pending_verify==null)
-                                                    <td class="text-center"><span class="badge badge-warning">First Instance</span></td>
-                                                    <td class="text-center"><a class="badge bg-grey margin-0" href="javascript:void(0);" disabled>View</a></td>
+                                                <td>{{$key+1}}</td>
+                                                <td>{{$item->spoc_name}}</td>
+                                                <td>{{$item->email}}</td>
+                                                <td>{{$item->spoc_mobile}}</td>
+                                                <td><a href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a></td>
+                                                @if($item->complete_profile && $item->pending_verify)
+                                                    <td><span class="badge badge-info">Pending</span></td>
+                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>                                    
+                                                @elseif(!$item->complete_profile && is_null($item->pending_verify))
+                                                    <td><span class="badge badge-warning">First Instance</span></td>
+                                                    <td><a class="badge bg-grey margin-0" href="javascript:void(0);" disabled>View</a></td>
                                                 @endif
                                             </tr>
                                             
