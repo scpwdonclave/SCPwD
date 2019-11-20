@@ -41,8 +41,8 @@
                                         <td>{{$item->spoc_name}}</td>
                                         <td>{{$item->email}}</td>
                                         <td>{{$item->spoc_mobile}}</td>
-                                        <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.training_partner.partner.target',Crypt::encrypt($item->id))}}'" >Target</button></td>
-                                        <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.training_partner.partner.view',Crypt::encrypt($item->id))}}'" >View</button></td>
+                                        <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tp.target.view',Crypt::encrypt($item->id))}}'" >Target</button></td>
+                                        <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tp.partner.view',Crypt::encrypt($item->id))}}'" >View</button></td>
                                         <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->spoc_name.' ('.$item->tp_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
                                     </tr>
                                 @endforeach
@@ -60,7 +60,7 @@
 <script>
     function callajax(val, dataString){
         $.ajax({
-            url: "{{ route('admin.tp.partner.action') }}",
+            url: "{{ route('admin.tp.partner.status-action') }}",
             method: "POST",
             data: dataString,
             success: function(data){

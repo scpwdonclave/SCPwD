@@ -41,7 +41,7 @@
                                                 <td><a href="#largeModal{{$item->id}}" data-toggle="modal" data-target="#largeModal{{$item->id}}"><i class="zmdi zmdi-eye"></i></a></td>
                                                 @if($item->complete_profile && $item->pending_verify)
                                                     <td><span class="badge badge-info">Pending</span></td>
-                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.training_partner.partner.verify',['id'=>$item->id])}}" >View</a></td>                                    
+                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tp.partner.view',Crypt::encrypt($item->id))}}" >View</a></td>                                    
                                                 @elseif(!$item->complete_profile && is_null($item->pending_verify))
                                                     <td><span class="badge badge-warning">First Instance</span></td>
                                                     <td><a class="badge bg-grey margin-0" href="javascript:void(0);" disabled>View</a></td>

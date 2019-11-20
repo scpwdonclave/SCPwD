@@ -327,9 +327,9 @@
                         {{-- @can('partner-profile-verified', Auth::shouldUse('partner'))
                         @endcan --}}
                         @if ($partnerData->pending_verify==1)
-                        <button class="btn btn-success" onclick="location.href='{{route('admin.training_partner.accept.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}';this.disabled = true;">Accept</button>
-                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                        @elseif ($partnerData->pending_verify==0 && $partnerData->status==1)
+                        <button class="btn btn-success" onclick="location.href='{{route('admin.tp.partner.action',Crypt::encrypt($partnerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
+                        <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($partnerData->id.','.'0')}}');">Reject</button>
+                        @elseif (!$partnerData->pending_verify && $partnerData->status)
                         <button class="btn" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Edit</button>                         
                     
                     @endif
@@ -425,9 +425,9 @@
 @stop
 @section('page-script')
 <script>
-    function callajax(val, dataString){
+    function callajax(dataString, url){
         $.ajax({
-            url: "{{ route('admin.tp.partner.scheme_action') }}",
+            url: url,
             method: "POST",
             data: dataString,
             success: function(data){
@@ -449,7 +449,7 @@
         var scheme=data[2];
         if (data[1]==1) {
                 color = 'red'; text = 'Deactivate'; 
-                displayText='Please Provide the Reason of this Deactivation';
+                displayText='Please Provide the Reason of Deactivation';
                 confirmatonText="input"
             } else {
                 color = 'green'; text = 'Activate';
@@ -473,69 +473,49 @@
             closeOnEsc: false,
         }).then(function(val){
             if (val != null) {
+                var url = "{{ route('admin.tp.partner.scheme_action') }}";
                 if (val === '') {
                     swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
                 } else if (val === true) {
-                    var dataString = {_token, data:data[0], reason:null};
-                    callajax(val,dataString);
+                    let dataString = {_token, data:data[0], reason:null};
+                    callajax(dataString,url);
                 } else {
-                    var dataString = {_token, data:data[0], reason:val};
-                    callajax(val,dataString);
+                    let dataString = {_token, data:data[0], reason:val};
+                    callajax(dataString,url);
                 }
             }
         });
     }
-</script>
 
-
-
-<script>
-function showPromptMessage() {
-    swal({
-        title: "Reject!",
-        text: "Write Reason for Rejection",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        confirmButtonText: 'Reject',
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write something"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id={{$partnerData->id}};
-        var note=inputValue;
-        let _token = $("input[name='_token']").val();
-    console.log(note);
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.reject.partner')}}",
-        data: {_token,id,note},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deleted",
-        text: "Record Deleted",
-        type:"success",
-        //timer: 2000,
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-        //swal("Shortlisted!", "Candidates are successfully shortlisted!", "success");
-        window.location="{{route('admin.tp.partners')}}";
-
-        } 
+    function popupRejectSwal(id) {
+        swal({
+            text: 'Please Provide the Reason of Rejection',
+            content: "input",
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cancel",
+                    confirm: {
+                        text: "Confirm Reject",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(reason){
+            if (reason != null) {
+                if (reason === '') {
+                    swal('Attention', 'Please Describe the Reason of Rejection before Proceed', 'info');
+                } else {
+                    var url = '{{ route("admin.tp.partner.action",[":id",":reason"]) }}';
+                    url = url.replace(':id', id);
+                    url = url.replace(':reason', reason);
+                    location.href = url;
+                }
+            }
         });
-    
-        }
-    });
-        
-    });
-}
+    }
+
 </script>
 {{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>

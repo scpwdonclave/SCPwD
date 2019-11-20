@@ -45,13 +45,21 @@ class AdminPartnerController extends Controller
         }
     }
 
+    protected function writeNotification($relid,$relwith,$title,$msg){
+        $notification = new Notification;
+        $notification->rel_id = $relid;
+        $notification->rel_with = $relwith;
+        $notification->title = $title;
+        $notification->message = $msg;
+        $notification->save();
+    }
+
     public function partners(){
-        $data=Partner::where([['pending_verify','=',0]])->get();
-       
+        $data=Partner::where('pending_verify',0)->get();
         return view('admin.partners.partners')->with(compact('data'));
     }
 
-    public function pendingpartners(){
+    public function pendingPartners(){
         $data=Partner::where('pending_verify','=',1)
         ->orWhere('pending_verify','=',null)
         ->get();
@@ -63,7 +71,7 @@ class AdminPartnerController extends Controller
 
     // * Training Partner Activation Deactvation
     
-    public function partnerAction(Request $request){
+    public function partnerStatusAction(Request $request){
         if ($request->has('data')) {
 
             if ($id=$this->decryptThis($request->data)) {
@@ -153,7 +161,7 @@ class AdminPartnerController extends Controller
             ->groupBy('scheme_id')->get();
     
             if ($partnerData->complete_profile) {
-                return view('admin.partners.partner-view')->with(compact('partnerData','partnerState','partner_scheme'));
+                return view('admin.partners.view-partner')->with(compact('partnerData','partnerState','partner_scheme'));
             } else {
                 return redirect()->route('admin.tp.partners');
             }
@@ -176,163 +184,265 @@ class AdminPartnerController extends Controller
         return view('admin.partners.partner-update')->with(compact('partner','states','parliaments'));
     }
 
-    public function partnerAccept($id){
-        try {
-           $partner_id = Crypt::decrypt($id); 
-        } catch (DecryptException $e) {
-            abort(404);
-        }
-        $partner=Partner::findOrFail($partner_id);
-        if($partner->pending_verify==0){
-            alert()->error("Training Partner Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-            return Redirect()->back(); 
-        }
-        $data=DB::table('partners')
-        ->select(\DB::raw('SUBSTRING(tp_id,3) as tp_id'))
-        ->where("tp_id", "LIKE", "TP%")->get();
-        $year = date('Y');
-        if (count($data) > 0) {
 
-            $priceprod = array();
-                foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->tp_id;
-                }
-                $lastid= max($priceprod);
-               
-                $new_tpid = (substr($lastid, 0, 4)== $year) ? 'TP'.($lastid + 1) : 'TP'.$year.'000001' ;
-            //dd($new_tpid);
-        } else {
-            $new_tpid = 'TP'.$year.'000001';
-        }
 
-        $partner->tp_id=$new_tpid;
-        $partner->pending_verify=0;
-        $partner->save();
-        
-        /* Notification For Partner */
-        $notification = new Notification;
-        $notification->rel_id = $partner->id;
-        $notification->rel_with = 'partner';
-        $notification->title = 'Account Activated';
-        $notification->message = "Your Profile has been <span style='color:blue;'>Approved</span>.";
-        $notification->save();
-        /* End Notification For Partner */
-        
-        Mail::to($partner['email'])->send(new TPConfirmationMail($partner));
-        alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(4000);
-        return Redirect()->back();
-    }
-    public function partnerReject(Request $request){
-        
-        $partnerData=Partner::findOrFail($request->id);
-        DB::transaction(function() use ($request,$partnerData){
-
-            DB::table('rejected_partners')->insert(
-               
-                ['spoc_name' => $partnerData->spoc_name	,
-                'spoc_mobile' => $partnerData->spoc_mobile,	
-                'email' => $partnerData->email,	 
-                'incorp_doc'=> $partnerData->incorp_doc,	
-                'org_name'=> $partnerData->org_name,	
-                'org_type'=> $partnerData->org_type,	
-                'estab_year'=> $partnerData->estab_year,	
-                'landline'=> $partnerData->landline,	
-                'website'=> $partnerData->website,	
-                'ceo_name'=> $partnerData->ceo_name,	
-                'ceo_email'=> $partnerData->ceo_email,	
-                'ceo_mobile'=> $partnerData->ceo_mobile,	
-                'signatory_name'=> $partnerData->signatory_name,	
-                'signatory_email'=> $partnerData->signatory_email,	
-                'signatory_mobile'=> $partnerData->signatory_mobile,	
-                'org_address'=> $partnerData->org_address,	
-                'landmark'=> $partnerData->landmark,	
-                'addr_proof'=> $partnerData->addr_proof,	
-                'addr_doc'=> $partnerData->addr_doc,	
-                'city'=> $partnerData->city,	
-                'block'=> $partnerData->block,	
-                'pin'=> $partnerData->pin,	
-                'state_district'=> $partnerData->state_district,	
-                'parliament'=> $partnerData->parliament,	
-                'pan'=> $partnerData->pan,	
-                'pan_doc'=> $partnerData->pan_doc,	
-                'gst'=> $partnerData->gst,	
-                'gst_doc'=> $partnerData->gst_doc,	
-                'ca1_doc'=> $partnerData->ca1_doc,	
-                'ca1_year'=> $partnerData->ca1_year,	
-                'ca2_doc'=> $partnerData->ca2_doc,	
-                'ca2_year'=> $partnerData->ca2_year,	
-                'ca3_doc'=> $partnerData->ca3_doc,	
-                'ca3_year'=> $partnerData->ca3_year,	
-                'ca4_doc'=> $partnerData->ca4_doc,	
-                'ca4_year'=> $partnerData->ca4_year,	
-                'offer'=> $partnerData->offer,	
-                'offer_date'=> $partnerData->offer_date,	
-                'offer_doc'=> $partnerData->offer_doc,	
-                'sanction'=> $partnerData->sanction,	
-                'sanction_date'=> $partnerData->sanction_date,	
-                'sanction_doc'=> $partnerData->sanction_doc,	
-                'reason'=> $request->note,
-                'remember_token'=> 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-                ]
-            );
-            $data = $partnerData;
-            $data['note'] = $request->note;
-            $partnerData->delete();
-            Mail::to($data->email)->send(new TPRejectMail($data));
-            
-        });
-        return response()->json(['status' => 'done'],200);
-        
-       
-    }
-    public function partnerUpdateAccept($id,$tpid){
-       $updt= DB::table('partner_update')->where([['id','=',$id],['tp_id','=',$tpid]])->first();
-       $updated_partner= DB::table('partners')->where('tp_id','=',$tpid)->first();
-       if(!$updt) abort(404);
+    // * Training Partner Accept Reject
     
-       DB::table('partner_update')
-       ->where('id', $id)->update(['action' => 1,'approve'=>1,'created_at' => Carbon::now(),
-       'updated_at' => Carbon::now()]);
-       DB::table('partners')
-       ->where('tp_id', $tpid)
-       ->update(['spoc_name' => $updt->spoc_name,'email'=>$updt->email,'spoc_mobile'=>$updt->spoc_mobile,'updated_at' => Carbon::now()]);
-      
-       /* Notification For Partner */
-       $notification = new Notification;
-       $notification->rel_id = $updated_partner->id;
-       $notification->rel_with = 'partner';
-       $notification->title = 'Account Updated';
-       $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
-       $notification->save();
-       /* End Notification For Partner */
+    public function partnerAction(Request $request){
+        if ($req=$this->decryptThis($request->id)) {
+            $data = explode(',',$req);
+            $partner = Partner::findOrFail($data[0]);
+            if ($partner->pending_verify) {
+                if ($data[1]) {
+                    $data=DB::table('partners')->select(DB::raw('SUBSTRING(tp_id,3) as tp_id'))->where("tp_id", "LIKE", "TP%")->get();
+                    $year = date('Y');
+                    if (count($data) > 0) {
+                        $array = array();
+                        foreach ($data as $key=>$data) {
+                            $array[$key]=$data->tp_id;
+                        }
+                        $lastid= max($array);
+                        $new_tpid = (substr($lastid, 0, 4)== $year) ? 'TP'.($lastid + 1) : 'TP'.$year.'000001' ;
+                    } else {
+                        $new_tpid = 'TP'.$year.'000001';
+                    }
+                    $partner->tp_id=$new_tpid;
+                    $partner->pending_verify=0;
+                    $partner->save();
+                    alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
+                    $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
+
+                } else {
+                    DB::transaction(function() use ($request,$partner){
+
+                        DB::table('rejected_partners')->insert(
+                        
+                            ['spoc_name' => $partner->spoc_name	,
+                            'spoc_mobile' => $partner->spoc_mobile,	
+                            'email' => $partner->email,	 
+                            'incorp_doc'=> $partner->incorp_doc,	
+                            'org_name'=> $partner->org_name,	
+                            'org_type'=> $partner->org_type,	
+                            'estab_year'=> $partner->estab_year,	
+                            'landline'=> $partner->landline,	
+                            'website'=> $partner->website,	
+                            'ceo_name'=> $partner->ceo_name,	
+                            'ceo_email'=> $partner->ceo_email,	
+                            'ceo_mobile'=> $partner->ceo_mobile,	
+                            'signatory_name'=> $partner->signatory_name,	
+                            'signatory_email'=> $partner->signatory_email,	
+                            'signatory_mobile'=> $partner->signatory_mobile,	
+                            'org_address'=> $partner->org_address,	
+                            'landmark'=> $partner->landmark,	
+                            'addr_proof'=> $partner->addr_proof,	
+                            'addr_doc'=> $partner->addr_doc,	
+                            'city'=> $partner->city,	
+                            'block'=> $partner->block,	
+                            'pin'=> $partner->pin,	
+                            'state_district'=> $partner->state_district,	
+                            'parliament'=> $partner->parliament,	
+                            'pan'=> $partner->pan,	
+                            'pan_doc'=> $partner->pan_doc,	
+                            'gst'=> $partner->gst,	
+                            'gst_doc'=> $partner->gst_doc,	
+                            'ca1_doc'=> $partner->ca1_doc,	
+                            'ca1_year'=> $partner->ca1_year,	
+                            'ca2_doc'=> $partner->ca2_doc,	
+                            'ca2_year'=> $partner->ca2_year,	
+                            'ca3_doc'=> $partner->ca3_doc,	
+                            'ca3_year'=> $partner->ca3_year,	
+                            'ca4_doc'=> $partner->ca4_doc,	
+                            'ca4_year'=> $partner->ca4_year,	
+                            'offer'=> $partner->offer,	
+                            'offer_date'=> $partner->offer_date,	
+                            'offer_doc'=> $partner->offer_doc,	
+                            'sanction'=> $partner->sanction,	
+                            'sanction_date'=> $partner->sanction_date,	
+                            'sanction_doc'=> $partner->sanction_doc,	
+                            'reason'=> $request->reason,
+                            'remember_token'=> 1,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now()
+                            ]
+                        );
+                        $data = $partner;
+                        $data['note'] = $request->reason;
+                        $partner->delete();
+                        // Mail::to($data->email)->send(new TPRejectMail($data));
+                        
+                    });
+                    alert()->success("Training Partner Account has been <span style='color:red;'>Rejected</span>", "Job Done")->html()->autoclose(4000);
+                }
+                return redirect(route('admin.tp.partners'));
+            } else {
+                alert()->error("Training Partner Account already been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(3000);
+                return redirect(route('admin.tp.partners'));
+            }   
+        }
+    }
+
+    // * End Training Partner Accept Reject
+
+
+
+
+    // public function partnerAccept($id){
+    //     try {
+    //        $partner_id = Crypt::decrypt($id); 
+    //     } catch (DecryptException $e) {
+    //         abort(404);
+    //     }
+    //     $partner=Partner::findOrFail($partner_id);
+    //     if($partner->pending_verify==0){
+    //         alert()->error("Training Partner Account already been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+    //         return Redirect()->back(); 
+    //     }
+    //     $data=DB::table('partners')
+    //     ->select(\DB::raw('SUBSTRING(tp_id,3) as tp_id'))
+    //     ->where("tp_id", "LIKE", "TP%")->get();
+    //     $year = date('Y');
+    //     if (count($data) > 0) {
+
+    //         $priceprod = array();
+    //             foreach ($data as $key=>$data) {
+    //                 $priceprod[$key]=$data->tp_id;
+    //             }
+    //             $lastid= max($priceprod);
+               
+    //             $new_tpid = (substr($lastid, 0, 4)== $year) ? 'TP'.($lastid + 1) : 'TP'.$year.'000001' ;
+    //         //dd($new_tpid);
+    //     } else {
+    //         $new_tpid = 'TP'.$year.'000001';
+    //     }
+
+    //     $partner->tp_id=$new_tpid;
+    //     $partner->pending_verify=0;
+    //     $partner->save();
+        
+    //     /* Notification For Partner */
+    //     $notification = new Notification;
+    //     $notification->rel_id = $partner->id;
+    //     $notification->rel_with = 'partner';
+    //     $notification->title = 'Account Activated';
+    //     $notification->message = "Your Profile has been <span style='color:blue;'>Approved</span>.";
+    //     $notification->save();
+    //     /* End Notification For Partner */
+        
+    //     Mail::to($partner['email'])->send(new TPConfirmationMail($partner));
+    //     alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(4000);
+    //     return Redirect()->back();
+    // }
+    // public function partnerReject(Request $request){
+        
+    //     $partnerData=Partner::findOrFail($request->id);
+    //     DB::transaction(function() use ($request,$partnerData){
+
+    //         DB::table('rejected_partners')->insert(
+               
+    //             ['spoc_name' => $partnerData->spoc_name	,
+    //             'spoc_mobile' => $partnerData->spoc_mobile,	
+    //             'email' => $partnerData->email,	 
+    //             'incorp_doc'=> $partnerData->incorp_doc,	
+    //             'org_name'=> $partnerData->org_name,	
+    //             'org_type'=> $partnerData->org_type,	
+    //             'estab_year'=> $partnerData->estab_year,	
+    //             'landline'=> $partnerData->landline,	
+    //             'website'=> $partnerData->website,	
+    //             'ceo_name'=> $partnerData->ceo_name,	
+    //             'ceo_email'=> $partnerData->ceo_email,	
+    //             'ceo_mobile'=> $partnerData->ceo_mobile,	
+    //             'signatory_name'=> $partnerData->signatory_name,	
+    //             'signatory_email'=> $partnerData->signatory_email,	
+    //             'signatory_mobile'=> $partnerData->signatory_mobile,	
+    //             'org_address'=> $partnerData->org_address,	
+    //             'landmark'=> $partnerData->landmark,	
+    //             'addr_proof'=> $partnerData->addr_proof,	
+    //             'addr_doc'=> $partnerData->addr_doc,	
+    //             'city'=> $partnerData->city,	
+    //             'block'=> $partnerData->block,	
+    //             'pin'=> $partnerData->pin,	
+    //             'state_district'=> $partnerData->state_district,	
+    //             'parliament'=> $partnerData->parliament,	
+    //             'pan'=> $partnerData->pan,	
+    //             'pan_doc'=> $partnerData->pan_doc,	
+    //             'gst'=> $partnerData->gst,	
+    //             'gst_doc'=> $partnerData->gst_doc,	
+    //             'ca1_doc'=> $partnerData->ca1_doc,	
+    //             'ca1_year'=> $partnerData->ca1_year,	
+    //             'ca2_doc'=> $partnerData->ca2_doc,	
+    //             'ca2_year'=> $partnerData->ca2_year,	
+    //             'ca3_doc'=> $partnerData->ca3_doc,	
+    //             'ca3_year'=> $partnerData->ca3_year,	
+    //             'ca4_doc'=> $partnerData->ca4_doc,	
+    //             'ca4_year'=> $partnerData->ca4_year,	
+    //             'offer'=> $partnerData->offer,	
+    //             'offer_date'=> $partnerData->offer_date,	
+    //             'offer_doc'=> $partnerData->offer_doc,	
+    //             'sanction'=> $partnerData->sanction,	
+    //             'sanction_date'=> $partnerData->sanction_date,	
+    //             'sanction_doc'=> $partnerData->sanction_doc,	
+    //             'reason'=> $request->note,
+    //             'remember_token'=> 1,
+    //             'created_at' => Carbon::now(),
+    //             'updated_at' => Carbon::now()
+    //             ]
+    //         );
+    //         $data = $partnerData;
+    //         $data['note'] = $request->note;
+    //         $partnerData->delete();
+    //         Mail::to($data->email)->send(new TPRejectMail($data));
+            
+    //     });
+    //     return response()->json(['status' => 'done'],200);
+        
        
-       Mail::to($updt->email)->send(new TPUpdateAccept($updt));
-      alert()->success('Partner Accepted', 'Done')->autoclose(2000);
-      return Redirect()->back();
+    // }
+    // public function partnerUpdateAccept($id,$tpid){
+    //    $updt= DB::table('partner_update')->where([['id','=',$id],['tp_id','=',$tpid]])->first();
+    //    $updated_partner= DB::table('partners')->where('tp_id','=',$tpid)->first();
+    //    if(!$updt) abort(404);
+    
+    //    DB::table('partner_update')
+    //    ->where('id', $id)->update(['action' => 1,'approve'=>1,'created_at' => Carbon::now(),
+    //    'updated_at' => Carbon::now()]);
+    //    DB::table('partners')
+    //    ->where('tp_id', $tpid)
+    //    ->update(['spoc_name' => $updt->spoc_name,'email'=>$updt->email,'spoc_mobile'=>$updt->spoc_mobile,'updated_at' => Carbon::now()]);
+      
+    //    /* Notification For Partner */
+    //    $notification = new Notification;
+    //    $notification->rel_id = $updated_partner->id;
+    //    $notification->rel_with = 'partner';
+    //    $notification->title = 'Account Updated';
+    //    $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
+    //    $notification->save();
+    //    /* End Notification For Partner */
+       
+    //    Mail::to($updt->email)->send(new TPUpdateAccept($updt));
+    //   alert()->success('Partner Accepted', 'Done')->autoclose(2000);
+    //   return Redirect()->back();
 
         
-    }
-    public function partnerUpdateReject(Request $request){
+    // }
+    // public function partnerUpdateReject(Request $request){
 
-        $updated_partner= DB::table('partners')->where('tp_id','=',$request->tpid)->first();
-        DB::table('partner_update')
-        ->where('id',$request->id)->update(['action' => 1,'approve'=>0,'comment'=>$request->note,'updated_at' => Carbon::now()]);
+    //     $updated_partner= DB::table('partners')->where('tp_id','=',$request->tpid)->first();
+    //     DB::table('partner_update')
+    //     ->where('id',$request->id)->update(['action' => 1,'approve'=>0,'comment'=>$request->note,'updated_at' => Carbon::now()]);
         
-         /* Notification For Partner */
-       $notification = new Notification;
-       $notification->rel_id = $updated_partner->id;
-       $notification->rel_with = 'partner';
-       $notification->title = 'Account Update Request Cancel';
-       $notification->message = "Your Profile update request has been <span style='color:blue;'>Rejected</span>.";
-       $notification->save();
-       /* End Notification For Partner */
-         $updated_partner->note = $request->note;
-       Mail::to($updated_partner->email)->send(new TPUpdateReject($updated_partner));
+    //      /* Notification For Partner */
+    //    $notification = new Notification;
+    //    $notification->rel_id = $updated_partner->id;
+    //    $notification->rel_with = 'partner';
+    //    $notification->title = 'Account Update Request Cancel';
+    //    $notification->message = "Your Profile update request has been <span style='color:blue;'>Rejected</span>.";
+    //    $notification->save();
+    //    /* End Notification For Partner */
+    //      $updated_partner->note = $request->note;
+    //    Mail::to($updated_partner->email)->send(new TPUpdateReject($updated_partner));
 
-        return response()->json(['status' => 'done'],200);
-    }
+    //     return response()->json(['status' => 'done'],200);
+    // }
 
     
 
@@ -419,33 +529,30 @@ class AdminPartnerController extends Controller
              $notification->save();
 
              alert()->success("Training Partner profile has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(2000);
-             return Redirect()->back();
+             return redirect()->back();
 
 
     }
 
-    public function partnerTarget($id){
-        // $data=DB::table('orders')
-        // ->join('customers','orders.customer_id','=','customers.cust_id')
-        // ->select('orders.id','orders.order_date','orders.order_no','orders.order_date','orders.total_amount','customers.customer_display_name')
-        // ->get();
-        try {
-           $partner_id = Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
+
+
+    // * View Partner Target Page
+    
+    public function partnerTargetView($id){        
+        if ($id=$this->decryptThis($id)) {
+            $data = [
+                'partner' => Partner::findOrFail($id),
+                'sectors' => Sector::all(),
+                'schemes' => Scheme::all(),
+            ];            
+            return view('admin.partners.partner-target')->with($data);
         }
-        $partner= Partner::findOrFail($partner_id);
-        // $tp_job=DB::table('partner_jobroles AS p')
-        //     ->join('sectors AS s','p.sector_id','=','s.id')
-        //     ->join('job_roles AS r','p.jobrole_id','=','r.id')
-        //     ->join('schemes AS sc','p.scheme_id','=','sc.id')
-        //     ->select('p.id as id','p.scheme_id as scheme_id','p.sector_id as sector_id','p.target as target','p.status as status','s.sector as sector','r.job_role as job_role','sc.scheme')
-        //     ->where('p.tp_id',$partner->tp_id)->get();
-        $sectors=Sector::all();
-        $schemes=Scheme::all();
-        
-        return view('admin.partners.partner-target')->with(compact('sectors','partner','schemes'));
     }
+    
+    // * End View Partner Target Page
+
+
+
 
     public function fetchJobrole(Request $request){
 
@@ -453,13 +560,39 @@ class AdminPartnerController extends Controller
         return response()->json(['jobroles' => $jobroles],200); 
     }
 
-    public function fetchPrvData(Request $request){
+    public function fetchData(Request $request){
 
-        $data=DB::table('partner_jobroles')->where('id','=',$request->e_id)->first();
-        $job=DB::table('job_roles')->where('sector_id','=',$data->sector_id)->get();
-        $sectors=Sector::all();
-        $schemes=Scheme::all();
-        return response()->json(['sectors' => $sectors,'data'=>$data,'job'=>$job,'schemes'=>$schemes],200); 
+        if (is_null($request->data)) {            
+            $data = [
+                'job' => DB::table('job_roles')->where('sector_id',1)->get(),
+                'sectors' => Sector::all(),
+                'schemes' => Scheme::all(),
+            ];
+        } else {
+            $val = PartnerJobrole::findOrFail($request->data);
+            $data = [
+                'data' => $val,
+                'job' => DB::table('job_roles')->where('sector_id',$val->sector_id)->get(),
+                'sectors' => Sector::all(),
+                'schemes' => Scheme::all(),
+            ];
+        }
+
+
+
+        // $data = PartnerJobrole::find($request->e_id);
+        // $job=DB::table('job_roles')->where('sector_id','=',$data->sector_id)->get();
+        // $sectors=Sector::all();
+        // $schemes=Scheme::all();
+        // return response()->json(['sectors' => $sectors,'data'=>$data,'job'=>$job,'schemes'=>$schemes],200); 
+
+
+
+        
+
+        // $sectors=Sector::all();
+        // $schemes=Scheme::all();
+        return response()->json($data,200); 
     }
     //Job Submit
     public function jobTarget(Request $request){
@@ -522,20 +655,20 @@ class AdminPartnerController extends Controller
         }
     }
 
-    public function jobroleDeactive(Request $request){
-        $partnerJob=PartnerJobrole::findOrFail($request->id);
-        $partnerJob->status=0;
-        $partnerJob->save();
-        return response()->json(['status' => 'done'],200);
-    }
+    // public function jobroleDeactive(Request $request){
+    //     $partnerJob=PartnerJobrole::findOrFail($request->id);
+    //     $partnerJob->status=0;
+    //     $partnerJob->save();
+    //     return response()->json(['status' => 'done'],200);
+    // }
 
-    public function jobroleActive($id){
-        $partnerJob=PartnerJobrole::findOrFail($id);
-        $partnerJob->status=1;
-        $partnerJob->save();
-        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
-        return Redirect()->back();
-    }
+    // public function jobroleActive($id){
+    //     $partnerJob=PartnerJobrole::findOrFail($id);
+    //     $partnerJob->status=1;
+    //     $partnerJob->save();
+    //     alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Activated</span>", 'Activated')->html()->autoclose(2000);
+    //     return Redirect()->back();
+    // }
 
     // * Training Partner Scheme Activation Deactivation
 

@@ -4,7 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -15,29 +15,27 @@
                     <div class="card">
                         <div class="header">
                             <h2><strong>Target Details</strong> For Partner</h2>
-                           
                         </div>
                         <div class="body">
                             <div class="text-center">
-                                    <h4 class="margin-0">{{$partner->spoc_name}}</h4>
-                                    <h6 class="m-b-20">{{$partner->tp_id}}</h6>
+                                <h4 class="margin-0">{{$partner->spoc_name}}</h4>
+                                <h6 class="m-b-20">{{$partner->tp_id}}</h6>
                             </div>
-                                <button class="btn btn-primary btn-sm" style="float:right;" onclick="location.href='#largeModal1'" data-toggle="modal" data-target="#largeModal1">Add Job Role</button>
-                                <br><br>
+                            <button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="popupMenu()">Add Job Role</button>
                             <div class="table-responsive">
                                 <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                            <tr>
+                                        <tr>
                                             <th>Scheme | Sector | Job Role</th>
                                             <th>Target Allocated</th>
                                             <th>Student Enroll</th>
                                             <th>Target Achieve</th>
                                             <th>Scheme Status</th>
                                             <th>Edit</th>
-                                            </tr>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($partner->partner_jobroles as $key=>$job)
+                                        @foreach ($partner->partner_jobroles as $job)
                                             <tr>
                                                 <td>{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
                                                 <td>{{$job->target}}</td>
@@ -45,83 +43,21 @@
                                                 <td>{{$job->target}}</td>
                                                 <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
                                                 @if($job->status)
-                                                    <td><a class="badge bg-green margin-0" href="#" onclick="showEditJobrole({{$job->id}})">Edit</a></td>
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
                                                 @else
-                                                    <td><a class="badge bg-grey margin-0" href="#" onclick="return false">Edit</a></td>
+                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
                                                 @endif
-                                             </tr>
-                                            @endforeach
+                                            </tr>
+                                        @endforeach
                                            
-                                                <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
-                                                    <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                        <h4 class="title" id="defaultModalLabel">Job Role Update</h4>
-                                                                    </div>
-                                                            <div class="modal-body">
-                                                            <form id="form2" method="POST" action="{{route('admin.tp.partner.jobtarget.update')}}" onsubmit="event.preventDefault();return myFunction2()">
-                                                                        @csrf
-                
-                                                                        <input type="hidden" value="{{$partner->id}}" name="tpid2">
-                                                                        <input type="hidden"  name="p_job_id" id="p_job_id">
-                                                                        <input type="hidden"  name="scheme2_u" id="scheme2_u">
-                                                                        <input type="hidden"  name="sector2_u" id="sector2_u">
-                                                                        <input type="hidden"  name="jobrole2_u" id="jobrole2_u">
-                                                                        
-                                                                        
-                
-                                                                            <div class="row">
-                                                                                <div class="col-sm-4">
-                                                                                        <label for="scheme">Select Scheme</label>    
-                                                                                    <select class="form-control show-tick form-group" id="scheme_u" name="scheme_u" onchange="valinst2(this.value,2);" data-live-search="true" required >
-                                                                                       
-                                                                                    </select>
-                                                                                    <span id="e_scheme2" class="error text-danger">This Field required</span>
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-                                                                                        <label for="sector">Select Sector</label>
-                                                                                        <select class="form-control show-tick form-group" onchange="fetchJobRole(this.value,2);" id="sector_u" name="sector_u" data-live-search="true" required >
-                                                                                                
-                                                                                            </select>
-                                                                                            <span id="e_sector2" class="error text-danger">This Field required</span>
-                                                                                    
-                                                                                </div>
-                                                                                <div class="col-sm-4">
-                                                                                        <label for="jobrole">Select Job Role</label>
-                                                                                        <select class="form-control show-tick form-group" id="jobrole_u" name="jobrole_u" onchange="valinst(this.value,2);" data-live-search="true" required >
-                                                                                            </select>
-                                                                                            <span id="e_jobrole2" class="error text-danger">This Field required</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                    <div class="col-sm-6">
-                                                                                            <label for="scheme">Enter Target Value</label>    
-                                                                                            <div class="form-group form-float">
-                                                                                                <input type="number" min=200 class="form-control" placeholder="Enter Target Value" name="target_u" id="target_u">
-                                                                                            </div>
-                                                                                        <span id="e_target2" class="error text-danger">This Field required</span>
-                                                                                    </div>
-                                                                                    
-                                                                                </div>
-                                                    
-                                                                            </form>
-                                                                            <button class="btn btn-raised btn-primary btn-round waves-effect" type="submit" form="form2" >UPDATE</button>
-                                                                
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                
-                                                                <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                
                                             {{-- =========================== --}}
 
                                             <div class="modal fade" id="largeModal1" tabindex="-1" role="dialog">
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                        <h4 class="title" id="defaultModalLabel">Job Role</h4>
+                                                                        <h4 class="title" id="defaultModalLabel1">Job Role</h4>
                                                                     </div>
                                                             <div class="modal-body">
                                                             <form id="form_validation" method="POST" action="{{route('admin.tp.partner.jobtarget')}}" onsubmit="event.preventDefault();return myFunction()">
@@ -167,7 +103,7 @@
                                                                                     <div class="col-sm-6">
                                                                                             <label for="scheme">Enter Target Value</label>    
                                                                                             <div class="form-group form-float">
-                                                                                                <input type="number" class="form-control" placeholder="Enter Target Value" name="target" id="target">
+                                                                                                <input type="number" class="form-control" placeholder="Enter Target Value" name="target" id="target" required>
                                                                                             </div>
                                                                                         <span id="e_target" class="error text-danger">This Field required</span>
                                                                                     </div>
@@ -196,6 +132,52 @@
             </div>
 </div>
 @stop
+@section('modal')
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title" id="defaultModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form_modal" method="POST" action="{{route('admin.tp.partner.jobtarget.update')}}">
+                        @csrf
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="scheme">Select Scheme</label>    
+                                <select class="form-control show-tick form-group" id="scheme" name="scheme" data-live-search="true" required >
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="sector">Select Sector</label>
+                                <select class="form-control show-tick form-group" onchange="fetchJobRole(this.value,2);" id="sector" name="sector" data-live-search="true" required >
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="jobrole">Select Job Role</label>
+                                <select class="form-control show-tick form-group" id="jobrole" name="jobrole" data-live-search="true" required >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-6">
+                                <label for="target">Enter Target Value</label>    
+                                <div class="form-group form-float">
+                                    <input type="number" class="form-control" placeholder="Enter Target Value" name="target" id="target" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <button id="btnConfirm" class="btn btn-raised btn-primary btn-round waves-effect" type="submit" ></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
 @section('page-script')
 <script>
         $(function(){
@@ -253,7 +235,7 @@
                 return false;
             }
             else{
-                var form = document.getElementById("form2");
+                var form = document.getElementById("modal_form");
                 form.submit();
                 return true;
             }
@@ -325,121 +307,100 @@
         }
     }
     </script>
-    <script>
-            function showCancelMessage(f,i) {
-                let _token = $("input[name='_token']").val();
-                var id=f;
-                swal({
-                    title: "Are you sure?",
-                    text: "Job Role will not be able to Access!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No, cancel",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{route('admin.tp.partner.jobrole.deactive')}}",
-                            data:{_token,id},
-                            success: function(data) {
-                               
-                               swal({
-                            title: "Done",
-                            text: "Job Role Deactivated",
-                            type:"success",
-                            
-                            showConfirmButton: true
-                        },function(isConfirm){
-                    
-                            if (isConfirm){
-                           
-                            window.location="{{route('admin.tp.partners')}}";
-                    
-                            } 
-                            });
-                        
-                            }
-                        });
-                       
-                    } else {
-                        swal("Cancelled", "Your Job Role is safe :)", "error");
-                    }
-                });
-            }
-            </script>
-    <script>
-    function showEditJobrole(e_id){
-        console.log(e_id);
-        let _token = $("input[name='_token']").val();
-            var e_id=e_id;
-            
-            $.ajax({
-                    url:"{{route('admin.tp.fetch-prvdata')}}", 
-                    data:{_token,e_id},
-                    method:'POST',
-                    success: function(data){
-                     
-                    //  $('#jobrole_u').empty();
-                    //  $('#jobrole_u').append('<option value="">Please select</option>');
-                    //  $.each (data.jobroles, function (bb) {
-                    //         var jobrole=data.jobroles[bb].job_role;
-                    //         var jobid=data.jobroles[bb].id;
-                            
-                    //         $('#jobrole').append('<option value="'+jobid+'">'+jobrole+'</option>');
-                    //      });
-                    $('#sector_u').empty();
-                    $('#scheme_u').empty();
-                    $('#jobrole_u').empty();
 
-                    $.each (data.sectors, function (index) {
-                    var id=data.sectors[index].id;
-                    var sector=data.sectors[index].sector;
+    <script>
+    function popupMenu(id){
+        let _token = $("[name=_token]").val();
+        if (id === undefined) {
+            data = null;
+            $('#defaultModalLabel').html('Add Job Role with Target');
+            $('#btnConfirm').html('Add JobRole');
+        } else if(id != '') {
+            $('#defaultModalLabel').html('Update Job Role & Target');
+            $('#btnConfirm').html('Update JobRole');
+            data = id;
+        }
+        
+            $.ajax({
+                url:"{{route('admin.tp.fetch-data')}}", 
+                data:{_token,data},
+                method:'POST',
+                success: function(data){
                     
-                    $('#sector_u').append('<option value="'+id+'">'+sector+'</option>');
-                    });
-                    $("#sector_u").val(data.data.sector_id);
-                    $('#sector_u').selectpicker('refresh');
+                    $('[name=scheme]').empty();
+                    $('[name=sector]').empty();
+                    $('[name=jobrole]').empty();
                     
                     $.each (data.schemes, function (index) {
-                    var s_id=data.schemes[index].id;
-                    var scheme=data.schemes[index].scheme;
-                    
-                    $('#scheme_u').append('<option value="'+s_id+'">'+scheme+'</option>');
+                        var s_id=data.schemes[index].id;
+                        var scheme=data.schemes[index].scheme;
+                        $('[name=scheme]').append('<option value="'+s_id+'">'+scheme+'</option>');
                     });
-                    $("#scheme_u").val(data.data.scheme_id);
-                    $('#scheme_u').selectpicker('refresh');
-
+                    
+                    $.each (data.sectors, function (index) {
+                        var id=data.sectors[index].id;
+                        var sector=data.sectors[index].sector;
+                        $('[name=sector]').append('<option value="'+id+'">'+sector+'</option>');
+                    });
+                    
+                    
                     $.each (data.job, function (index) {
-                    var id=data.job[index].id;
-                    var job_role=data.job[index].job_role;
-                    
-                    $('#jobrole_u').append('<option value="'+id+'">'+job_role+'</option>');
+                        var id=data.job[index].id;
+                        var job_role=data.job[index].job_role;
+                        $('[name=jobrole]').append('<option value="'+id+'">'+job_role+'</option>');
                     });
-                    $("#jobrole_u").val(data.data.jobrole_id);
-                    $('#jobrole_u').selectpicker('refresh');
-
-                    $("#target_u").val(data.data.target);
-                    $("#target_u").attr("min", data.data.assigned);
                     
-                   
-                    $("#p_job_id").val(data.data.id);
-                    $("#scheme2_u").val(data.data.scheme_id);
-                    $("#sector2_u").val(data.data.sector_id);
-                    $("#jobrole2_u").val(data.data.jobrole_id);
-                    $("#target2_u").val(data.data.target);
-
-
+                    if(id != '' && id !== undefined) {
+                        
+                        $("[name=scheme]").val(data.data.scheme_id);
+                        $("[name=sector]").val(data.data.sector_id);
+                        $("[name=jobrole]").val(data.data.jobrole_id);
+                        $("[name=target]").val(data.data.target);
+                        if (data.data.assigned == 0) {
+                            $("[name=target]").attr("min", 1);
+                        } else {
+                            $("[name=target]").attr("min", data.data.assigned);
                         }
-                     });
+                    }
+
+                    $('[name=scheme]').selectpicker('refresh');
+                    $('[name=sector]').selectpicker('refresh');
+                    $('[name=jobrole]').selectpicker('refresh');
+
+                },
+                error: function(){
+                    swal('Attention', 'Something went Wrong, Try Again', 'error').then(function(){location.reload()});
+                }
+                });
          $("#defaultModal").modal('show');
     }
-   
-    </script>
 
+    $(()=>{
+        $('#form_modal').validate();
+    });
+
+    //* Modal Close Event
+    
+    $("#defaultModal").on("hidden.bs.modal", function () {
+        $("label[class^='error']").each(function() {
+            $(this).hide();
+        });
+        $(this).find('form').trigger('reset');
+    });
+    
+    //* End Modal Close Event
+    
+    $('#form_modal').on('submit', function(e){
+        e.preventDefault();
+        console.log(e.currentTarget);
+        
+    });
+
+
+   
+</script>
+
+<script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -447,5 +408,5 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 @stop
