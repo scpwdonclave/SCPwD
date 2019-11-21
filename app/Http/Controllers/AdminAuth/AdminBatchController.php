@@ -104,7 +104,7 @@ class AdminBatchController extends Controller
 
     public function pendingBatches(){
         $data=Batch::where('verified',0)->get();
-        return view('admin.batches.pending-batches')->with(compact('data'));
+        return view('admin.batches.pending-batches')->with(compact('data')); 
     }
     public function viewBatch($id){
         if ($id=$this->decryptThis($id)) {

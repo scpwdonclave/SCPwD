@@ -9,12 +9,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Mail\AAConfirmationMail;
 use App\Agency;
+use App\AgencyBatch;
+use App\AssessorBatch;
 use App\Reason;
 use App\AgencySector;
+use App\JobRole;
 use Validator;
 use Crypt;
 use DB;
 use Mail;
+use Storage;
 
 class AdminAgencyController extends Controller
 {
@@ -26,6 +30,22 @@ class AdminAgencyController extends Controller
     protected function guard()
     {
         return Auth::guard('admin');
+    }
+
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
+    protected function partnerstatus($batch){
+        if ($batch->partner->status && $batch->tpjobrole->status) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function agencies(){
@@ -115,6 +135,7 @@ class AdminAgencyController extends Controller
     }
 
     public function agencyView($id){
+        $id=$this->decryptThis($id);
         $agency=Agency::findOrFail($id);
         $agencyState=DB::table('agencies')
         ->join('state_district','agencies.state_district','=','state_district.id')
@@ -124,11 +145,7 @@ class AdminAgencyController extends Controller
     }
 
     public function agencyEdit($id){
-        try {
-            $aa_id = Crypt::decrypt($id);
-         } catch (DecryptException $e) {
-             abort(404);
-         }
+        $aa_id =$this->decryptThis($id);
          $agency=Agency::findOrFail($aa_id);
          $states=DB::table('state_district')->get();
          $parliaments=DB::table('parliament')->get();
@@ -136,9 +153,9 @@ class AdminAgencyController extends Controller
 
          $selSector=array();
          foreach ($agency->agencySector as $item){
-             if($item->status){
+           
             array_push($selSector,$item->sector); 
-             }
+            
          }
          
          return view('admin.agencies.agency-edit')->with(compact('agency','states','parliaments','sectors','selSector'));
@@ -179,12 +196,8 @@ class AdminAgencyController extends Controller
         $agency->website=$request->website;	
         $agency->save();
 
-       $agency_sector= AgencySector::where('aa_id',$request->aa_id)->get();
-       foreach ($agency_sector as $agency_sector) {
-        $agency_sector->status=0;
-        $agency_sector->save();
-         
-        }
+       AgencySector::where('aa_id',$request->aa_id)->delete();
+       
 
           foreach ($request->sector as $sector) {
             $agencySector = new AgencySector;
@@ -333,5 +346,62 @@ class AdminAgencyController extends Controller
         
         }
 
+    }
+
+    public function agencyBatch($id){
+        $id=$this->decryptThis($id); 
+        $agency=Agency::where([['id','=',$id],['status','=',1]])->get();
+        if(count($agency)==null){
+           abort(404);
+        }
+        return view('admin.agencies.agency-batch')->with(compact('agency'));
+        
+    }
+
+    public function agencyFetchBatch(Request $request){
+        
+        $jobroles=JobRole::where('sector_id','=',$request->sector)->get(); 
+        $agencyBatch=AgencyBatch::all();
+        $selBatch=array();
+        foreach ($agencyBatch as $value) {
+            array_push($selBatch,$value->batch->id); 
+        }
+        $batch=array();
+        foreach ($jobroles as  $job) {
+        foreach ($job->batches as  $job2) {
+            if($job2->status && $job2->verified && !$job2->completed && $this->partnerstatus($job2)){
+                array_push($batch,$job2); 
+            }
+            
+        }
+    }
+  
+
+        return response()->json(['batch' => $batch,'selbatch'=>$selBatch],200);  
+    }
+
+    public function agencyBatchInsert(Request $request){
+        foreach ($request->batch as $batch) {
+           $agencyBatch=new AgencyBatch;
+           $agencyBatch->aa_id=$request->aa_id;
+           $agencyBatch->bt_id=$batch;
+           $agencyBatch->save();
+        }
+        alert()->success('Assessment Agency Batch has been Added', 'Job Done')->autoclose(3000);
+        return Redirect()->back();
+    }
+
+    public function agencyBatchDelete(Request $request){
+        $agencyBatch=AgencyBatch::findOrFail($request->id);
+
+        $assessorBatch=AssessorBatch::where('bt_id',$agencyBatch->bt_id)->first();
+        if($assessorBatch !=null){
+            return response()->json(['status' => 'fail'],200);
+
+        }else{
+            $agencyBatch->delete();
+            return response()->json(['status' => 'done'],200);
+
+        }
     }
 }

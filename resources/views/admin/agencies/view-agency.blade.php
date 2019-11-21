@@ -134,13 +134,13 @@
                                                     @endphp
                                                     @foreach ($agency->agencySector as $item) 
                                                     <tr>
-                                                        @if ($item->status)
+                                                      
                                                         @php
                                                             $i++;
                                                         @endphp
                                                         <td>{{$i}}</td>
                                                         <td>{{$item->sectors->sector}}</td>
-                                                        @endif
+                                                       
                                                        
                                                     </tr>
                                                     @endforeach

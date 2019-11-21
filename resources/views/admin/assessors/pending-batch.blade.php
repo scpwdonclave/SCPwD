@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Assessor')
+@section('title', 'Pending-Batch')
 @section('parentPageTitle', 'Assessor')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
@@ -13,7 +13,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong> Verified Assessor </h2>
+                            <h2><strong>All</strong>  Pending Assessor Batch </h2>
                            
                         </div>
                         <div class="body">
@@ -22,32 +22,26 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>AA ID</th>
+                                            <th>AS ID</th>
                                             <th>Assessor Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
-                                            <th>View</th>
-                                            <th>Action</th>
+                                            <th>View batch</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($data as $key=>$item)
+                                            @foreach ($pending_as_batch as $key=>$item)
                                                 
                                                 <tr>
                                                 <td>{{$key+1}}</td>
-                                                <td>{{$item->agency->aa_id}}</td>
-                                                <td>{{$item->name}}</td>
-                                                <td>{{$item->email}}</td>
-                                                <td>{{$item->mobile}}</td>
+                                                <td>{{$item->assessor->as_id}}</td>
+                                                <td>{{$item->assessor->name}}</td>
+                                                <td>{{$item->assessor->email}}</td>
+                                                <td>{{$item->assessor->mobile}}</td>
                                               
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                               
-                                                @if($item->status==1)
-                                                <td><button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Deactivate</button></td>
-                                                @elseif($item->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                                @endif
-                                            </tr>
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view-batch',['id'=>Crypt::encrypt($item->as_id)])}}">View Batch</a></td>
+                                                </tr>
                                           
                                             @endforeach
                                            

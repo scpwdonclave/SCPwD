@@ -69,7 +69,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_email">SPOC Email Address *</label>
+                                                            <label for="email">SPOC Email Address *</label>
                                                             <div class="form-group form-float">
                                                                 <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
                                                                 <span id="email_error" style="color:red"></span>
@@ -79,7 +79,7 @@
                                                     </div>
                                                     <div class="row d-flex justify-content-around">
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_mobile">SPOC Mobile Number *</label>
+                                                            <label for="mobile">SPOC Mobile Number *</label>
                                                             <div class="form-group form-float">
                                                                 <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
                                                                 <span id="mobile_error" style="color:red"></span>
@@ -88,7 +88,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="gender">SPOC Gender *</label>
                                                             <div class="form-group form-float">
-                                                                <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
+                                                                <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                                     <option>Male</option>
                                                                     <option>Female</option>
                                                                     <option>Transgender</option>

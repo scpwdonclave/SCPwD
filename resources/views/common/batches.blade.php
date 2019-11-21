@@ -44,7 +44,7 @@
                                     <th>View</th>
                                 </tr>
                                
-                            </thead>
+                            </thead> 
                             <tbody>
                                 @foreach ($data as $key=>$item)
                                 <tr>

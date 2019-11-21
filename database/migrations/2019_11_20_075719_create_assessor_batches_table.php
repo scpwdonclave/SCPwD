@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAgencySectorsTable extends Migration
+class CreateAssessorBatchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAgencySectorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('agency_sectors', function (Blueprint $table) {
+        Schema::create('assessor_batches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('aa_id');
-            $table->unsignedBigInteger('sector');
+            $table->unsignedBigInteger('as_id');
+            $table->unsignedBigInteger('bt_id');
+            $table->boolean('verified')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateAgencySectorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agency_sectors');
+        Schema::dropIfExists('assessor_batches');
     }
 }

@@ -94,6 +94,7 @@
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/assessor/assessors') ? 'active' : null }}"><a href="{{route('admin.assessor.assessors')}}">Assessors</a></li>
                         <li class="{{ Request::is('admin/assessor/pending-assessors') ? 'active' : null }}"><a href="{{route('admin.as.pending-assessors')}}"> Pending Assessors</a></li>
+                        <li class="{{ Request::is('admin/assessor/pending-batch') ? 'active' : null }}"><a href="{{route('admin.as.pending-batch')}}"> Pending Batch</a></li>
                     </ul>
                 </li> 
                 @endif

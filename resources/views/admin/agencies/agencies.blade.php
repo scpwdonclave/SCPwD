@@ -26,6 +26,7 @@
                                             <th>SPOC Email</th>
                                             <th>SPOC Mobile</th>
                                             <th>View</th>
+                                            <th>Batch</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -38,7 +39,8 @@
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>$item->id])}}" >View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.batch',['id'=>Crypt::encrypt($item->id)])}}" >Batch</a></td>
                                             @if($item->status==1)
                                             <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
                                             @elseif($item->status==0)
@@ -88,7 +90,7 @@
                                         <td>{{$item->name}}</td>
                                         <td>{{$item->email}}</td>
                                         <td>{{$item->mobile}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>$item->id])}}" >View</a></td>
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>
                                         @if($item->status==1)
                                         <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
                                         @elseif($item->status==0)

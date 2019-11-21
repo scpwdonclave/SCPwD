@@ -58,4 +58,8 @@ class Assessor extends Authenticatable
     public function assessorLanguage(){
         return $this->hasMany('App\AssessorLanguage', 'as_id');
     }
+
+    public function assessorBatch(){
+        return $this->hasMany('App\AssessorBatch', 'as_id');
+    }
 }
