@@ -4,8 +4,6 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
-
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
@@ -60,13 +58,9 @@
                                 <td>{{$candidate->dob}}</td>
                                 <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
                                 @if (Request::segment(1)==='admin')
-                                    @if($candidate->status)
-                                        <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$candidate->id}})">Deactivate</a></td>
-                                    @else
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.candidate.active',Crypt::encrypt($candidate->id))}}" >Activate</a></td>
-                                    @endif
+                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($candidate->id).','.$candidate->status.','.$candidate->name}}')" class="badge bg-{{($candidate->status)?'red':'green'}} margin-0">{{($candidate->status)?'Deactivate':'Activate'}}</button></td>
                                 @endif
-                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->id))}}" >View</a></td>
+                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->id))}}'" >View</button></td>
                                 </tr>
                                 @endforeach
                                
@@ -81,55 +75,72 @@
 @endsection
 
 @section('page-script')
+@auth('admin')
+@if (Request::segment(1)==='admin')
 <script>
-function showCancelMessage(f) {
-    console.log(f);
-    
-    swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
-   
+    function callajax(val, dataString){
         $.ajax({
-        type: "POST",
-        url: "{{route('admin.tc.candidate.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Candidate Record Deactive",
-        type:"success",
-        
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-       
-        window.location="{{route('admin.tc.candidates')}}";
-
-        } 
+            url: "{{ route('admin.tp.candidate.status-action') }}",
+            method: "POST",
+            data: dataString,
+            success: function(data){
+                var SuccessResponseText = document.createElement("div");
+                SuccessResponseText.innerHTML = data['message'];
+                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+            },
+            error:function(data){
+                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+            }
         });
-    
-        }
-    });
+    }
+
+    function popup(v){
+        var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        var color=''; var text=''; var displayText='';
+        var _token=$('[name=_token]').val();
+        var candidate=data[2];
+        if (data[1]==1) {
+                color = 'red'; text = 'Deactivate'; 
+                displayText='Deactivate Candidate '+candidate+'\nProvide Candidate Deactivation Reason ';
+                confirmatonText="input"
+            } else {
+                color = 'green'; text = 'Activate';
+                displayText = "Are you Sure ?";
+                confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br>Candidate <span style='font-weight:bold; color:blue;'>"+candidate+"</span>";
+            }
         
-    });
-}
+        swal({
+            text: displayText,
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Update Status",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            if (val != null) {
+                if (val === '') {
+                    swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                } else if (val === true) {
+                    var dataString = {_token, data:data[0], reason:null};
+                    callajax(val,dataString);
+                } else {
+                    var dataString = {_token, data:data[0], reason:val};
+                    callajax(val,dataString);
+                }
+            }
+        });
+    }
 </script>
+@endif
+@endauth
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
@@ -138,5 +149,4 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @endsection

@@ -43,6 +43,16 @@ class AdminCenterController extends Controller
         }
     }
 
+    
+    protected function writeNotification($relid,$relwith,$title,$msg){
+        $notification = new Notification;
+        $notification->rel_id = $relid;
+        $notification->rel_with = $relwith;
+        $notification->title = $title;
+        $notification->message = $msg;
+        $notification->save();
+    }
+
     public function centers(){ 
 
         $data=Center::where('verified',1)->get();
@@ -278,48 +288,93 @@ class AdminCenterController extends Controller
             return Redirect()->back();
     }
 
-    public function centerDeactive(Request $request){
-        $center=Center::findOrFail($request->id);
-        $center->status=0;
-        $center->save();
+    // * Training Cenetr Activation Deactvation
 
-        $reason = new Reason;
-        $reason->rel_id = $center->id;
-        $reason->rel_with = 'center';
-        $reason->reason = $request->reason;
-        $reason->save();
+    public function centerStatusAction(Request $request){
+        if ($request->has('data')) {
 
-          /* Notification For Partner */
-          $notification = new Notification;
-          $notification->rel_id = $center->tp_id;
-          $notification->rel_with = 'partner';
-          $notification->title = 'Training Center Deactive';
-          $notification->message = "One of Your Center has been <span style='color:blue;'>Deactivated</span>.";
-          $notification->save();
-          /* End Notification For Partner */
+            if ($id=$this->decryptThis($request->data)) {
+                $data = explode(',',$id);
+                $center = Center::find($data[0]);
 
-        return response()->json(['status' => 'done'],200);
+                if ($center) {
+                    if ($center->status) {
+                        if (!is_null($request->reason) && $request->reason != '') {
+                            $center->status = 0;
+                            $center->save();
+                            $reason = new Reason;
+                            $reason->rel_id = $data[0];
+                            $reason->rel_with = 'center';
+                            $reason->reason = $request->reason;
+                            $reason->save();
+                            $this->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
+                            $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
+                        } else {
+                            $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                        }
+                    } else {
+                        $center->status = 1;
+                        $center->save();
+                        $this->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
+                        $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
+                    }
+                    return response()->json($array,200);
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Center Account"),400);
+                }
+
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+            }
+        }        
     }
-    public function centerActive($id){
+
+    // * End Training Partner Activation Deactvation
+
+
+
+    // public function centerDeactive(Request $request){
+    //     $center=Center::findOrFail($request->id);
+    //     $center->status=0;
+    //     $center->save();
+
+    //     $reason = new Reason;
+    //     $reason->rel_id = $center->id;
+    //     $reason->rel_with = 'center';
+    //     $reason->reason = $request->reason;
+    //     $reason->save();
+
+    //       /* Notification For Partner */
+    //       $notification = new Notification;
+    //       $notification->rel_id = $center->tp_id;
+    //       $notification->rel_with = 'partner';
+    //       $notification->title = 'Training Center Deactive';
+    //       $notification->message = "One of Your Center has been <span style='color:blue;'>Deactivated</span>.";
+    //       $notification->save();
+    //       /* End Notification For Partner */
+
+    //     return response()->json(['status' => 'done'],200);
+    // }
+    // public function centerActive($id){
         
-        if ($id = $this->decryptThis($id)) {
-            $center=Center::findOrFail($id);
-            $center->status=1;
-            $center->save();
+    //     if ($id = $this->decryptThis($id)) {
+    //         $center=Center::findOrFail($id);
+    //         $center->status=1;
+    //         $center->save();
     
-             /* Notification For Partner */
-             $notification = new Notification;
-             $notification->rel_id = $center->tp_id;
-             $notification->rel_with = 'partner';
-             $notification->title = 'Training Center Active';
-             $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
-             $notification->save();
-             /* End Notification For Partner */
+    //          /* Notification For Partner */
+    //          $notification = new Notification;
+    //          $notification->rel_id = $center->tp_id;
+    //          $notification->rel_with = 'partner';
+    //          $notification->title = 'Training Center Active';
+    //          $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
+    //          $notification->save();
+    //          /* End Notification For Partner */
     
-            alert()->success('Center Activated', 'Done')->autoclose(2000);
-            return redirect()->back();
-        }
-    }
+    //         alert()->success('Center Activated', 'Done')->autoclose(2000);
+    //         return redirect()->back();
+    //     }
+    // }
 
     public function candidates(){
         $data = [
@@ -336,50 +391,94 @@ class AdminCenterController extends Controller
             return view('common.view-candidate')->with(compact('candidate','state_dist'));
         }
     }
-    public function candidateActive($id){
-        if ($id=$this->decryptThis($id)) {
-            $candidate=Candidate::findOrFail($id);
-            $candidate->status=1;
-            $candidate->save();
-    
-            /* Notification For Center */
-            $notification = new Notification;
-            $notification->rel_id = $candidate->tc_id;
-            $notification->rel_with = 'center';
-            $notification->title = 'Candidate Active';
-            $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
-            $notification->save();
-            /* End Notification For Center */
-    
-            alert()->success('Candidate Activated', 'Done')->autoclose(2000);
-            return redirect()->back();
-        }
+
+    public function candidateStatusAction(Request $request)
+    {
+        if ($request->has('data')) {
+
+            if ($id=$this->decryptThis($request->data)) {
+                $data = explode(',',$id);
+                $candidate = Candidate::find($data[0]);
+
+                if ($candidate) {
+                    if ($candidate->status) {
+                        if (!is_null($request->reason) && $request->reason != '') {
+                            $candidate->status = 0;
+                            $candidate->save();
+                            $reason = new Reason;
+                            $reason->rel_id = $data[0];
+                            $reason->rel_with = 'candidate';
+                            $reason->reason = $request->reason;
+                            $reason->save();
+                            $this->writeNotification($candidate->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
+                            $this->writeNotification($candidate->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
+                            $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:red'>Deactivated</span> now");
+                        } else {
+                            $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                        }
+                    } else {
+                        $candidate->status = 1;
+                        $candidate->save();
+                        $this->writeNotification($candidate->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $this->writeNotification($candidate->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:blue'>Activated</span> now");
+                    }
+                    return response()->json($array,200);
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Center Account"),400);
+                }
+
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+            }
+        } 
     }
 
-    public function candidateDeactive(Request $request){
 
-        $candidate=Candidate::findOrFail($request->id);
-        $candidate->status=0;
-        $candidate->save();
+    // public function candidateActive($id){
+    //     if ($id=$this->decryptThis($id)) {
+    //         $candidate=Candidate::findOrFail($id);
+    //         $candidate->status=1;
+    //         $candidate->save();
+    
+    //         /* Notification For Center */
+    //         $notification = new Notification;
+    //         $notification->rel_id = $candidate->tc_id;
+    //         $notification->rel_with = 'center';
+    //         $notification->title = 'Candidate Active';
+    //         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
+    //         $notification->save();
+    //         /* End Notification For Center */
+    
+    //         alert()->success('Candidate Activated', 'Done')->autoclose(2000);
+    //         return redirect()->back();
+    //     }
+    // }
 
-        $reason = new Reason;
-        $reason->rel_id = $candidate->id;
-        $reason->rel_with = 'candidate';
-        $reason->reason = $request->reason;
-        $reason->save();
+    // public function candidateDeactive(Request $request){
 
-         /* Notification For Center */
-         $notification = new Notification;
-         $notification->rel_id = $candidate->tc_id;
-         $notification->rel_with = 'center';
-         $notification->title = 'Candidate Deactive';
-         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Deactivated</span>.";
-         $notification->save();
-         /* End Notification For Center */
+    //     $candidate=Candidate::findOrFail($request->id);
+    //     $candidate->status=0;
+    //     $candidate->save();
 
-         return response()->json(['status' => 'done'],200);
+    //     $reason = new Reason;
+    //     $reason->rel_id = $candidate->id;
+    //     $reason->rel_with = 'candidate';
+    //     $reason->reason = $request->reason;
+    //     $reason->save();
 
-    }
+    //      /* Notification For Center */
+    //      $notification = new Notification;
+    //      $notification->rel_id = $candidate->tc_id;
+    //      $notification->rel_with = 'center';
+    //      $notification->title = 'Candidate Deactive';
+    //      $notification->message = "One of Your Candidate has been <span style='color:blue;'>Deactivated</span>.";
+    //      $notification->save();
+    //      /* End Notification For Center */
+
+    //      return response()->json(['status' => 'done'],200);
+
+    // }
 
     public function candidateEdit($id){
         if ($id = $this->decryptThis($id)) {

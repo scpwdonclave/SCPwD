@@ -20,13 +20,12 @@ Route::get('training_partners/partner-update/{id}', 'AdminAuth\AdminPartnerContr
 // Route::post('partner-reject', 'AdminAuth\AdminPartnerController@partnerReject')->name('reject.partner');
 // Route::get('partner-accept/{id}/{tp_id}', 'AdminAuth\AdminPartnerController@partnerUpdateAccept')->name('accept.tp-updt-req');
 // Route::post('partnerupdate-reject', 'AdminAuth\AdminPartnerController@partnerUpdateReject')->name('reject.tp-updt-req');
-Route::post('training_partners/partners-deactive', 'AdminAuth\AdminPartnerController@partnerStatusAction')->name('tp.partner.status-action');
+Route::post('training_partners/partners/', 'AdminAuth\AdminPartnerController@partnerStatusAction')->name('tp.partner.status-action');
 Route::post('training_partners/partners-comp-details-update', 'AdminAuth\AdminPartnerController@partnerDetailsUpdate')->name('training_partner.comp-details-update');
 Route::get('training_partners/partner-target/{id}', 'AdminAuth\AdminPartnerController@partnerTargetView')->name('tp.target.view');
+Route::post('training_partners/partner-target/', 'AdminAuth\AdminPartnerController@partnerTargetAction')->name('tp.target.action');
 Route::post('training_partners/fetch-jobrole', 'AdminAuth\AdminPartnerController@fetchJobrole')->name('tp.fetch-jobrole');
 Route::post('training_partners/fetch-prvdata', 'AdminAuth\AdminPartnerController@fetchData')->name('tp.fetch-data');
-Route::post('training_partners/partner-jobtarget', 'AdminAuth\AdminPartnerController@jobTarget')->name('tp.partner.jobtarget');
-Route::post('training_partners/partner-jobtarget-update', 'AdminAuth\AdminPartnerController@jobTargetUpdate')->name('tp.partner.jobtarget.update');
 // Route::post('training_partners/partner-jobrole-Deactive', 'AdminAuth\AdminPartnerController@jobroleDeactive')->name('tp.partner.jobrole.deactive');
 // Route::get('training_partners/partner-jobrole-Active/{id}', 'AdminAuth\AdminPartnerController@jobroleActive')->name('tp.partner.jobrole.active');
 // Route::get('training_partners/partner-scheme/{id}', 'AdminAuth\AdminPartnerController@partnerScheme')->name('training_partner.partner.scheme');
@@ -41,14 +40,17 @@ Route::get('training_centers/center-verify/{id}', 'AdminAuth\AdminCenterControll
 Route::post('training_centers/center-reject', 'AdminAuth\AdminCenterController@centerReject')->name('tc.reject.center');
 Route::get('training_centers/center-edit/{id}', 'AdminAuth\AdminCenterController@centerEdit')->name('tc.edit.center');
 Route::post('training_centers/center-update', 'AdminAuth\AdminCenterController@centerDetailsUpdate')->name('tc.update.center');
-Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
-Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
+
+Route::post('training_centers/centers/', 'AdminAuth\AdminCenterController@centerStatusAction')->name('tp.center.status-action');
+// Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
+// Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
 Route::post('training_centers/center-api', 'AdminAuth\AdminCenterController@centerApi')->name('tc.center.api');
 
 Route::get('training_centers/candidates', 'AdminAuth\AdminCenterController@candidates')->name('tc.candidates');
 Route::get('training_centers/candidates/{id}', 'AdminAuth\AdminCenterController@view_candidate')->name('tc.candidate.view');
-Route::get('training_centers/candidate-active/{id}', 'AdminAuth\AdminCenterController@candidateActive')->name('tc.candidate.active');
-Route::post('training_centers/candidate-deactive', 'AdminAuth\AdminCenterController@candidateDeactive')->name('tc.candidate.deactive');
+Route::post('training_centers/candidates/', 'AdminAuth\AdminCenterController@candidateStatusAction')->name('tp.candidate.status-action');
+// Route::get('training_centers/candidate-active/{id}', 'AdminAuth\AdminCenterController@candidateActive')->name('tc.candidate.active');
+// Route::post('training_centers/candidate-deactive', 'AdminAuth\AdminCenterController@candidateDeactive')->name('tc.candidate.deactive');
 Route::get('training_centers/candidate-edit/{id}', 'AdminAuth\AdminCenterController@candidateEdit')->name('tc.edit.candidate');
 Route::post('training_centers/candidate-update', 'AdminAuth\AdminCenterController@candidateUpdate')->name('tc.update.candidate');
 

@@ -262,51 +262,7 @@ function dlink(f) {
     });
     });
 }
-//==============================
 
-// function showCancelMessage(f) {
-//     let _token = $("input[name='_token']").val();
-//     var id=f;
-//     swal({
-//         title: "Are you sure?",
-//         text: "Center will not be able to Access!",
-//         type: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#DD6B55",
-//         confirmButtonText: "Yes",
-//         cancelButtonText: "No, cancel",
-//         closeOnConfirm: false,
-//         closeOnCancel: false
-//     }, function (isConfirm) {
-//         if (isConfirm) {
-//             $.ajax({
-//                 type: "POST",
-//                 url: "{{route('admin.tc.center.deactive')}}",
-//                 data:{_token,id},
-//                 success: function(data) {
-                   
-//                    swal({
-//                 title: "Done",
-//                 text: "Center Deactivated",
-//                 type:"success",
-                
-//             },function(isConfirm){
-        
-//                 if (isConfirm){
-               
-//                 window.location="{{route('admin.tc.centers')}}";
-        
-//                 } 
-//                 });
-            
-//                 }
-//             });
-           
-//         } else {
-//             swal("Cancelled", "Your Partner is safe :)", "error");
-//         }
-//     });
-// }
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

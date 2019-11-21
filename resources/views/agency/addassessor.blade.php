@@ -486,7 +486,7 @@
                     <h4 class="title" id="TermsModalLabel">Company Terms & Conditions</h4>
                 </div>
                 <div class="modal-body">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum nemo vero illum esse explicabo dolor quisquam id iusto enim, placeat eligendi, ipsa facere nesciunt ex temporibus repellendus assumenda atque? Officiis.
+                    {{Config::get('constants.declaration')}}
                 </div>
             </div>
         </div>

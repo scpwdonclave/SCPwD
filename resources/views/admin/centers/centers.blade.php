@@ -3,7 +3,6 @@
 @section('parentPageTitle', 'Centers')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -41,12 +40,8 @@
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->mobile}}</td>
                                     <td style="color:{{($item->status && $item->partner->status)?'green':'red'}}">{{($item->status && $item->partner->status)?'Active':'Inactive'}}</td>
-                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.view',Crypt::encrypt($item->id))}}" >View</a></td>
-                                    @if($item->status)
-                                        <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                    @else
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tc.center.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                    @endif
+                                    <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tc.center.view',Crypt::encrypt($item->id))}}'" >View</button></td>
+                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->spoc_name.' ('.$item->tc_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -60,95 +55,67 @@
 @stop
 @section('page-script')
 <script>
-function showCancelMessage(f) {
-    swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
-   
+    function callajax(val, dataString){
         $.ajax({
-        type: "POST",
-        url: "{{route('admin.tc.center.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Center Record Deactive",
-        type:"success",
-        
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-       
-        window.location="{{route('admin.tc.centers')}}";
-
-        } 
+            url: "{{ route('admin.tp.center.status-action') }}",
+            method: "POST",
+            data: dataString,
+            success: function(data){
+                var SuccessResponseText = document.createElement("div");
+                SuccessResponseText.innerHTML = data['message'];
+                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+            },
+            error:function(data){
+                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+            }
         });
-    
-        }
-    });
-        
-    });
-}
+    }
 
-// function showCancelMessage(f) {
-//     let _token = $("input[name='_token']").val();
-//     var id=f;
-//     swal({
-//         title: "Are you sure?",
-//         text: "Center will not be able to Access!",
-//         type: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#DD6B55",
-//         confirmButtonText: "Yes",
-//         cancelButtonText: "No, cancel",
-//         closeOnConfirm: false,
-//         closeOnCancel: false
-//     }, function (isConfirm) {
-//         if (isConfirm) {
-//             $.ajax({
-//                 type: "POST",
-//                 url: "{{route('admin.tc.center.deactive')}}",
-//                 data:{_token,id},
-//                 success: function(data) {
-                   
-//                    swal({
-//                 title: "Done",
-//                 text: "Center Deactivated",
-//                 type:"success",
-                
-//             },function(isConfirm){
+    function popup(v){
+        var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        var color=''; var text=''; var displayText='';
+        var _token=$('[name=_token]').val();
+        var center=data[2];
+        if (data[1]==1) {
+                color = 'red'; text = 'Deactivate'; 
+                displayText=center+'\nProvide Center Deactivation Reason ';
+                confirmatonText="input"
+            } else {
+                color = 'green'; text = 'Activate';
+                displayText = "Are you Sure ?";
+                confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br> <span style='font-weight:bold; color:blue;'>"+center+"</span> Center";
+            }
         
-//                 if (isConfirm){
-               
-//                 window.location="{{route('admin.tc.centers')}}";
-        
-//                 } 
-//                 });
-            
-//                 }
-//             });
-           
-//         } else {
-//             swal("Cancelled", "Your Partner is safe :)", "error");
-//         }
-//     });
-// }
+        swal({
+            text: displayText,
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Update Status",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            if (val != null) {
+                if (val === '') {
+                    swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                } else if (val === true) {
+                    var dataString = {_token, data:data[0], reason:null};
+                    callajax(val,dataString);
+                } else {
+                    var dataString = {_token, data:data[0], reason:val};
+                    callajax(val,dataString);
+                }
+            }
+        });
+    }
+
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
@@ -157,5 +124,4 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @stop

@@ -209,8 +209,8 @@ class AdminPartnerController extends Controller
                     $partner->tp_id=$new_tpid;
                     $partner->pending_verify=0;
                     $partner->save();
-                    alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
                     $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
+                    alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
 
                 } else {
                     DB::transaction(function() use ($request,$partner){
@@ -551,17 +551,15 @@ class AdminPartnerController extends Controller
     
     // * End View Partner Target Page
 
-
-
-
+    
+    // * TP Fetch Target Data API
+    
     public function fetchJobrole(Request $request){
-
         $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get(); 
         return response()->json(['jobroles' => $jobroles],200); 
     }
 
     public function fetchData(Request $request){
-
         if (is_null($request->data)) {            
             $data = [
                 'job' => DB::table('job_roles')->where('sector_id',1)->get(),
@@ -577,83 +575,122 @@ class AdminPartnerController extends Controller
                 'schemes' => Scheme::all(),
             ];
         }
-
-
-
-        // $data = PartnerJobrole::find($request->e_id);
-        // $job=DB::table('job_roles')->where('sector_id','=',$data->sector_id)->get();
-        // $sectors=Sector::all();
-        // $schemes=Scheme::all();
-        // return response()->json(['sectors' => $sectors,'data'=>$data,'job'=>$job,'schemes'=>$schemes],200); 
-
-
-
-        
-
-        // $sectors=Sector::all();
-        // $schemes=Scheme::all();
         return response()->json($data,200); 
     }
-    //Job Submit
-    public function jobTarget(Request $request){
-        $data=PartnerJobrole::where([['tp_id','=',$request->tpid],
-                                    ['scheme_id','=',$request->scheme2],
-                                    ['sector_id','=',$request->sector2],
-                                    ['jobrole_id','=',$request->jobrole2]])->get();
+    
+    // * End TP Fetch Target Data API
+
+
+    // * Training Partner JobRole Target Section
+    
+    public function partnerTargetAction(Request $request)
+    {
+        if (is_null($request->jobid)) {
+            $partnerJob=PartnerJobrole::where([['tp_id','=',$request->userid],['scheme_id','=',$request->scheme],['sector_id','=',$request->sector],['jobrole_id','=',$request->jobrole]])->first();
+            if ($partnerJob) {
+                alert()->error("Jobrole with these details already <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Partner", 'Abort')->html()->autoclose(5000);
+                return redirect()->back();
+            } else {
+                $partnerjob = new PartnerJobrole;
+                $partnerjob->tp_id=$request->userid;
+                $partnerjob->scheme_id=$request->scheme;
+                $partnerjob->sector_id=$request->sector;
+                $partnerjob->jobrole_id=$request->jobrole;
+                $partnerjob->target=$request->target;
+                $partnerjob->save();
+                
+                $this->writeNotification($request->userid,'partner','New Job Target',"New Jobrole with Target has been <span style='color:blue;'>Assigned</span> to you.");        
+                alert()->success("New Job with Target has been <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Partner", 'Job Done')->html()->autoclose(4000);
+                return redirect()->back(); 
+            }
+        } else {
+            $partnerJob=PartnerJobrole::find($request->jobid);
+            if ($partnerJob) {
+                if ($partnerJob->scheme_id==$request->scheme && $partnerJob->sector_id==$request->sector && $partnerJob->jobrole_id==$request->jobrole) {
+                    alert()->info("You have not changed anything yet", 'Attention')->html()->autoclose(4000);
+                } else {
+                    $partnerJobFetch=PartnerJobrole::where([['id','<>',$request->jobid],['tp_id','==',$request->userid],['scheme_id','=',$request->scheme],['sector_id','=',$request->sector],['jobrole_id','=',$request->jobrole]])->first();
+                    if ($partnerJobFetch) {
+                        alert()->error("Jobrole with these details already <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Partner", 'Abort')->html()->autoclose(5000);
+                    } else {
+                        $partnerJob->scheme_id=$request->scheme;
+                        $partnerJob->sector_id=$request->sector;
+                        $partnerJob->jobrole_id=$request->jobrole;
+                        $partnerJob->target=$request->target;
+                        $partnerJob->save();
+                        $this->writeNotification($request->userid,'partner','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.");        
+                        alert()->success("Jobrole of This Training Partner has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+                    }
+                }
+                return redirect()->back(); 
+            } else {
+                alert()->error("Could not find the Record you have <span style='font-weight:bold;color:blue'>Requested</span>", 'Attention')->html()->autoclose(2000);
+                return redirect()->back();
+            }            
+        }
+    }
+
+    // * End Training Partner JobRole Target Section
+
+    // public function jobTarget(Request $request){
+    //     $data=PartnerJobrole::where([['tp_id','=',$request->tpid],
+    //                                 ['scheme_id','=',$request->scheme2],
+    //                                 ['sector_id','=',$request->sector2],
+    //                                 ['jobrole_id','=',$request->jobrole2]])->get();
             
-        if(count($data)>0){
-            alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
-        return Redirect()->back();
-        }else{
-        $partnerjob = new PartnerJobrole;
-        $partnerjob->tp_id=$request->tpid;
-        $partnerjob->scheme_id=$request->scheme2;
-        $partnerjob->sector_id=$request->sector2;
-        $partnerjob->jobrole_id=$request->jobrole2;
-        $partnerjob->target=$request->target;
-        $partnerjob->save();
+    //     if(count($data)>0){
+    //         alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
+    //     return Redirect()->back();
+    //     }else{
+    //     $partnerjob = new PartnerJobrole;
+    //     $partnerjob->tp_id=$request->tpid;
+    //     $partnerjob->scheme_id=$request->scheme2;
+    //     $partnerjob->sector_id=$request->sector2;
+    //     $partnerjob->jobrole_id=$request->jobrole2;
+    //     $partnerjob->target=$request->target;
+    //     $partnerjob->save();
 
-        $notification = new Notification;
-        $notification->rel_id =$request->tpid;
-        $notification->rel_with = 'partner';
-        $notification->title = 'Partner Job Target';
-        $notification->message = "Job target has been Updated";
-        $notification->save();
+    //     $notification = new Notification;
+    //     $notification->rel_id =$request->tpid;
+    //     $notification->rel_with = 'partner';
+    //     $notification->title = 'Partner Job Target';
+    //     $notification->message = "Job target has been Updated";
+    //     $notification->save();
 
-        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Assign</span>", 'Job Done')->html()->autoclose(2000);
-        return Redirect()->back();
-        }
-    }
-    public function jobTargetUpdate(Request $request){
+    //     alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Assign</span>", 'Job Done')->html()->autoclose(2000);
+    //     return Redirect()->back();
+    //     }
+    // }
+    // public function jobTargetUpdate(Request $request){
        
-        $data=PartnerJobrole::where([
-                                    ['scheme_id','=',$request->scheme2_u],
-                                    ['sector_id','=',$request->sector2_u],
-                                    ['jobrole_id','=',$request->jobrole2_u],
-                                    ['target','=',$request->target_u]])->get();
-        if(count($data)>0){
-            alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
-        return Redirect()->back();
-        }else{
-        $partnerjob =PartnerJobrole::findOrFail($request->p_job_id) ;
+    //     $data=PartnerJobrole::where([
+    //                                 ['scheme_id','=',$request->scheme2_u],
+    //                                 ['sector_id','=',$request->sector2_u],
+    //                                 ['jobrole_id','=',$request->jobrole2_u],
+    //                                 ['target','=',$request->target_u]])->get();
+    //     if(count($data)>0){
+    //         alert()->error("Training Partner Job Target with this details already <span style='font-weight:bold;color:blue'>Assign</span>", 'Abort')->html()->autoclose(5000);
+    //     return Redirect()->back();
+    //     }else{
+    //     $partnerjob =PartnerJobrole::findOrFail($request->p_job_id) ;
        
-        $partnerjob->scheme_id=$request->scheme2_u;
-        $partnerjob->sector_id=$request->sector2_u;
-        $partnerjob->jobrole_id=$request->jobrole2_u;
-        $partnerjob->target=$request->target_u;
-        $partnerjob->save();
+    //     $partnerjob->scheme_id=$request->scheme2_u;
+    //     $partnerjob->sector_id=$request->sector2_u;
+    //     $partnerjob->jobrole_id=$request->jobrole2_u;
+    //     $partnerjob->target=$request->target_u;
+    //     $partnerjob->save();
 
-        $notification = new Notification;
-        $notification->rel_id =$request->tpid2;
-        $notification->rel_with = 'partner';
-        $notification->title = 'Partner Job Target';
-        $notification->message = "Job target has been Updated";
-        $notification->save();
+    //     $notification = new Notification;
+    //     $notification->rel_id =$request->tpid2;
+    //     $notification->rel_with = 'partner';
+    //     $notification->title = 'Partner Job Target';
+    //     $notification->message = "Job target has been Updated";
+    //     $notification->save();
 
-        alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(2000);
-        return Redirect()->back();
-        }
-    }
+    //     alert()->success("Training Partner Job Target <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(2000);
+    //     return Redirect()->back();
+    //     }
+    // }
 
     // public function jobroleDeactive(Request $request){
     //     $partnerJob=PartnerJobrole::findOrFail($request->id);

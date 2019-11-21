@@ -50,53 +50,6 @@
 </div>
 @stop
 @section('page-script')
-<script>
-function showCancelMessage(f) {
-    swal({
-        title: "Deactive!",
-        text: "Write Reason for Deactive:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
-   
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.tc.center.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Center Record Deactive",
-        type:"success",
-        
-        showConfirmButton: true
-    },function(isConfirm){
-
-        if (isConfirm){
-       
-        window.location="{{route('admin.tc.centers')}}";
-
-        } 
-        });
-    
-        }
-    });
-        
-    });
-}
-</script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

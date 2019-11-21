@@ -83,8 +83,6 @@
         if (data[1]==1) {
                 color = 'red'; text = 'Deactivate'; 
                 displayText=partner+'\nProvide Partner Deactivation Reason ';
-                confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br> <span style='font-weight:bold; color:blue;'>"+partner+"</span> Partner";
-
                 confirmatonText="input"
             } else {
                 color = 'green'; text = 'Activate';
