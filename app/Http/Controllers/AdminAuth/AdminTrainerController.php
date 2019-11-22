@@ -242,6 +242,84 @@ class AdminTrainerController extends Controller
         }
     }
 
+
+    public function trainerStatusAction(Request $request)
+    {
+        if ($request->has('data')) {
+        $data = explode(',',$request->data);
+
+            if ($id=$this->decryptThis($data[0])) {
+                
+                if ($data[2]) {
+                    // * Request for Trainers Table
+                    $trainer = Trainer::find($id);
+                    if ($trainer) {
+                        // * Trainer is Present with That ID
+                        if ($data[1]) {
+                            // * Request for Change Trainer Status
+                            if ($trainer->status) {
+                                // * Trainer is Active
+                                if (!is_null($request->reason) && $request->reason != '') {
+                                    // * Trainer Deactivation Reason Provided so Deactivating
+                                    
+                                    $trainer->status = 0;
+                                    $trainer->save();
+                                    $reason = new Reason;
+                                    $reason->rel_id = $data[0];
+                                    $reason->rel_with = 'trainer';
+                                    $reason->reason = $request->reason;
+                                    $reason->save();
+                                    $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:red'>Deactive</span> now", 'title' => "Job Done");
+                                    
+                                } else {
+                                    // * Trainer Deactivation Reason Not Provided so Aborting
+                                    
+                                    $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>", 'title' => "Aborted");
+                                }
+                                
+                            } else {
+                            // * Trainer is Inactive so Activating
+                            
+                                $trainer->status = 1;
+                                $trainer->save();
+                                $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>Active</span> now", 'title' => "Job Done");
+                            }
+                        } else {
+                            // * Deling Process of a Trainer
+                            $batch=Batch::where([['tr_id','=',$id],['completed','=',0]])->first();
+                            if($batch){
+                                // * Requested Trainer Linked with a Batch that is not yet Completed so Aborting
+
+                                $array = array('type' => 'error', 'message' => "This Trainer is Actively Attached with a Batch That is not yet <span style='font-weight:bold;color:red'>Completed</span>", 'title' => "Aborted");
+                            }else{
+                                // * Proceeding to De Link the Requested Trainer
+                                $trainerStatus=TrainerStatus::where('prv_id',$id)->orderBy('created_at', 'desc')->first();
+                                $trainerStatus->attached=0;        
+                                $trainerStatus->dlink_reason=$request->reason;   
+                                $trainerStatus->save();  
+                                $trainer->delete();
+                                $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>De Linked</span> Successfully", 'title' => "Job Done");
+                            }
+                        }
+                    } else {
+                        // * Trainer Not Found With That ID
+
+                        return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),400);
+                    }
+                } else {
+                // * Request for TrainerStatuses Table
+                
+                // TODO 
+                // TODO Color Trainer Names and Write Notifications and also Reuse Above Code and Optimise
+                }
+            }
+        }
+    }
+
+
+
+
+
     public function trainerEdit($id){
         if ($id=$this->decryptThis($id)) {
             $trainer=Trainer::findOrFail($id);
