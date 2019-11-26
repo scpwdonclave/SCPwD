@@ -4,6 +4,8 @@ Route::get('dashboard', function () { return redirect(route('admin.dashboard.das
 Route::get('dashboard/dashboard', 'AdminAuth\AdminHomeController@dashboard')->name('dashboard.dashboard');
 Route::get('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles')->name('dashboard.jobroles');
 Route::post('dashboard/job_roles', 'AdminAuth\AdminHomeController@job_roles_action')->name('dashboard.jobroles');
+Route::post('dashboard/job_roles/qualification', 'AdminAuth\AdminHomeController@jobroleQualification')->name('dashboard.jobroles.qualiication');
+Route::post('dashboard/job_roles/add/qualification', 'AdminAuth\AdminHomeController@jobroleAddQualification')->name('dashboard.jobroles.qualiication.add');
 Route::get('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme')->name('dashboard.scheme');
 Route::get('dashboard/holiday', 'AdminAuth\AdminHomeController@holiday')->name('dashboard.holiday');
 Route::post('dashboard/holiday-insert', 'AdminAuth\AdminHomeController@holidayInsert')->name('dashboard.holiday-insert');

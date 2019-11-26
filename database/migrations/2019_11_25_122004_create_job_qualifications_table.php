@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobRolesTable extends Migration
+class CreateJobQualificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateJobRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_roles', function (Blueprint $table) {
+        Schema::create('job_qualifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('sector_id');
-            $table->string('job_role');
-            $table->string('qp_code');
-            $table->string('nsqf_level');
-            $table->string('hours');
+            $table->unsignedBigInteger('job_id');
+            $table->string('qualification');
+            $table->string('sector_exp');
+            $table->string('teaching_exp');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateJobRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_roles');
+        Schema::dropIfExists('job_qualifications');
     }
 }

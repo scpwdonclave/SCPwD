@@ -20,4 +20,8 @@ class JobRole extends Model implements Auditable
     public function partners(){
         return $this->hasMany('App\PartnerJobrole', 'jobrole_id');
     }
+
+    public function qualifications(){
+        return $this->hasMany('App\JobQualification', 'job_id');
+    }
 }

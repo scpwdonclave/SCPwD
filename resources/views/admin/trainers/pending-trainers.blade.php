@@ -82,7 +82,7 @@
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',['id'=>$item->id])}}" >View</a></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',Crypt::encrypt($item->id))}}" >View</a></td>
                                                
                                             </tr>
                                           

@@ -1,14 +1,18 @@
 <?php
 return [
     'qualifications' => [
-        '0' => '8th and Above',
-        '1' => '10th and Above',
-        '2' => '12th and Above',
-        '3' => 'Diploma',
-        '4' => 'UG',
-        '5' => 'PG',
-        '6' => 'PHD',
+        '0' => 'Un Educated',
+        '1' => '5th to 8th',
+        '2' => '9th to 10th',
+        '3' => '11th to 12th',
+        '4' => 'Under Graduate',
+        '5' => 'Graduate',
+        '6' => 'Post Graduate',
+        '7' => 'ITI',
+        '8' => 'Polytechnic',
+        '9' => 'Diploma',
     ],
+
 
     'hours' => [
         '0' => [

@@ -37,6 +37,37 @@ class AdminTrainerController extends Controller
         }
     }
 
+    protected function updateTrainerStatus($trainer,$for,$request,$id){
+        if ($trainer->status) {
+            // * Trainer is Active
+            if (!is_null($request->reason) && $request->reason != '') {
+                // * Trainer Deactivation Reason Provided so Deactivating
+                
+                $trainer->status = 0;
+                $trainer->save();
+                $reason = new Reason;
+                $reason->rel_id = $id;
+                $reason->rel_with = $for;
+                $reason->reason = $request->reason;
+                $reason->save();
+                return array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:red'>Deactive</span> now", 'title' => "Job Done");
+                
+            } else {
+                // * Trainer Deactivation Reason Not Provided so Aborting
+                
+                return array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>", 'title' => "Aborted");
+            }
+            
+        } else {
+        // * Trainer is Inactive so Activating
+        
+            $trainer->status = 1;
+            $trainer->save();
+            return array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>Active</span> now", 'title' => "Job Done");
+        }
+    }
+
+
     public function trainers(){
         $data=Trainer::where('verified',1)->get();
         $dlinkData=TrainerStatus::orderBy('id', 'desc')->get()->unique('trainer_id');
@@ -53,19 +84,18 @@ class AdminTrainerController extends Controller
         if ($id=$this->decryptThis($id)) {
             $data = [
                 'trainerData' => Trainer::findOrFail($id),
-                'partner' => $this->guard()->user(),
                 'trainerdoc' => TrainerJobRole::where('tr_id',$id)->get(),
             ];
             return view('common.view-trainer')->with($data);
         }
     }
     public function dlinkTrainerView($id){
-
-        $trainerData=TrainerStatus::findOrFail($id);
-        $trainerdoc=TrainerJobRole::where('tr_id',$trainerData->prv_id)->get();
-        $dlinkData = collect([]);
-        return view('common.view-trainer')->with(compact('trainerData','trainerdoc'));
-        
+        if ($id=$this->decryptThis($id)) {
+            $trainerData=TrainerStatus::findOrFail($id);
+            $trainerdoc=TrainerJobRole::where('tr_id',$trainerData->prv_id)->get();
+            $delinked = true;
+            return view('common.view-trainer')->with(compact('trainerData','trainerdoc','delinked'));
+        }
     }
     public function trainerAccept($id){
         if ($id=$this->decryptThis($id)) {
@@ -257,33 +287,7 @@ class AdminTrainerController extends Controller
                         // * Trainer is Present with That ID
                         if ($data[1]) {
                             // * Request for Change Trainer Status
-                            if ($trainer->status) {
-                                // * Trainer is Active
-                                if (!is_null($request->reason) && $request->reason != '') {
-                                    // * Trainer Deactivation Reason Provided so Deactivating
-                                    
-                                    $trainer->status = 0;
-                                    $trainer->save();
-                                    $reason = new Reason;
-                                    $reason->rel_id = $data[0];
-                                    $reason->rel_with = 'trainer';
-                                    $reason->reason = $request->reason;
-                                    $reason->save();
-                                    $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:red'>Deactive</span> now", 'title' => "Job Done");
-                                    
-                                } else {
-                                    // * Trainer Deactivation Reason Not Provided so Aborting
-                                    
-                                    $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>", 'title' => "Aborted");
-                                }
-                                
-                            } else {
-                            // * Trainer is Inactive so Activating
-                            
-                                $trainer->status = 1;
-                                $trainer->save();
-                                $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>Active</span> now", 'title' => "Job Done");
-                            }
+                            $array = $this->updateTrainerStatus($trainer,'trainer',$request,$id);
                         } else {
                             // * Deling Process of a Trainer
                             $batch=Batch::where([['tr_id','=',$id],['completed','=',0]])->first();
@@ -304,14 +308,30 @@ class AdminTrainerController extends Controller
                     } else {
                         // * Trainer Not Found With That ID
 
-                        return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),400);
+                        return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),200);
                     }
                 } else {
-                // * Request for TrainerStatuses Table
+                    // * Request for TrainerStatuses Table
                 
-                // TODO 
-                // TODO Color Trainer Names and Write Notifications and also Reuse Above Code and Optimise
+                    $trainer = TrainerStatus::find($id);
+                    if ($trainer) {
+                        // * Trainer is Present with That ID
+                        if ($data[1]) {
+                            // * Request for Change Trainer Status
+                            $array = $this->updateTrainerStatus($trainer,'dlink trainer',$request,$id);
+                        } else {
+                            // * Bad Request
+
+                            return response()->json(array('type' => 'error'),400);
+                        }
+                    } else {
+                        // * Trainer Not Found With That ID
+
+                        return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),200);
+                    }
                 }
+
+                return response()->json($array, 200);
             }
         }
     }

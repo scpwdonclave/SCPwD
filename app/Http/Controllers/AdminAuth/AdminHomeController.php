@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\JobRole;
+use App\JobQualification;
 use App\Partner;
 use App\Center;
 use App\Candidate;
@@ -13,6 +14,7 @@ use App\Expository;
 use App\Sector;
 use App\Scheme;
 use App\Holiday;
+use Crypt;
 
 class AdminHomeController extends Controller
 {
@@ -33,6 +35,14 @@ class AdminHomeController extends Controller
     protected function guard()
     {
         return Auth::guard('admin');
+    }
+
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
     }
 
     public function dashboard(){
@@ -84,12 +94,62 @@ class AdminHomeController extends Controller
                 case 'JobRole':
                     return $this->dispatchNow(new \App\Jobs\RemoveJobRole($request));
                 break;    
+                case 'JobQualification':
+                    return $this->dispatchNow(new \App\Jobs\RemoveJobQualification($request));
+                break;    
                 default:
                     return abort(404);
                     break;
             }
         }
         return abort(404);
+    }
+
+
+    public function jobroleQualification(Request $request){
+
+        if ($id=$this->decryptThis($request->data)) { 
+            $jobrole = JobRole::findOrFail($id);   
+            $qualificationRow = [[]];
+            $qualificationArray = [];
+            foreach ($jobrole->qualifications as $qualification) {
+                $qualificationRow[0] = $qualification->qualification;
+                $qualificationRow[1] = $qualification->sector_exp;
+                $qualificationRow[2] = $qualification->teaching_exp;
+                $qualificationRow[3] = '<form id="removeform_JobQualification_'.$qualification->id.'" action="#" method="post"> <input type="hidden" name="data" value="'.$qualification->id.','.$qualification->qualification.'"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form>';
+                // $qualificationRow[3] = '<button type="button" onclick="popup(\''.Crypt::encrypt($qualification->id).',job'.'\')" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button>';
+                array_push($qualificationArray, $qualificationRow);
+            }
+            return response()->json(['success' => true, 'qualifications' => $qualificationArray],200);
+        }
+    }
+
+    public function jobroleAddQualification(Request $request)
+    {
+        $request->validate([
+            'jobid' => 'required',
+            'qualification' => 'required',
+            'sector_exp' => 'required',
+            'teaching_exp' => 'required',
+        ]);
+
+        if ($id=$this->decryptThis($request->jobid)) {
+            $job = JobQualification::where([['job_id',$id],['qualification',$request->qualification]])->first();
+            if ($job) {
+                alert()->error("This Qualification Details already <span style='color:red;'>Persent</span> for This Jobrole", "Aborted")->html()->autoclose(4000);
+                return redirect()->back();
+            } else {
+                $job = new jobQualification;
+                $job->job_id = $id;
+                $job->qualification = $request->qualification;
+                $job->sector_exp = $request->sector_exp;
+                $job->teaching_exp = $request->teaching_exp;
+                $job->save();
+                alert()->success("Qualification Details are <span style='color:blue;'>Added</span> to the Jobrole", "Job Done")->html()->autoclose(4000);
+                return redirect()->back();
+            }
+            
+        }
     }
 
 

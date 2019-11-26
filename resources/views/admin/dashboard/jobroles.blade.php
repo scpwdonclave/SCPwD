@@ -155,7 +155,7 @@
                     <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-around">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="sector_id">Sector *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='true' required>
@@ -165,7 +165,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="role_expository">Expository *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="role_expository[]" multiple data-show-subtext="true" data-dropup-auto='true' required>
@@ -175,6 +175,8 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
                             <div class="col-sm-4">
                                 <label for="hours">Total Hours *</label>
                                 <div class="form-group form-float year_picker">
@@ -184,20 +186,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
-                        <div class="row d-flex justify-content-around">
-                            
-                            <div class="col-sm-3">
-                                <label for="qualification">Minimum Required Qualification *</span></label>
-                                <div class="form-group form-float">
-                                    <select class="form-control show-tick selectpicker" data-live-search="true" name="qualification" data-dropup-auto='true' required>
-                                        @foreach (config('constants.qualifications') as $key => $qualification)
-                                            <option value="{{$key}}">{{$qualification}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label for="job_role">Job Role *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
@@ -206,7 +195,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label for="qp_code">QP Code *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
@@ -215,12 +204,42 @@
                                     @endif
                                 </div>
                             </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
                             <div class="col-sm-3">
                                 <label for="nsqf_level">NSQF Level *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
                                     @if ($errors->has('nsqf_level'))
                                         <span style="color:red">{{$errors->first('nsqf_level')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="qualification">Qualification *</span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick selectpicker" data-live-search="true" name="qualification" data-dropup-auto='true' required>
+                                        @foreach (config('constants.qualifications') as $qualification)
+                                            <option>{{$qualification}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="sector_exp">Sector Specific Experience *</label>
+                                <div class="form-group form-float year_picker">
+                                    <input type="number" min="0" step="1" class="form-control" placeholder="Sector Experience" value="{{ old('sector_exp') }}" name="sector_exp" required>
+                                    @if ($errors->has('sector_exp'))
+                                        <span style="color:red">{{$errors->first('sector_exp')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="teaching_exp">Teaching Experience *</label>
+                                <div class="form-group form-float year_picker">
+                                    <input type="number" min="0" step="1" class="form-control" placeholder="Teaching Experience" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
+                                    @if ($errors->has('teaching_exp'))
+                                        <span style="color:red">{{$errors->first('teaching_exp')}}</span>
                                     @endif
                                 </div>
                             </div>
@@ -238,9 +257,9 @@
                                     <th>Job Role</th>
                                     <th>QP Code</th>
                                     <th>NSQF</th>
-                                    <th>Min. Qualification</th>
                                     <th>Hours</th>
                                     <th>Disabilities</th>
+                                    <th>Qualification</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -254,15 +273,18 @@
                                     <td>{{$jobrole->job_role}}</td>
                                     <td>{{$jobrole->qp_code}}</td>
                                     <td>{{$jobrole->nsqf_level}}</td>
-                                    <td>{{config('constants.qualifications.'.$jobrole->qualification)}}</td>
                                     <td>{{$jobrole->hours}}</td>
                                     @foreach ($jobrole->expositories as $item)
                                         @php
                                             $item1 = $item->initials.', '.$item1;
+                                            $btnData = Crypt::encrypt($jobrole->id).','.$jobrole->sector->sector.' | '.$jobrole->job_role.' | '.$jobrole->qp_code;
+                                            // 1 : Popup Modal For View
+                                            // 0 : Popup Modal For Add
                                         @endphp
                                     @endforeach
                                     <td>{{$item1}}</td>
-                                    <td class="text-center"> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    <td><button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$btnData}},0')">ADD</button> <button type="button" class="badge bg-green margin-0" onclick="popupModal('{{$btnData}},1')">VIEW</button></td>
+                                    <td> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                 </tr>
                                 @php
                                     $item1='';
@@ -278,6 +300,65 @@
     </div>
 </div>
 @stop
+@section('modal')
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title" id="defaultModalLabel"></h4>
+                </div>
+                <h6 id="defaultModalSubLabel" style="color:blue" class="text-center"></h6>
+                <div class="modal-body d-flex justify-content-center">
+                    <div id="modalTable" style="display:none;">
+                        <table id="qualification_table" class="qualificationtable table nobtn table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Qualification</th>
+                                    <th>Min Sector Exp</th>
+                                    <th>Min Teaching Exp</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="modalForm" style="display:none;">
+                        <form id="form_modal" method="POST" action="{{route('admin.dashboard.jobroles.qualiication.add')}}">
+                            @csrf
+                            <input type="hidden" name="jobid">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="qualification">Qualification *</label>    
+                                    <select class="form-control show-tick form-group" id="qualification" name="qualification" data-live-search="true" required >
+                                        @foreach (Config::get('constants.qualifications') as $qualification)
+                                            <option>{{$qualification}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="sector_exp">Sector Specific Experience *</label>    
+                                    <div class="form-group form-float">
+                                        <input type="number" min="0" step="1" class="form-control" placeholder="Enter Sector Experience" name="sector_exp" id="sector_exp" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="teaching_exp">Teaching Experience *</label>    
+                                    <div class="form-group form-float">
+                                        <input type="number" min="0" step="1" class="form-control" placeholder="Enter Teaching Experience" name="teaching_exp" id="teaching_exp" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <button id="btnConfirm" class="btn btn-raised btn-primary btn-round waves-effect" type="submit" >Add Qualification</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('page-script')
 
 <script>
@@ -287,65 +368,68 @@
         $('[name=initials]').val(matches.join('').toUpperCase());        
     });
 
-    $('form[id^=removeform_]').submit(function(e){
-        e.preventDefault();
-        var section = e.currentTarget.id.split('_');
-        // console.log(value[1]);
+    $(()=>{
+        formSubmit();
+    })
 
-        
-        var data = e.currentTarget.data.value.split(',');
-        var _token = e.currentTarget._token.value;
-        var dataString = {_token:_token, id:data[0], name:data[1], section: section[1]};
-        var confirmatonText = document.createElement("div");
-        confirmatonText.innerHTML = "You are about to Remove <br><span style='font-weight:bold; color:red;'>"+ data[1] +"</span><br>"+section[1];
-        swal({
-            title: "Are you Sure ?",
-            content: confirmatonText,
-            icon: "info",
-            buttons: true,
-            buttons: {
-                    cancel: "Not Now",
-                    confirm: {
-                        text: "Confirm Remove",
-                        closeModal: false
-                    }
-                },
-            closeModal: false,
-            closeOnEsc: false,
-        }).then(function(isConfirm){
-            if (isConfirm) {
-                $.ajax({
-                    url: "{{ route('admin.dashboard.jobroles') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML = data['message'];
-                        if (data['type'] === 'success') {
-                            setTimeout(function () {
-                                swal({title: "Job Done", content: SuccessResponseText, icon: "success", closeOnEsc: false}).then(function(){
-                                    setTimeout(function(){location.reload()},150);
-                                });
-                            }, 2000);
-                        } else {
-                            setTimeout(function () {
-                                swal({title: "Abort", content: SuccessResponseText, icon: "error", closeOnEsc: false}).then(function(){
-                                    setTimeout(function(){location.reload()},150);
-                                });
-                            }, 2000);
+
+    function formSubmit(){
+        $('form[id^=removeform_]').submit(function(e){
+            e.preventDefault();
+            var section = e.currentTarget.id.split('_');
+            
+            var data = e.currentTarget.data.value.split(',');
+            // var _token = e.currentTarget._token.value;
+            var _token = $('[name=_token]').val();
+            var dataString = {_token:_token, id:data[0], name:data[1], section: section[1]};
+            var confirmatonText = document.createElement("div");
+            confirmatonText.innerHTML = "You are about to Remove <br><span style='font-weight:bold; color:red;'>"+ data[1] +"</span><br>"+section[1];
+            swal({
+                title: "Are you Sure ?",
+                content: confirmatonText,
+                icon: "info",
+                buttons: true,
+                buttons: {
+                        cancel: "Not Now",
+                        confirm: {
+                            text: "Confirm Remove",
+                            closeModal: false
                         }
                     },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
-            }
+                closeModal: false,
+                closeOnEsc: false,
+            }).then(function(isConfirm){
+                if (isConfirm) {
+                    $.ajax({
+                        url: "{{ route('admin.dashboard.jobroles') }}",
+                        method: "POST",
+                        data: dataString,
+                        success: function(data){
+                            var SuccessResponseText = document.createElement("div");
+                            SuccessResponseText.innerHTML = data['message'];
+                            if (data['type'] === 'success') {
+                                setTimeout(function () {
+                                    swal({title: "Job Done", content: SuccessResponseText, icon: "success", closeOnEsc: false}).then(function(){
+                                        setTimeout(function(){location.reload()},150);
+                                    });
+                                }, 2000);
+                            } else {
+                                setTimeout(function () {
+                                    swal({title: "Abort", content: SuccessResponseText, icon: "error", closeOnEsc: false}).then(function(){
+                                        setTimeout(function(){location.reload()},150);
+                                    });
+                                }, 2000);
+                            }
+                        },
+                        error:function(data){
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload()});
+                        }
+                    });
+                }
+            });
+            
         });
-        
-    });
+    }
 
 
     
@@ -391,6 +475,67 @@
     });
 
 
+
+    // Call Modal of Adding or Updating Job roles
+
+    function popupModal(btnData){        
+        let _token = $("[name=_token]").val();
+        if (btnData != undefined && btnData != '') {
+            id = btnData.split(',');
+            data = id[0];
+            if (id[2] === '1') {
+                
+                $('#modalTable').show();
+                $('#modalForm').hide();
+                $('#defaultModalLabel').html('Required Qualifications for');
+                $('#defaultModalSubLabel').html(id[1]);
+                $.ajax({
+                    url:"{{route('admin.dashboard.jobroles.qualiication')}}", 
+                    data:{_token,data},
+                    method:'POST',
+                    success: function(data){
+                        var datatable = $('.qualificationtable').DataTable();
+                        datatable.clear().draw();
+
+                        if (data.qualifications.length > 0) {
+                            data.qualifications.forEach(value => {
+                                if (value[0].length > 0) {
+                                    datatable.rows.add([value]); // Add new data
+                                }
+                            });
+                        }
+                        datatable.columns.adjust().draw();
+                        formSubmit();
+                    },
+                    error: function(){
+                        swal('Attention', 'Something went Wrong, Try Again', 'error').then(function(){location.reload()});
+                    }
+                });
+            } else {
+                $('#defaultModalLabel').html('Add New Qualification to');
+                $('#defaultModalSubLabel').html(id[1]);
+                $('#modalTable').hide();
+                $('#modalForm').show();
+                $('[name=jobid]').val(data);
+            }
+
+        }
+        
+         $("#defaultModal").modal('show');
+    }
+
+    // End Call Modal of Adding or Updating Job roles
+
+    //* Modal Close Event
+    
+    $("#defaultModal").on("hidden.bs.modal", function () {
+        $("label[class^='error']").each(function() {
+            $(this).hide();
+        });
+        $(this).find('form').trigger('reset');
+    });
+    
+    //* End Modal Close Event
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
@@ -408,6 +553,11 @@
     $("table[id*='_table'").dataTable({
         dom: 'Bfrtip',
         buttons: []
+    });
+
+
+    $("table[id*='_table'").on('draw.dt', function() {
+        formSubmit();
     });
 </script>
 @endsection

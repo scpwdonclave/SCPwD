@@ -48,7 +48,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <small class="text-muted">Attached TP</small>
+                                        <small class="text-muted">
+                                            {{isset($delinked)?'Last ':null}}Attached TP</small>
                                         <p>{{$trainerData->partner->tp_id}} <span style='color:{{($trainerData->partner->status)?"green":"red"}}'><strong>{{($trainerData->partner->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>

@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
+use App\JobQualification;
 use App\JobRole;
 
 class AddJobRole implements ShouldQueue
@@ -37,8 +38,10 @@ class AddJobRole implements ShouldQueue
             'qp_code' => 'required|unique:job_roles',
             'nsqf_level' => 'required|numeric',
             'hours' => 'required|numeric',
-            'qualification' => 'required|numeric',
-            'role_expository' => 'array|required'
+            'qualification' => 'required',
+            'sector_exp' => 'required|numeric',
+            'teaching_exp' => 'required|numeric',
+            'role_expository' => 'array|required',
         ]);
         
         $jobrole = new JobRole;
@@ -47,8 +50,14 @@ class AddJobRole implements ShouldQueue
         $jobrole->qp_code = $request->qp_code;
         $jobrole->nsqf_level = $request->nsqf_level;
         $jobrole->hours = $request->hours;
-        $jobrole->qualification = $request->qualification;
         $jobrole->save();
+
+        $jobquilification = new JobQualification;
+        $jobquilification->job_id = $jobrole->id;
+        $jobquilification->qualification = $request->qualification;
+        $jobquilification->sector_exp = $request->sector_exp;
+        $jobquilification->teaching_exp = $request->teaching_exp;
+        $jobquilification->save();
 
         $jobrole->expositories()->sync($request->role_expository);
 
