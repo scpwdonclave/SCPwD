@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
 use App\JobQualification;
-use Storage;
 
 class RemoveJobQualification implements ShouldQueue
 {
