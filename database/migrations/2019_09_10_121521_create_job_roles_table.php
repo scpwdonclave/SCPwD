@@ -20,6 +20,8 @@ class CreateJobRolesTable extends Migration
             $table->string('qp_code');
             $table->string('nsqf_level');
             $table->string('hours');
+            $table->string('full_marks');
+            $table->string('pass_marks');
             $table->timestamps();
         });
     }

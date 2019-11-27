@@ -39,7 +39,7 @@ class RemoveJobRole implements ShouldQueue
         $jobrole = JobRole::find($request->id);
         if ($jobrole) {
             if (count($jobrole->partners) > 0) {
-                return response()->json(array('type' => 'error', 'message' => "You cannot <span style='font-weight:bold;color:red'>Remove</span> a Job Role while its associated with some Training Partners"),200);
+                return response()->json(array('type' => 'error', 'message' => "You cannot <span style='font-weight:bold;color:red'>Remove</span> a Job Role while its associated with Training Partners"),200);
             } else {
                 $jobrole->delete();
                 return response()->json(array('type' => 'success', 'message' => "Job Role <span style='font-weight:bold;color:blue'>$request->name</span> has been Removed Successfully"),200);

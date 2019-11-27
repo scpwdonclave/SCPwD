@@ -39,6 +39,8 @@ class AddJobRole implements ShouldQueue
             'nsqf_level' => 'required|numeric',
             'hours' => 'required|numeric',
             'qualification' => 'required',
+            'full_marks' => 'required|numeric',
+            'pass_marks' => 'required|numeric',
             'sector_exp' => 'required|numeric',
             'teaching_exp' => 'required|numeric',
             'role_expository' => 'array|required',
@@ -50,6 +52,8 @@ class AddJobRole implements ShouldQueue
         $jobrole->qp_code = $request->qp_code;
         $jobrole->nsqf_level = $request->nsqf_level;
         $jobrole->hours = $request->hours;
+        $jobrole->full_marks = $request->full_marks;
+        $jobrole->pass_marks = $request->pass_marks;
         $jobrole->save();
 
         $jobquilification = new JobQualification;

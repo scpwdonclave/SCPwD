@@ -155,7 +155,7 @@
                     <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
                         @csrf
                         <div class="row d-flex justify-content-around">
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <label for="sector_id">Sector *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='true' required>
@@ -165,7 +165,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <label for="role_expository">Expository *</label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="role_expository[]" multiple data-show-subtext="true" data-dropup-auto='true' required>
@@ -175,9 +175,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row d-flex justify-content-around">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="hours">Total Hours *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="1" class="form-control" placeholder="Total Allocated Hours" value="{{ old('hours') }}" name="hours" required>
@@ -186,7 +184,27 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
+                                <label for="full_marks">Full Marks *</label>
+                                <div class="form-group form-float year_picker">
+                                    <input type="number" min="0" step="1" class="form-control" placeholder="Total Marks" value="{{ old('full_marks') }}" name="full_marks" required>
+                                    @if ($errors->has('full_marks'))
+                                        <span style="color:red">{{$errors->first('full_marks')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <div class="col-sm-3">
+                                <label for="pass_marks">Pass Marks *</label>
+                                <div class="form-group form-float year_picker">
+                                    <input type="number" min="0" step="1" class="form-control" placeholder="Passing Marks" value="{{ old('pass_marks') }}" name="pass_marks" required>
+                                    @if ($errors->has('pass_marks'))
+                                        <span style="color:red">{{$errors->first('pass_marks')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
                                 <label for="job_role">Job Role *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
@@ -195,7 +213,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="qp_code">QP Code *</label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
@@ -254,10 +272,9 @@
                             <thead>
                                 <tr>
                                     <th>Sector</th>
-                                    <th>Job Role</th>
-                                    <th>QP Code</th>
-                                    <th>NSQF</th>
+                                    <th>Job Role | QP Code | NSQF</th>
                                     <th>Hours</th>
+                                    <th>Passing Marks</th>
                                     <th>Disabilities</th>
                                     <th>Qualification</th>
                                     <th>Action</th>
@@ -270,10 +287,9 @@
                                 @foreach ($jobroles as $key=>$jobrole)
                                 <tr style="height:5px !important">
                                     <td>{{$jobrole->sector->sector}}</td>
-                                    <td>{{$jobrole->job_role}}</td>
-                                    <td>{{$jobrole->qp_code}}</td>
-                                    <td>{{$jobrole->nsqf_level}}</td>
+                                    <td>{{$jobrole->job_role.' | '.$jobrole->qp_code.' | '.$jobrole->nsqf_level}}</td>
                                     <td>{{$jobrole->hours}}</td>
+                                    <td>{{$jobrole->pass_marks.' / '.$jobrole->full_marks}}</td>
                                     @foreach ($jobrole->expositories as $item)
                                         @php
                                             $item1 = $item->initials.', '.$item1;
