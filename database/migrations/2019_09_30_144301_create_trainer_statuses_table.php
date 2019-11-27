@@ -30,6 +30,8 @@ class CreateTrainerStatusesTable extends Migration
             $table->string('scpwd_valid')->nullable();
 
             $table->string('qualification');
+            $table->string('sector_exp');
+            $table->string('teaching_exp');
             $table->string('qualification_doc');
             $table->string('ssc_no')->nullable();
             $table->string('ssc_doc')->nullable();

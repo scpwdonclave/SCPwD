@@ -101,6 +101,7 @@ Route::group(['prefix' => 'assessor'], function () {
 
 /* File Access */
 Route::get('partner/files/{action}/{filename}', 'PartnerAuth\FileController@partnerFiles')->where('action', 'view|download')->name('partner.files.partner-file');
+Route::get('partner/requirements', 'PartnerAuth\FileController@partnerRequirement')->name('partner.requirements');
 Route::get('trainer/files/{id}/{action}/{filename}', 'PartnerAuth\FileController@trainerFiles')->where('action', 'view|download')->name('trainer.files.trainer-file');
 Route::get('center/files/{action}/{filename}', 'CenterAuth\FileController@centerFiles')->where('action', 'view|download')->name('center.files.center-file');
 Route::get('candidate/files/{action}/{id}/{file}', 'FileController@candidateFiles')->where('action', 'view|download')->where('file', 'doc|cert')->name('center.files.candidate-file');

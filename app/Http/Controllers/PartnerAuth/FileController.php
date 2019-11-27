@@ -60,6 +60,21 @@ class FileController extends Controller
         }
     }
 
+    public function partnerRequirement()
+    {
+        if (Auth::guard('admin')->check() || Auth::guard('partner')->check()) {
+            try {
+                return response()->download(storage_path("app/Requirements.xlsx"));
+            } catch (Exception $e) {
+                return abort(404);
+            }
+        } else {
+            return abort(401);
+        }
+    }
+
+
+
     public function trainerFiles($id, $action, $file){
         if (Auth::guard('partner')->check()) {
             $partner = Auth::guard('partner')->user();

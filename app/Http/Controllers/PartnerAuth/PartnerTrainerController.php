@@ -107,7 +107,7 @@ class PartnerTrainerController extends Controller
         } elseif ($request->has('jobroleid')){
             $job = JobRole::find($request->jobroleid);
             if ($job) {
-                return response()->json(['success' => true, 'qualification' => $job->qualification],200);
+                return response()->json(['success' => true, 'qualifications' => $job->qualifications],200);
             } else {
                 return response()->json(['success' => false],400);
             }
@@ -130,8 +130,7 @@ class PartnerTrainerController extends Controller
             $data = [
                 'partner'  => $this->guard()->user(),
                 'parliaments'   => DB::table('parliament')->get(),
-                'states'   => DB::table('state_district')->get(),
-                'config' => Config::get('constants.qualifications')
+                'states'   => DB::table('state_district')->get()
             ];
             return view('partner.centers.addtrainer')->with($data);
         } else {   
@@ -196,6 +195,8 @@ class PartnerTrainerController extends Controller
 
 
                 $trainer->qualification = $request->qualification;
+                $trainer->sector_exp = $request->sector_exp;
+                $trainer->teaching_exp = $request->teaching_exp;
                 $trainer->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request->qualification_doc);
                 $trainer->ssc_no = $request->ssc_doc_no;
                 if ($request->hasFile('ssc_doc')) {

@@ -155,12 +155,26 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification">Highest Qualification *</label>
+                                                    <label for="qualification">Relavent Qualification *</label>
                                                     <div class="form-group form-float">
-                                                        <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" data-dropup-auto='false' required>
+                                                        <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" onchange="updateminvalues(this.value)" data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-4">
+                                                    <label for="sector_exp">Sector Experience in Years*</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('sector_exp') }}" name="sector_exp" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="teaching_exp">Teaching Experience in Years*</label>
+                                                    <div class="form-group form-float">
+                                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
                                                     <label for="qualification_doc">Qualification Certificate Upload *</label>
                                                     <div class="form-group form-float">
@@ -196,6 +210,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <h6>Note: To View Qualification Domain Teaching Experience Requirements Please <a href="{{route('partner.requirements')}}" target="_blank"> <span style="color:blue">Click Here</span> </a> </h6>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
@@ -533,6 +550,17 @@
     /* End Fetch SelectPicker Data */
 
 
+    /* Update Min Values of Experience Depending on Selected Job Role Qualifications */
+    
+    function updateminvalues(v) {
+        var data = localStorage.getItem(v).split(',');
+        $('[name=sector_exp]').attr('min', data[0]);
+        $('[name=teaching_exp]').attr('min', data[1]);
+    }
+    
+    /* End Update Min Values of Experience Depending on Selected Job Role Qualifications */
+
+
     /* Qualification DropDown Item Section */
         function updatequali() {
             var jobroleid = ($("#jobrole :selected").val()).split(',')[0];
@@ -542,15 +570,21 @@
                 url: "{{ route('partner.addtrainer.api') }}",
                 data: {_token, jobroleid},
                 success: function (response) {
-                    qualifications = '<?php echo json_encode($config)?>';
-                    data = JSON.parse(qualifications);
-
                     $('#qualification').empty();
-                    Object.keys(data).forEach(function(k){
-                        if (k >= response.qualification) {
-                            $('#qualification').append('<option value="'+k+'">'+data[k]+'</option>');
-                        }
+                    localStorage.clear();
+                    if (response.qualifications.length == 0) {
+                        $('[name=sector_exp]').attr('min', 0);
+                        $('[name=teaching_exp]').attr('min', 0);
+                    } else {
+                        $('[name=sector_exp]').attr('min', response.qualifications[0].sector_exp);
+                        $('[name=teaching_exp]').attr('min', response.qualifications[0].teaching_exp);
+                    }
+                    
+                    response.qualifications.forEach(function(v){
+                        localStorage.setItem(v.qualification, v.sector_exp+','+v.teaching_exp);
+                        $('#qualification').append('<option>'+v.qualification+'</option>');
                     });
+
                     $('#qualification').selectpicker('refresh');
                     updatescheme();
                 },

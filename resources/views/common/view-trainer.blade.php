@@ -172,41 +172,50 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                        <div class="col-sm-4">
-                                            <small class="text-muted">Qualification</small>
-                                                <p>
-                                                   
-                                                    {{config('constants.qualifications.'.$trainerData->qualification)}} &nbsp;&nbsp;                                                    
-                                                    <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->qualification_doc)])}}" download="{{basename($trainerData->qualification_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
-                                                </p>
-                                          
-                                            <hr>
-                                        </div>
-                                    
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">SSC No</small>
-                                                @if (!is_null($trainerData->ssc_doc))
-                                                <p>{{$trainerData->ssc_no}}&nbsp;&nbsp; 
-                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->ssc_doc)])}}" download="{{basename($trainerData->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
-                                                </p>
-                                                @else
-                                                <p>No Document Provided</p>
-                                                @endif
-
-                                                <hr>
-                                        </div>
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">SSC Issued</small>
-                                                <p>{{$trainerData->ssc_issued}}</p>
-                                                <hr>
-                                        </div>
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">SSC Valid</small>
-                                                <p>{{$trainerData->ssc_valid}}</p>
-                                                <hr>
-                                        </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Relavent Qualification</small>
+                                            <p>
+                                                {{$trainerData->qualification}} &nbsp;&nbsp;                                                    
+                                                <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->qualification_doc)])}}" download="{{basename($trainerData->qualification_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                            </p>                                          
+                                        <hr>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Sector Experience</small>
+                                        <p>{{$trainerData->sector_exp}} Years</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Teaching Experience</small>
+                                        <p>{{$trainerData->teaching_exp}} Years</p>
+                                        <hr>
+                                    </div>
+                                </div>
                                 
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">SSC No</small>
+                                            @if (!is_null($trainerData->ssc_doc))
+                                            <p>{{$trainerData->ssc_no}}&nbsp;&nbsp; 
+                                            <a class="btn-icon-mini" href="{{route('trainer.files.trainer-file',['id'=>$trainerData->id,'action'=>'download','filename'=>basename($trainerData->ssc_doc)])}}" download="{{basename($trainerData->ssc_doc)}}"><i class="zmdi zmdi-download"></i></a>                                                    
+                                            </p>
+                                            @else
+                                            <p>No Document Provided</p>
+                                            @endif
+
+                                            <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">SSC Issued</small>
+                                            <p>{{$trainerData->ssc_issued}}</p>
+                                            <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">SSC Valid</small>
+                                            <p>{{$trainerData->ssc_valid}}</p>
+                                            <hr>
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>

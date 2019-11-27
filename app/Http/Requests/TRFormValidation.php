@@ -33,7 +33,9 @@ class TRFormValidation extends FormRequest
             'name' => 'required',
             /* End TR Basic Details */
 
-            'qualification' => 'required|numeric',
+            'qualification' => 'required',
+            'sector_exp' => 'required|numeric',
+            'teaching_exp' => 'required|numeric',
             'sector' => 'required|numeric',
             'ssc_doc_no' => 'nullable',
             'ssc_start' => 'nullable',

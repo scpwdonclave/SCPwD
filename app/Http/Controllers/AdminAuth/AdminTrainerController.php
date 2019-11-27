@@ -162,6 +162,9 @@ class AdminTrainerController extends Controller
                 $neutral->scpwd_valid=$trainer->scpwd_valid;
                 
                 $neutral->qualification=$trainer->qualification;
+                $neutral->sector_exp=$trainer->sector_exp;
+                $neutral->teaching_exp=$trainer->teaching_exp;
+                
                 $neutral->qualification_doc=$trainer->qualification_doc;
                 $neutral->ssc_no=$trainer->ssc_no;
                 $neutral->ssc_doc=$trainer->ssc_doc;
@@ -376,6 +379,9 @@ class AdminTrainerController extends Controller
         $trainer->ssc_valid=$trainer_status->ssc_valid=$request->ssc_end;
 
         $trainer->qualification=$trainer_status->qualification=$request->qualification;
+        $trainer->sector_exp = $trainer_status->sector_exp = $request->sector_exp;
+        $trainer->teaching_exp = $trainer_status->teaching_exp = $request->teaching_exp;
+
         if ($request->hasFile('qualification_doc')) {
             $trainer_status->qualification_doc = $trainer->qualification_doc = Storage::disk('myDisk')->put('/trainers', $request['qualification_doc']);            
         }

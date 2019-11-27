@@ -112,20 +112,34 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                    <label for="qualification">Qualification</label>
-                                                    <div class="form-group form-float">
-                                                        <select class="form-control show-tick" data-live-search="true" name="qualification" data-show-subtext="true" data-dropup-auto='false'>
-                                                            @foreach (config('constants.qualifications') as $key=>$qualification)
-                                                                <option value="{{$key}}" {{ ( $key ==$trainer->qualification) ? 'selected' : '' }}>{{ $qualification }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+                                                <label for="qualification">Qualification</label>
+                                                <div class="form-group form-float">
+                                                    <select class="form-control show-tick" data-live-search="true" name="qualification" data-show-subtext="true" data-dropup-auto='false'>
+                                                        @foreach (config('constants.qualifications') as $qualification)
+                                                            <option {{ ( $qualification == $trainer->qualification) ? 'selected' : '' }}>{{ $qualification }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
+                                            </div>
                                             <div class="col-sm-4">
                                                 <label for="qualification_doc">Qualification Certificate </label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" >
                                                     <span id="qualification_doc_error"  style="color:red;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="col-sm-4">
+                                                <label for="sector_exp">Sector Experience in Years *</label>
+                                                <div class="form-group form-float">
+                                                    <input type="text" class="form-control" min="0" placeholder="Years" value="{{$trainer->sector_exp}}" name="sector_exp" required> 
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label for="teaching_exp">Teaching Experience in Years *</label>
+                                                <div class="form-group form-float">
+                                                    <input type="text" class="form-control" min="0" placeholder="Years" value="{{$trainer->teaching_exp}}" name="teaching_exp" required> 
                                                 </div>
                                             </div>
                                         </div>

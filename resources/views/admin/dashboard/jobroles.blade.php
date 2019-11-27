@@ -246,7 +246,7 @@
                             <div class="col-sm-3">
                                 <label for="sector_exp">Sector Specific Experience *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="number" min="0" step="1" class="form-control" placeholder="Sector Experience" value="{{ old('sector_exp') }}" name="sector_exp" required>
+                                    <input type="number" min="0" step=".5" class="form-control" placeholder="In Years" value="{{ old('sector_exp') }}" name="sector_exp" required>
                                     @if ($errors->has('sector_exp'))
                                         <span style="color:red">{{$errors->first('sector_exp')}}</span>
                                     @endif
@@ -255,7 +255,7 @@
                             <div class="col-sm-3">
                                 <label for="teaching_exp">Teaching Experience *</label>
                                 <div class="form-group form-float year_picker">
-                                    <input type="number" min="0" step="1" class="form-control" placeholder="Teaching Experience" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
+                                    <input type="number" min="0" step=".5" class="form-control" placeholder="In Years" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
                                     @if ($errors->has('teaching_exp'))
                                         <span style="color:red">{{$errors->first('teaching_exp')}}</span>
                                     @endif
@@ -355,13 +355,13 @@
                                 <div class="col-sm-4">
                                     <label for="sector_exp">Sector Specific Experience *</label>    
                                     <div class="form-group form-float">
-                                        <input type="number" min="0" step="1" class="form-control" placeholder="Enter Sector Experience" name="sector_exp" id="sector_exp" required>
+                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Enter Sector Experience" name="sector_exp" id="sector_exp" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="teaching_exp">Teaching Experience *</label>    
                                     <div class="form-group form-float">
-                                        <input type="number" min="0" step="1" class="form-control" placeholder="Enter Teaching Experience" name="teaching_exp" id="teaching_exp" required>
+                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Enter Teaching Experience" name="teaching_exp" id="teaching_exp" required>
                                     </div>
                                 </div>
                             </div>
