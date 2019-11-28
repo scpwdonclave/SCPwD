@@ -32,6 +32,7 @@
                                     <th>#</th>
                                     <th>Scheme</th>
                                     <th>Year</th>
+                                    <th>Logo</th>
                                     <th>Action</th>
                                     <th>Status</th>
                                 </tr>
@@ -42,6 +43,7 @@
                                 <td>{{$key+1}}</td>
                                 <td>{{$scheme->scheme}}</td>
                                 <td>{{$scheme->year}}</td>
+                                <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
                                 <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
                                 <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                 </tr>
@@ -58,7 +60,7 @@
                     <h2><strong>Add</strong> Scheme</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
@@ -81,6 +83,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="logo">Scheme Logo *</label>
+                                <div class="form-group form-float">
+                                    <input type="file" id="logo" class="form-control" name="logo" required>
+                                    <span id="logo_error"  style="color:red;"></span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row d-flex justify-content-center">
                             <button class="btn btn-round btn-primary" type="submit">ADD</button>
                         </div>
@@ -94,6 +105,13 @@
 @section('page-script')
 
 <script>
+    /* Onload Function */
+    $(() => {
+        filevalidate();
+    });
+    /* End Onload Function */
+
+
     $('form[id^=editform_]').submit(function(e){
         e.preventDefault();
         var data = e.currentTarget.data.value.split(',');
@@ -210,6 +228,29 @@
     });
     /* End Add Finantial Year Items to Scheme Year */
 
+    /* File Type Validation */
+    function filevalidate(){
+            var _URL = window.URL || window.webkitURL;
+            $("[type='file']").change(function(e) {
+            var image, file;
+            for (var i = this.files.length - 1; i >= 0; i--) {
+            if ((file = this.files[i])) {
+                    image = new Image();
+                    var fileType = file["type"];
+                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+                    if ($.inArray(fileType, ValidImageTypes) < 0) {
+                    $("#"+e.currentTarget.id).val('');
+                    
+                    $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg or png Format');
+                    } else {
+                    $("#" + e.currentTarget.id + "_error").text('');
+                    }
+                    image.src = _URL.createObjectURL(file);
+                }
+            }
+            });
+        }
+    /* End File Type Validation */
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

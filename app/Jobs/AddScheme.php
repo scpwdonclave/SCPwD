@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
 use App\Scheme;
+use Storage;
 
 class AddScheme implements ShouldQueue
 {
@@ -33,11 +34,13 @@ class AddScheme implements ShouldQueue
     {
         $request->validate([
             'scheme' => 'required|unique:schemes',
+            'logo' => 'required|mimes:jpeg,jpg,png',
             'year' => 'required',
         ]);
 
         $scheme = new Scheme;
         $scheme->scheme = $request->scheme;
+        $scheme->logo = Storage::disk('myDisk')->put('/adminscheme', $request->logo);
         $scheme->year = $request->year;
         $scheme->save();
 
