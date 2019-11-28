@@ -26,7 +26,7 @@ class TCFormValidation extends FormRequest
         $rules = [
             'spoc_name' => 'required',
             'email' => 'required|email|unique:centers',
-            'mobile' => 'required|regex:/[0-9]{10}/|unique:centers',
+            'mobile' => 'required|numeric|min:10|unique:centers',
 
             /* Address of the Organization */
             'center_name' => 'nullable',

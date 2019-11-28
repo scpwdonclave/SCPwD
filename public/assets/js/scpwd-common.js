@@ -88,23 +88,24 @@ $(function() {
     "mobile",
     function(value, element) {
       // return this.optional(element) || /^[6-9]\d{9}$/.test(value);
-      return this.optional(element) || /^\d*$/.test(value);
+      // return this.optional(element) || /^\d*$/.test(value);
+      return this.optional(element) || /^\d{10,}$/.test(value);
     },
-    "Please enter a valid Contact Number"
+    "Please enter a valid Contact number"
   );
   jQuery.validator.addMethod(
     "aadharvoter",
     function(value, element) {
       return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/.test(value);
     },
-    "Please enter a Valid Aadhaar or Voter Number"
+    "Please enter a valid Aadhaar or Voter number"
   );
   jQuery.validator.addMethod(
     "aadhaar",
     function(value, element) {
       return this.optional(element) || /^\d{12}$/.test(value);
     },
-    "Please enter a valid Aadhaar Number"
+    "Please enter a valid Aadhaar number"
   );
   jQuery.validator.addMethod(
     "time",

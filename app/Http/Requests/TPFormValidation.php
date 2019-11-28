@@ -35,13 +35,13 @@ class TPFormValidation extends FormRequest
             /* CEO/MD/Head of the Organization Details */
             'ceo_name' => 'nullable',
             'ceo_email' => 'nullable|email',
-            'ceo_mobile' => 'nullable|numeric|digits:10',
+            'ceo_mobile' => 'nullable|numeric|min:10',
             /* End CEO/MD/Head of the Organization Details */
             
             /* Authorized Signatory Info */
             'signatory_name' => 'nullable',
             'signatory_email' => 'nullable|email',
-            'signatory_mobile' => 'nullable|numeric|digits:10',
+            'signatory_mobile' => 'nullable|numeric|min:10',
             /* End Authorized Signatory Info */
             
             /* Address of the Organization */
