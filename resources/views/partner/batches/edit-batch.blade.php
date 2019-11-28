@@ -58,7 +58,7 @@ table.dataTable thead th:first-child {
                             <input type="hidden" name="batchid" value="{{$batchData->id}}">
                             <div class="row d-flex justify-content-around">
                                 <div class="col-sm-4">
-                                    <label for="trainer">Trainer *</label>
+                                    <label for="trainer">Trainer <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' onchange="changetrainer()" required>
                                             @foreach ($trainers as $trainer)
@@ -68,13 +68,13 @@ table.dataTable thead th:first-child {
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="batch_end">Batch End Date *</label>
+                                    <label for="batch_end">Batch End Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float batch_end_datepicker">
                                         <input type="text" id="batch_end" class="form-control" placeholder="Batch End Date" onchange="calculate_assessment()" value="{{ $batchData->batch_end }}" name="batch_end" required >
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="assessment">Assessment Date *</label>
+                                    <label for="assessment">Assessment Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float date_picker">
                                         <select id="assessment" class="form-control show-tick" data-live-search="true" name="assessment" data-dropup-auto='false' required>
                                         </select>
@@ -83,7 +83,7 @@ table.dataTable thead th:first-child {
                             </div>
                             <div class="row d-flex justify-content-center">
                                 <div class="col-sm-4" id="trainer_start_div">
-                                    <label for="trainer_start">New Trainer Start Date *</label>
+                                    <label for="trainer_start">New Trainer Start Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float trainer_start_datepicker">
                                         <input type="text" id="trainer_start" class="form-control" placeholder="Trainer Start Date" onchange="calculate_assessment()" name="trainer_start">
                                     </div>

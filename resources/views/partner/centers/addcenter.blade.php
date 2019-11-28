@@ -43,20 +43,20 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="spoc_name">SPOC Name *</label>
+                                                <label for="spoc_name">SPOC Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="SPOC Name" value="{{ old('spoc_name') }}" name="spoc_name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="mobile">SPOC Mobile *</label>
+                                                <label for="mobile">SPOC Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="email">SPOC Email *</label>
+                                                <label for="email">SPOC Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
@@ -86,13 +86,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="center_address">Address of the Training Center *</label>
+                                                <label for="center_address">Address of the Training Center <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Training Center Address" value="{{ old('center_address') }}" name="center_address" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="landmark">Nearby Landmark *</label>
+                                                <label for="landmark">Nearby Landmark <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Landmark" value="{{ old('landmark') }}" name="landmark" required>
                                                 </div>
@@ -100,7 +100,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="addr_proof">Address Proof *</label>
+                                                <label for="addr_proof">Address Proof <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="addr_proof" data-dropup-auto='false' required>
                                                         <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
@@ -114,7 +114,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label>Address Proof Document *</label>
+                                                <label>Address Proof Document <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <div class="row d-flex justify-content-center">
                                                         <span id="addr_doc2" for="addr_doc" style="color:blue;"></span>
@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="state">State/Union Territory - District *</label>
+                                                <label for="state">State/Union Territory - District <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                         @foreach ($states as $state)
@@ -136,7 +136,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-5">
-                                                <label for="parliament">Parliament Constituency *</label>
+                                                <label for="parliament">Parliament Constituency <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" required>
                                                         @foreach ($parliaments as $parliament)
@@ -148,19 +148,19 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="city">City/Town/Village *</label>
+                                                <label for="city">City/Town/Village <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="City/Town/Village" value="{{ old('city') }}" name="city" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="block">Tehsil/Mandal/Block *</label>
+                                                <label for="block">Tehsil/Mandal/Block <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Tehsil/Mandal/Block" value="{{ old('block') }}" name="block" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="pin">PIN code *</label>
+                                                <label for="pin">PIN code <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="PIN Code" value="{{ old('pin') }}" name="pin" required>
                                                 </div>
@@ -188,7 +188,7 @@
                                         <div class="card body field-group" id="form_id_new">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-8">
-                                                    <label for="jobrole[new]">Scheme - Sectors - Job Roles *</label>
+                                                    <label for="jobrole[new]">Scheme - Sectors - Job Roles <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="jobrole_new" class="form-control show-tick" data-live-search="true" name="jobrole[new]" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles as $job)
@@ -200,7 +200,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="target[new]">Target *</label>
+                                                    <label for="target[new]">Target <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="number" id="target_new" min="0" class="form-control" placeholder="Target" name="target[new]" required>
                                                     </div>
@@ -635,7 +635,7 @@
     <div class="card body field-group" id="form_id_{?}">
         <div class="row d-flex justify-content-around">
             <div class="col-sm-8">
-                <label for="jobrole[{?}]">Scheme - Sectors - Job Roles *</label>
+                <label for="jobrole[{?}]">Scheme - Sectors - Job Roles <span style="color:red"> <strong>*</strong></span></label>
                 <div class="form-group form-float">
                     <select id="jobrole_{?}" class="form-control show-tick jobroleclass" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
                         
@@ -643,7 +643,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <label for="target[{?}]">Target *</label>
+                <label for="target[{?}]">Target <span style="color:red"> <strong>*</strong></span></label>
                 <div class="form-group form-float">
                     <input id="target_{?}" type="number" min="0" class="form-control" placeholder="Target" name="target[{?}]" required>
                 </div>

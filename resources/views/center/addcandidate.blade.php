@@ -52,7 +52,7 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhaar/Voter Number *</label>
+                                                <label for="doc_no">Aadhaar/Voter Number <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar No or Voter No" name="doc_no" required>
                                                 </div>
@@ -75,20 +75,20 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="name">Candidate Name *</label>
+                                                <label for="name">Candidate Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Candidate Name" value="{{ old('name') }}" name="name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="contact">Candidate Contact *</label>
+                                                <label for="contact">Candidate Contact <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Candidate Contact" value="{{ old('contact') }}" onchange="checkduplicacy('contact')" name="contact" required>
                                                     <span id="contact_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="email">Candidate Email *</label>
+                                                <label for="email">Candidate Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Candidate Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
@@ -97,7 +97,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="gender">Gender *</label>
+                                                <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                         <option>Male</option>
@@ -107,13 +107,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="mobile">Date of Birth *</label>
+                                                <label for="mobile">Date of Birth <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float date_picker">
                                                     <input type="text" class="form-control" placeholder="Candidate's Date of Birth" name="dob" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="m_status">Marital Status *</label>
+                                                <label for="m_status">Marital Status <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="m_status" data-dropup-auto='false' required>
                                                         <option>Married</option>
@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                <label for="doc_file">Aadhaar / Voter Document *</label>
+                                                <label for="doc_file">Aadhaar / Voter Document <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>
@@ -151,7 +151,7 @@
                                         <div class="card body field-group">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-6">
-                                                    <label for="job">Sector / Job Role / NSQF / QP Code *</label>
+                                                    <label for="job">Sector / Job Role / NSQF / QP Code <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="job" class="form-control show-tick" data-live-search="true" name="job" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($center->center_jobroles as $centerjob)
@@ -163,7 +163,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="d_type">Disability Type *</label>
+                                                    <label for="d_type">Disability Type <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="d_type" class="form-control show-tick" data-live-search="true" name="d_type" data-dropup-auto='false' required>
                                                         </select>
@@ -179,13 +179,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-8">
-                                                    <label for="address">Address *</label>
+                                                    <label for="address">Address <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Candidate's Address" value="{{ old('address') }}" name="address" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="state_district">State District *</label>
+                                                    <label for="state_district">State District <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
                                                             @foreach ($states as $state)
@@ -197,13 +197,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="category">Category *</label>
+                                                    <label for="category">Category <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="eg: SC / ST / OBC" value="{{ old('category') }}" name="category" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="service">Ex Service Employee *</label>
+                                                    <label for="service">Ex Service Employee <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="service" class="form-control show-tick" name="service" data-dropup-auto='false' required>
                                                             <option>No</option>
@@ -212,7 +212,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="education">Education *</label>
+                                                    <label for="education">Education <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="eg: 10 / 12 / Diploma" value="{{ old('education') }}" name="education" required>
                                                     </div>
@@ -220,13 +220,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="g_name">Guardian Name *</label>
+                                                    <label for="g_name">Guardian Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name of the Guardian" value="{{ old('g_name') }}" name="g_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="g_type">Guardian Type *</label>
+                                                    <label for="g_type">Guardian Type <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="g_type" class="form-control show-tick" name="g_type" data-dropup-auto='false' required>
                                                             <option>Father</option>

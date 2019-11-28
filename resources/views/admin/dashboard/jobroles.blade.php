@@ -45,7 +45,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <label for="sector">Sector *</label>
+                                    <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float year_picker">
                                         <input type="text" class="form-control" placeholder="Sector Name" value="{{ old('sector') }}" name="sector" required>
                                         @if ($errors->has('sector'))
@@ -94,7 +94,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label for="expository">Expository *</label>
+                                    <label for="expository">Expository <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float year_picker">
                                         <input type="text" class="form-control" placeholder="Expository Name" value="{{ old('expository') }}" name="expository" required>
                                         @if ($errors->has('expository'))
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="initials">Initial *</label>
+                                    <label for="initials">Initial <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float year_picker">
                                         <input type="text" class="form-control" placeholder="Expository Initial" value="{{ old('initials') }}" name="initials" required>
                                         @if ($errors->has('initials'))
@@ -156,7 +156,7 @@
                         @csrf
                         <div class="row d-flex justify-content-around">
                             <div class="col-sm-3">
-                                <label for="sector_id">Sector *</label>
+                                <label for="sector_id">Sector <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector_id" data-show-subtext="true" data-dropup-auto='true' required>
                                         @foreach ($sectors as $sector)
@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="role_expository">Expository *</label>
+                                <label for="role_expository">Expository <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="role_expository[]" multiple data-show-subtext="true" data-dropup-auto='true' required>
                                         @foreach ($expositories as $expository)
@@ -176,7 +176,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="hours">Total Hours *</label>
+                                <label for="hours">Total Hours <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="1" class="form-control" placeholder="Total Allocated Hours" value="{{ old('hours') }}" name="hours" required>
                                     @if ($errors->has('hours'))
@@ -185,7 +185,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="full_marks">Full Marks *</label>
+                                <label for="full_marks">Full Marks <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="0" step="1" class="form-control" placeholder="Total Marks" value="{{ old('full_marks') }}" name="full_marks" required>
                                     @if ($errors->has('full_marks'))
@@ -196,7 +196,7 @@
                         </div>
                         <div class="row d-flex justify-content-around">
                             <div class="col-sm-3">
-                                <label for="pass_marks">Pass Marks *</label>
+                                <label for="pass_marks">Pass Marks <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="0" step="1" class="form-control" placeholder="Passing Marks" value="{{ old('pass_marks') }}" name="pass_marks" required>
                                     @if ($errors->has('pass_marks'))
@@ -205,7 +205,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="job_role">Job Role *</label>
+                                <label for="job_role">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="Job Role Name" value="{{ old('job_role') }}" name="job_role" required>
                                     @if ($errors->has('job_role'))
@@ -214,7 +214,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="qp_code">QP Code *</label>
+                                <label for="qp_code">QP Code <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="text" class="form-control" placeholder="QP Code" value="{{ old('qp_code') }}" name="qp_code" required>
                                     @if ($errors->has('qp_code'))
@@ -225,7 +225,7 @@
                         </div>
                         <div class="row d-flex justify-content-center">
                             <div class="col-sm-3">
-                                <label for="nsqf_level">NSQF Level *</label>
+                                <label for="nsqf_level">NSQF Level <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" class="form-control" placeholder="NSQF Level" value="{{ old('nsqf_level') }}" name="nsqf_level" required>
                                     @if ($errors->has('nsqf_level'))
@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="qualification">Qualification *</span></label>
+                                <label for="qualification">Qualification <span style="color:red"> <strong>*</strong></span></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="qualification" data-dropup-auto='true' required>
                                         @foreach (config('constants.qualifications') as $qualification)
@@ -244,7 +244,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="sector_exp">Sector Specific Experience *</label>
+                                <label for="sector_exp">Sector Specific Experience <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="0" step=".5" class="form-control" placeholder="In Years" value="{{ old('sector_exp') }}" name="sector_exp" required>
                                     @if ($errors->has('sector_exp'))
@@ -253,7 +253,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="teaching_exp">Teaching Experience *</label>
+                                <label for="teaching_exp">Teaching Experience <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float year_picker">
                                     <input type="number" min="0" step=".5" class="form-control" placeholder="In Years" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
                                     @if ($errors->has('teaching_exp'))
@@ -345,7 +345,7 @@
                             <input type="hidden" name="jobid">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label for="qualification">Qualification *</label>    
+                                    <label for="qualification">Qualification <span style="color:red"> <strong>*</strong></span></label>    
                                     <select class="form-control show-tick form-group" id="qualification" name="qualification" data-live-search="true" required >
                                         @foreach (Config::get('constants.qualifications') as $qualification)
                                             <option>{{$qualification}}</option>
@@ -353,13 +353,13 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="sector_exp">Sector Specific Experience *</label>    
+                                    <label for="sector_exp">Sector Specific Experience <span style="color:red"> <strong>*</strong></span></label>    
                                     <div class="form-group form-float">
                                         <input type="number" min="0" step=".5" class="form-control" placeholder="Enter Sector Experience" name="sector_exp" id="sector_exp" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="teaching_exp">Teaching Experience *</label>    
+                                    <label for="teaching_exp">Teaching Experience <span style="color:red"> <strong>*</strong></span></label>    
                                     <div class="form-group form-float">
                                         <input type="number" min="0" step=".5" class="form-control" placeholder="Enter Teaching Experience" name="teaching_exp" id="teaching_exp" required>
                                     </div>

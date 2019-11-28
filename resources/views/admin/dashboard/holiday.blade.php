@@ -63,7 +63,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="scheme">Holiday Name *</label>
+                                <label for="scheme">Holiday Name <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <input type="text" class="form-control" placeholder="Holiday Name"  name="holiday_name" required>
                                     @if ($errors->has('scheme'))
@@ -75,7 +75,7 @@
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="scheme">Date *</label>
+                                    <label for="scheme">Date <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <i class="zmdi zmdi-calendar"></i>

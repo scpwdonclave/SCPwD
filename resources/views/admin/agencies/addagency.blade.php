@@ -56,20 +56,20 @@
                                                 <div class="panel-body">
                                                     <div class="row d-flex justify-content-around">
                                                         <div class="col-sm-4">
-                                                            <label for="name">SPOC Name *</label>
+                                                            <label for="name">SPOC Name <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <input type="text" class="form-control" placeholder="SPOC Name"  name="name" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="aadhaar">SPOC Aadhaar *</label>
+                                                            <label for="aadhaar">SPOC Aadhaar <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('aadhaar')" placeholder="Enter Aadhaar No" name="aadhaar" required>
                                                                 <span id="aadhaar_error" style="color:red"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <label for="spoc_email">SPOC Email Address *</label>
+                                                            <label for="spoc_email">SPOC Email Address <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
                                                                 <span id="email_error" style="color:red"></span>
@@ -79,14 +79,14 @@
                                                     </div>
                                                     <div class="row d-flex justify-content-around">
                                                         <div class="col-sm-3">
-                                                            <label for="spoc_mobile">SPOC Mobile Number *</label>
+                                                            <label for="spoc_mobile">SPOC Mobile Number <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
                                                                 <span id="mobile_error" style="color:red"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="gender">SPOC Gender *</label>
+                                                            <label for="gender">SPOC Gender <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
                                                                     <option>Male</option>
@@ -96,7 +96,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <label for="designation">SPOC Designation *</label>
+                                                            <label for="designation">SPOC Designation <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
                                                                 <input type="text" class="form-control" placeholder="Designation"  name="designation" required>
                                                             </div>
@@ -121,7 +121,7 @@
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
-                                                    <label for="agency_name">Assessment Agency Name * </label>
+                                                    <label for="agency_name">Assessment Agency Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name of the Agency"  name="agency_name" required>
                                                        
@@ -144,7 +144,7 @@
                                                 </div>
                                             
                                                 <div class="col-sm-3">
-                                                    <label for="org_id">Organization ID / Registration No *</label>
+                                                    <label for="org_id">Organization ID / Registration No <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Organization ID"  name="org_id" required>
                                                     </div>
@@ -153,19 +153,19 @@
 
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="sla_date">SLA Start Date *</label>
+                                                    <label for="sla_date">SLA Start Date <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="SLA Start Date" id="sla_date" name="sla_date" onchange="yearAdd()" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sla_end_date">SLA End Date *</label>
+                                                    <label for="sla_end_date">SLA End Date <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float ">
                                                         <input type="text" class="form-control" placeholder="SLA End Date"  id="sla_end_date" name="sla_end_date" readonly required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sector">Sector *</label>
+                                                    <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="sector[]"  data-dropup-auto='false' multiple required>
                                                             @foreach ($sectors as $sector)
@@ -189,19 +189,19 @@
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="ceo_name">CEO/Head's Name *</label>
+                                                    <label for="ceo_name">CEO/Head's Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name"  name="ceo_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ceo_aadhaar">Aadhaar *</label>
+                                                    <label for="ceo_aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="ceo_aadhaar" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ceo_email">CEO/Head's Email Address *</label>
+                                                    <label for="ceo_email">CEO/Head's Email Address <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="email" class="form-control" placeholder="Email"  name="ceo_email" required>
                                                     </div>
@@ -210,13 +210,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
-                                                    <label for="ceo_mobile">CEO/Head's Mobile Number *</label>
+                                                    <label for="ceo_mobile">CEO/Head's Mobile Number <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Mobile"  name="ceo_mobile" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="ceo_gender">Gender *</label>
+                                                    <label for="ceo_gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="ceo_gender" data-dropup-auto='false' required>
                                                             <option>Male</option>
@@ -226,7 +226,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="ceo_designation">Designation *</label>
+                                                    <label for="ceo_designation">Designation <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Designation"  name="ceo_designation" required>
                                                     </div>
@@ -253,13 +253,13 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <label for="org_address">Address of the Organization *</label>
+                                                    <label for="org_address">Address of the Organization <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Organization Address"  name="org_address" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="post_office">Post Office *</label>
+                                                    <label for="post_office">Post Office <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Post Office"  name="post_office" required>
                                                     </div>
@@ -268,7 +268,7 @@
                                         
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-6">
-                                                    <label for="state_district">State - District *</label>
+                                                    <label for="state_district">State - District <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                             @foreach ($states as $state)
@@ -278,7 +278,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="parliament">Parliament Constituency *</label>
+                                                    <label for="parliament">Parliament Constituency <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" data-dropup-auto='false' required>
                                                             @foreach ($parliaments as $parliament)
@@ -290,19 +290,19 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="city">City/Town/Village *</label>
+                                                    <label for="city">City/Town/Village <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="City/Town/Village"  name="city" required >
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sub_district">Sub-District *</label>
+                                                    <label for="sub_district">Sub-District <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Sub-District"  name="sub_district" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="pin">PIN code *</label>
+                                                    <label for="pin">PIN code <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="PIN Code"  name="pin" required>
                                                     </div>

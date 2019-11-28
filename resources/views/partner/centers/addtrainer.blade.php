@@ -53,7 +53,7 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhaar/Voter Number *</label>
+                                                <label for="doc_no">Aadhaar/Voter Number <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Trainer's Aadhaar No or Voter No" name="doc_no" required>
                                                 </div>
@@ -80,20 +80,20 @@
                                         <br>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="name">Trainer Name *</label>
+                                                <label for="name">Trainer Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Trainer Name" value="{{ old('name') }}" name="name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="mobile">Trainer Mobile *</label>
+                                                <label for="mobile">Trainer Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="email">Trainer Email *</label>
+                                                <label for="email">Trainer Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
@@ -102,7 +102,7 @@
                                         </div>
                                         <div id="doc_file_div" class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                <label for="doc_file">Aadhaar / Voter Document *</label>
+                                                <label for="doc_file">Aadhaar / Voter Document <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>
@@ -127,7 +127,7 @@
                                         <div class="card body field-group" id="form_id">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="sector">Domain/Sector/SSC *</label>
+                                                    <label for="sector">Domain/Sector/SSC <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="sector" class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
@@ -139,14 +139,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="jobrole">Job Roles *</label>
+                                                    <label for="jobrole">Job Roles <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole" onchange="updatequali()" data-dropup-auto='false' required>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="scheme[]">Schemes *</label>
+                                                    <label for="scheme[]">Schemes <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="scheme" class="form-control show-tick" name="scheme[]" multiple data-dropup-auto='false' required>
                                                         </select>
@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification">Relavent Qualification *</label>
+                                                    <label for="qualification">Relavent Qualification <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" onchange="updateminvalues(this.value)" data-dropup-auto='false' required>
                                                         </select>
@@ -176,7 +176,7 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification_doc">Qualification Certificate Upload *</label>
+                                                    <label for="qualification_doc">Qualification Certificate Upload <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" required>
                                                         <span id="qualification_doc_error"  style="color:red;"></span>

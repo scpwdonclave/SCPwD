@@ -64,7 +64,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="scheme">Scheme *</label>
+                                <label for="scheme">Scheme <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <input type="text" class="form-control" placeholder="Scheme Name" value="{{ old('scheme') }}" name="scheme" required>
                                     @if ($errors->has('scheme'))
@@ -76,7 +76,7 @@
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="year">Year *</label>
+                                <label for="year">Year <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="year" class="form-control show-tick" data-live-search="true" name="year" data-dropup-auto='false' required>
                                     </select>
@@ -85,7 +85,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="logo">Scheme Logo *</label>
+                                <label for="logo">Scheme Logo <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <input type="file" id="logo" class="form-control" name="logo" required>
                                     <span id="logo_error"  style="color:red;"></span>

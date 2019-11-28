@@ -72,20 +72,20 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="name">Candidate Name *</label>
+                                                <label for="name">Candidate Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Candidate Name" value="{{ $candidate->name }}" name="name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="contact">Candidate Contact *</label>
+                                                <label for="contact">Candidate Contact <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Candidate Contact" value="{{$candidate->contact}}"  name="contact" required>
                                                     <span id="contact_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="email">Candidate Email *</label>
+                                                <label for="email">Candidate Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Candidate Email" value="{{ $candidate->email }}"  name="email" required>
                                                     <span id="email_error" style="color:red"></span>
@@ -94,7 +94,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="gender">Gender *</label>
+                                                <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                         <option {{($candidate->gender=="Male")?'selected':null}}>Male</option>
@@ -104,13 +104,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="mobile">Date of Birth *</label>
+                                                <label for="mobile">Date of Birth <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float date_picker">
                                                     <input type="text" class="form-control" placeholder="Candidate's Date of Birth" value="{{ $candidate->dob }}" name="dob" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="m_status">Marital Status *</label>
+                                                <label for="m_status">Marital Status <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="m_status" data-dropup-auto='false' required>
                                                         <option {{ ( $candidate->m_status =="Married") ? 'selected' : '' }}>Married</option>
@@ -123,7 +123,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-sm-6">
-                                                {{-- <label for="doc_file">Aadhar / Voter Document *</label>
+                                                {{-- <label for="doc_file">Aadhar / Voter Document <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="file" id="doc_file" class="form-control" name="doc_file" required>
                                                     <span id="doc_file_error"  style="color:red;"></span>
@@ -149,13 +149,13 @@
                                            
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-8">
-                                                    <label for="address">Address *</label>
+                                                    <label for="address">Address <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Candidate's Address" value="{{ $candidate->address }}" name="address" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="state_district">State District *</label>
+                                                    <label for="state_district">State District <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
                                                             @foreach ($states as $state)
@@ -167,13 +167,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="category">Category *</label>
+                                                    <label for="category">Category <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="eg: SC / ST / OBC" value="{{ $candidate->category}}" name="category" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="service">Ex Service Employee *</label>
+                                                    <label for="service">Ex Service Employee <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="service" class="form-control show-tick" name="service" data-dropup-auto='false' required>
                                                             <option {{ ( $candidate->service =="No") ? 'selected' : '' }}>No</option>
@@ -182,7 +182,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="education">Education *</label>
+                                                    <label for="education">Education <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="eg: 10 / 12 / Diploma" value="{{ $candidate->education }}" name="education" required>
                                                     </div>
@@ -190,13 +190,13 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="g_name">Guardian Name *</label>
+                                                    <label for="g_name">Guardian Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name of the Guardian" value="{{ $candidate->g_name  }}" name="g_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="g_type">Guardian Type *</label>
+                                                    <label for="g_type">Guardian Type <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="g_type" class="form-control show-tick" name="g_type" data-dropup-auto='false' required>
                                                             <option {{ ( $candidate->g_type =="Father") ? 'selected' : '' }}>Father</option>

@@ -76,20 +76,20 @@
                                         <br>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label for="name">Trainer Name *</label>
+                                                <label for="name">Trainer Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Trainer Name" value="{{$trainer->name}}" name="name" required> 
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="mobile">Trainer Mobile *</label>
+                                                <label for="mobile">Trainer Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{$trainer->mobile}}" onchange="checkduplicacy('mobile')"  name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
-                                                <label for="email">Trainer Email *</label>
+                                                <label for="email">Trainer Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Trainer Email" value="{{$trainer->email}}" onchange="checkduplicacy('email')" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
@@ -131,13 +131,13 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="sector_exp">Sector Experience in Years *</label>
+                                                <label for="sector_exp">Sector Experience in Years <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" min="0" placeholder="Years" value="{{$trainer->sector_exp}}" name="sector_exp" required> 
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="teaching_exp">Teaching Experience in Years *</label>
+                                                <label for="teaching_exp">Teaching Experience in Years <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" min="0" placeholder="Years" value="{{$trainer->teaching_exp}}" name="teaching_exp" required> 
                                                 </div>

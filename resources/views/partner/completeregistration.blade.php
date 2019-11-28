@@ -57,7 +57,7 @@
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
-                                                    <label for="org_name">Oganization Name *</label>
+                                                    <label for="org_name">Oganization Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Name of the Organization" value="{{ old('org_name') }}" name="org_name" required>
                                                     </div>
@@ -79,7 +79,7 @@
                                                 </div>
                                             
                                                 <div class="col-sm-3">
-                                                    <label for="estab_year">Establishment Year *</label>
+                                                    <label for="estab_year">Establishment Year <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float year_picker">
                                                          <input type="text" class="form-control" placeholder="Year of Establishment" value="{{ old('estab_year') }}" name="estab_year" required>
                                                     </div>
@@ -195,13 +195,13 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <label for="org_address">Address of the Organization *</label>
+                                                    <label for="org_address">Address of the Organization <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Organization Address" value="{{ old('org_address') }}" name="org_address" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="landmark">Nearby Landmark *</label>
+                                                    <label for="landmark">Nearby Landmark <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Landmark" value="{{ old('landmark') }}" name="landmark" required>
                                                     </div>
@@ -209,7 +209,7 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-6">
-                                                    <label for="addr_proof">Address Proof *</label>
+                                                    <label for="addr_proof">Address Proof <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="addr_proof" onchange="checkaddress();" data-show-subtext="true" data-dropup-auto='false' required>
                                                             <option value="Rent/ Lease Agreement">Rent/ Lease Agreement</option>
@@ -222,7 +222,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label>Address Proof Document *</label>
+                                                    <label>Address Proof Document <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="addr_doc" type="file" class="form-control" name="addr_doc" required>
                                                         <span id="addr_doc_error" style="color:red;"></span>                                                            
@@ -231,7 +231,7 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-5">
-                                                    <label for="state">State/Union Territory - District *</label>
+                                                    <label for="state">State/Union Territory - District <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                             @foreach ($states as $state)
@@ -241,7 +241,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-5">
-                                                    <label for="parliament">Parliament Constituency *</label>
+                                                    <label for="parliament">Parliament Constituency <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" required>
                                                             @foreach ($parliaments as $parliament)
@@ -253,19 +253,19 @@
                                             </div>
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="city">City/Town/Village *</label>
+                                                    <label for="city">City/Town/Village <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="City/Town/Village" value="{{ old('city') }}" name="city" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="block">Tehsil/Mandal/Block *</label>
+                                                    <label for="block">Tehsil/Mandal/Block <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Tehsil/Mandal/Block" value="{{ old('block') }}" name="block" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="pin">PIN code *</label>
+                                                    <label for="pin">PIN code <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="PIN Code" value="{{ old('pin') }}" name="pin" required>
                                                     </div>
@@ -323,14 +323,14 @@
                                             </div>
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col-sm-3">
-                                                    <label for="pan">PAN Number *</label>
+                                                    <label for="pan">PAN Number <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('pan')" placeholder="PAN Number" value="{{ old('pan') }}" name="pan" required>
                                                         <span id="pan_error" style="color:red"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="pan_doc">PAN Document *</label>
+                                                    <label for="pan_doc">PAN Document <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="pan_doc" type="file" class="form-control" name="pan_doc" required>
                                                         <span id="pan_doc_error"  style="color:red;"></span>                                                            
@@ -372,19 +372,19 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label for="offer">Offer Letter *</label>
+                                                    <label for="offer">Offer Letter <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Offer Letter Number" value="{{ old('offer') }}" name="offer" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="offer_date">Offer Letter Approval Date *</label>
+                                                    <label for="offer_date">Offer Letter Approval Date <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('offer_date') }}" name="offer_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="offer_doc">Offer Letter File *</label>
+                                                    <label for="offer_doc">Offer Letter File <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="offer_doc" type="file" class="form-control" name="offer_doc" required>
                                                         <span id="offer_doc_error"  style="color:red;"></span>                                                            
@@ -393,19 +393,19 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label for="sanction">Sanction Letter *</label>
+                                                    <label for="sanction">Sanction Letter <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Sanction Letter Number" value="{{ old('sanction') }}" name="sanction" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sanction_date">Sanction Letter Approval Date *</label>
+                                                    <label for="sanction_date">Sanction Letter Approval Date <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Approval Date" value="{{ old('sanction_date') }}" name="sanction_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="sanction_doc">Sanction Letter File *</label>
+                                                    <label for="sanction_doc">Sanction Letter File <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="sanction_doc" type="file" class="form-control" name="sanction_doc" required>
                                                         <span id="sanction_doc_error"  style="color:red;"></span>                                                            

@@ -42,20 +42,20 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="name">Name of the Applicant *</label>
+                                                <label for="name">Name of the Applicant <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Applicant Name" name="name" required>
                                                    
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="birth">Date of Birth *</label>
+                                                <label for="birth">Date of Birth <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float date_picker">
                                                     <input type="text" class="form-control date_datepicker" placeholder="Date of Birth" id="birth" name="birth"  required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="gender">Gender *</label>
+                                                <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                         <option value="Male">Male</option>
@@ -67,7 +67,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="language">Language known *</label>
+                                                <label for="language">Language known <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="language[]" multiple>
                                                         @foreach ($languages as $language)
@@ -141,14 +141,14 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="aadhaar">Aadhaar *</label>
+                                                <label for="aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="aadhaar" onchange="checkduplicacy('aadhaar')" required>
                                                     <span id="aadhaar_error" style="color:red;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label>Aadhaar Document *</label>
+                                                <label>Aadhaar Document <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input id="aadhaar_doc" type="file" class="form-control" name="aadhaar_doc" required>
                                                     <span id="aadhaar_doc_error" style="color:red;"></span>                                                            
@@ -171,7 +171,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="mobile">Mobile Number *</label>
+                                                <label for="mobile">Mobile Number <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
@@ -181,21 +181,21 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="email">Email Address *</label>
+                                                <label for="email">Email Address <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label>Upload Your Photo *</label>
+                                                <label>Upload Your Photo <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input id="photo" type="file" class="form-control" name="photo" required>
                                                     <span id="photo_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="applicant_cat">Select Applicant Category *</label>
+                                                <label for="applicant_cat">Select Applicant Category <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick"  name="applicant_cat" data-dropup-auto='false' >
                                                         <option value="Assessor">Assessor</option>
@@ -219,13 +219,13 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label for="address">Address Line *</label>
+                                                <label for="address">Address Line <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Full Address"  name="address" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="post_office">Post Office *</label>
+                                                <label for="post_office">Post Office <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Post Office"  name="post_office" required>
                                                 </div>
@@ -233,7 +233,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="state_district">State - District *</label>
+                                                <label for="state_district">State - District <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                         @foreach ($states as $state)
@@ -243,13 +243,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="sub_district">Sub-District *</label>
+                                                <label for="sub_district">Sub-District <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Sub-District"  name="sub_district" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="parliament">Parliament Constituency *</label>
+                                                <label for="parliament">Parliament Constituency <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" data-dropup-auto='false' required>
                                                         @foreach ($parliaments as $parliament)
@@ -262,14 +262,14 @@
                                        
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="city">City/Town/Village *</label>
+                                                <label for="city">City/Town/Village <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="City/Town/Village"  name="city" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="col-sm-6">
-                                                <label for="pin">PIN code *</label>
+                                                <label for="pin">PIN code <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="PIN Code"  name="pin" required>
                                                 </div>
@@ -388,7 +388,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="sector">Sector *</label>
+                                                <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="sector"  onchange="fetchJob(this.value)"  data-dropup-auto='false' required >
                                                         <option value="" >Select Sector</option>
@@ -399,7 +399,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="job_role">Job Role *</label>
+                                                <label for="job_role">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="job_role[]" id="job_role" data-dropup-auto='false' multiple >
                                                        

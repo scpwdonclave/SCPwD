@@ -211,7 +211,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="landmark">Nearby Landmark *</label>
+                                                    <label for="landmark">Nearby Landmark <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Landmark" value="{{ $partner->landmark }}" name="landmark">
                                                     </div>

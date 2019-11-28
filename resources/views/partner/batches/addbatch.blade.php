@@ -48,7 +48,7 @@ table.dataTable thead th:first-child {
                             @csrf
                             <div class="row d-flex justify-content-around">
                                 <div class="col-sm-3">
-                                    <label for="scheme">Scheme *</label>
+                                    <label for="scheme">Scheme <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="scheme" class="form-control show-tick" data-live-search="true" name="scheme" onchange="update('job')" data-dropup-auto='false' required>
                                             @foreach ($partner->partner_jobroles->unique("scheme_id") as $scheme)
@@ -60,14 +60,14 @@ table.dataTable thead th:first-child {
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label for="jobrole">Job Role *</label>
+                                    <label for="jobrole">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole" onchange="update('center')" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label for="center">Training Center *</label>
+                                    <label for="center">Training Center <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="center" class="form-control show-tick" data-live-search="true" name="center" onchange="update('table')" data-dropup-auto='false' required>
                                         </select>
@@ -77,20 +77,20 @@ table.dataTable thead th:first-child {
 
                             <div class="row d-flex justify-content-around">
                                 <div class="col-sm-6">
-                                    <label for="trainer">Trainer *</label>
+                                    <label for="trainer">Trainer <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label for="batch_time">Batch Start Time *</label>
+                                    <label for="batch_time">Batch Start Time <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <input type="text" id="batch_time" class="form-control time_picker" name="batch_time" onchange="calculate_enddate()" required>                                        
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label for="batch_hour">Hours Per Day *</label>
+                                    <label for="batch_hour">Hours Per Day <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="batch_hour" class="form-control show-tick" data-live-search="true" onchange="calculate_enddate()" name="batch_hour" data-dropup-auto='false' required>
                                             @foreach (config('constants.hours') as $item)
@@ -103,19 +103,19 @@ table.dataTable thead th:first-child {
                             
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <label for="batch_start">Batch Start Date *</label>
+                                    <label for="batch_start">Batch Start Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float batch_start_datepicker">
                                         <input type="text" id="batch_start" class="form-control" onchange="calculate_enddate()" name="batch_start" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="batch_end">Batch End Date *</label>
+                                    <label for="batch_end">Batch End Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <input type="text" id="batch_end" class="form-control" name="batch_end" readonly required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="assessment">Assessment Date *</label>
+                                    <label for="assessment">Assessment Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float date_picker">
                                         <select id="assessment" class="form-control show-tick" data-live-search="true" name="assessment" data-dropup-auto='false' required>
                                         </select>
