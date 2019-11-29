@@ -8,13 +8,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Mail\TPVerificationMail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Mail;
+use App\Mail\TPMail;
 use App\Notification;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -96,6 +96,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $data['password'] = str_random(8);
+        $data['tag'] = 'tpverifiation'; // * Mailling Tag
 
         $path = Storage::disk('myDisk')->put('/partners', $data['incorp_doc']);
         return Partner::create([
@@ -104,9 +105,10 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'spoc_mobile' => $data['spoc_mobile'],
             'incorp_doc' => $path,
-            'password' => Hash::make($data['password']), 
-            Mail::to($data['email'])->send(new TPVerificationMail($data))
+            'password' => Hash::make($data['password']),
+            Mail::to($data['email'])->send(new TPMail($data))
         ]);
+
     }
 
     /**

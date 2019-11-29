@@ -118,7 +118,7 @@ td p {
                       <td align="center" style="padding:0;Margin:0;padding-top:35px;padding-left:40px;padding-right:40px;"><h3 style="Margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:tahoma, verdana, segoe, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#333333;">Dear {{$name}},</h3></td> 
                      </tr> 
                      <tr style="border-collapse:collapse;"> 
-                      <td align="center" style="padding:0;Margin:0;padding-top:25px;padding-left:40px;padding-right:40px;">{!!$message!!}</td> 
+                      <td align="center" style="padding:0;Margin:0;padding-top:25px;padding-left:40px;padding-right:40px;">{!!$messagedata!!}</td> 
                      </tr> 
                      <tr style="border-collapse:collapse;"> 
                       <td align="center" style="Margin:0;padding-left:10px;padding-right:10px;padding-bottom:20px;padding-top:30px;"><span class="es-button-border" style="border-style:solid;border-color:transparent;background:none 0% 0% repeat scroll #34265F;border-width:0px;display:inline-block;border-radius:5px;width:auto;"><a href="{{$confirmBtnLink}}" class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:18px;color:#FFFFFF;border-style:solid;border-color:#34265F;border-width:10px 20px;display:inline-block;background:none 0% 0% repeat scroll #34265F;border-radius:5px;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center;">{{$confirmBtnText}}</a></span></td> 

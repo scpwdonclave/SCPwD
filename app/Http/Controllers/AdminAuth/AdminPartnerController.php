@@ -6,14 +6,11 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Mail\TPConfirmationMail;
 use App\PartnerJobRoleReason;
-use App\Mail\TPUpdateAccept;
-use App\Mail\TPUpdateReject;
 use Illuminate\Http\Request;
-use App\Mail\TPRejectMail;
 use App\PartnerJobrole;
 use App\CenterJobRole;
+use App\Mail\TPMail;
 use App\Notification;
 use Carbon\Carbon;
 use App\Partner;
@@ -210,6 +207,8 @@ class AdminPartnerController extends Controller
                     $partner->pending_verify=0;
                     $partner->save();
                     $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
+                    $partner['tag'] = 'tpaccept'; // * Mailling Tag
+                    Mail::to($partner->email)->send(new TPMail($partner));
                     alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
 
                 } else {
@@ -266,10 +265,10 @@ class AdminPartnerController extends Controller
                             ]
                         );
                         $data = $partner;
-                        $data['note'] = $request->reason;
+                        $data['reason'] = $request->reason;
                         $partner->delete();
-                        // Mail::to($data->email)->send(new TPRejectMail($data));
-                        
+                        $data['tag'] = 'tpreject'; // * Mailling Tag
+                        Mail::to($data['email'])->send(new TPMail($data));                        
                     });
                     alert()->success("Training Partner Account has been <span style='color:red;'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                 }
