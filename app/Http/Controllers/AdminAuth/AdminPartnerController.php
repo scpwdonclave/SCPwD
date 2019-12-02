@@ -85,6 +85,10 @@ class AdminPartnerController extends Controller
                             $reason->rel_with = 'partner';
                             $reason->reason = $request->reason;
                             $reason->save();
+
+                            $partner['tag'] = 'tpdeactive'; // * Mailling Tag
+                            $partner->reason = $request->reason;
+                            Mail::to($partner->email)->send(new TPMail($partner));
                             $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -92,6 +96,10 @@ class AdminPartnerController extends Controller
                     } else {
                         $partner->status = 1;
                         $partner->save();
+                        
+                        $partner['tag'] = 'tpactive'; // * Mailling Tag
+                        Mail::to($partner->email)->send(new TPMail($partner));
+
                         $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
                     return response()->json($array,200);

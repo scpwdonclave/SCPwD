@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\TCConfirmationMail;
+use App\Mail\TCMail;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Mail\TCRejectMail;
@@ -307,6 +308,11 @@ class AdminCenterController extends Controller
                             $reason->rel_with = 'center';
                             $reason->reason = $request->reason;
                             $reason->save();
+
+                            $center['tag'] = 'tcdeactive'; // * Mailling Tag
+                            $center->reason = $request->reason;
+                            Mail::to($center->email)->cc($center->partner->email)->send(new TCMail($center));
+                            
                             $this->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
@@ -315,6 +321,10 @@ class AdminCenterController extends Controller
                     } else {
                         $center->status = 1;
                         $center->save();
+
+                        $center['tag'] = 'tcactive'; // * Mailling Tag
+                        Mail::to($center->email)->cc($center->partner->email)->send(new TCMail($center));
+
                         $this->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
                         $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
