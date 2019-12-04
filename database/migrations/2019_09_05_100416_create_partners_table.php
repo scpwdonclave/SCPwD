@@ -46,8 +46,8 @@ class CreatePartnersTable extends Migration
             /* End Authorized Signatory Info */
 
             /* Address of the Organization */
-            $table->text('org_address')->default('No Data');
-            $table->text('landmark')->default('No Data');
+            $table->text('org_address');
+            $table->text('landmark');
             $table->string('addr_proof')->default('No Data');
             $table->string('addr_doc')->default('No Data');
             $table->string('city')->default('No Data');
