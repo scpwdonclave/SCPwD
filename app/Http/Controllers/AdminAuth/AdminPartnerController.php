@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\PartnerJobRoleReason;
-use Illuminate\Http\Request;
-use App\PartnerJobrole;
-use App\CenterJobRole;
+use DB;
+use Mail;
+use Crypt;
+use App\Center;
+use App\Reason;
+use App\Scheme;
+use App\Sector;
+use App\Partner;
+use Carbon\Carbon;
 use App\Mail\TPMail;
 use App\Notification;
-use Carbon\Carbon;
-use App\Partner;
-use App\Reason;
-use App\Center;
-use App\Sector;
-use App\Scheme;
-use Crypt;
-use Mail;
-use DB;
+use App\CenterJobRole;
+use App\PartnerJobrole;
+use App\Events\TCMailEvent;
+use App\Events\TPMailEvent;
+use Illuminate\Http\Request;
+use App\PartnerJobRoleReason;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminPartnerController extends Controller
 {
@@ -76,6 +78,8 @@ class AdminPartnerController extends Controller
                 $partner = Partner::find($data[0]);
 
                 if ($partner) {
+                    $dataMail = collect();
+
                     if ($partner->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
                             $partner->status = 0;
@@ -86,9 +90,9 @@ class AdminPartnerController extends Controller
                             $reason->reason = $request->reason;
                             $reason->save();
 
-                            $partner['tag'] = 'tpdeactive'; // * Mailling Tag
-                            $partner->reason = $request->reason;
-                            Mail::to($partner->email)->send(new TPMail($partner));
+                            $dataMail->reason = $request->reason;
+                            $dataMail->tag = 'tpdeactive';
+                            
                             $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -96,12 +100,27 @@ class AdminPartnerController extends Controller
                     } else {
                         $partner->status = 1;
                         $partner->save();
+                        $dataMail->tp_id = $partner->tp_id;
+                        $dataMail->tag = 'tpactive';
                         
-                        $partner['tag'] = 'tpactive'; // * Mailling Tag
-                        Mail::to($partner->email)->send(new TPMail($partner));
-
                         $array = array('type' => 'success', 'message' => "Training Partner Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
+
+                    // * Mail Events
+                    if ($array['type'] == 'success') {
+                        $dataMail->spoc_name = $partner->spoc_name;
+                        $dataMail->email = $partner->email;
+                        event(new TPMailEvent($dataMail));
+                        foreach ($partner->centers as $center) {
+                            if ($center->status) {
+                                $dataMail->spoc_name = $center->spoc_name;
+                                $dataMail->email = $center->email;
+                                event(new TCMailEvent($dataMail));
+                            }
+                        }
+                    }
+                    // * End Mail Events
+
                     return response()->json($array,200);
                 } else {
                     return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account"),400);
@@ -198,6 +217,7 @@ class AdminPartnerController extends Controller
             $data = explode(',',$req);
             $partner = Partner::findOrFail($data[0]);
             if ($partner->pending_verify) {
+                $dataMail = collect();
                 if ($data[1]) {
                     $data=DB::table('partners')->select(DB::raw('SUBSTRING(tp_id,3) as tp_id'))->where("tp_id", "LIKE", "TP%")->get();
                     $year = date('Y');
@@ -215,8 +235,8 @@ class AdminPartnerController extends Controller
                     $partner->pending_verify=0;
                     $partner->save();
                     $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
-                    $partner['tag'] = 'tpaccept'; // * Mailling Tag
-                    Mail::to($partner->email)->send(new TPMail($partner));
+                    $dataMail->tag = 'tpaccept';
+                    $dataMail->tp_id = $new_tpid;
                     alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
 
                 } else {
@@ -272,14 +292,16 @@ class AdminPartnerController extends Controller
                             'updated_at' => Carbon::now()
                             ]
                         );
-                        $data = $partner;
-                        $data['reason'] = $request->reason;
-                        $partner->delete();
-                        $data['tag'] = 'tpreject'; // * Mailling Tag
-                        Mail::to($data['email'])->send(new TPMail($data));                        
+                        $dataMail->tag = 'tpreject';
+                        $dataMail->reason = $request->reason;                      
                     });
                     alert()->success("Training Partner Account has been <span style='color:red;'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                 }
+
+                $dataMail->spoc_name = $partner->spoc_name;
+                $dataMail->email = $partner->email;
+                event(new TPMailEvent($dataMail));
+                
                 return redirect(route('admin.tp.partners'));
             } else {
                 alert()->error("Training Partner Account already been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(3000);

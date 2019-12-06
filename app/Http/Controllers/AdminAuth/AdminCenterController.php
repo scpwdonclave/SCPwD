@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use App\Mail\TCConfirmationMail;
-use App\Mail\TCMail;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
-use App\Mail\TCRejectMail;
-use App\CenterJobRole;
-use App\Notification;
-use App\CenterDoc;
-use App\Candidate;
-use App\Reason;
-use App\Center;
-use Validator;
-use Crypt;
+use DB;
 use Auth;
 use Mail;
-use DB;
+use Crypt;
+use Validator;
+use App\Center;
+use App\Reason;
+use App\Candidate;
+use App\CenterDoc;
+use App\Mail\TCMail;
+use App\Notification;
+use App\CenterJobRole;
+use App\Mail\TCRejectMail;
+use App\Events\TCMailEvent;
+use App\Events\TPMailEvent;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Mail\TCConfirmationMail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 
 class AdminCenterController extends Controller 
@@ -144,6 +146,15 @@ class AdminCenterController extends Controller
          $data->delete();
         return response()->json(['status' => 'done'],200);
     }
+
+
+    public function centerAction(Request $request)
+    {
+        if ($id=$this->decryptThis($request->id)) {
+            
+        }
+    }
+
     
     public function centerEdit($id){
         if ($id = $this->decryptThis($id)) {
@@ -299,6 +310,7 @@ class AdminCenterController extends Controller
                 $center = Center::find($data[0]);
 
                 if ($center) {
+                    $dataMail = collect();
                     if ($center->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
                             $center->status = 0;
@@ -309,9 +321,8 @@ class AdminCenterController extends Controller
                             $reason->reason = $request->reason;
                             $reason->save();
 
-                            $center['tag'] = 'tcdeactive'; // * Mailling Tag
-                            $center->reason = $request->reason;
-                            Mail::to($center->email)->cc($center->partner->email)->send(new TCMail($center));
+                            $dataMail->tag = 'tcdeactive'; // * Mailling Tag
+                            $dataMail->reason = $request->reason; 
                             
                             $this->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
@@ -322,12 +333,28 @@ class AdminCenterController extends Controller
                         $center->status = 1;
                         $center->save();
 
-                        $center['tag'] = 'tcactive'; // * Mailling Tag
-                        Mail::to($center->email)->cc($center->partner->email)->send(new TCMail($center));
+                        $dataMail->tag = 'tcactive'; // * Mailling Tag
 
                         $this->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
                         $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
+
+                    $dataMail->spoc_name = $center->spoc_name;
+                    $dataMail->email = $center->email;
+                    $dataMail->tc_id = $center->tc_id;
+                    if ($center->partner->status) {
+                        event(new TCMailEvent($dataMail));
+                        $dataMail->spoc_name = $center->partner->spoc_name;
+                        $dataMail->email = $center->partner->email;
+                        event(new TPMailEvent($dataMail));
+                    }
+                    // foreach ($partner->centers as $center) {
+                    //     if ($center->status) {
+                    //         $dataMail->spoc_name = $center->spoc_name;
+                    //         $dataMail->email = $center->email;
+                    //         event(new TCMailEvent($dataMail));
+                    //     }
+                        // }
                     return response()->json($array,200);
                 } else {
                     return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Center Account"),400);

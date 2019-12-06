@@ -326,12 +326,11 @@
                     <div class="text-center" >
                         {{-- @can('partner-profile-verified', Auth::shouldUse('partner'))
                         @endcan --}}
-                        @if ($partnerData->pending_verify==1)
+                    @if ($partnerData->pending_verify==1)
                         <button class="btn btn-success" onclick="location.href='{{route('admin.tp.partner.action',Crypt::encrypt($partnerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
                         <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($partnerData->id.','.'0')}}');">Reject</button>
-                        @elseif (!$partnerData->pending_verify && $partnerData->status)
+                    @elseif (!$partnerData->pending_verify && $partnerData->status)
                         <button class="btn" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Edit</button>                         
-                    
                     @endif
                 </div>
                 </div>

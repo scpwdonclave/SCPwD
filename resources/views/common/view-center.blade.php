@@ -4,7 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -299,14 +299,14 @@
                         
                         
                         
-                    </ul>
+                    </ul> 
                     @auth('admin')
                         <div class="text-center" >
                             @if ($centerData->status==0 && $centerData->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.verify',['center_id' => Crypt::encrypt($centerData->id) ])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',Crypt::encrypt($centerData->id))}}';this.disabled = true;">Accept</button>
+                                <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
                             @elseif ( $centerData->verified==1)
-                                <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                         
+                                <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'">Edit</button>                         
                             @endif
                         </div>
                     @endauth 
@@ -404,49 +404,63 @@
 @section('page-script')
 @auth('admin')
     <script>
-        function showPromptMessage() {
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
-                }
-                var id={{$centerData->id}};
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
-            
-                $.ajax({
-                type: "POST",
-                url: "{{route('admin.tc.reject.center')}}",
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Deleted",
-                text: "Record Deleted",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-                
-                window.location="{{route('admin.tc.centers')}}";
-        
-                } 
-                });
-            
+
+        function callajax(dataString){
+            $.ajax({
+                url: "{{ route('admin.tc.center.action') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                    var SuccessResponseText = document.createElement("div");
+                    SuccessResponseText.innerHTML = data['message'];
+                    swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                },
+                error:function(data){
+                    swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
                 }
             });
-                
+        }
+
+        function showPromptMessage(id) {
+
+            // var data = v.split(',');
+            var confirmatonText = document.createElement("div");
+            var _token=$('[name=_token]').val();
+            // var color=''; var text=''; var displayText='';
+            // var partner=data[2];
+            // if (data[1]==1) {
+            color = 'red'; text = 'Rejection'; 
+            displayText='Provide Center Rejection Reason ';
+            confirmatonText="input"
+            // } else {
+            //     color = 'green'; text = 'Activate';
+            //     displayText = "Are you Sure ?";
+            //     confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br> <span style='font-weight:bold; color:blue;'>"+partner+"</span> Partner";
+            // }
+            
+            swal({
+                text: displayText,
+                content: confirmatonText,
+                icon: "info",
+                buttons: true,
+                buttons: {
+                        cancel: "No, Cencel",
+                        confirm: {
+                            text: "Confirm Reject",
+                            closeModal: false
+                        }
+                    },
+                closeModal: false,
+                closeOnEsc: false,
+            }).then(function(val){
+                if (val != null) {
+                    if (val === '') {
+                        swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                    } else {
+                        var dataString = {_token, data:id, reason:val};
+                        callajax(dataString);
+                    }
+                }
             });
         }
     </script>
@@ -503,7 +517,7 @@
         </script>
     @endif
 @endauth
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

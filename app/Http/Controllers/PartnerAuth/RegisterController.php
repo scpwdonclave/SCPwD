@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use App\Partner;
+use Mail;
 use Validator;
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Request;
+use App\Partner;
 use App\Mail\TPMail;
 use App\Notification;
-use Mail;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Events\NewPartnerHasRegisteredEvent;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -95,8 +96,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $data['password'] = str_random(8);
-        $data['tag'] = 'tpverifiation'; // * Mailling Tag
+        $dataMail = collect();
+        $dataMail->password = $data['password'] = str_random(8);
+        $dataMail->spoc_name = $data['spoc_name'];
+        $dataMail->email = $data['email'];
+        $dataMail->tag = 'tpverifiation'; // * Mailling Tag
 
         $path = Storage::disk('myDisk')->put('/partners', $data['incorp_doc']);
         return Partner::create([
@@ -106,7 +110,7 @@ class RegisterController extends Controller
             'spoc_mobile' => $data['spoc_mobile'],
             'incorp_doc' => $path,
             'password' => Hash::make($data['password']),
-            Mail::to($data['email'])->send(new TPMail($data))
+            event(new TPMailEvent($dataMail))
         ]);
 
     }

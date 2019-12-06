@@ -18,6 +18,13 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        \App\Events\TPMailEvent::class => [
+            \App\Listeners\TPMailListener::class
+        ],
+        \App\Events\TCMailEvent::class => [
+            \App\Listeners\TCMailListener::class
+        ],
     ];
 
     /**

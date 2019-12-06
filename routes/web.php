@@ -107,6 +107,3 @@ Route::get('trainer/files/{id}/{action}/{filename}', 'PartnerAuth\FileController
 Route::get('center/files/{action}/{filename}', 'CenterAuth\FileController@centerFiles')->where('action', 'view|download')->name('center.files.center-file');
 Route::get('candidate/files/{action}/{id}/{file}', 'FileController@candidateFiles')->where('action', 'view|download')->where('file', 'doc|cert')->name('center.files.candidate-file');
 Route::get('assessor/files/{id}/{action}/{column}', 'FileController@assessorFiles')->where('action', 'view|download')->name('agency.files.assessor-file');
-
-/* For Testing */
-Route::get('email', 'Controller@mail')->name('email');
