@@ -97,6 +97,13 @@
                         <li class="{{ Request::is('admin/assessor/pending-batch') ? 'active' : null }}"><a href="{{route('admin.as.pending-batch')}}"> Pending Batch</a></li>
                     </ul>
                 </li> 
+                <li class="{{ Request::segment(2) === 'assessment' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Assessment</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.all-assessment')}}">All Assessment</a></li>
+                        <li class="{{ Request::is('admin/assessment/pending-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.pending-assessment')}}">Pending Approval</a></li>
+                    </ul>
+                </li> 
                 @endif
             @endauth
                     
@@ -125,8 +132,31 @@
             @auth('agency')
                 @if (Request::segment(1) === 'agency')
                 <li class="{{ Request::segment(2)==='assessors' ? 'active open' : (Request::is('agency/assessors') ? 'active open' : null) }}"><a href="{{route('agency.assessors')}}"><i class="zmdi zmdi-account-box"></i><span>Assessor</span></a></li>  
+                <li class="{{ Request::segment(2) === 'assessment' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Assessment</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('agency/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('agency.assessment.all-assessment')}}">All assessment</a></li>
+                        <li class="{{ Request::is('agency/assessment/pending-approval') ? 'active' : null }}"><a href="{{route('agency.assessment.pending-approval')}}">Pending Approval</a></li>
+                        {{-- <li class="{{ Request::is('assessor/batches/pending-approval') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">Pending Approval</a></li> --}}
+                        {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
+                    </ul>
+                </li>
                 @endif
             @endauth
+
+            @auth('assessor')
+                @if (Request::segment(1) === 'assessor')
+                <li class="{{ Request::segment(2) === 'batches' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Batches</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('assessor/batches') ? 'active' : null }}"><a href="{{route('assessor.batch')}}"> Assign Batch</a></li>
+                        <li class="{{ Request::is('assessor/batches/assessment') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">All Assessment</a></li>
+                        {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
+                    </ul>
+                </li> 
+                @endif
+            @endauth
+
             @if (Request::segment(1) != 'admin' && Request::segment(1) != 'agency' && Request::segment(1) != 'assessor')
                 <li class="{{ Request::segment(2)==='batches' ? 'active open' : (Request::is('partner/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
             @endif

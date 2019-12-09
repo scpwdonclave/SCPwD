@@ -28,4 +28,13 @@ class Batch extends Model
     public function candidatesmap(){
         return $this->hasMany('App\BatchCandidateMap', 'bt_id');
     }
+    public function batchassessment(){
+        return $this->hasOne('App\BatchAssessment', 'bt_id');
+    } 
+    public function agencybatch(){
+        return $this->hasOne('App\AgencyBatch', 'bt_id');
+    } 
+    public function assessorbatch(){
+        return $this->hasOne('App\AssessorBatch', 'bt_id');
+    } 
 }

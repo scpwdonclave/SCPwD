@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AgencyAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\AgencySector;
 use App\AgencyBatch;
 use App\Notification;

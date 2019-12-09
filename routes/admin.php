@@ -108,3 +108,13 @@ Route::post('assessors/fetch-jobrole', 'AdminAuth\AdminAssessorController@fetchJ
 Route::get('assessor/assessor-edit/{id}', 'AdminAuth\AdminAssessorController@assessorEdit')->name('as.edit.assessor');
 Route::post('assessor/assessor-update', 'AdminAuth\AdminAssessorController@assessorUpdate')->name('as.update.assessor');
 Route::post('assessors/assessor-api', 'AssessorApiController@assessorApi')->name('as.assessor.api'); 
+
+/* Assessment */
+Route::get('assessment/all-assessment', 'AdminAuth\AdminAssessmentController@allAssessment')->name('assessment.all-assessment');
+Route::get('assessment/pending-assessment', 'AdminAuth\AdminAssessmentController@pendingAssessment')->name('assessment.pending-assessment');
+Route::get('assessment/assessment-view/{id}', 'AdminAuth\AdminAssessmentController@viewAssessment')->name('assessment.view');
+Route::get('assessment/assessment-verify/{id}', 'AdminAuth\AdminAssessmentController@assessmentAccept')->name('assessment.verify');
+Route::post('assessment/assessment-reject', 'AdminAuth\AdminAssessmentController@assessmentReject')->name('assessment.reject');
+Route::get('assessment/assessment-certi-release/{id}', 'AdminAuth\AdminAssessmentController@certificateRelease')->name('assessment.certificate.release');
+Route::post('assessment/assessment-release-reject', 'AdminAuth\AdminAssessmentController@assessmentReleaseReject')->name('assessment.release.reject');
+Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAssessmentController@certificatePrint')->name('assessment.certificate.print');

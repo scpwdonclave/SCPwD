@@ -118,6 +118,8 @@ function fetchBatch(sector){
                     data:{_token,sector,aa_id},
                     method:'POST',
                     success: function(data){
+                        //console.table(data.batch);
+                        
                     $('#batch').empty();
 
                     $.each (data.batch, function (index) {

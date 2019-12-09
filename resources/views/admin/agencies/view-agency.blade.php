@@ -289,12 +289,12 @@
 </div>
 
 {{-- =================== --}}
-{{-- <div class="container-fluid">
+<div class="container-fluid">
     <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>Center</strong> Job Target</h2>
+                        <h2><strong>Agency</strong> Assign Batch</h2>
                        
                     </div>
                     <div class="body">
@@ -303,26 +303,38 @@
                                 <thead>
                                         <tr>
                                         <th>#</th>
-                                        <th>Scheme</th>
-                                        <th>Sector</th>
-                                        <th>Job Role</th>
-                                        <th>Target Allocated</th>
-                                        <th>Student Enroll</th>
-                                        <th>Target Achieve</th>
+                                        <th>Batch ID</th>
+                                        <th>Partner ID</th>
+                                        <th>Center ID</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Assessment Date</th>
+                                        <th>Status</th>
+                                        <th>Scheme Status</th>
+                                        <th>View</th>
                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @foreach ($tc_target as $key=>$target)
-                                            
+                                        @foreach ($agency->agencyBatch as $key=>$item) 
+                                        
                                         <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$target->partnerjobrole->scheme->scheme}}</td>
-                                        <td>{{$target->partnerjobrole->sector->sector}}</td>
-                                        <td>{{$target->partnerjobrole->jobrole->job_role}}</td>
-                                        <td>{{$target->target}}</td>
-                                        <td>{{$target->enrolled}}</td>
-                                       <td>0</td>
+                                        <td>{{is_null($item->batch->batch_id)?'NULL':$item->batch->batch_id}}</td>
+                                        <td>{{$item->batch->partner->tp_id}}</td>
+                                        <td>{{$item->batch->center->tc_id}}</td>
+                                        <td>{{$item->batch->batch_start}}</td>
+                                        <td>{{$item->batch->batch_end}}</td>
+                                        <td>{{$item->batch->assessment}}</td>
+                                        @if ($item->batch->verified)
+                                        <td style="color:{{($item->batch->status)?'green':'red'}}">{{($item->batch->status)?'Active':'Inactive'}}</td>
+                                        @else
+                                            <td style="color:red">Not Verified</td>
+                                        @endif
+                                            <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
+                                       
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
+                                                                                                           
                                         </tr>
                                       
                                         @endforeach
@@ -334,7 +346,7 @@
                 </div>
             </div>
         </div>
-</div> --}}
+</div>
 {{-- =================== --}}
 @stop
 @section('page-script')

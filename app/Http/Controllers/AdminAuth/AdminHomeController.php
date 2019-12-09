@@ -13,6 +13,8 @@ use App\Expository;
 use App\Sector;
 use App\Scheme;
 use App\Holiday;
+use Carbon\Carbon;
+use DB;
 
 class AdminHomeController extends Controller
 {
@@ -45,17 +47,96 @@ class AdminHomeController extends Controller
         
         
     ];
+
+    $data = [ 
+        'partners' => Partner::all(),
+        'centers' => Center::all(),
+        'candidates' => Candidate::all(),
+       
+    ];
     $test=json_encode($test);
     $rr=array();
     $rr[0]=$test;
     
-        $data = [ 
-            'partners' => Partner::all(),
-            'centers' => Center::all(),
-            'candidates' => Candidate::all(),
-        ];
+      
 
-        return view('admin.home')->with($data)->with($rr);
+        // $partner_count = Partner::groupBy('created_at')->select('id', DB::raw('count(*) as total'))->get();
+        $fyear =( date('m') > 3) ? date('Y') : (date('Y')-1);
+        $res=$res1=$res2=[];
+       
+        
+       foreach ($data as $key => $query) {
+          
+       
+        
+        // $query = DB::table('partners')
+        //  ->select(\DB::raw('SUBSTRING(tp_id,3,4) as tp_id'))
+        // ->groupBy(DB::raw('MONTH(created_at)'))
+        // ->where(DB::raw('SUBSTRING(tp_id,3,4)'), '=', $fyear)
+        // ->select('created_at', DB::raw('count(*) as total'),DB::raw('MONTHNAME(created_at) as month'))
+        // ->get();
+        $apr=$may=$jun=$jul=$aug=$sep=$oct=$nov=$dec=$jan=$feb=$mar=0;
+        foreach ($query as $value) {
+            if(Carbon::parse($value->created_at)->format('m')>3){
+                $fyr=Carbon::parse($value->created_at)->format('Y');
+            }else{
+                $fyr=(Carbon::parse($value->created_at)->format('Y')-1);
+
+            }
+
+            if($fyear==$fyr){
+                switch (Carbon::parse($value->created_at)->format('m')) {
+                    case 4:
+                        $apr=$apr+1;
+                        break;
+                    case 5:
+                        $may=$may+1;
+                        break;
+                    case 6:
+                        $jun=$jun+1;
+                        break;
+                    case 7:
+                        $jul=$jul+1;
+                        break;
+                    case 8:
+                        $aug=$aug+1;
+                        break;
+                    case 9:
+                        $sep=$sep+1;
+                        break;
+                    case 10:
+                        $oct=$oct+1;
+                        break;
+                    case 11:
+                        $nov=$nov+1;
+                        break;
+                    case 12:
+                        $dec=$dec+1;
+                        break;
+                    case 1:
+                        $jan=$jan+1;
+                        break;
+                    case 2:
+                        $feb=$feb+1;
+                        break;
+                    case 3:
+                        $mar=$mar+1;
+                        break;
+                    }  
+                }
+            }
+            if($key=='partners'){
+                $res=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+            }else if($key=='centers'){
+                $res1=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+
+            }else if($key=='candidates'){
+                $res2=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+
+            }
+        }
+
+        return view('admin.home')->with($data)->with($rr)->with(compact('res','res1','res2'));
     }
     
     public function job_roles(){

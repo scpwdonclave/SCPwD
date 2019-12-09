@@ -12,4 +12,5 @@ class AssessorBatch extends Model
     public function assessor(){
         return $this->belongsTo('App\Assessor', 'as_id');
     }
+    
 }

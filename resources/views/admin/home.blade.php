@@ -11,6 +11,11 @@
         <div class="col-lg-3 col-sm-6">
             <div class="card">
                 <div class="body">
+                    {{-- @foreach ($res as $item)
+
+                        <h1>{{$item}}</h1> 
+                    @endforeach --}}
+                    
                     @php
                         $partnerCount = $partners->count();
                         $activePartner = 0; $inactivePartner = 0;
@@ -290,8 +295,64 @@
 @stop
 @section('page-script')
 
+<script>
+$(function () {
+    new Chart(document.getElementById("line_chart").getContext("2d"), getChartJs('line'));
+       
+});
+
+function getChartJs(type) {
+    var config = null;
+
+    if (type === 'line') {
+        config = {
+            type: 'line',
+            data: {
+                labels: ["April", "May", "June", "July","August","September","October","November","December","January", "February", "March"],
+                datasets: [{
+                    label: "Training partner",
+                    data: <?php echo json_encode($res);?>,
+                    borderColor: 'rgba(0,128,128, 0.2)',
+                    backgroundColor: 'rgba(0,128,128, 0.4)',
+                    pointBorderColor: 'rgba(0,128,128, 0.3)',
+                    pointBackgroundColor: 'rgba(0,128,128, 0.2)',
+                    pointBorderWidth: 1
+                }, {
+                    label: "Training Center",
+                    data: <?php echo json_encode($res1);?>,                    
+                    borderColor: 'rgba(49,79,232, 0.2)',
+                    backgroundColor: 'rgba(49,79,232, 0.4)',
+                    pointBorderColor: 'rgba(49,79,232, 0)',
+                    pointBackgroundColor: 'rgba(49,79,232, 0.9)',
+                    pointBorderWidth: 1
+                }, {
+                    label: "Trainer",
+                    data: <?php echo json_encode($res2);?>,                    
+                    borderColor: 'rgba(126,239,186, 0.2)',
+                    backgroundColor: 'rgba(126,239,186, 0.4)',
+                    pointBorderColor: 'rgba(126,239,186, 0)',
+                    pointBackgroundColor: 'rgba(126,239,186, 0.9)',
+                    pointBorderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: false,
+                
+            }
+        }
+    }
+    
+    
+      
+    return config;
+}
+
+
+</script>
+
 <script src="{{asset('assets/plugins/chartjs/Chart.bundle.js')}}"></script>
-<script src="{{asset('assets/js/pages/charts/chartjs.js')}}"></script>
+{{-- <script src="{{asset('assets/js/pages/charts/chartjs.js')}}"></script> --}}
 
 
 <script src="{{asset('assets/bundles/morrisscripts.bundle.js')}}"></script>
