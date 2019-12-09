@@ -13,7 +13,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="header">
-                            <h2><strong>All</strong> Verified Assessor </h2>
+                            <h2><strong>All</strong> Pending Assessor </h2>
                            
                         </div>
                         <div class="body">
@@ -40,7 +40,7 @@
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
                                               
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>$item->id])}}">View</a></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                                
                                                 {{-- @if($item->status==1)
                                                 <td><button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Deactivate</button></td>

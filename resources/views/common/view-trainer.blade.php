@@ -127,6 +127,7 @@
                                                 <td>{{$trainerJob->partnerjobrole->jobrole->job_role}}</td>
                                                 <td class="text-{{($trainerJob->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($trainerJob->partnerjobrole->status)?'Active':'Inactive'}}</strong></td>
                                             </tr>
+                                          
                                             @endforeach
                                         </tbody>
                                     </table>

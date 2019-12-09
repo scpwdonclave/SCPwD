@@ -91,13 +91,21 @@ Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@insertAgency')
 Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDeactive')->name('aa.agency.deactive');
 Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
 Route::get('agency/agency-view/{id}', 'AdminAuth\AdminAgencyController@agencyView')->name('aa.agency.view');
+Route::get('agency/agency-batch/{id}', 'AdminAuth\AdminAgencyController@agencyBatch')->name('aa.agency.batch');
 Route::get('agency/agency-edit/{id}', 'AdminAuth\AdminAgencyController@agencyEdit')->name('aa.edit.agency');
 Route::post('agency/agency-update', 'AdminAuth\AdminAgencyController@agencyUpdate')->name('aa.update.agency');
+Route::post('agency/agency-batch', 'AdminAuth\AdminAgencyController@agencyFetchBatch')->name('aa.fetch-batch');
+Route::post('agency/agency-batch-insert', 'AdminAuth\AdminAgencyController@agencyBatchInsert')->name('agency.batch-insert');
 Route::post('agency/agency-api', 'AdminAuth\AdminAgencyController@agencyApi')->name('aa.agency.api');
+Route::post('agency/agency-batch-delete', 'AdminAuth\AdminAgencyController@agencyBatchDelete')->name('agency.batch-delete');
 
 /* Assessors */
 Route::get('assessor/assessors', 'AdminAuth\AdminAssessorController@assessor')->name('assessor.assessors');
 Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pendingAssessors')->name('as.pending-assessors');
+Route::get('assessor/pending-batch', 'AdminAuth\AdminAssessorController@pendingBatch')->name('as.pending-batch');
+Route::get('assessor/view-batch/{id}', 'AdminAuth\AdminAssessorController@viewBatch')->name('as.assessor.view-batch');
+Route::post('assessor/reject-batch', 'AdminAuth\AdminAssessorController@rejectBatch')->name('as.reject.batch');
+Route::get('assessor/accept-batch/{id}', 'AdminAuth\AdminAssessorController@acceptBatch')->name('as.accept.batch');
 Route::get('assessor/assessor-view/{id}', 'AdminAuth\AdminAssessorController@assessorView')->name('as.assessor.view');
 Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
 Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');
@@ -107,3 +115,13 @@ Route::post('assessors/fetch-jobrole', 'AdminAuth\AdminAssessorController@fetchJ
 Route::get('assessor/assessor-edit/{id}', 'AdminAuth\AdminAssessorController@assessorEdit')->name('as.edit.assessor');
 Route::post('assessor/assessor-update', 'AdminAuth\AdminAssessorController@assessorUpdate')->name('as.update.assessor');
 Route::post('assessors/assessor-api', 'AssessorApiController@assessorApi')->name('as.assessor.api'); 
+
+/* Assessment */
+Route::get('assessment/all-assessment', 'AdminAuth\AdminAssessmentController@allAssessment')->name('assessment.all-assessment');
+Route::get('assessment/pending-assessment', 'AdminAuth\AdminAssessmentController@pendingAssessment')->name('assessment.pending-assessment');
+Route::get('assessment/assessment-view/{id}', 'AdminAuth\AdminAssessmentController@viewAssessment')->name('assessment.view');
+Route::get('assessment/assessment-verify/{id}', 'AdminAuth\AdminAssessmentController@assessmentAccept')->name('assessment.verify');
+Route::post('assessment/assessment-reject', 'AdminAuth\AdminAssessmentController@assessmentReject')->name('assessment.reject');
+Route::get('assessment/assessment-certi-release/{id}', 'AdminAuth\AdminAssessmentController@certificateRelease')->name('assessment.certificate.release');
+Route::post('assessment/assessment-release-reject', 'AdminAuth\AdminAssessmentController@assessmentReleaseReject')->name('assessment.release.reject');
+Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAssessmentController@certificatePrint')->name('assessment.certificate.print');

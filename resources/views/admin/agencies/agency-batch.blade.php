@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Holidays')
+@section('title', 'Batches')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
@@ -18,33 +18,39 @@
 }
 </style>
 @stop
-@section('parentPageTitle', 'Dashboard')
+@section('parentPageTitle', 'Agency')
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-8">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Holiday</strong> Section</h2>                        
+                    <h2><strong>Batch</strong> Section</h2>                        
                 </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Holiday Name</th>
-                                    <th>Date</th>
+                                   
+                                    <th>Batch ID</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>View</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($holidays as $key=>$holiday)
+                                @foreach ($agency[0]->agencyBatch as $agbatch)
                                 <tr style="height:5px !important">
-                                <td>{{$key+1}}</td>
-                                <td>{{$holiday->holiday_name}}</td>
-                                <td>{{$holiday->holiday_date}}</td>
-                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$holiday->id}});"><i class="zmdi zmdi-delete"></button></td>
+                                
+                                <td>{{$agbatch->batch->batch_id}}</td>
+                                <td>{{$agbatch->batch->batch_start}}</td>
+                                <td>{{$agbatch->batch->batch_end}}</td>
+                                {{-- <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td> --}}
+                                <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($agbatch->batch->id)])}}'"><i class="zmdi zmdi-lamp"></button></td>
+                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$agbatch->id}});"><i class="zmdi zmdi-delete"></button></td>
+                                {{-- <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                          --}}
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -56,32 +62,36 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Add</strong> Holiday</h2>                        
+                    <h2><strong>Add</strong> Batch</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.dashboard.holiday-insert')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.agency.batch-insert')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="scheme">Holiday Name <span style="color:red"> <strong>*</strong></span></label>
+                                <label for="sector">Sector *</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Holiday Name"  name="holiday_name" required>
-                                    @if ($errors->has('scheme'))
-                                        <span style="color:red">{{$errors->first('scheme')}}</span>
-                                    @endif
+                                    <select class="form-control show-tick" data-live-search="true" name="sector" onchange="fetchBatch(this.value)" data-dropup-auto='false' required>
+                                        <option value="">--select--</option>
+                                        @foreach ($agency[0]->agencySector as $item)
+                                       
+                                        <option value="{{$item->sectors->id}}">{{ $item->sectors->sector }}</option>
+                                       
+                                        @endforeach
+                                    </select>
+                                <input type="hidden" name="aa_id" value="{{$agency[0]->id}}">
                                 </div>
                             </div>
                         </div>
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="scheme">Date <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="zmdi zmdi-calendar"></i>
-                                    </span>
-                                    <input type="text" class="form-control datetimepicker" name="holiday_date" id="holiday_date" placeholder="Date of Holiday" required>
-                                </div>
+                                    <label for="batch">Batch *</label>
+                                    <div class="form-group form-float">
+                                        <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
+                                            
+                                        </select>
+                                    </div>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -97,10 +107,40 @@
 @section('page-script')
 
 <script>
+
+function fetchBatch(sector){
+       
+        let _token = $("input[name='_token']").val();
+        let aa_id = $("input[name='aa_id']").val();
+            var sector=sector;
+            $.ajax({
+                    url:"{{route('admin.aa.fetch-batch')}}", 
+                    data:{_token,sector,aa_id},
+                    method:'POST',
+                    success: function(data){
+                        //console.table(data.batch);
+                        
+                    $('#batch').empty();
+
+                    $.each (data.batch, function (index) {
+                    var id=data.batch[index].id;
+                    var batch_id=data.batch[index].batch_id;
+                    if(!data.selbatch.includes(id)){
+                    $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
+
+                    }
+                    });
+                   
+                    $('#batch').selectpicker('refresh');
+
+                        }
+                     });
+                }
+
  function deleteConfirm(id){
     swal({
         title: "Are you sure?",
-        text: "Your Holiday Data will be deleted",
+        text: "Your Batch Data will be deleted",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
@@ -113,23 +153,37 @@
             let _token = $("input[name='_token']").val();
             $.ajax({
                 type: "POST",
-                url: "{{route('admin.dashboard.holiday-delete')}}",
+                url: "{{route('admin.agency.batch-delete')}}",
                 data: {_token,id},
                 success: function(data) {
+                    if(data.status=='done'){
                    swal({
                         title: "Deleted",
-                        text: "Holiday Record Deleted",
+                        text: "Batch Record Deleted",
                         type:"success",
                         showConfirmButton: true
                     },function(isConfirm){
                         if (isConfirm){
-                            window.location="{{route('admin.dashboard.holiday')}}";
+                            window.location="{{route('admin.agency.agencies')}}";
                         }
                     });
+
+                    }else{
+                        swal({
+                        title: "Failed",
+                        text: "Some Assessor Assigned with this Batch",
+                        type:"error",
+                        showConfirmButton: true
+                    },function(isConfirm){
+                        if (isConfirm){
+                            window.location="{{route('admin.agency.agencies')}}";
+                        }
+                    });
+                    }
                 }
             });
         } else {
-            swal("Cancelled", "Your Holiday Data Remain safe", "error");
+            swal("Cancelled", "Your Batch Data Remain safe", "error");
         }
     });
 

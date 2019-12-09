@@ -134,11 +134,19 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
+                                    @if (Request::segment(1)==='agency')
+                                    <th>Category</th>
+                                    <th>Education</th>
+                                    <th>Birth date</th>   
+                                    @else
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Aadhaar/Voter</th>
+                                    @endif
                                     <th>Overall Status</th>
+                                    @if(Request::segment(1) !='agency')
                                     <th>View</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,13 +154,19 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$item->candidate->name}}</td>
-                                    <td>{{$item->candidate->contact}}</td>
-                                    <td>{{$item->candidate->email}}</td>
-                                    <td>{{$item->candidate->doc_no}}</td>
-                                    <td style="color:{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'green':'red'}}">{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'Active':'Inactive'}}</td>
+                                    @if (Request::segment(1)==='agency')
+                                        <td>{{$item->candidate->category}}</td>
+                                        <td>{{$item->candidate->education}}</td>
+                                        <td>{{$item->candidate->dob}}</td>   
+                                    @else
+                                        <td>{{$item->candidate->contact}}</td>
+                                        <td>{{$item->candidate->email}}</td>
+                                        <td>{{$item->candidate->doc_no}}</td>
+                                    @endif
+                                        <td style="color:{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'green':'red'}}">{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'Active':'Inactive'}}</td>
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>                                                                                
-                                    @else
+                                    @elseif(Request::segment(1) !='agency')
                                         <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>
                                     @endif
                                 </tr>

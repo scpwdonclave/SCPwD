@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Candidate;
 use App\Assessor;
+use App\BatchAssessment;
 use Exception;
 use Auth;
 
@@ -34,6 +35,15 @@ class FileController extends Controller
             return abort(404);
         }
     }
+    protected function downloadThisAssessment($id,$column){
+       
+        $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
+        try {
+            return response()->download(storage_path("app/files/{$fileurl->$column}"));
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
 
     protected function viewThis($id, $file){
         $column = ($file === 'doc')?'doc_file':'d_cert';
@@ -47,6 +57,15 @@ class FileController extends Controller
     protected function viewThisAssessor($id,$column){
         //$column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = Candidate::where('id', $id)->select($column)->firstOrFail();
+        try {
+            return response()->file(storage_path("app/files/{$fileurl->$column}"));
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
+    protected function viewThisAssessment($id,$column){
+        //$column = ($file === 'doc')?'doc_file':'d_cert';
+        $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
         try {
             return response()->file(storage_path("app/files/{$fileurl->$column}"));
         } catch (Exception $e) {
@@ -116,9 +135,41 @@ class FileController extends Controller
 
             if (Auth::guard('admin')->check()) {
                 if ($action === 'view') {
-                    return $this->downloadThisAssessor($id,$column);
+                    return $this->viewThisAssessor($id,$column);
                 } elseif ($action === 'download') {
-                    return $this->downloadThis($id,$column);
+                    return $this->downloadThisAssessor($id,$column);
+                }
+            }
+        } else {
+            return abort(401);
+        }
+
+    }
+
+
+    public function assessmentFiles( $id, $action,$column){
+        // dd($action);
+
+        if (Auth::guard('admin')->check() || Auth::guard('agency')->check()) {
+            if (Auth::guard('agency')->check()) {
+                $batch_assessment = BatchAssessment::findOrFail($id);
+                if ($batch_assessment->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisAssessment($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisAssessment($id,$column);
+                    }
+                }
+            }
+           
+
+            if (Auth::guard('admin')->check()) {
+                if ($action === 'view') {
+                    return $this->viewThisAssessment($id,$column);
+                } elseif ($action === 'download') {
+                    return $this->downloadThisAssessment($id,$column);
                 }
             }
         } else {

@@ -45,4 +45,7 @@ class Agency extends Authenticatable
     public function assessors(){
         return $this->hasMany('App\Assessor', 'aa_id');
     }
+    public function agencyBatch(){
+        return $this->hasMany('App\AgencyBatch', 'aa_id');
+    }
 }

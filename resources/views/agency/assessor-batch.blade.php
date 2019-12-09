@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Holidays')
+@section('title', 'Batches')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
@@ -18,33 +18,36 @@
 }
 </style>
 @stop
-@section('parentPageTitle', 'Dashboard')
+@section('parentPageTitle', 'Assessor')
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-8">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Holiday</strong> Section</h2>                        
+                    <h2><strong>Batch</strong> Section</h2>                        
                 </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Holiday Name</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
+                                   
+                                    <th>Batch ID</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($holidays as $key=>$holiday)
+                                @foreach ($assessor->assessorBatch as $asbatch)
                                 <tr style="height:5px !important">
-                                <td>{{$key+1}}</td>
-                                <td>{{$holiday->holiday_name}}</td>
-                                <td>{{$holiday->holiday_date}}</td>
-                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$holiday->id}});"><i class="zmdi zmdi-delete"></button></td>
+                                
+                                <td>{{$asbatch->batch->batch_id}}</td>
+                                <td>{{$asbatch->batch->batch_start}}</td>
+                                <td>{{$asbatch->batch->batch_end}}</td>
+                                <td class="text-{{$asbatch->verified?'success':'danger'}}"><strong>{{$asbatch->verified?'Verified':'Not Verified'}}</strong></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -56,32 +59,36 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Add</strong> Holiday</h2>                        
+                    <h2><strong>Add</strong> Batch</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.dashboard.holiday-insert')}}" method="post">
+                    <form id="form_scheme" action="{{route('agency.assessor.batch-insert')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="scheme">Holiday Name <span style="color:red"> <strong>*</strong></span></label>
+                                <label for="job">Job Role *</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Holiday Name"  name="holiday_name" required>
-                                    @if ($errors->has('scheme'))
-                                        <span style="color:red">{{$errors->first('scheme')}}</span>
-                                    @endif
+                                    <select class="form-control show-tick" data-live-search="true" name="job" onchange="fetchBatch(this.value)" data-dropup-auto='false' required>
+                                        <option value="">--select--</option>
+                                        @foreach ($assessor->assessorJob as $item)
+                                       
+                                        <option value="{{$item->jobRoles->id}}">{{ $item->jobRoles->job_role }}</option>
+                                       
+                                        @endforeach
+                                    </select>
+                                  <input type="hidden" name="as_id" value="{{$assessor->id}}">
                                 </div>
                             </div>
                         </div>
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="scheme">Date <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="zmdi zmdi-calendar"></i>
-                                    </span>
-                                    <input type="text" class="form-control datetimepicker" name="holiday_date" id="holiday_date" placeholder="Date of Holiday" required>
-                                </div>
+                                    <label for="batch">Batch *</label>
+                                    <div class="form-group form-float">
+                                        <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
+                                            
+                                        </select>
+                                    </div>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -97,43 +104,37 @@
 @section('page-script')
 
 <script>
- function deleteConfirm(id){
-    swal({
-        title: "Are you sure?",
-        text: "Your Holiday Data will be deleted",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            let _token = $("input[name='_token']").val();
+
+function fetchBatch(job){
+       
+        let _token = $("input[name='_token']").val();
+        let as_id = $("input[name='as_id']").val();
+            var job=job;
             $.ajax({
-                type: "POST",
-                url: "{{route('admin.dashboard.holiday-delete')}}",
-                data: {_token,id},
-                success: function(data) {
-                   swal({
-                        title: "Deleted",
-                        text: "Holiday Record Deleted",
-                        type:"success",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.dashboard.holiday')}}";
+                    url:"{{route('agency.as.fetch-batch')}}", 
+                    data:{_token,job,as_id},
+                    method:'POST',
+                    success: function(data){
+                        console.log(data);
+                        
+                    $('#batch').empty();
+
+                    $.each (data.batch, function (index) {
+                    var id=data.batch[index].id;
+                    var batch_id=data.batch[index].batch_id;
+                     if(!data.selbatch.includes(id)){
+                    $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
+
                         }
                     });
-                }
-            });
-        } else {
-            swal("Cancelled", "Your Holiday Data Remain safe", "error");
-        }
-    });
+                   
+                    $('#batch').selectpicker('refresh');
 
- }
+                        }
+                     });
+                }
+
+ 
 
 </script>
 

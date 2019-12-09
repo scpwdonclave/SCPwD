@@ -5,14 +5,19 @@ namespace App\Http\Controllers\AgencyAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 use App\AgencySector;
+use App\AgencyBatch;
 use App\Notification;
 use App\Assessor;
 use App\AssessorJobRole;
+use App\AssessorBatch;
 use App\AssessorLanguage;
 use App\Sector;
+use App\Batch;
 use Validator;
 use Auth;
+use Crypt;
 use DB;
 
 class AgencyAssessorController extends Controller
@@ -27,6 +32,22 @@ class AgencyAssessorController extends Controller
         return Auth::guard('agency');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
+    protected function partnerstatus($batch){
+        if ($batch->partner->status && $batch->tpjobrole->status) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function assessor(){
 
         $data=Assessor::all();
@@ -39,7 +60,7 @@ class AgencyAssessorController extends Controller
         $parliaments=DB::table('parliament')->get();
         $languages=DB::table('language')->get();
         $expositories=DB::table('expositories')->get();
-        $sectors=AgencySector::where([['aa_id','=',$this->guard()->user()->id],['status','=',1]])->get();
+        $sectors=AgencySector::where('aa_id',$this->guard()->user()->id)->get();
         $allsector=Sector::all();
         
         return view('agency.addassessor')->with(compact('languages','expositories','sectors','allsector','states','parliaments'));
@@ -146,6 +167,7 @@ class AgencyAssessorController extends Controller
     }
 
     public function assessorView($id){
+        $id=$this->decryptThis($id);
         $assessorData=Assessor::findOrFail($id);
         $assessorState=DB::table('assessors')
         ->join('state_district','assessors.state_district','=','state_district.id')
@@ -155,6 +177,13 @@ class AgencyAssessorController extends Controller
          ->join('language','language.id','=','assessor_languages.language_id')
          ->where('assessor_languages.as_id',$id)->get();
         return view('common.view-assessor')->with(compact('assessorData','language','assessorState'));
+    }
+
+    public function viewBatch($id){
+        if ($id=$this->decryptThis($id)) {
+            $batchData=Batch::findOrFail($id);
+            return view('common.view-batch')->with(compact('batchData'));
+        }
     }
 
     // public function assessorApi(Request $request){
@@ -270,5 +299,47 @@ class AgencyAssessorController extends Controller
         
     //     }
     // }
+
+    public function assessorBatch($id){
+        $id=$this->decryptThis($id);
+        $assessor=Assessor::findOrFail($id);
+        if(!$assessor->status || !$assessor->verified){
+            abort(404);
+        }
+        return view('agency.assessor-batch')->with(compact('assessor'));
+
+
+    }
+
+    public function assessorFetchBatch(Request $request){
+        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        $assessorBatch=AssessorBatch::all();
+
+        $selBatch=array();
+        foreach ($assessorBatch as $value) {
+            array_push($selBatch,$value->batch->id); 
+        }
+
+        $batch=array();
+        foreach ($agencyBatch as  $batches) {
+            $batchind= $batches->batch;
+            if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified && !$batchind->completed && $this->partnerstatus($batchind))
+            array_push($batch,$batchind); 
+        }
+        
+        return response()->json(['batch' => $batch,'selbatch'=>$selBatch],200);
+    }
+
+    public function assessorBatchInsert(Request $request){
+        foreach ($request->batch as $batch) {
+            $agencyBatch=new AssessorBatch;
+            $agencyBatch->as_id=$request->as_id;
+            $agencyBatch->bt_id=$batch;
+            $agencyBatch->save();
+         }
+         alert()->success('Assessor Batch has been Added', 'Job Done')->autoclose(3000);
+         return Redirect()->back();
+
+    }
 
 }

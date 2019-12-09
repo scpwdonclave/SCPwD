@@ -24,4 +24,8 @@ class JobRole extends Model implements Auditable
     public function qualifications(){
         return $this->hasMany('App\JobQualification', 'job_id');
     }
+    
+    public function batches(){
+        return $this->hasMany('App\Batch', 'jobrole_id');
+    }
 }

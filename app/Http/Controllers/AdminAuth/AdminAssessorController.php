@@ -13,6 +13,7 @@ use App\Assessor;
 use App\Notification;
 use App\Reason;
 use App\AssessorLanguage;
+use App\AssessorBatch;
 use App\AssessorJobRole;
 use App\AgencySector;
 use App\Sector;
@@ -33,12 +34,21 @@ class AdminAssessorController extends Controller
         return Auth::guard('admin');
     }
 
+    protected function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
+    }
+
     public function assessor(){
         $data=Assessor::where('verified',1)->get();
         return view('admin.assessors.assessors')->with(compact('data'));
     }
 
     public function assessorView($id){
+        $id=$this->decryptThis($id);
         $assessorData=Assessor::findOrFail($id);
         $assessorState=DB::table('assessors')
         ->join('state_district','assessors.state_district','=','state_district.id')
@@ -53,6 +63,54 @@ class AdminAssessorController extends Controller
     public function pendingAssessors(){
         $data=Assessor::where('verified',0)->get();
         return view('admin.assessors.pending-assessors')->with(compact('data'));
+    }
+
+    public function pendingBatch(){
+        $pending_as_batch=AssessorBatch::where('verified',0)->orderBy('id', 'desc')->get()->unique('as_id');
+
+        return view('admin.assessors.pending-batch')->with(compact('pending_as_batch'));
+    }
+
+    public function viewBatch($id){
+        $id=$this->decryptThis($id);
+        $assessorBatch=AssessorBatch::where('as_id',$id)->where('verified',0)->get();
+        return view('admin.assessors.pending-batch-details')->with(compact('assessorBatch'));
+    }
+
+    public function rejectBatch(Request $request){
+        $data=AssessorBatch::findOrFail($request->id);
+        $data['note'] = $request->note;
+        // Mail::to($data->agency->email)->send(new ASRejectMail($data));
+
+         /* Notification For Agency */
+         $notification = new Notification;
+         $notification->rel_id = $data->assessor->agency->id;
+         $notification->rel_with = 'agency';
+         $notification->title = 'Assessor Batch Rejected';
+         $notification->message = "One of your Batch has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
+         $notification->save();
+         /* End Notification For Agency */
+         $data->delete();
+         return response()->json(['status' => 'done'],200);
+    }
+
+    public function acceptBatch($id){
+        $as_batch_id=$this->decryptThis($id);
+        $assessor_batch=AssessorBatch::findOrFail($as_batch_id);
+        $assessor_batch->verified=1;
+        $assessor_batch->save();
+
+        /* Notification For Agency */
+        $notification = new Notification;
+        $notification->rel_id = $assessor_batch->assessor->agency->id;
+        $notification->rel_with = 'agency';
+        $notification->title = 'Assessor Batch Activated';
+        $notification->message = "Assessor (BATCH ID ".$assessor_batch->batch->batch_id.") has been <span style='color:blue;'>Accepted</span>.";
+        $notification->save();
+        /* End Notification For Agency */
+
+        alert()->success('Assessor Batch has been Activated', 'Job Done')->autoclose(3000);
+        return Redirect()->back();
     }
 
     public function assessorDeactive(Request $request){
@@ -80,11 +138,8 @@ class AdminAssessorController extends Controller
     }
 
     public function assessorActive($id){
-        try {
-            $as_id = Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
-        }
+        
+        $as_id=$this->decryptThis($id);
         $assessor=Assessor::findOrFail($as_id);
         $assessor->status=1;
         $assessor->save();
@@ -103,11 +158,8 @@ class AdminAssessorController extends Controller
     }
 
     public function assessorAccept($id){
-        try {
-            $id = Crypt::decrypt($id); 
-        } catch (DecryptException $e) {
-            abort(404);
-        }
+        
+        $id=$this->decryptThis($id);
         $assessor=Assessor::findOrFail($id);
         if($assessor->verified==1){
             alert()->error("This Assessor already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
@@ -179,12 +231,7 @@ class AdminAssessorController extends Controller
     }
 
     public function assessorEdit($id){
-
-        try {
-            $as_id = Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
-        }
+        $as_id=$this->decryptThis($id);
         $assessor=Assessor::findOrFail($as_id);
         $states=DB::table('state_district')->get();
         $parliaments=DB::table('parliament')->get();

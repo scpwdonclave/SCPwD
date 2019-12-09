@@ -88,7 +88,7 @@
                                                         <div class="col-sm-3">
                                                             <label for="gender">SPOC Gender <span style="color:red"> <strong>*</strong></span></label>
                                                             <div class="form-group form-float">
-                                                                <select class="form-control show-tick" data-live-search="true" name="spoc_gender" data-dropup-auto='false' required>
+                                                                <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                                     <option>Male</option>
                                                                     <option>Female</option>
                                                                     <option>Transgender</option>
