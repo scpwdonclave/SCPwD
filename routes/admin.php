@@ -40,7 +40,7 @@ Route::get('training_centers/pending-centers', 'AdminAuth\AdminCenterController@
 Route::get('training_centers/centers/{id}', 'AdminAuth\AdminCenterController@centerView')->name('tc.center.view');
 // Route::get('training_centers/center-verify/{id}', 'AdminAuth\AdminCenterController@centerAccept')->name('tc.center.verify');
 // Route::post('training_centers/center-reject', 'AdminAuth\AdminCenterController@centerReject')->name('tc.reject.center');
-Route::get('training_centers/center-action', 'AdminAuth\AdminCenterController@centerAction')->name('tc.center.action');
+Route::get('training_centers/center-action/{id}/{action}/{reason?}', 'AdminAuth\AdminCenterController@centerAction')->name('tc.center.action');
 Route::get('training_centers/center-edit/{id}', 'AdminAuth\AdminCenterController@centerEdit')->name('tc.edit.center');
 Route::post('training_centers/center-update', 'AdminAuth\AdminCenterController@centerDetailsUpdate')->name('tc.update.center');
 

@@ -80,78 +80,121 @@ class AdminCenterController extends Controller
         }
         
     }
-    public function centerAccept($id){
-        if ($center_id=$this->decryptThis($id)) {
-            $center=Center::findOrFail($center_id);
-            if($center->verified==1){
-                alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-                return Redirect()->back(); 
-            }
-            $data=DB::table('centers')
-            ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
-            ->where("tc_id", "LIKE", "TC%")->get();
-            $year = date('Y');
-            if (count($data) > 0) {
+    // public function centerAccept($id){
+    //     if ($center_id=$this->decryptThis($id)) {
+    //         $center=Center::findOrFail($center_id);
+    //         if($center->verified==1){
+    //             alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+    //             return Redirect()->back(); 
+    //         }
+    //         $data=DB::table('centers')
+    //         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
+    //         ->where("tc_id", "LIKE", "TC%")->get();
+    //         $year = date('Y');
+    //         if (count($data) > 0) {
     
-                $priceprod = array();
-                    foreach ($data as $key=>$data) {
-                        $priceprod[$key]=$data->tc_id;
-                    }
-                    $lastid= max($priceprod);
+    //             $priceprod = array();
+    //                 foreach ($data as $key=>$data) {
+    //                     $priceprod[$key]=$data->tc_id;
+    //                 }
+    //                 $lastid= max($priceprod);
                    
-                    $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
-                //dd($new_tpid);
-            } else {
-                $new_tcid = 'TC'.$year.'000001';
-            }
-            $center_password = str_random(8);
-            $center->tc_id=$new_tcid;
-            $center->password=Hash::make($center_password);
-            $center->status=1;
-            $center->verified=1;
-            $center->save();
+    //                 $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
+    //             //dd($new_tpid);
+    //         } else {
+    //             $new_tcid = 'TC'.$year.'000001';
+    //         }
+    //         $center_password = str_random(8);
+    //         $center->tc_id=$new_tcid;
+    //         $center->password=Hash::make($center_password);
+    //         $center->status=1;
+    //         $center->verified=1;
+    //         $center->save();
     
-             /* Notification For Partner */
-             $notification = new Notification;
-             $notification->rel_id = $center->tp_id;
-             $notification->rel_with = 'partner';
-             $notification->title = 'TC has been Approved';
-             $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
-             $notification->save();
-             /* End Notification For Partner */
-             $center['password']=$center_password;
-             Mail::to($center['email'])->send(new TCConfirmationMail($center));
+    //          /* Notification For Partner */
+    //          $notification = new Notification;
+    //          $notification->rel_id = $center->tp_id;
+    //          $notification->rel_with = 'partner';
+    //          $notification->title = 'TC has been Approved';
+    //          $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
+    //          $notification->save();
+    //          /* End Notification For Partner */
+    //          $center['password']=$center_password;
+    //          Mail::to($center['email'])->send(new TCConfirmationMail($center));
     
-             alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
-             return redirect()->back();
-        }
-    }
+    //          alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
+    //          return redirect()->back();
+    //     }
+    // }
 
-    public function centerReject(Request $request){
-        $data=Center::findOrFail($request->id);
-        $data['note'] = $request->note;
-        Mail::to($data->email)->send(new TCRejectMail($data));
-         /* Notification For Partner */
-         $notification = new Notification;
-         $notification->rel_id = $data->tp_id;
-         $notification->rel_with = 'partner';
-         $notification->title = 'Training Center Rejected';
-         $notification->message = "Training Center (Spoc Name: <span style='color:blue;'>$data->spoc_name</span>) has been Rejected";
-         $notification->save();
-         /* End Notification For Partner */
+    // public function centerReject(Request $request){
+    //     $data=Center::findOrFail($request->id);
+    //     $data['note'] = $request->note;
+    //     Mail::to($data->email)->send(new TCRejectMail($data));
+    //      /* Notification For Partner */
+    //      $notification = new Notification;
+    //      $notification->rel_id = $data->tp_id;
+    //      $notification->rel_with = 'partner';
+    //      $notification->title = 'Training Center Rejected';
+    //      $notification->message = "Training Center (Spoc Name: <span style='color:blue;'>$data->spoc_name</span>) has been Rejected";
+    //      $notification->save();
+    //      /* End Notification For Partner */
 
-         CenterDoc::where('tc_id',$request->id)->delete();
-         CenterJobRole::where('tc_id',$request->id)->delete();
+    //      CenterDoc::where('tc_id',$request->id)->delete();
+    //      CenterJobRole::where('tc_id',$request->id)->delete();
        
-         $data->delete();
-        return response()->json(['status' => 'done'],200);
-    }
+    //      $data->delete();
+    //     return response()->json(['status' => 'done'],200);
+    // }
 
 
     public function centerAction(Request $request)
     {
         if ($id=$this->decryptThis($request->id)) {
-            
+            $center = Center::findOrFail($id);
+            if ($center->verified) {
+                alert()->info('Training Center Already has been Approved', 'Attention')->autoclose(3000);
+                return redirect()->back();
+            } else {
+                if ($request->action == 'accept') {
+                        $data=DB::table('centers')
+                        ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
+                        ->where("tc_id", "LIKE", "TC%")->get();
+                        $year = date('Y');
+                        if (count($data) > 0) {
+                            $priceprod = array();
+                                foreach ($data as $key=>$data) {
+                                    $priceprod[$key]=$data->tc_id;
+                                }
+                                $lastid= max($priceprod);
+                            
+                                $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
+                        } else {
+                            $new_tcid = 'TC'.$year.'000001';
+                        }
+
+                        $center_password = str_random(8);
+                        $center->tc_id=$new_tcid;
+                        $center->password=Hash::make($center_password);
+                        $center->status= $center->verified = 1;
+                        $center->save();
+
+                        $this->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
+                        alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
+
+                } elseif ($request->action == 'reject' && $request->reason != '') {
+                    $this->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
+                    $center->delete();
+                    CenterDoc::where('tc_id',$request->id)->delete();
+                    CenterJobRole::where('tc_id',$request->id)->delete();
+                    alert()->success('Training Center Request has been Rejeted', 'job Done')->autoclose(3000);
+                    return redirect()->back();
+                } else {
+                    alert()->error('Something went Wrong', 'Try Again')->autoclose(3000);
+                }
+
+                return redirect()->route('admin.tc.centers');
+            }
         }
     }
 

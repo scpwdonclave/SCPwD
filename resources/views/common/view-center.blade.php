@@ -303,8 +303,8 @@
                     @auth('admin')
                         <div class="text-center" >
                             @if ($centerData->status==0 && $centerData->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',Crypt::encrypt($centerData->id))}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
+                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',[Crypt::encrypt($centerData->id),'accept'])}}';this.disabled = true;">Accept</button>
+                                <button class="btn btn-danger" onclick="popupReject('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
                             @elseif ( $centerData->verified==1)
                                 <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'">Edit</button>                         
                             @endif
@@ -405,38 +405,13 @@
 @auth('admin')
     <script>
 
-        function callajax(dataString){
-            $.ajax({
-                url: "{{ route('admin.tc.center.action') }}",
-                method: "POST",
-                data: dataString,
-                success: function(data){
-                    var SuccessResponseText = document.createElement("div");
-                    SuccessResponseText.innerHTML = data['message'];
-                    swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                },
-                error:function(data){
-                    swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
-                }
-            });
-        }
+        function popupReject(id) {
 
-        function showPromptMessage(id) {
-
-            // var data = v.split(',');
             var confirmatonText = document.createElement("div");
             var _token=$('[name=_token]').val();
-            // var color=''; var text=''; var displayText='';
-            // var partner=data[2];
-            // if (data[1]==1) {
             color = 'red'; text = 'Rejection'; 
             displayText='Provide Center Rejection Reason ';
             confirmatonText="input"
-            // } else {
-            //     color = 'green'; text = 'Activate';
-            //     displayText = "Are you Sure ?";
-            //     confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br> <span style='font-weight:bold; color:blue;'>"+partner+"</span> Partner";
-            // }
             
             swal({
                 text: displayText,
@@ -457,8 +432,9 @@
                     if (val === '') {
                         swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
                     } else {
-                        var dataString = {_token, data:id, reason:val};
-                        callajax(dataString);
+                        let url = "{{route('admin.tc.center.action',[':id','reject',':reason'])}}}";
+                        url = url.replace(':id', id); 
+                        location.href = url.replace(':reason', val);
                     }
                 }
             });
@@ -471,47 +447,52 @@
         <script>
             function update(v){
                 dataValues = v.split(',');
+                
                 swal({
-                    title: "Update TC SPOC Details",
-                    text: "Please Provide The Updated Value",
-                    type: "input",
-                    confirmButtonText: 'UPDATE',
-                    cancelButtonText: 'NOT NOW',
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                    inputValue: dataValues[0]
-                }, function (value) {
-                    if (value === false) return false;
-                    if (value === "") {
-                        swal.showInputError("You need to write something!"); return false
-                    }
-                    var id='{{$centerData->id}}';
-                    let _token = $("input[name='_token']").val();
-                    var name = dataValues[1]
-                    $.ajax({
-                    type: "POST",
-                    url: "{{ route('partner.tc.center.update') }}",
-                    data: {_token,id,name,value},
-                    success: function(data) {
-                        swal({
-                            title: data['title'],
-                            text: data['message'],
-                            type: data['type'],
-                            html: true,
-                            showConfirmButton: true
-                        },function(isConfirm){
-                            if (isConfirm){
-                                    setTimeout(function(){location.reload()},150);
-                            } 
-                        });
+                    text: "Update TC SPOC Details",
+                    content: {
+                        element: "input",
+                        attributes: {
+                            value: dataValues[0],
+                            type: "text",
+                        },
                     },
-                    error:function(){
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
+                    icon: "info",
+                    buttons: true,
+                    buttons: {
+                            cancel: "No, Cencel",
+                            confirm: {
+                                text: "Confirm UPDATE",
+                                closeModal: false
+                            }
+                        },
+                    closeModal: false,
+                    closeOnEsc: false,
+                }).then(function(value){
+                    if (value != null) {
+                        if (value === '') {
+                            swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                        } else {
+                            var id='{{$centerData->id}}';
+                            let _token = $("[name='_token']").val();
+                            var name = dataValues[1]
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('partner.tc.center.update') }}",
+                                data: {_token,id,name,value},
+                                success: function(data) {
+                                    var ResponseText = document.createElement("div");
+                                    ResponseText.innerHTML=data['message'];
+                                    swal({title: data['title'], content: ResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                                },
+                                error:function(){
+                                    swal('Oops', 'Something Went Wrong, Try Again Later', 'error').then(function () {
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
                     }
-                    }); 
                 });
             }
         </script>
