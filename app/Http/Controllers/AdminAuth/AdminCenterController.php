@@ -14,6 +14,7 @@ use App\CenterDoc;
 use App\Mail\TCMail;
 use App\Notification;
 use App\CenterJobRole;
+use App\PartnerJobrole;
 use App\Mail\TCRejectMail;
 use App\Events\TCMailEvent;
 use App\Events\TPMailEvent;
@@ -156,6 +157,7 @@ class AdminCenterController extends Controller
                 alert()->info('Training Center Already has been Approved', 'Attention')->autoclose(3000);
                 return redirect()->back();
             } else {
+                $dataMail = collect();
                 if ($request->action == 'accept') {
                         $data=DB::table('centers')
                         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
@@ -181,18 +183,44 @@ class AdminCenterController extends Controller
 
                         $this->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
                         alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
+                
+                        $dataMail->tag = 'tcaccept';
+                        $dataMail->spoc_name = $center->spoc_name;
+                        $dataMail->tp_name = $center->partner->spoc_name;
+                        $dataMail->tc_id = $center->tc_id;
+                        $dataMail->password = $center_password;
+                        $dataMail->email = $center->email;
+                        event(new TCMailEvent($dataMail));
+                        $dataMail->email = $center->partner->email;
+                        event(new TPMailEvent($dataMail));
 
                 } elseif ($request->action == 'reject' && $request->reason != '') {
                     $this->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
-                    $center->delete();
-                    CenterDoc::where('tc_id',$request->id)->delete();
-                    CenterJobRole::where('tc_id',$request->id)->delete();
+                    $spoc_name = $center->partner->spoc_name;
+                    $tc_name = $center->spoc_name;
+                    $email = $center->email;
+                    DB::transaction(function() use ($center,$id){
+                        foreach ($center->center_jobroles as $centerJob) {
+                            $partnerJob = PartnerJobrole::find($centerJob->partnerjobrole->id);
+                            $partnerJob->assigned = $partnerJob->assigned - $centerJob->target;
+                            $partnerJob->save();
+                        }
+                        $center->center_docs()->delete();
+                        $center->center_jobroles()->delete();
+                        $center->delete();
+                    });
                     alert()->success('Training Center Request has been Rejeted', 'job Done')->autoclose(3000);
-                    return redirect()->back();
+                    
+                    $dataMail->tag = 'tcreject';
+                    $dataMail->spoc_name = $spoc_name;
+                    $dataMail->email = $email;
+                    $dataMail->tc_name = $tc_name;
+                    $dataMail->reason = $request->reason;
+                    event(new TPMailEvent($dataMail));
+                
                 } else {
                     alert()->error('Something went Wrong', 'Try Again')->autoclose(3000);
                 }
-
                 return redirect()->route('admin.tc.centers');
             }
         }
@@ -391,13 +419,6 @@ class AdminCenterController extends Controller
                         $dataMail->email = $center->partner->email;
                         event(new TPMailEvent($dataMail));
                     }
-                    // foreach ($partner->centers as $center) {
-                    //     if ($center->status) {
-                    //         $dataMail->spoc_name = $center->spoc_name;
-                    //         $dataMail->email = $center->email;
-                    //         event(new TCMailEvent($dataMail));
-                    //     }
-                        // }
                     return response()->json($array,200);
                 } else {
                     return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Center Account"),400);

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use Illuminate\Support\Facades\Gate;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Auth;
 use Exception;
 use App\Trainer;
-use Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -18,7 +19,7 @@ class FileController extends Controller
 
     protected function downloadThis($file){
         try {
-            return response()->download(storage_path("app/files/partners/{$file}"));
+            return Storage::disk('myDisk')->download("partners/{$file}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -26,22 +27,22 @@ class FileController extends Controller
 
     protected function viewThis($file){
         try {
-            return response()->file(storage_path("app/files/partners/{$file}"));
+            return Storage::disk('myDisk')->response("partners/{$file}");
         } catch (Exception $e) {
             return abort(404);
         }
     }
     protected function downloadThisTrainer($file){
         try {
-            return response()->download(storage_path("app/files/trainers/{$file}"));
+            return Storage::disk('myDisk')->download("trainers/{$file}");
         } catch (Exception $e) {
             return abort(404);
         }
     }
-
+    
     protected function viewThisTrainer($file){
         try {
-            return response()->file(storage_path("app/files/trainers/{$file}"));
+            return Storage::disk('myDisk')->response("trainers/{$file}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -64,7 +65,7 @@ class FileController extends Controller
     {
         if (Auth::guard('admin')->check() || Auth::guard('partner')->check()) {
             try {
-                return response()->download(storage_path("app/Requirements.xlsx"));
+                return Storage::disk('myDisk')->download("Requirements.xlsx");
             } catch (Exception $e) {
                 return abort(404);
             }

@@ -196,14 +196,19 @@
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-4"> 
                                                     <label for="category">Category <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="eg: SC / ST / OBC" value="{{ old('category') }}" name="category" required>
+                                                        <select id="category" class="form-control show-tick" name="category" data-dropup-auto='false' required>
+                                                            <option>SC</option>
+                                                            <option>ST</option>
+                                                            <option>OBC</option>
+                                                            <option>General</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="service">Ex Service Employee <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="service">Ex Serviceman <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="service" class="form-control show-tick" name="service" data-dropup-auto='false' required>
                                                             <option>No</option>
@@ -214,7 +219,11 @@
                                                 <div class="col-sm-4">
                                                     <label for="education">Education <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="eg: 10 / 12 / Diploma" value="{{ old('education') }}" name="education" required>
+                                                        <select class="form-control show-tick form-group" id="education" name="education" data-live-search="true" required >
+                                                            @foreach (Config::get('constants.qualifications') as $qualification)
+                                                                <option>{{$qualification}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>

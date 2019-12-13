@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Exception;
 use Auth;
+use Exception;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -18,7 +19,7 @@ class FileController extends Controller
     public function schemeFiles($logo)
     {
         try {
-            return response()->download(storage_path("app/files/adminscheme/{$logo}"));
+            return Storage::disk('myDisk')->response("adminscheme/{$logo}");
         } catch (Exception $e) {
             return abort(404);
         }

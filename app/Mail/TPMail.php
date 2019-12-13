@@ -81,6 +81,26 @@ class TPMail extends Mailable
                 ];
                 $subject = "Training Partner Account Deactivated | SCPwD";
                 break;
+            case 'tcaccept':
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Training Center Account (ID: <strong><span style='color:#0000CD;'>".$this->data->tc_id."</span></strong>) for <span style='color:#0000CD;'>".$this->data->spoc_name."</span> has been Approved by SCPwD. Please log in to your portal to Manage your Training Centers</p>",
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                $subject = "Training Center Account Request Accepted | SCPwD";
+                break;
+            case 'tcreject':
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->spoc_name,
+                    'messagedata' => "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Training Center Account Request for <span style='color:#0000CD;'>".$this->data->tc_name."</span> has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can start over again whenever you want.</p>",
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                $subject = "Training Center Account Request Rejected | SCPwD";        
+                break;
             case 'tcactive':
                 $dataToSend = [
                     'initial' => 'Important',

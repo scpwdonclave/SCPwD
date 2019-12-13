@@ -114,7 +114,7 @@
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Address Proof Document</small>
                                                 <p>Document &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->addr_doc)])}}" download="{{basename($centerData->addr_doc)}}"><i class="zmdi zmdi-download"></i></a>
+                                                    <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->addr_doc)])}}" download="{{basename($centerData->addr_doc)}}"><i class="zmdi zmdi-download"></i></a>
                                                     </p>
                                                 <hr>
                                         </div>
@@ -162,7 +162,7 @@
                                             <small class="text-muted">Center Front View</small>
                                             @if($centerData->center_front_view !=null)
                                             <p>Center Front Image &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_front_view)])}}" download="{{basename($centerData->center_front_view)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->center_front_view)])}}" download="{{basename($centerData->center_front_view)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif
                                             <hr>
@@ -172,7 +172,7 @@
                                             <small class="text-muted">Center Back View</small>
                                             @if($centerData->center_back_view !=null)
                                             <p>Center Back Image &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_back_view)])}}" download="{{basename($centerData->center_back_view)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->center_back_view)])}}" download="{{basename($centerData->center_back_view)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif    
                                             <hr>
@@ -181,7 +181,7 @@
                                             <small class="text-muted">Center Right View</small>
                                             @if($centerData->center_right_view !=null)
                                             <p>Center Right Image &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_right_view)])}}" download="{{basename($centerData->center_right_view)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->center_right_view)])}}" download="{{basename($centerData->center_right_view)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif
                                             <hr>
@@ -190,7 +190,7 @@
                                         <small class="text-muted">Center Left View</small>
                                         @if($centerData->center_left_view !=null)
                                         <p>Center Left Image&nbsp;&nbsp;
-                                            <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->center_left_view)])}}" download="{{basename($centerData->center_left_view)}}"><i class="zmdi zmdi-download"></i></a>
+                                            <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->center_left_view)])}}" download="{{basename($centerData->center_left_view)}}"><i class="zmdi zmdi-download"></i></a>
                                         </p>
                                         @endif    
                                         <hr>
@@ -203,7 +203,7 @@
                                             <small class="text-muted">Biometric System</small>
                                             @if($centerData->biometric !=null)
                                             <p>Biometric &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->biometric)])}}" download="{{basename($centerData->biometric)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->biometric)])}}" download="{{basename($centerData->biometric)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif    
                                             <hr>
@@ -213,7 +213,7 @@
                                             <small class="text-muted">Drinking Facility</small>
                                             @if($centerData->drinking !=null)
                                             <p>Drinking &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->drinking)])}}" download="{{basename($centerData->drinking)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->drinking)])}}" download="{{basename($centerData->drinking)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif    
                                             <hr>
@@ -222,7 +222,7 @@
                                             <small class="text-muted">Saftey</small>
                                             @if($centerData->safety !=null)
                                             <p>Saftey &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($centerData->safety)])}}" download="{{basename($centerData->safety)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($centerData->safety)])}}" download="{{basename($centerData->safety)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                             @endif    
                                             <hr>
@@ -239,8 +239,8 @@
                                 <div class="row">
                                     @foreach ($centerData->center_docs as $docs)
                                         @if ($docs->room === 'class')
-                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
                                             </div>
                                         @endif
                                     @endforeach
@@ -255,8 +255,8 @@
                                 <div class="row">
                                     @foreach ($centerData->center_docs as $docs)
                                         @if ($docs->room === 'lab')
-                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
                                             </div>
                                         @endif
                                     @endforeach
@@ -271,8 +271,8 @@
                                 <div class="row">
                                     @foreach ($centerData->center_docs as $docs)
                                         @if ($docs->room === 'equip')
-                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
                                             </div>
                                         @endif
                                     @endforeach
@@ -287,8 +287,8 @@
                                 <div class="row">
                                     @foreach ($centerData->center_docs as $docs)
                                         @if ($docs->room === 'wash')
-                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
-                                                <a href="{{route('center.files.center-file',['action'=>'download','filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
+                                            <div class="col-lg-3 col-md-6 col-6"><a href="javascript:void(0);"><img src="{{route('center.files.center-file',['action'=>'view','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" alt="" class="img-fluid img-thumbnail m-t-30"></a>
+                                                <a href="{{route('center.files.center-file',['action'=>'download','id'=>$centerData->id,'filename'=>basename($docs->doc)])}}" download="{{basename($docs->doc)}}">Download</a>
                                             </div>
                                         @endif
                                     @endforeach
@@ -432,7 +432,7 @@
                     if (val === '') {
                         swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
                     } else {
-                        let url = "{{route('admin.tc.center.action',[':id','reject',':reason'])}}}";
+                        let url = "{{route('admin.tc.center.action',[':id','reject',':reason'])}}";
                         url = url.replace(':id', id); 
                         location.href = url.replace(':reason', val);
                     }

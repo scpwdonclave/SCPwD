@@ -300,7 +300,9 @@ class PartnerCenterController extends Controller
         $centers = $this->guard()->user()->centers;
         $candidates = collect();
         foreach ($centers as $center) {
-            $candidates = $center->candidates;
+            foreach ($center->candidates as $candidate) {
+                $candidates->push($candidate);
+            }
         }
         $data = [
             'partner'  => $partner,

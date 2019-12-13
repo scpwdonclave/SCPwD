@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Candidate;
-use App\Assessor;
-use App\BatchAssessment;
-use Exception;
 use Auth;
+use Exception;
+use App\Assessor;
+use App\Candidate;
+use App\BatchAssessment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -21,7 +22,7 @@ class FileController extends Controller
         $column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = Candidate::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->download(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->download("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -30,7 +31,7 @@ class FileController extends Controller
         //$column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = Assessor::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->download(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->download("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -39,7 +40,7 @@ class FileController extends Controller
        
         $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->download(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->download("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -49,7 +50,7 @@ class FileController extends Controller
         $column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = Candidate::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->file(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->response("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -58,7 +59,7 @@ class FileController extends Controller
         //$column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = Candidate::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->file(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->response("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
@@ -67,7 +68,7 @@ class FileController extends Controller
         //$column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
         try {
-            return response()->file(storage_path("app/files/{$fileurl->$column}"));
+            return Storage::disk('myDisk')->response("{$fileurl->$column}");
         } catch (Exception $e) {
             return abort(404);
         }
