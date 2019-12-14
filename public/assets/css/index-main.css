@@ -141,22 +141,25 @@ iframe {
 .txt1 {
   font-family: Poppins-Regular;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 0.5;
   color: #999999;
 }
 
 .txt2 {
   font-family: Poppins-Regular;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.0;
   color: #666666;
 }
 .txt2 i {
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.0;
   color: #666666;
 }
 
+.txt2:focus {
+  color: #666666;
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ login ]*/
@@ -184,7 +187,8 @@ iframe {
 .wrap-login100 {
   width: 960px;
   background: #fff;
-  border-radius: 10px;
+  /* border-radius: 10px; */
+  border-radius: 10px 10px 0 0 ;
   overflow: hidden;
 
   display: -webkit-box;
@@ -196,6 +200,26 @@ iframe {
   justify-content: space-between;
   /* padding: 177px 130px 33px 95px; */
   padding: 40px 90px 20px 75px;
+}
+
+.wrap-login101 {
+  width: 960px;
+  vertical-align: top;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  overflow: visible;
+  position: relative;
+  top: -25px;
+  padding: 10px 90px 0px 75px;
+}
+
+.wrap-login101 p {
+  font-size: 13px;
+  padding-bottom: 10px;
+}
+
+.wrap-login101 p a {
+  color: #57b846;
 }
 
 /*------------------------------------------------------------------
@@ -396,6 +420,9 @@ iframe {
 @media (max-width: 768px) {
   .wrap-login100 {
     padding: 25px 70px 15px 65px;
+  }
+  .wrap-login101 {
+    top: -15px;
   }
 
   .login100-pic {

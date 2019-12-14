@@ -46,7 +46,7 @@
 					<a href="#TermsModal" class="custom-btn txt2" data-toggle="modal" data-target="#TermsModal">Terms & Conditions</a>
 				</div>
 
-				<div class="text-center p-t-25">
+				<div class="text-center p-t-10">
 					<button class="custom-btn txt2" onclick="location.href='{{route('partner.register')}}'">
 						Training Partner Registration
 						<i class="zmdi zmdi-long-arrow-right m-l-5" aria-hidden="true"></i>
@@ -54,6 +54,9 @@
 				</div>
 
 			</div>
+		</div>
+		<div class="wrap-login101">
+			<p>&copy; 2019 Skill Council for Persons with Disability (SCPwD) . All Rights Reserved | Developed &amp; Maintained by <a href="https://onclavesystems.com/" target="blank">Onclave Systems</a></p>
 		</div>
 	</div>
 </div>
