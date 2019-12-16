@@ -182,23 +182,23 @@ class AdminAssessmentController extends Controller
                        
                          if($lastyr == substr($fyear,-2))
                          { 
-                             $new_certi_id =$cert_format.(sprintf("%05d", (int)$lastid +1)).'/'.$fyear;
+                             $new_certi_id =$cert_format.((int)$lastid +1).'/'.$fyear;
                             } else{ 
-                            $new_certi_id = $cert_format.'00001'.'/'.$fyear ;
+                            $new_certi_id = $cert_format.'1'.'/'.$fyear ;
                             }
 
                         }else{
 
-                            $new_certi_id =$cert_format.(sprintf("%05d", (int)$lastid +1));
+                            $new_certi_id =$cert_format.((int)$lastid +1);
 
                         }
                    
                 } else {
                     if($batchAssessment->batch->scheme->fin_yr){
 
-                    $new_certi_id = $cert_format.'00001'.'/'.$fyear;
+                    $new_certi_id = $cert_format.'1'.'/'.$fyear;
                     }else{
-                    $new_certi_id = $cert_format.'00001';
+                    $new_certi_id = $cert_format.'1';
 
                     }
                 }

@@ -7,6 +7,7 @@ use Validator;
 use App\Partner;
 use App\Mail\TPMail;
 use App\Notification;
+use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
