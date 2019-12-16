@@ -210,7 +210,7 @@ iframe {
   overflow: visible;
   position: relative;
   top: -25px;
-  padding: 10px 90px 0px 75px;
+  padding: 10px 90px 0px 75px; 
 }
 
 .wrap-login101 p {
@@ -220,6 +220,10 @@ iframe {
 
 .wrap-login101 p a {
   color: #57b846;
+}
+
+.login-div {
+  display: inline-block;
 }
 
 /*------------------------------------------------------------------

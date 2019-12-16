@@ -2,6 +2,7 @@
 @section('content')
 <div class="limiter">
 	<div class="container-login100">
+		<div class="login-div">
 		<div class="wrap-login100">
 			<div class="login100-pic-mobile">
 				<img src="{{asset('assets/images/scpwd-trans.png')}}" alt="IMG">
@@ -57,6 +58,7 @@
 		</div>
 		<div class="wrap-login101">
 			<p>&copy; 2019 Skill Council for Persons with Disability (SCPwD) . All Rights Reserved | Developed &amp; Maintained by <a href="https://onclavesystems.com/" target="blank">Onclave Systems</a></p>
+		</div>
 		</div>
 	</div>
 </div>
