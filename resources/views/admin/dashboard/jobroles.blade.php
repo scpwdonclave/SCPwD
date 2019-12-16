@@ -283,6 +283,7 @@
                             <tbody>
                                 @php
                                     $item1='';
+                                    $btnData ='';
                                 @endphp
                                 @foreach ($jobroles as $key=>$jobrole)
                                 <tr style="height:5px !important">
