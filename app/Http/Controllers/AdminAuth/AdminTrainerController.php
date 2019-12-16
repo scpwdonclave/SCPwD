@@ -177,7 +177,7 @@ class AdminTrainerController extends Controller
                 $neutral->attached=1;
                 $neutral->save();
             });
-            alert()->success("Trainer has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+            alert()->success("Trainer has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
             return redirect()->back();   
         }
     }
@@ -258,7 +258,7 @@ class AdminTrainerController extends Controller
             $notification->save();
             /* End Notification For Partner */
     
-            alert()->success('Trainer has been Activated', 'Job Done')->autoclose(3000);
+            alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
             return redirect()->back();
         }
     }
@@ -269,7 +269,7 @@ class AdminTrainerController extends Controller
                 $trainer->status=1;
                 $trainer->save();
                 
-                alert()->success('Trainer has been Activated', 'Job Done')->autoclose(3000);
+                alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
                 return Redirect()->back();
             }
         }
@@ -389,7 +389,7 @@ class AdminTrainerController extends Controller
         $trainer->save();
         $trainer_status->save();
 
-        alert()->success('Trainer has been Updated', 'Job Done')->autoclose(3000);
+        alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Updated</span>", 'Job Done')->html()->autoclose(3000);
         return redirect()->back();
        
     }

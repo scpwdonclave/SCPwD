@@ -17,6 +17,8 @@ class CreateSchemesTable extends Migration
             $table->bigIncrements('id');
             $table->string('scheme');
             $table->string('logo');
+            $table->string('cert_format');
+            $table->boolean('fin_yr')->default(0);
             $table->string('year');
             $table->boolean('status')->default(1);
             $table->timestamps();

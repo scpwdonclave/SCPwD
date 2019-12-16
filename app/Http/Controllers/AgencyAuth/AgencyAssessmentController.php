@@ -70,7 +70,7 @@ class AgencyAssessmentController extends Controller
         $notification->save();
         /* End Notification For Admin */
 
-        alert()->success('Assessment has been Approved', 'Job Done')->autoclose(3000);
+        alert()->success("Assessment has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
          return Redirect()->back();
         }else{
             abort(404);

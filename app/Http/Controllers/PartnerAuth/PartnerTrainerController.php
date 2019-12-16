@@ -229,7 +229,7 @@ class PartnerTrainerController extends Controller
 
                 /* Notification For Partner */
                 $notification = new Notification;
-                $notification->rel_id = 1;
+                //$notification->rel_id = 1;
                 $notification->rel_with = 'admin';
                 $notification->title = 'New Trainer Registered';
                 $notification->message = "TP (ID <span style='color:blue;'>$pid</span>) has Registered a <span style='color:blue;'>Trainer</span>. Verification is <span style='color:blue;'>Pending</span>.";

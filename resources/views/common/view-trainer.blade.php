@@ -228,7 +228,7 @@
                                         <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
                                         <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                                     @else
-                                        <button class="btn" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'">Edit</button>
+                                        <button class="btn btn-primary" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                                     @endif
                                 @endif
                             @endif

@@ -166,102 +166,11 @@ function showCancelMessage(f) {
 }
 //======================================
 
-function dlinkTrainerDeactive(f) {
-    swal({
-        title: "Deactivation!",
-        text: "Write Reason for Deactivation:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
-   
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.tr.dlink.trainer.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Trainer Record Deactive",
-        type:"success",
-        
-        showConfirmButton: true
-    },function(isConfirm){
 
-        if (isConfirm){
-       
-        window.location="{{route('admin.tc.trainers')}}";
-
-        } 
-        });
-    
-        }
-    });
-        
-    });
-}
 
 //==============================
 
-function dlink(f) {
-    swal({
-        title: "DeLink!",
-        text: "Write Reason for DeLink:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
-   
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.tr.trainer.dlink')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-            //console.log(data.status);
-            if(data.status=='done'){
-            swal({
-            title: "DeLink",
-            text: "Trainer Record DeLinked",
-            type:"success", 
-            showConfirmButton: true
-            },function(isConfirm){
-                if (isConfirm){location.reload();} 
-             });
-            }else{
-                swal({
-            title: "DeLink Failed",
-            text: "Trainer Record Linked with Some Batch",
-            type:"warning", 
-            showConfirmButton: true
-            },function(isConfirm){
-                if (isConfirm){location.reload();} 
-             });
-            }
-        }
-    });
-    });
-}
+
 
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>

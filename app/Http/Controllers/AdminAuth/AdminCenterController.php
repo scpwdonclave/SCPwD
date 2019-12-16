@@ -180,14 +180,14 @@ class AdminCenterController extends Controller
                         $center->save();
 
                         $this->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
-                        alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
+                        alert()->success('Training Center has been<span style="color:blue;font-weight:bold"> Approved</span>', 'Job Done')->html()->autoclose(3000);
 
                 } elseif ($request->action == 'reject' && $request->reason != '') {
                     $this->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
                     $center->delete();
                     CenterDoc::where('tc_id',$request->id)->delete();
                     CenterJobRole::where('tc_id',$request->id)->delete();
-                    alert()->success('Training Center Request has been Rejeted', 'job Done')->autoclose(3000);
+                    alert()->success('Training Center Request has been <span style="color:red;font-weight:bold"> Rejeted</span>', 'job Done')->html()->autoclose(3000);
                     return redirect()->back();
                 } else {
                     alert()->error('Something went Wrong', 'Try Again')->autoclose(3000);
@@ -339,7 +339,7 @@ class AdminCenterController extends Controller
             /* End Notification For Partner */
 
             $center->save();
-            alert()->success('Center Details Updated', 'Done')->autoclose(2000);
+            alert()->success("Center Details <span style='color:blue;font-weight:bold'>Updated</span>", 'Done')->html()->autoclose(2000);
             return Redirect()->back();
     }
 

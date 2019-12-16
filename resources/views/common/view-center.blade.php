@@ -306,7 +306,7 @@
                                 <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',[Crypt::encrypt($centerData->id),'accept'])}}';this.disabled = true;">Accept</button>
                                 <button class="btn btn-danger" onclick="popupReject('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
                             @elseif ( $centerData->verified==1)
-                                <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'">Edit</button>                         
+                                <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
                             @endif
                         </div>
                     @endauth 

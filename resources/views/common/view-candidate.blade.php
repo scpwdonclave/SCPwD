@@ -200,7 +200,7 @@
                   
                     @if (Request::segment(1)==='admin')
                         <div class="text-center" >
-                            <button class="btn" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
+                            <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
                         </div>
                     @endif
                    
