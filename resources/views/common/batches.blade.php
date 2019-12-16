@@ -17,7 +17,9 @@
                 <div class="header d-flex justify-content-between">
                     <h2><strong>All</strong> Batches</h2>
                     @if (Request::segment(1) === 'partner')
-                        <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.addbatch')}}">Add New Batch</a>                      
+                        @can('partner-has-jobrole', Auth::shouldUse('partner'))
+                            <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.addbatch')}}">Add New Batch</a>                      
+                        @endcan
                     @endif
                 </div>
                 <div class="body">
@@ -75,8 +77,15 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="text-muted">
-                            {!!Config::get('constants.note')!!}
+                        @can('partner-has-jobrole', Auth::shouldUse('partner'))
+                            <div class="text-muted">
+                                {!!Config::get('constants.note')!!}
+                            </div>
+                        @endcan
+                        <div class="text-center">
+                            @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
+                                <h6>You Can Add New Batches Once Admin Assign you Job Roles</h6>
+                            @endcannot
                         </div>
                     </div>
                 </div>

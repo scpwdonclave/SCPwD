@@ -18,6 +18,7 @@ use App\Center;
 use App\Batch;
 use Config;
 use Crypt;
+use Gate;
 use Auth;
 use DB;
 
@@ -155,13 +156,17 @@ class PartnerBatchController extends Controller
     }
     
     public function addbatch(){
+        
+        if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
+            $data = [
+                'partner' => $this->guard()->user(),
+                'holidays' => $this->getHolidays()
+            ];    
+            return view('partner.batches.addbatch')->with($data);
+        } else {   
+            return redirect(route('partner.batches'));
+        }
 
-        $data = [
-            'partner' => $this->guard()->user(),
-            'holidays' => $this->getHolidays()
-        ];
-
-        return view('partner.batches.addbatch')->with($data);
     }
 
     public function addbatch_api(Request $request){
