@@ -29,20 +29,18 @@
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Scheme</th>
-                                    <th>Year</th>
+                                    <th>Certificate Format</th>
                                     <th>Logo</th>
                                     <th>Action</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($schemes as $key=>$scheme)
+                                @foreach ($schemes as $scheme)
                                 <tr style="height:5px !important">
-                                <td>{{$key+1}}</td>
                                 <td>{{$scheme->scheme}}</td>
-                                <td>{{$scheme->year}}</td>
+                                <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.$scheme->year:null)!!}</td>
                                 <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
                                 <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
                                 <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
@@ -78,11 +76,44 @@
                             <div class="col-sm-12">
                                 <label for="year">Year <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
-                                    <select id="year" class="form-control show-tick" data-live-search="true" name="year" data-dropup-auto='false' required>
+                                    <select id="year" class="form-control show-tick" data-live-search="true" name="year" onchange="redesign()" data-dropup-auto='false' required>
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="finyear">Include Finantial Year in Cert. No <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select id="finyear" class="form-control show-tick" data-live-search="true" name="finyear" onchange="redesign()" data-dropup-auto='false' required>
+                                        <option value="1">Include Finantial Year</option>
+                                        <option value="0">Exclude Finantial Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="cert_format">Certificate Number Format <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Certificate Number Format" value="{{ old('cert_format') }}" onkeyup="redesign()" name="cert_format" required>
+                                    @if ($errors->has('cert_format'))
+                                        <span style="color:red">{{$errors->first('cert_format')}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="cert_no_div" style="display:none;">
+                            <div class="col-sm-12">
+                                <label>Certificate Number will look like</label>
+                                <div class="form-group form-float text-center">
+                                    <span id="cert_no" style="color:blue;font-weight:bold;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="logo">Scheme Logo <span style="color:red"> <strong>*</strong></span></label>
@@ -251,6 +282,25 @@
             });
         }
     /* End File Type Validation */
+
+    /* Redesigning Certificate Number Format */
+        function redesign(){
+            let certno = $('[name=cert_format]').val();
+            if (certno != '') {
+                let finyear = $('[name=finyear]').val();
+                if (finyear == '1') {
+                    let year = $('[name=year]').val();
+                    $('#cert_no').html(certno+'/1/'+year.substring(2));
+                } else {
+                    $('#cert_no').html(certno+'/1');
+                }
+                $('#cert_no_div').slideDown();
+            } else {
+                $('#cert_no_div').slideUp();
+                $('#cert_no').html('');
+            }
+        }
+    /* End Redesigning Certificate Number Format */
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
