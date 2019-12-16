@@ -388,7 +388,7 @@ class PartnerBatchController extends Controller
                 $partner = $this->guard()->user();
                 /* For Admin */
                 $notification = new Notification;
-                $notification->rel_id = 1;
+                //$notification->rel_id = 1;
                 $notification->rel_with = 'admin';
                 $notification->title = 'New Batch Registred';
                 $notification->message = "TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.";

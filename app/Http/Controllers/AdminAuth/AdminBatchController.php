@@ -148,7 +148,7 @@ class AdminBatchController extends Controller
                         $notification->save();
                         /* End Notification For Partner */
                 
-                        alert()->success("Batch has been <span style='color:blue;'>Approved</span>", 'Job Done')->html()->autoclose(3000);   
+                        alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);   
                     } else{
                         alert()->error("Either this Trainer is <span style='color:red;'>Pre-Occupied</span> at Provided Time or Candidate associated with This Batch is <span style='color:red;'>Inactive</span>, Cannot Proceed!", 'Attention')->html()->autoclose(6000);
                     }
@@ -168,7 +168,7 @@ class AdminBatchController extends Controller
                         
                         BatchCandidateMap::where('bt_id',$id)->delete();
                         $data->delete();
-                        alert()->success("Batch has been <span style='color:blue;'>Rejected</span>", 'Job Done')->html()->autoclose(3000);         
+                        alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(3000);         
                     } else {
                         alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
                     }
@@ -221,7 +221,7 @@ class AdminBatchController extends Controller
                         $batchupdate->save();
                     });
     
-                    alert()->success('Batch Update Request has been <span style="color:blue">Approved</span> Successfully', 'Job Done')->html()->autoclose(3000);
+                    alert()->success('Batch Update Request has been <span style="color:blue;font-weight:bold">Approved</span> Successfully', 'Job Done')->html()->autoclose(3000);
                 
                 } elseif ($request->action === 'reject') {
                     
@@ -234,7 +234,7 @@ class AdminBatchController extends Controller
                         $batchupdate['note'] = $request->reason;
                         Mail::to($batchupdate->partner->email)->send(new BTRejectMail($batchupdate));
 
-                        alert()->success('Batch Update Request has been <span style="color:red">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
+                        alert()->success('Batch Update Request has been <span style="color:red;font-weight:bold">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
                     } else {
                         alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
                     }                    

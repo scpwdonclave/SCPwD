@@ -279,7 +279,7 @@
                     </ul>
                     
                         <div class="text-center" >
-                                <button class="btn" onclick="location.href='{{route('admin.aa.edit.agency',['aa_id' => Crypt::encrypt($agency->id) ])}}'">Edit</button>                         
+                                <button class="btn btn-primary" onclick="location.href='{{route('admin.aa.edit.agency',['aa_id' => Crypt::encrypt($agency->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
                         </div>
                     
                 </div>

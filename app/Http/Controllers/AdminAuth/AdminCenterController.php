@@ -365,7 +365,7 @@ class AdminCenterController extends Controller
             /* End Notification For Partner */
 
             $center->save();
-            alert()->success('Center Details Updated', 'Done')->autoclose(2000);
+            alert()->success("Center Details <span style='color:blue;font-weight:bold'>Updated</span>", 'Done')->html()->autoclose(2000);
             return Redirect()->back();
     }
 

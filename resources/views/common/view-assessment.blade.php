@@ -118,7 +118,7 @@
                             @if (Request::segment(1)==='assessor')
                                
                                     @if ($batchAssessment->aa_verified==2 || $batchAssessment->admin_verified==2 || $batchAssessment->sup_admin_verified==2)
-                                        <button class="btn btn-grey" onclick="location.href='{{route('assessor.assessment.edit',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Edit</button>
+                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                                         {{-- <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button> --}}
                                     {{-- @elseif ( $batchAssessment->verified==1)
                                         <button class="btn" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($batchAssessment->id) ])}}'">Edit</button>                          --}}

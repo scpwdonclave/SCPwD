@@ -134,8 +134,8 @@ class AssessorBatchController extends Controller
                 /* Notification For Admin */
                 $notification = new Notification;
                 if($batchAssessment->sup_admin_verified==2){
-                    
-                    $notification->rel_id =2;
+                    $supadmin_id=DB::table('admins')->where('supadmin','=',1)->first();
+                    $notification->rel_id =$supadmin_id->id;
                 }
                 $notification->rel_with = 'admin';
                 $notification->title = 'Assessment Review & Submit';
@@ -153,7 +153,7 @@ class AssessorBatchController extends Controller
         $id= $this->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
        
-        return view('common.view-assessment')->with(compact('batchAssessment','cc'));
+        return view('common.view-assessment')->with(compact('batchAssessment'));
     }
 
     public function editAssessment($id){

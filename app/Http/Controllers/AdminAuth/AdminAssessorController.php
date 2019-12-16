@@ -215,14 +215,14 @@ class AdminAssessorController extends Controller
         $data=Assessor::findOrFail($request->id);
         $data['note'] = $request->note;
          Mail::to($data->agency->email)->send(new ASRejectMail($data));
-         /* Notification For Partner */
+         /* Notification For Agency */
          $notification = new Notification;
          $notification->rel_id = $data->aa_id;
          $notification->rel_with = 'agency';
          $notification->title = 'Assessor Rejected';
          $notification->message = "One of your Assessor has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
          $notification->save();
-         /* End Notification For Partner */
+         /* End Notification For Agency */
          AssessorLanguage::where('as_id',$request->id)->delete();
          AssessorJobRole::where('as_id',$request->id)->delete();
          
@@ -237,7 +237,7 @@ class AdminAssessorController extends Controller
         $parliaments=DB::table('parliament')->get();
         $expositories=DB::table('expositories')->get();
         $languages=DB::table('language')->get();
-        $sectors=AgencySector::where([['aa_id','=',$assessor->aa_id],['status','=',1]])->get();
+        $sectors=AgencySector::where('aa_id',$assessor->aa_id)->get();
         $allsector=Sector::all();
         $selJob=array();
         foreach ($assessor->assessorJob as $item){
@@ -253,7 +253,7 @@ class AdminAssessorController extends Controller
            array_push($selLang,$item->language_id); 
         
         }
-       
+      
 
         return view('admin.assessors.assessor-edit')->with(compact('assessor','languages','selLang','states','parliaments','expositories','sectors','allsector','selJob'));
     }

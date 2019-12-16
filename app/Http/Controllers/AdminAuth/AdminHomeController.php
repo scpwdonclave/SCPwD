@@ -70,12 +70,19 @@ class AdminHomeController extends Controller
     
       
 
-        // $partner_count = Partner::groupBy('created_at')->select('id', DB::raw('count(*) as total'))->get();
+            $chart = [ 
+                'partners' => Partner::where('pending_verify',0)->get(),
+                'centers' => Center::where('verified',1)->get(),
+                'candidates' => Candidate::all(),
+            
+            ];
         $fyear =( date('m') > 3) ? date('Y') : (date('Y')-1);
+        // $fyear1 =( date('m') > 3) ? date('y').'-'.(date('y')+1) : (date('y')-1).'-'.date('y');
+        // dd($fyear1);
         $res=$res1=$res2=[];
        
         
-       foreach ($data as $key => $query) {
+       foreach ($chart as $key => $query) {
           
        
         

@@ -129,7 +129,7 @@ class AdminAgencyController extends Controller
         $agency['password']=$agency_password;
         Mail::to($agency['email'])->send(new AAConfirmationMail($agency));
 
-        alert()->success('Assessment Agency has been Registered', 'Job Done')->autoclose(3000);
+        alert()->success("Assessment Agency has been <span style='color:blue;font-weight:bold'>Registered</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
 
     }
@@ -207,7 +207,7 @@ class AdminAgencyController extends Controller
 
         }
 
-        alert()->success('Assessment Agency has been Updated', 'Job Done')->autoclose(3000);
+        alert()->success("Assessment Agency has been <span style='color:blue;font-weight:bold'>Updated</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
         }
 
@@ -235,7 +235,7 @@ class AdminAgencyController extends Controller
         $agency->status=1;
         $agency->save();
 
-        alert()->success('Assessment Agency has been Activated', 'Job Done')->autoclose(3000);
+        alert()->success("Assessment Agency has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
     }
 
@@ -252,6 +252,7 @@ class AdminAgencyController extends Controller
                     'unique:partners,spoc_mobile',
                     'unique:centers,mobile',
                     'unique:trainer_statuses,mobile',
+                    'unique:assessors,mobile',
                     'unique:agencies,mobile,'.$request->aa_id,
                     
                 ],
@@ -266,6 +267,7 @@ class AdminAgencyController extends Controller
                         'unique:partners,spoc_mobile',
                         'unique:centers,mobile',
                         'unique:trainer_statuses,mobile',
+                        'unique:assessors,mobile',
                         'unique:agencies,mobile',
                         
                     ],
@@ -289,6 +291,7 @@ class AdminAgencyController extends Controller
                     'unique:partners,email',
                     'unique:centers,email',
                     'unique:trainer_statuses,email',
+                    'unique:assessors,email',
                     'unique:agencies,email,'.$request->aa_id,
                 ],
             ]);
@@ -302,6 +305,7 @@ class AdminAgencyController extends Controller
                         'unique:partners,email',
                         'unique:centers,email',
                         'unique:trainer_statuses,email',
+                        'unique:assessors,email',
                         'unique:agencies,email',
                     ],
                 ]);
@@ -321,6 +325,7 @@ class AdminAgencyController extends Controller
                     'required',
                     'unique:trainers,doc_no',
                     'unique:trainer_statuses,doc_no',
+                    'unique:assessors,aadhaar',
                     'unique:agencies,aadhaar,'.$request->aa_id,
                     
                 ],
@@ -332,6 +337,7 @@ class AdminAgencyController extends Controller
                          'required',
                          'unique:trainers,doc_no',
                          'unique:trainer_statuses,doc_no',
+                         'unique:assessors,aadhaar',
                          'unique:agencies,aadhaar',
                          
                      ],
@@ -387,7 +393,7 @@ class AdminAgencyController extends Controller
            $agencyBatch->bt_id=$batch;
            $agencyBatch->save();
         }
-        alert()->success('Assessment Agency Batch has been Added', 'Job Done')->autoclose(3000);
+        alert()->success("Assessment Agency Batch has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
     }
 

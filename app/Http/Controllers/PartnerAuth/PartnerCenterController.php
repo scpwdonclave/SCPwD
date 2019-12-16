@@ -281,7 +281,7 @@ class PartnerCenterController extends Controller
             /* Notification For Partner */
             $partner_name = $this->guard()->user()->spoc_name;
             $notification = new Notification;
-            $notification->rel_id = 1;
+            //$notification->rel_id = 1;
             $notification->rel_with = 'admin';
             $notification->title = 'Training Center Added';
             $notification->message = "<span style='color:blue;'>".$partner_name."</span> Added New Training Center, TC Verification Required";

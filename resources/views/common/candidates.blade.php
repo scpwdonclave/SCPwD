@@ -35,6 +35,7 @@
                                     <th>Category</th>
                                     <th>Date of Birth</th>
                                     <th>Overall Status</th>
+                                    <th>Result</th>
                                     @if (Request::segment(1) === 'admin')
                                         <th>Action</th>
                                     @endif
@@ -57,6 +58,15 @@
                                 <td>{{$candidate->category}}</td>
                                 <td>{{$candidate->dob}}</td>
                                 <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
+                               
+                               @if ($candidate->passed===1)
+                               <td class="text-success">Passed</td>
+                               @elseif ($candidate->passed===0)
+                               <td class="text-danger">Failed</td>
+                               @elseif ($candidate->passed===null)
+                               <td>N/A</td>
+                               @endif
+                                
                                 @if (Request::segment(1)==='admin')
                                     <td><button type="button" onclick="popup('{{Crypt::encrypt($candidate->id).','.$candidate->status.','.$candidate->name}}')" class="badge bg-{{($candidate->status)?'red':'green'}} margin-0">{{($candidate->status)?'Deactivate':'Activate'}}</button></td>
                                 @endif

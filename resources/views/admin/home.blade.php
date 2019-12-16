@@ -52,8 +52,8 @@
                             <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activeCenter*100/$centerCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activeCenter*100/$centerCount}}%;"></div>
                         </div>
                         <div class="row d-flex justify-content-around">
-                            <small>Active {{$activeCenter*100/$centerCount}}%</small>
-                            <small>Inactive {{$inactiveCenter*100/$centerCount}}%</small>
+                            <small>Active {{round($activeCenter*100/$centerCount,2)}}%</small>
+                            <small>Inactive {{round($inactiveCenter*100/$centerCount,2)}}%</small>
                         </div>
                     @else
                        <strong><p class="text-muted"><span style="color:blue">No Training Centers Has been Registered yet</span></p></strong>                        
@@ -311,7 +311,7 @@ function getChartJs(type) {
                 labels: ["April", "May", "June", "July","August","September","October","November","December","January", "February", "March"],
                 datasets: [{
                     label: "Training partner",
-                    data: <?php echo json_encode($res);?>,
+                    data: @json($res),
                     borderColor: 'rgba(0,128,128, 0.2)',
                     backgroundColor: 'rgba(0,128,128, 0.4)',
                     pointBorderColor: 'rgba(0,128,128, 0.3)',
@@ -319,15 +319,15 @@ function getChartJs(type) {
                     pointBorderWidth: 1
                 }, {
                     label: "Training Center",
-                    data: <?php echo json_encode($res1);?>,                    
+                    data: @json($res1),                    
                     borderColor: 'rgba(49,79,232, 0.2)',
                     backgroundColor: 'rgba(49,79,232, 0.4)',
                     pointBorderColor: 'rgba(49,79,232, 0)',
                     pointBackgroundColor: 'rgba(49,79,232, 0.9)',
                     pointBorderWidth: 1
                 }, {
-                    label: "Trainer",
-                    data: <?php echo json_encode($res2);?>,                    
+                    label: "Candidate",
+                    data: @json($res2),                    
                     borderColor: 'rgba(126,239,186, 0.2)',
                     backgroundColor: 'rgba(126,239,186, 0.4)',
                     pointBorderColor: 'rgba(126,239,186, 0)',

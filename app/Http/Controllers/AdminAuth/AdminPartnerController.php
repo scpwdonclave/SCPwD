@@ -237,7 +237,7 @@ class AdminPartnerController extends Controller
                     $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
                     $dataMail->tag = 'tpaccept';
                     $dataMail->tp_id = $new_tpid;
-                    alert()->success("Training Partner Account has been <span style='color:blue;'>Approved</span>", "Job Done")->html()->autoclose(4000);
+                    alert()->success("Training Partner Account has been <span style='color:blue;font-weight:bold;'>Approved</span>", "Job Done")->html()->autoclose(4000);
 
                 } else {
                     DB::transaction(function() use ($request,$partner){
@@ -295,7 +295,7 @@ class AdminPartnerController extends Controller
                         $dataMail->tag = 'tpreject';
                         $dataMail->reason = $request->reason;                      
                     });
-                    alert()->success("Training Partner Account has been <span style='color:red;'>Rejected</span>", "Job Done")->html()->autoclose(4000);
+                    alert()->success("Training Partner Account has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                 }
 
                 $dataMail->spoc_name = $partner->spoc_name;
@@ -304,7 +304,7 @@ class AdminPartnerController extends Controller
                 
                 return redirect(route('admin.tp.partners'));
             } else {
-                alert()->error("Training Partner Account already been <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(3000);
+                alert()->error("Training Partner Account already been <span style='color:blue;font-weight:bold'>Approved</span>", "Done")->html()->autoclose(3000);
                 return redirect(route('admin.tp.partners'));
             }   
         }

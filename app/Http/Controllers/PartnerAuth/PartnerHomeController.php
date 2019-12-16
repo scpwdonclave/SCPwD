@@ -75,6 +75,7 @@ class PartnerHomeController extends Controller
                 'schemesectorjobrole' => $partner_job->scheme->scheme.'/'.$partner_job->sector->sector.'/'.$partner_job->jobrole->job_role,
                 'centers' => CenterJobRole::where('tp_job_id', $partner_job->id)->get()
             ];
+            
             return view('partner.viewjobrole')->with($data);
         }
     }
@@ -169,7 +170,7 @@ class PartnerHomeController extends Controller
             
             /* For Admin */
             $notification = new Notification;
-            $notification->rel_id = 1;
+            //$notification->rel_id = 1;
             $notification->rel_with = 'admin';
             $notification->title = 'New Registration';
             $notification->message = "<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";

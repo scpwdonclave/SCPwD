@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header d-flex justify-content-between">
-                        <h2><strong>All</strong> Assessment</h2>
+                        <h2><strong>Pending</strong> Assessment</h2>
                        
                     </div>
                     <div class="body">

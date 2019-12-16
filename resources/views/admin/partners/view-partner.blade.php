@@ -330,7 +330,7 @@
                         <button class="btn btn-success" onclick="location.href='{{route('admin.tp.partner.action',Crypt::encrypt($partnerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
                         <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($partnerData->id.','.'0')}}');">Reject</button>
                     @elseif (!$partnerData->pending_verify && $partnerData->status)
-                        <button class="btn" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'">Edit</button>                         
+                        <button class="btn btn-primary" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
                     @endif
                 </div>
                 </div>

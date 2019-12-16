@@ -50,7 +50,8 @@ class AgencyAssessorController extends Controller
 
     public function assessor(){
 
-        $data=Assessor::all();
+        $data=Assessor::where('aa_id',$this->guard()->user()->id)->get();
+        
         return view('agency.assessor')->with(compact('data'));
     }
 
@@ -154,14 +155,14 @@ class AgencyAssessorController extends Controller
 
          /* Notification For Admin */
          $notification = new Notification;
-         $notification->rel_id =1;
+         //$notification->rel_id =1;
          $notification->rel_with = 'admin';
          $notification->title = 'Assessor has been Register';
-         $notification->message = "One assessor <br>has been <span style='color:blue;'>Register</span>";
+         $notification->message = "One assessor has been <span style='color:blue;'>Register</span>";
          $notification->save();
          /* End Notification For Admin */
         
-        alert()->success('Assessor has been Registered wait for Approved', 'Job Done')->autoclose(3000);
+        alert()->success("Assessor has been Registered wait for <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
 
     }
@@ -169,6 +170,9 @@ class AgencyAssessorController extends Controller
     public function assessorView($id){
         $id=$this->decryptThis($id);
         $assessorData=Assessor::findOrFail($id);
+        if($assessorData->aa_id != $this->guard()->user()->id){
+            abort(404);
+        }
         $assessorState=DB::table('assessors')
         ->join('state_district','assessors.state_district','=','state_district.id')
         ->join('parliament','assessors.parliament','=','parliament.id')
@@ -303,7 +307,7 @@ class AgencyAssessorController extends Controller
     public function assessorBatch($id){
         $id=$this->decryptThis($id);
         $assessor=Assessor::findOrFail($id);
-        if(!$assessor->status || !$assessor->verified){
+        if(!$assessor->status || !$assessor->verified || $assessor->aa_id != $this->guard()->user()->id){
             abort(404);
         }
         return view('agency.assessor-batch')->with(compact('assessor'));
@@ -337,7 +341,7 @@ class AgencyAssessorController extends Controller
             $agencyBatch->bt_id=$batch;
             $agencyBatch->save();
          }
-         alert()->success('Assessor Batch has been Added', 'Job Done')->autoclose(3000);
+         alert()->success("Assessor Batch has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->autoclose(3000);
          return Redirect()->back();
 
     }

@@ -29,7 +29,13 @@
                         if (Auth::guard(Request::segment(1))->check()) {
                             switch (Request::segment(1)) {
                                 case 'admin':
-                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
+                                    if(!Auth::guard('admin')->user()->supadmin){
+
+                                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=',null]])->orderBy('created_at', 'desc')->get();
+                                    }else{
+                                         $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('admin')->user()->id]])->orderBy('created_at', 'desc')->get();
+
+                                    }
                                     break;
                                 case 'partner':
                                     $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('partner')->user()->id]])->orderBy('created_at', 'desc')->get();

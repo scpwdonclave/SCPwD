@@ -409,7 +409,7 @@
                                         <button class="btn btn-success" onclick="location.href='{{route('admin.as.assessor.verify',['trainer_id' => Crypt::encrypt($assessorData->id) ])}}';this.disabled = true;">Accept</button>
                                         <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                                     @elseif ( $assessorData->verified==1)
-                                        <button class="btn" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($assessorData->id) ])}}'">Edit</button>                         
+                                        <button class="btn btn-primary" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($assessorData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
                                     @endif
                                 @endif
                             @endif
