@@ -38,8 +38,12 @@
           <button type="submit" class="login100-form-btn">Login</button>
         </div>
 
-        <div class="d-flex justify-content-around p-t-30 p-b-20">
+        <div class="d-flex justify-content-around p-t-30">
           <a href="{{ route('assessor.password.request') }}" class="txt2 hov1"> Forgot Password </a>
+        </div>
+
+        <div class="p-t-20 copyrighttext">
+          <p>&copy; {{date("Y")}} (SCPwD) . All Rights Reserved <br> Developed &amp; Maintained by <a href="https://onclavesystems.com/" class="copylink" target="blank">Onclave Systems</a></p>
         </div>
       
     </form>

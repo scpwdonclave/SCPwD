@@ -479,3 +479,11 @@ iframe {
     padding-right: 15px;
   }
 }
+
+.copyrighttext {
+  font-size: 14px;
+}
+
+.copylink{
+  color: black;
+}

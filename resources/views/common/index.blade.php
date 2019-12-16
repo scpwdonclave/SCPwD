@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div class="wrap-login101">
-			<p>&copy; 2019 Skill Council for Persons with Disability (SCPwD) . All Rights Reserved | Developed &amp; Maintained by <a href="https://onclavesystems.com/" target="blank">Onclave Systems</a></p>
+			<p>&copy; {{date('Y')}} Skill Council for Persons with Disability (SCPwD) . All Rights Reserved | Developed &amp; Maintained by <a href="https://onclavesystems.com/" target="blank">Onclave Systems</a></p>
 		</div>
 		</div>
 	</div>

@@ -49,9 +49,9 @@
           <button type="submit" class="login100-form-btn">Reset Password</button>
         </div>
 
-        {{-- <div class="text-center p-t-30 p-b-20">
-          <a href="{{ route('admin.login') }}" class="txt2 hov1"> Login Here </a>
-        </div> --}}
+        <div class="p-t-20 copyrighttext">
+          <p>&copy; {{date("Y")}} (SCPwD) . All Rights Reserved <br> Developed &amp; Maintained by <a href="https://onclavesystems.com/" class="copylink" target="blank">Onclave Systems</a></p>
+        </div>
       
     </form>
   </div>
