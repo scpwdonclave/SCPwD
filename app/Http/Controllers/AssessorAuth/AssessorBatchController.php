@@ -60,6 +60,7 @@ class AssessorBatchController extends Controller
     }
 
     public function candidateMarksInsert(Request $request){
+        //dd($request);
 
         $batchAssessment= new BatchAssessment;
         $batchAssessment->bt_id	=$request->bt_id;
@@ -76,10 +77,19 @@ class AssessorBatchController extends Controller
             $a='remark'.($key+1);
             $candidatemark=new CandidateMark;
             $candidatemark->bt_assessment_id=$batchAssessment->id;	
-            $candidatemark->candidate_id=$value;	
-            $candidatemark->mark=$request->mark[$key];	
+            $candidatemark->candidate_id=$value;
+            if($request->mark[$key]==null){
+                $candidatemark->mark=0;	
+                    }else{
+                $candidatemark->mark=$request->mark[$key];	
+                    }	
             $candidatemark->attendence=$request->attendence[$key];
-            $candidatemark->passed=$request->$a;
+            if($request->$a==null){
+                $candidatemark->passed=0;
+
+            }else{
+                $candidatemark->passed=$request->$a;
+            }
             $candidatemark->save();
         }
 
@@ -112,10 +122,20 @@ class AssessorBatchController extends Controller
 
              foreach ($batchAssessment->candidateMarks as $key => $candidatemark) {
                 $a='remark'.($key+1);
-               
-               	$candidatemark->mark=$request->mark[$key];	
+                if($request->mark[$key]==null){
+                    $candidatemark->mark=0;	
+                        }else{
+                    $candidatemark->mark=$request->mark[$key];	
+                        }
+               	//$candidatemark->mark=$request->mark[$key];	
                 $candidatemark->attendence=$request->attendence[$key];
-                $candidatemark->passed=$request->$a;
+                if($request->$a==null){
+                    $candidatemark->passed=0;
+    
+                }else{
+                    $candidatemark->passed=$request->$a;
+                }
+                //$candidatemark->passed=$request->$a;
                
                 $candidatemark->save();
             }

@@ -153,12 +153,15 @@ function markDisable(val,id) {
    if(val==='absent'){
         $('#mark'+id).attr('readonly',true);
         //$('#mark'+id).val('');
-        $('#mark'+id).val('');
-        $('#remark'+id).removeClass().html('');
-        $('[name=remark'+id+']').val('');
+        $('#mark'+id).val(0);
+        $('#remark'+id).addClass('text-danger').html('Failed');
+        //$('#remark'+id).removeClass().html('');
+        $('[name=remark'+id+']').val(0);
 
     }else{
         $('#mark'+id).attr('readonly',false);
+        $('#remark'+id).removeClass().html('');
+
 
     }
 }
@@ -181,6 +184,7 @@ function passFail(m,m_id){
     $('[name=remark'+m_id+']').val(0);
     
   }else if(m >= Number(pass_mark)){
+    $('#remark'+m_id).removeClass().html('');
     $('#remark'+m_id).addClass('text-success').html('Passed');
     $('[name=remark'+m_id+']').val(1);
     }else{

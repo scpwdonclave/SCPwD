@@ -17,9 +17,9 @@ class CreateCandidateMarksTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bt_assessment_id');
             $table->unsignedBigInteger('candidate_id');
-            $table->string('mark')->nullable(); 
+            $table->string('mark')->default(0); 
             $table->string('attendence');
-            $table->integer('passed')->nullable();
+            $table->integer('passed')->default(0);
             $table->string('certi_no')->nullable();
 
             $table->timestamps();

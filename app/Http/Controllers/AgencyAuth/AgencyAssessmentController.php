@@ -95,4 +95,11 @@ class AgencyAssessmentController extends Controller
 
         return response()->json(['success' => true], 200);
     }
+
+    public function myBatch(){
+        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        return view('agency.batch')->with(compact('agencyBatch'));
+
+
+    }
 }
