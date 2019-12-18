@@ -171,7 +171,7 @@ function fetchBatch(sector){
                     }else{
                         swal({
                         title: "Failed",
-                        text: "Some Assessor Assigned with this Batch",
+                        text: "This Batch already been assigned to a Batch",
                         type:"error",
                         showConfirmButton: true
                     },function(isConfirm){
@@ -183,7 +183,7 @@ function fetchBatch(sector){
                 }
             });
         } else {
-            swal("Cancelled", "Your Batch Data Remain safe", "error");
+            // swal("Cancelled", "Your Batch Data Remain safe", "error");
         }
     });
 

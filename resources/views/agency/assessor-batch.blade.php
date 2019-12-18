@@ -9,14 +9,6 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
-<style>
-.table td {
-    padding: .10rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-    text-align: center;
-}
-</style>
 @stop
 @section('parentPageTitle', 'Assessor')
 @section('content')
@@ -29,7 +21,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                    

@@ -122,7 +122,7 @@ var _URL = window.URL || window.webkitURL;
 
             image = new Image();
             var fileType = file["type"];
-            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
+            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel"];
             if ($.inArray(fileType, ValidImageTypes) < 0) {
                 // invalid file type code goes here.
                 $("#"+e.currentTarget.id).val('');

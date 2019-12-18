@@ -117,11 +117,14 @@ class AdminBatchController extends Controller
     public function batchAction(Request $request){
         if ($id=$this->decryptThis($request->id)) {
             $data=Batch::findOrFail($id);
+            $scheme=$data->scheme->scheme;
+            $sch_len=4+strlen($scheme)+1+1;
+            
             if (!$data->verified) {
                 if ($request->action === 'accept') {
 
                     if ($this->trainer_availability($data->tr_id, Carbon::parse($data->start_time), Carbon::parse($data->end_time)) && $this->candidate_availability($data->id)) {
-                        $records=DB::table('batches')->select(DB::raw('SUBSTRING(batch_id,3) as batch_id'))->where("batch_id", "LIKE", "BT%")->get();
+                        $records=DB::table('batches')->select(DB::raw("SUBSTRING(batch_id,$sch_len) as batch_id"))->where("batch_id", "LIKE", "PwD_".$scheme."%")->get();
                         $year = date('Y');
                         if (count($records) > 0) {
                             $priceprod = array();
@@ -129,11 +132,12 @@ class AdminBatchController extends Controller
                                 $priceprod[$key]=$record->batch_id;
                             }
                             $lastid= max($priceprod);
-                            $new_batchid = (substr($lastid, 0, 4)== $year) ? 'BT'.($lastid + 1) : 'BT'.$year.'000001' ;
+                            $new_batchid =  'PwD_'.$scheme.'_'.sprintf("%05d", $lastid + 1);
                         } else {
-                            $new_batchid = 'BT'.$year.'000001';
+                            $new_batchid = 'PwD_'.$scheme.'_'.sprintf("%05d", 1); // sprintf("%02d", 4444)
                         }
-                
+                        
+                        //dd($new_batchid); 
                         $data->batch_id=$new_batchid;
                         $data->status=1;
                         $data->verified=1;

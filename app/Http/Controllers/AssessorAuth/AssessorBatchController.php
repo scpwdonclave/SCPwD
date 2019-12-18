@@ -103,8 +103,7 @@ class AssessorBatchController extends Controller
           $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment marks submit by Assessor";
           $notification->save();
           /* End Notification For Agency */
-
-       alert()->success('Marks has been Submitted wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
+          alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
         return redirect()->route('assessor.batch');
     }
 
@@ -164,8 +163,9 @@ class AssessorBatchController extends Controller
                 /* End Notification For Admin */
                 }
 
-            alert()->success('Marks has been Updated wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
-            return redirect()->route('assessor.batch');
+                alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
+                // alert()->success('Marks has been Updated wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
+                return redirect()->route('assessor.batch');
 
     }
 
