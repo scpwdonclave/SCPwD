@@ -48,6 +48,10 @@
         <div class="container-login100-form-btn">
           <button type="submit" class="login100-form-btn">Reset Password</button>
         </div>
+
+        <div class="p-t-20 copyrighttext">
+          <p>&copy; {{date("Y")}} (SCPwD) . All Rights Reserved <br> Developed &amp; Maintained by <a href="https://onclavesystems.com/" class="copylink" target="blank">Onclave Systems</a></p>
+        </div>
     </form>
   </div>
 @endsection
