@@ -37,7 +37,7 @@ class CreateCandidatesTable extends Migration
             $table->string('g_name')->comment = 'Guardian Name';
             $table->string('g_type')->comment = 'Guardian Type';
             $table->boolean('status')->default(1);
-            $table->boolean('passed')->nullable();
+            $table->boolean('passed')->nullable()->comment = 'null:not applicable for exm|0:Failed|1:Passed|2:Absent';
             $table->timestamps();
         });
     }

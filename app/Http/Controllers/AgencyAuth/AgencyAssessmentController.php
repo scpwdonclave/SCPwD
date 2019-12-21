@@ -8,6 +8,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use App\AgencyBatch;
 use App\BatchAssessment;
 use App\Notification;
+use App\Reason;
 use Auth;
 use Crypt;
 
@@ -97,9 +98,58 @@ class AgencyAssessmentController extends Controller
     }
 
     public function myBatch(){
-        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',1]])->get();
         return view('agency.batch')->with(compact('agencyBatch'));
 
 
     }
+    public function myPendingBatch(){
+        $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',0]])->get();
+        return view('agency.agency-pending-batch')->with(compact('agencyBatch'));
+        }
+
+    public function pendingBatchApproved($id){
+        $id= $this->decryptThis($id);
+        $agency_batch=AgencyBatch::findOrFail($id);
+        $agency_batch->aa_verified=1;
+        $agency_batch->save();
+
+         /* Notification For Admin */
+         $batch_no=$agency_batch->batch->batch_id;
+         $notification = new Notification;
+         $notification->rel_with = 'admin';
+         $notification->title = 'Batch Accept by Agency';
+         $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) accept by Agency";
+         $notification->save();
+         /* End Notification For Admin */
+         alert()->success("Batch ID: <span style='color:blue;font-weight:bold'>$batch_no</span> has been <span style='color:blue;font-weight:bold'>Accepted</span>", 'Job Done')->html()->autoclose(3000);
+         return Redirect()->back();
+        
+    }
+
+    public function pendingBatchReject(Request $request){
+        $data=AgencyBatch::findOrFail($request->id);
+        $data['note'] = $request->note;
+    //     // Mail::to($data->agency->email)->send(new ASRejectMail($data));
+
+         /* Notification For Agency */
+         $batch_no=$data->batch->batch_id;
+
+         $notification = new Notification;
+         $notification->rel_with = 'admin';
+         $notification->title = 'Agency Batch Rejected';
+         $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) rejected by Agency";
+         $notification->save();
+         /* End Notification For Agency */
+         $data->delete();
+
+         $reason = new Reason;
+         $reason->rel_with = 'admin';
+         $reason->reason = $request->note;
+         $reason->save();
+
+         return response()->json(['status' => 'done'],200);
+
+    }
+    
 }

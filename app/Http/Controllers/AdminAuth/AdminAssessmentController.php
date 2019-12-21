@@ -209,7 +209,12 @@ class AdminAssessmentController extends Controller
                 }
 
                 $eachcand= $value->candidate;
+                if($value->attendence==='present'){
                 $eachcand->passed=$value->passed;
+                }else{
+                    $eachcand->passed=2;
+
+                }
                 $eachcand->save();
             }
             //$batchAssessment->candidateMarks

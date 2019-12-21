@@ -315,7 +315,7 @@ class AgencyAssessorController extends Controller
     }
 
     public function assessorFetchBatch(Request $request){
-        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        $agencyBatch=AgencyBatch::where([['aa_id',$this->guard()->user()->id],['aa_verified','=',1]])->get();
         $assessorBatch=AssessorBatch::all();
 
         $selBatch=array();
@@ -343,6 +343,15 @@ class AgencyAssessorController extends Controller
          alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessor", 'Job Done')->html()->autoclose(3000);
          return Redirect()->back();
 
+    }
+
+    public function deleteBatch(Request $request){
+        $agencyBatch=AssessorBatch::findOrFail($request->id);
+           
+            $agencyBatch->delete();
+            return response()->json(['status' => 'done'],200);
+
+        
     }
 
 }

@@ -19,6 +19,11 @@
                 <div class="header">
                     <h2><strong>Batch</strong> Section</h2>                        
                 </div>
+                <div class="text-center">
+                    @if (!is_null($assessor->as_id))
+                    <h6><strong>Assessor ID: {{$assessor->as_id}}</strong></h6>
+                    @endif
+                </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
@@ -28,7 +33,7 @@
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
-                                    <th>Status</th>
+                                    <th>Action</th>
                                    
                                 </tr>
                             </thead>
@@ -39,7 +44,9 @@
                                 <td>{{$asbatch->batch->batch_id}}</td>
                                 <td>{{$asbatch->batch->batch_start}}</td>
                                 <td>{{$asbatch->batch->batch_end}}</td>
-                                <td class="text-{{$asbatch->verified?'success':'danger'}}"><strong>{{$asbatch->verified?'Verified':'Not Verified'}}</strong></td>
+                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$asbatch->id}});"><i class="zmdi zmdi-delete"></button></td>
+
+                                {{-- <td class="text-{{$asbatch->verified?'success':'danger'}}"><strong>{{$asbatch->verified?'Verified':'Not Verified'}}</strong></td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -127,6 +134,59 @@ function fetchBatch(job){
                 }
 
  
+    function deleteConfirm(id){
+    swal({
+        title: "Are you sure?",
+        text: "Your Batch Data will be deleted",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        closeOnConfirm: false,
+        closeOnCancel: false
+    }, function (isConfirm) {
+        if (isConfirm) {
+            let _token = $("input[name='_token']").val();
+            $.ajax({
+                type: "POST",
+                url: "{{route('agency.as.batch-delete')}}",
+                data: {_token,id},
+                success: function(data) {
+                    if(data.status=='done'){
+                   swal({
+                        title: "Deleted",
+                        text: "Batch Record Deleted",
+                        type:"success",
+                        showConfirmButton: true
+                    },function(isConfirm){
+                        if (isConfirm){
+                            window.location="{{route('agency.assessors')}}";
+                        }
+                    });
+
+                    }
+                    // else{
+                    //     swal({
+                    //     title: "Failed",
+                    //     text: "This Batch already been assigned to a Assessor",
+                    //     type:"error",
+                    //     showConfirmButton: true
+                    // },function(isConfirm){
+                    //     if (isConfirm){
+                    //         window.location="{{route('admin.agency.agencies')}}";
+                    //     }
+                    // });
+                    // }
+                }
+            });
+        } else {
+             swal("Cancelled", "Your Cancel the process", "error");
+        }
+    });
+
+ }
+
 
 </script>
 

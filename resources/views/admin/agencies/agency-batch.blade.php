@@ -27,6 +27,11 @@
                 <div class="header">
                     <h2><strong>Batch</strong> Section</h2>                        
                 </div>
+                <div class="text-center">
+                    @if (!is_null($agency[0]->aa_id))
+                    <h6><strong>Agency ID: {{$agency[0]->aa_id}}</strong></h6>
+                    @endif
+                </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -36,6 +41,7 @@
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Status</th>
                                     <th>View</th>
                                     <th>Action</th>
                                 </tr>
@@ -47,8 +53,9 @@
                                 <td>{{$agbatch->batch->batch_id}}</td>
                                 <td>{{$agbatch->batch->batch_start}}</td>
                                 <td>{{$agbatch->batch->batch_end}}</td>
+                                <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Verified':'Not Verified'}}</strong></td>
                                 {{-- <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td> --}}
-                                <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($agbatch->batch->id)])}}'"><i class="zmdi zmdi-lamp"></button></td>
+                                <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($agbatch->batch->id)])}}'"><i class="zmdi zmdi-eye"></button></td>
                                 <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$agbatch->id}});"><i class="zmdi zmdi-delete"></button></td>
                                 {{-- <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                          --}}
                                 </tr>
@@ -171,7 +178,7 @@ function fetchBatch(sector){
                     }else{
                         swal({
                         title: "Failed",
-                        text: "This Batch already been assigned to a Batch",
+                        text: "This Batch already been assigned to a Assessor",
                         type:"error",
                         showConfirmButton: true
                     },function(isConfirm){
@@ -183,7 +190,7 @@ function fetchBatch(sector){
                 }
             });
         } else {
-            // swal("Cancelled", "Your Batch Data Remain safe", "error");
+             swal("Cancelled", "Your Cancel the process", "error");
         }
     });
 

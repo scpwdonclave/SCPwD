@@ -17,7 +17,7 @@ class CreateAssessorBatchesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('as_id');
             $table->unsignedBigInteger('bt_id');
-            $table->boolean('verified')->default(0);
+           
             $table->timestamps();
         });
     }

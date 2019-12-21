@@ -60,11 +60,13 @@
                                 <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
                                
                                @if ($candidate->passed===1)
-                               <td class="text-success">Passed</td>
+                               <td class="text-success"><strong>Passed</strong></td>
                                @elseif ($candidate->passed===0)
-                               <td class="text-danger">Failed</td>
+                               <td class="text-danger"><strong>Failed</strong></td>
+                               @elseif ($candidate->passed===2)
+                               <td class="text-danger"><strong>Absent</strong></td>
                                @elseif ($candidate->passed===null)
-                               <td>N/A</td>
+                               <td class="text-muted"><strong>N/A</strong></td>
                                @endif
                                 
                                 @if (Request::segment(1)==='admin')

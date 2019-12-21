@@ -59,7 +59,16 @@
                                                                 <td>{{$item->candidate->gender}}</td>
                                                                 <td>{{$item->attendence}}</td>
                                                                 <td>{{$item->mark}}</td>
-                                                                <td class="text-{{($item->passed)?'success':'danger'}}"><strong>{{($item->passed)?'Passed':'Failed'}}</strong></td>
+                                                                @if ($item->attendence==='present' && $item->passed)
+                                                                 <td class="text-success"><strong>Passed</strong></td> 
+                                                                @elseif ($item->attendence==='present' && !$item->passed)  
+                                                                 <td class="text-danger"><strong>Failed</strong></td> 
+                                                                @elseif ($item->attendence==='absent' && !$item->passed)  
+                                                                 <td class="text-danger"><strong>Absent</strong></td> 
+                                                                 
+                                                                @endif
+
+                                                                {{-- <td class="text-{{($item->passed)?'success':'danger'}}"><strong>{{($item->passed)?'Passed':'Failed'}}</strong></td> --}}
 
                                                             </tr>
                                                             @endforeach
@@ -150,7 +159,7 @@
                                     <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
                                     @endif
                                     @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Release Certificate</button>
+                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Request Certificate</button>
                                     {{-- <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject Release</button> --}}
  
                                     @endif

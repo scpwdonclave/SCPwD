@@ -38,13 +38,13 @@ class AssessorBatchController extends Controller
 
     public function batches(){
 
-        $assessorBatch=AssessorBatch::where([['as_id','=',$this->guard()->user()->id],['verified','=',1]])->get();
+        $assessorBatch=AssessorBatch::where('as_id','=',$this->guard()->user()->id)->get();
       
         return view('assessor.assessor-batch')->with(compact('assessorBatch'));
     }
 
     public function pendingApproval(){
-        $assessorBatch=AssessorBatch::where([['as_id','=',$this->guard()->user()->id],['verified','=',1]])->get();
+        $assessorBatch=AssessorBatch::where('as_id','=',$this->guard()->user()->id)->get();
         return view('assessor.assessor-batch-pending-approval')->with(compact('assessorBatch'));
         
     }

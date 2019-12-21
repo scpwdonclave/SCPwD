@@ -59,10 +59,15 @@
                                 <td style="width:10px;"><input class="text-center" type="number" size='30' style="height:30px;border:none" value="{{$item->mark}}" name="mark[]" id="mark{{$key+1}}" onchange="passFail(this.value,{{$key+1}})" /></td>
                                    <td>
                                     <strong>
-                                        @if($item->passed)
+                                        @if($item->attendence==='present' && $item->passed)
                                        <p id="remark{{$key+1}}" class="text-success">Passed</p>
                                     <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
-                                       @else
+
+                                       @elseif($item->attendence==='absent' && !$item->passed)
+                                       <p id="remark{{$key+1}}" class="text-danger">Absent</p>
+                                       <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
+
+                                       @elseif($item->attendence==='present' && !$item->passed)
                                        <p id="remark{{$key+1}}" class="text-danger">Failed</p>
                                        <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
                                        @endif
@@ -155,17 +160,32 @@ var _URL = window.URL || window.webkitURL;
 </script>
 <script>
 function markDisable(val,id) {
-   if(val==='absent'){
-        $('#mark'+id).attr('readonly',true);
-        //$('#mark'+id).val('');
-        $('#mark'+id).val('');
-        $('#remark'+id).removeClass().html('');
-        $('[name=remark'+id+']').val('');
+//    if(val==='absent'){
+//         $('#mark'+id).attr('readonly',true);
+//         //$('#mark'+id).val('');
+//         $('#mark'+id).val('');
+//         $('#remark'+id).removeClass().html('');
+//         $('[name=remark'+id+']').val('');
 
-    }else{
-        $('#mark'+id).attr('readonly',false);
+//     }else{
+//         $('#mark'+id).attr('readonly',false);
 
-    }
+//     }
+        if(val==='absent'){
+                $('#mark'+id).attr('readonly',true);
+                //$('#mark'+id).val('');
+                $('#mark'+id).val(0);
+                $('#remark'+id).addClass('text-danger').html('Absent');
+                //$('#remark'+id).removeClass().html('');
+                $('[name=remark'+id+']').val(0);
+
+            }else{
+                $('#mark'+id).attr('readonly',false);
+                $('#remark'+id).removeClass().html('');
+
+
+            }
+
 }
 
 function passFail(m,m_id){

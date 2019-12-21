@@ -15,7 +15,7 @@ class CreateReasonsTable extends Migration
     {
         Schema::create('reasons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('rel_id');
+            $table->string('rel_id')->nullable();
             $table->string('rel_with');
             $table->text('reason');
             $table->timestamps();

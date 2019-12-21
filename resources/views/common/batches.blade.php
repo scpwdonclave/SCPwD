@@ -42,6 +42,7 @@
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
                                     <th>Overall Status</th>
+                                    <th>Certificate</th>
                                     <th>View</th>
                                 </tr>
                                
@@ -71,8 +72,12 @@
                                 @else
                                     <td style="color:red">Not Verified</td>
                                 @endif
+                                @if (!is_null($item->batchassessment) && $item->batchassessment->supadmin_cert_rel)
+                                <td style="color:green">Released</td>   
+                                @else
+                                <td style="color:red">Not Released</td>   
+                                @endif
                                 <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                    
                                 </tr>
                                 @endforeach
                             </tbody>
