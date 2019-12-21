@@ -503,29 +503,29 @@ class AdminCenterController extends Controller
 
             if ($id=$this->decryptThis($request->data)) {
                 $data = explode(',',$id);
-                $center_candidate = CenterCandidateMap::find($data[0]);
+                $candidate = Candidate::find($data[0]);
 
-                if ($center_candidate) {
-                    if ($center_candidate->candidate->status) {
+                if ($candidate) {
+                    if ($candidate->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
-                            $center_candidate->candidate->status = 0;
-                            $center_candidate->candidate->save();
+                            $candidate->status = 0;
+                            $candidate->save();
                             $reason = new Reason; 
-                            $reason->rel_id = $center_candidate->candidate->id;$data[0];
+                            $reason->rel_id = $candidate->id;
                             $reason->rel_with = 'candidate';
                             $reason->reason = $request->reason;
                             $reason->save();
-                            $this->writeNotification($center_candidate->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
-                            $this->writeNotification($center_candidate->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
+                            $this->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
+                            $this->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
                         }
                     } else {
-                        $center_candidate->status = 1;
-                        $center_candidate->save();
-                        $this->writeNotification($center_candidate->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Active</span>.");
-                        $this->writeNotification($center_candidate->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $candidate->status = 1;
+                        $candidate->save();
+                        $this->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $this->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
                         $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
                     return response()->json($array,200);
