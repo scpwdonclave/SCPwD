@@ -107,6 +107,10 @@
                             @if (Request::segment(1) ==='partner')
                                 @if ($batchData->verified)
                                     <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                    @if (!is_null($batchData->batchassessment) && $batchData->batchassessment->supadmin_cert_rel)
+                                    <button class="btn btn-primary" onclick="location.href='{{route('partner.assessment.certificate.print',['id' => Crypt::encrypt($batchData->batchassessment->id) ])}}';this.disabled = true;"><i class="zmdi zmdi-print"></i>  &nbsp;&nbsp;Print Certificate</button>
+                                    @endif 
+
                                 @else
                                     <h6>Only Verified Batches are Editable</h6>
                                 @endif

@@ -50,7 +50,7 @@ return [
     <span style='color:red'><strong>Inactive</strong></span>: This Record is Currently in Inactive State
     <span style='color:red'><strong>Not Verified</strong></span>: Admin have not Verified This Entry yet",
 
-    'declaration' => "I hereby declare that the information provided is true and correct. I also understand that any willful dishonesty
+   'declaration' => "I hereby declare that the information provided is true and correct. I also understand that any willful dishonesty
     may render for refusal of this application or immediate termination of employment. If this application is successful, I authorize
     SCPwD  to keep this information in my personal file, otherwise, all information will be destroyed within 3 months after the date of
     application. I authorize SCPwD to disclose in a confidential manner of any information supplied in this application to the parties

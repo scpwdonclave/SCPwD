@@ -161,9 +161,8 @@ class AgencyAssessorController extends Controller
          $notification->message = "One assessor has been <span style='color:blue;'>Register</span>";
          $notification->save();
          /* End Notification For Admin */
-        
-        alert()->success("Assessor has been Registered wait for <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
+         alert()->success("Assessor data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);     
+         return Redirect()->back();
 
     }
 
@@ -316,7 +315,7 @@ class AgencyAssessorController extends Controller
     }
 
     public function assessorFetchBatch(Request $request){
-        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        $agencyBatch=AgencyBatch::where([['aa_id',$this->guard()->user()->id],['aa_verified','=',1]])->get();
         $assessorBatch=AssessorBatch::all();
 
         $selBatch=array();
@@ -341,9 +340,18 @@ class AgencyAssessorController extends Controller
             $agencyBatch->bt_id=$batch;
             $agencyBatch->save();
          }
-         alert()->success("Assessor Batch has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->autoclose(3000);
+         alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessor", 'Job Done')->html()->autoclose(3000);
          return Redirect()->back();
 
+    }
+
+    public function deleteBatch(Request $request){
+        $agencyBatch=AssessorBatch::findOrFail($request->id);
+           
+            $agencyBatch->delete();
+            return response()->json(['status' => 'done'],200);
+
+        
     }
 
 }

@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 // use Illuminate\Support\Facades\Gate;
 // use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 // use App\CenterJobRole;
 use App\Notification;
+
 // use App\Candidate;
 use Auth;
 // use DB;
@@ -37,6 +39,17 @@ class AgencyHomeController extends Controller
     }
 
     public function profile_update(Request $request){
-        dd($request);
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        
+            $agency = $this->guard()->user();
+            $agency->password = Hash::make($request->password);
+            $agency->save();
+
+            alert()->success("Your <span style='font-weight:bold;color:blue'>Password</span> has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+            return redirect()->back();
+        
     }
 }

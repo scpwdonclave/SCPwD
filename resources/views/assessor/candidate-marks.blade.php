@@ -107,12 +107,6 @@ var _URL = window.URL || window.webkitURL;
 
         var image, file;
 
-        // var l = this.files.length;
-        // if (l>6 || l<2) {
-        // alert('You Have To select atleast 2 images ( max limit is 6)');
-        // $("#file").val('');
-        // }
-
     for (var i = this.files.length - 1; i >= 0; i--) {
 
         if ((file = this.files[i])) {
@@ -122,11 +116,31 @@ var _URL = window.URL || window.webkitURL;
 
             image = new Image();
             var fileType = file["type"];
-            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
+            if(this.id==='marksheet_doc'){
+            var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+            var txt_msg="File must be in show Excel Format";
+            }else if(this.id==='attendence_doc'){
+            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+            var txt_msg='File must be in show jpg, jpeg, png ,pdf,Excel Format';
+                
+            }
+           
+            
             if ($.inArray(fileType, ValidImageTypes) < 0) {
                 // invalid file type code goes here.
+               
+                
                 $("#"+e.currentTarget.id).val('');
-                $("#" + e.currentTarget.id + "_error").text('File must be in show jpg, jpeg, png or pdf Format');
+                swal({
+                title: "File type Error",
+                text: txt_msg,
+                type:"error",
+                timer: 3000,
+                
+            });
+                //$('#'+e.currentTarget.id+'_error').text(txt_msg);
+               
+               
             } else {
                 $("#" + e.currentTarget.id + "_error").text('');
             }
@@ -153,12 +167,15 @@ function markDisable(val,id) {
    if(val==='absent'){
         $('#mark'+id).attr('readonly',true);
         //$('#mark'+id).val('');
-        $('#mark'+id).val('');
-        $('#remark'+id).removeClass().html('');
-        $('[name=remark'+id+']').val('');
+        $('#mark'+id).val(0);
+        $('#remark'+id).addClass('text-danger').html('Absent');
+        //$('#remark'+id).removeClass().html('');
+        $('[name=remark'+id+']').val(0);
 
     }else{
         $('#mark'+id).attr('readonly',false);
+        $('#remark'+id).removeClass().html('');
+
 
     }
 }
@@ -181,6 +198,7 @@ function passFail(m,m_id){
     $('[name=remark'+m_id+']').val(0);
     
   }else if(m >= Number(pass_mark)){
+    $('#remark'+m_id).removeClass().html('');
     $('#remark'+m_id).addClass('text-success').html('Passed');
     $('[name=remark'+m_id+']').val(1);
     }else{

@@ -58,9 +58,13 @@
                         </div>
                     @endcan
                     <div class="text-center">
-                        @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
-                            <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
-                        @endcannot
+
+                        @if (Request::segment(1)==='partner')
+                            @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
+                                <h6>You Can Add New Training Centers Once Admin Assign you Job Roles</h6>
+                            @endcannot
+                        @endif
+
                     </div>  
                 </div>
             </div>

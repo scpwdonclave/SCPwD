@@ -284,6 +284,7 @@
                                 @php
                                     $item1='';
                                     $btnData ='';
+                                    $myArray = array();
                                 @endphp
                                 @foreach ($jobroles as $key=>$jobrole)
                                 <tr style="height:5px !important">
@@ -297,14 +298,16 @@
                                             $btnData = Crypt::encrypt($jobrole->id).','.$jobrole->sector->sector.' | '.$jobrole->job_role.' | '.$jobrole->qp_code;
                                             // 1 : Popup Modal For View
                                             // 0 : Popup Modal For Add
+                                            $myArray[] =$item->initials;
                                         @endphp
                                     @endforeach
-                                    <td>{{$item1}}</td>
+                                    <td>{{implode( ', ', $myArray )}}</td>
                                     <td><button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$btnData}},0')">ADD</button> <button type="button" class="badge bg-green margin-0" onclick="popupModal('{{$btnData}},1')">VIEW</button></td>
                                     <td> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                 </tr>
                                 @php
                                     $item1='';
+                                    $myArray = array();
                                 @endphp
                                 @endforeach
                             </tbody>

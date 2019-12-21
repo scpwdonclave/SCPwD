@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\BatchCandidateMap;
+use App\BatchAssessment;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
 use App\Notification;
@@ -19,6 +20,7 @@ use App\Batch;
 use Config;
 use Crypt;
 use Gate;
+use PDF;
 use Auth;
 use DB;
 
@@ -475,4 +477,15 @@ class PartnerBatchController extends Controller
         }
         
     }
+    public function printCertificate($id){
+        $id=$this->decryptThis($id);
+        $batchAssessment=BatchAssessment::findOrFail($id);
+        if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
+            $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
+            return $pdf->stream($batchAssessment->id.'.pdf');
+        }else{
+            abort(404);
+        }
+    }
+
 }

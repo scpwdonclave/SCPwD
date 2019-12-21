@@ -393,7 +393,7 @@ class AdminAgencyController extends Controller
            $agencyBatch->bt_id=$batch;
            $agencyBatch->save();
         }
-        alert()->success("Assessment Agency Batch has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->html()->autoclose(3000);
+        alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
     }
 

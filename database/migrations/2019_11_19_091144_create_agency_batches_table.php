@@ -17,6 +17,8 @@ class CreateAgencyBatchesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('aa_id');
             $table->unsignedBigInteger('bt_id');
+            $table->boolean('aa_verified')->default(0);
+
             $table->timestamps();
         });
     }

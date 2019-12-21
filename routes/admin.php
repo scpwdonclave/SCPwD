@@ -98,10 +98,10 @@ Route::post('agency/agency-batch-delete', 'AdminAuth\AdminAgencyController@agenc
 /* Assessors */
 Route::get('assessor/assessors', 'AdminAuth\AdminAssessorController@assessor')->name('assessor.assessors');
 Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pendingAssessors')->name('as.pending-assessors');
-Route::get('assessor/pending-batch', 'AdminAuth\AdminAssessorController@pendingBatch')->name('as.pending-batch');
-Route::get('assessor/view-batch/{id}', 'AdminAuth\AdminAssessorController@viewBatch')->name('as.assessor.view-batch');
-Route::post('assessor/reject-batch', 'AdminAuth\AdminAssessorController@rejectBatch')->name('as.reject.batch');
-Route::get('assessor/accept-batch/{id}', 'AdminAuth\AdminAssessorController@acceptBatch')->name('as.accept.batch');
+
+
+
+
 Route::get('assessor/assessor-view/{id}', 'AdminAuth\AdminAssessorController@assessorView')->name('as.assessor.view');
 Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
 Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');

@@ -38,13 +38,13 @@ class AssessorBatchController extends Controller
 
     public function batches(){
 
-        $assessorBatch=AssessorBatch::where([['as_id','=',$this->guard()->user()->id],['verified','=',1]])->get();
+        $assessorBatch=AssessorBatch::where('as_id','=',$this->guard()->user()->id)->get();
       
         return view('assessor.assessor-batch')->with(compact('assessorBatch'));
     }
 
     public function pendingApproval(){
-        $assessorBatch=AssessorBatch::where([['as_id','=',$this->guard()->user()->id],['verified','=',1]])->get();
+        $assessorBatch=AssessorBatch::where('as_id','=',$this->guard()->user()->id)->get();
         return view('assessor.assessor-batch-pending-approval')->with(compact('assessorBatch'));
         
     }
@@ -60,6 +60,7 @@ class AssessorBatchController extends Controller
     }
 
     public function candidateMarksInsert(Request $request){
+        //dd($request);
 
         $batchAssessment= new BatchAssessment;
         $batchAssessment->bt_id	=$request->bt_id;
@@ -76,10 +77,19 @@ class AssessorBatchController extends Controller
             $a='remark'.($key+1);
             $candidatemark=new CandidateMark;
             $candidatemark->bt_assessment_id=$batchAssessment->id;	
-            $candidatemark->candidate_id=$value;	
-            $candidatemark->mark=$request->mark[$key];	
+            $candidatemark->candidate_id=$value;
+            if($request->mark[$key]==null){
+                $candidatemark->mark=0;	
+                    }else{
+                $candidatemark->mark=$request->mark[$key];	
+                    }	
             $candidatemark->attendence=$request->attendence[$key];
-            $candidatemark->passed=$request->$a;
+            if($request->$a==null){
+                $candidatemark->passed=0;
+
+            }else{
+                $candidatemark->passed=$request->$a;
+            }
             $candidatemark->save();
         }
 
@@ -93,8 +103,7 @@ class AssessorBatchController extends Controller
           $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment marks submit by Assessor";
           $notification->save();
           /* End Notification For Agency */
-
-       alert()->success('Marks has been Submitted wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
+          alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
         return redirect()->route('assessor.batch');
     }
 
@@ -112,10 +121,20 @@ class AssessorBatchController extends Controller
 
              foreach ($batchAssessment->candidateMarks as $key => $candidatemark) {
                 $a='remark'.($key+1);
-               
-               	$candidatemark->mark=$request->mark[$key];	
+                if($request->mark[$key]==null){
+                    $candidatemark->mark=0;	
+                        }else{
+                    $candidatemark->mark=$request->mark[$key];	
+                        }
+               	//$candidatemark->mark=$request->mark[$key];	
                 $candidatemark->attendence=$request->attendence[$key];
-                $candidatemark->passed=$request->$a;
+                if($request->$a==null){
+                    $candidatemark->passed=0;
+    
+                }else{
+                    $candidatemark->passed=$request->$a;
+                }
+                //$candidatemark->passed=$request->$a;
                
                 $candidatemark->save();
             }
@@ -144,8 +163,9 @@ class AssessorBatchController extends Controller
                 /* End Notification For Admin */
                 }
 
-            alert()->success('Marks has been Updated wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
-            return redirect()->route('assessor.batch');
+                alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
+                // alert()->success('Marks has been Updated wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
+                return redirect()->route('assessor.batch');
 
     }
 
