@@ -14,7 +14,7 @@
                 <div class="body">
                         <div class="text-center">
                             <h6>
-                                This Candidate is <span style='color:{{($candidate->status)?"green":"red"}}'>{{($candidate->status)?"Active":"Inactive"}}</span>
+                                This Candidate is <span style='color:{{($center_candidate->candidate->status)?"green":"red"}}'>{{($center_candidate->candidate->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -26,27 +26,27 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <small class="text-muted">Training Partner</small>
-                                        <p>{{$candidate->center->partner->tp_id}} <span style='color:{{($candidate->center->partner->status)?"green":"red"}}'><strong>{{($candidate->center->partner->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <p>{{$center_candidate->center->partner->tp_id}} <span style='color:{{($center_candidate->center->partner->status)?"green":"red"}}'><strong>{{($center_candidate->center->partner->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
                                     
                                     <div class="col-sm-3">
                                         <small class="text-muted">Training Center</small>
-                                        <p>{{$candidate->center->tc_id}} <span style='color:{{($candidate->center->status)?"green":"red"}}'><strong>{{($candidate->center->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <p>{{$center_candidate->center->tc_id}} <span style='color:{{($center_candidate->center->status)?"green":"red"}}'><strong>{{($center_candidate->center->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
 
                                     <div class="col-sm-3">
                                         <small class="text-muted">Aadhaar/Voter Number</small>
-                                        <p>{{$candidate->doc_no}}</p>
+                                        <p>{{$center_candidate->candidate->doc_no}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-3">
                                         <small class="text-muted">Aadhaar/Voter Document</small>
-                                        @if (!is_null($candidate->doc_file))
+                                        @if (!is_null($center_candidate->candidate->doc_file))
                                             <p>Document &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'doc'])}}" download="{{basename($candidate->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$center_candidate->candidate->id,'file'=>'doc'])}}" download="{{basename($center_candidate->candidate->doc_file)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                         @else
                                             <p>No Document Provided</p>
@@ -63,18 +63,18 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Candidate Name </small>
-                                        <p>{{$candidate->name}}</p>
+                                        <p>{{$center_candidate->candidate->name}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Candidate Contact </small>
-                                        <p>{{$candidate->contact}}</p>
+                                        <p>{{$center_candidate->candidate->contact}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Candidate Email </small>
-                                        <p>{{$candidate->email}}</p>
+                                        <p>{{$center_candidate->candidate->email}}</p>
                                         <hr>
                                     </div>
                                   
@@ -82,19 +82,19 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Gender</small>
-                                        <p>{{$candidate->gender}}</p>
+                                        <p>{{$center_candidate->candidate->gender}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Date of Birth</small>
-                                        <p>{{$candidate->dob}}</p>
+                                        <p>{{$center_candidate->candidate->dob}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Marital Status</small>
                                         <p>
-                                            {{$candidate->m_status}}</p>
+                                            {{$center_candidate->m_status}}</p>
                                         <hr>
                                     </div>
                 
@@ -112,17 +112,17 @@
                                 <div class="row">
                                     <div class="col-sm-8">
                                             <small class="text-muted">Scheme/Sector/Job Role/NSQF/QP Code</small>
-                                            <p>{{$candidate->jobrole->partnerjobrole->scheme->scheme}} |
-                                                {{$candidate->jobrole->partnerjobrole->sector->sector}} |
-                                                {{$candidate->jobrole->partnerjobrole->jobrole->job_role}} |
-                                                {{$candidate->jobrole->partnerjobrole->jobrole->nsqf_level}} |
-                                                {{$candidate->jobrole->partnerjobrole->jobrole->qp_code}}
+                                            <p>{{$center_candidate->jobrole->partnerjobrole->scheme->scheme}} |
+                                                {{$center_candidate->jobrole->partnerjobrole->sector->sector}} |
+                                                {{$center_candidate->jobrole->partnerjobrole->jobrole->job_role}} |
+                                                {{$center_candidate->jobrole->partnerjobrole->jobrole->nsqf_level}} |
+                                                {{$center_candidate->jobrole->partnerjobrole->jobrole->qp_code}}
                                             </p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Scheme Status </small>
-                                            <p class="text-{{($candidate->jobrole->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</strong></p>
+                                            <p class="text-{{($center_candidate->jobrole->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($center_candidate->jobrole->partnerjobrole->status)?'Active':'Inactive'}}</strong></p>
                                         <hr>
                                     </div>
                                 </div>
@@ -130,14 +130,14 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                             <small class="text-muted">Disability Type</small>
-                                            <p>{{$candidate->disability->e_expository}}</p>
+                                            <p>{{$center_candidate->disability->e_expository}}</p>
                                             <hr>
                                     </div>
                                     <div class="col-sm-6">
                                         <small class="text-muted">Disability Certificate</small>
-                                        @if (!is_null($candidate->d_cert))
+                                        @if (!is_null($center_candidate->d_cert))
                                             <p>Document &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$candidate->id,'file'=>'cert'])}}" download="{{basename($candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
+                                                <a class="btn-icon-mini" href="{{route('center.files.candidate-file',['action'=>'download','id'=>$center_candidate->candidate->id,'file'=>'cert'])}}" download="{{basename($center_candidate->d_cert)}}"><i class="zmdi zmdi-download"></i></a>
                                             </p>
                                         @else
                                             <p>No Document Provided</p>                                                 
@@ -148,7 +148,7 @@
                                 <div class="row">
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Address</small>
-                                                <p>{{$candidate->address}}</p>
+                                                <p>{{$center_candidate->address}}</p>
                                                 <hr>
                                         </div>
                                     
@@ -162,18 +162,18 @@
                                 <div class="row">
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Category </small>
-                                                <p>{{$candidate->category}}</p>
+                                                <p>{{$center_candidate->candidate->category}}</p>
                                                 <hr>
                                         </div>
                                     
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Ex Service Employee </small>
-                                                <p>{{$candidate->service}}</p>
+                                                <p>{{$center_candidate->service}}</p>
                                                 <hr>
                                         </div>
                                         <div class="col-sm-4">
                                                 <small class="text-muted">Education</small>
-                                                <p>{{$candidate->education}}</p>
+                                                <p>{{$center_candidate->education}}</p>
                                                 <hr>
                                         </div>
                                        
@@ -181,13 +181,13 @@
                                 <div class="row">
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Guardian Name  </small>
-                                                <p>{{$candidate->g_name}}</p>
+                                                <p>{{$center_candidate->g_name}}</p>
                                                 <hr>
                                         </div>
                                     
                                         <div class="col-sm-6">
                                                 <small class="text-muted">Guardian Type </small>
-                                                <p>{{$candidate->g_type}}</p>
+                                                <p>{{$center_candidate->g_type}}</p>
                                                 <hr>
                                         </div>
                                        
@@ -200,7 +200,7 @@
                   
                     @if (Request::segment(1)==='admin')
                         <div class="text-center" >
-                            <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
+                            <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($center_candidate->candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
                         </div>
                     @endif
                    
@@ -229,7 +229,7 @@
                 if (inputValue === "") {
                     swal.showInputError("You need to write something!"); return false
                 }
-                var id={{$candidate->id}};
+                var id='{{$center_candidate->candidate->id}}';
                 var note=inputValue;
                 let _token = $("input[name='_token']").val();
             
@@ -263,7 +263,7 @@
 @endauth
 
 @auth('partner')
-    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $candidate))
+    @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $center_candidate->center))
         <script>
             function update(v){
                 dataValues = v.split(',');
@@ -282,7 +282,7 @@
                     if (value === "") {
                         swal.showInputError("You need to write something!"); return false
                     }
-                    var id='{{$candidate->id}}';
+                    var id='{{$center_candidate->candidate->id}}';
                     let _token = $("input[name='_token']").val();
                     var name = dataValues[1]
                     $.ajax({

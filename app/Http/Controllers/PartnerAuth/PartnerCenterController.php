@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\Http\Requests\TCFormValidation;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\Request;
+use DB;
+use Auth;
+use Crypt;
+use App\Center;
+use App\Candidate;
+use App\CenterDoc;
 use App\Notification;
 use App\CenterJobRole;
-use App\Candidate;
 use App\PartnerJobrole;
-use App\CenterDoc;
-use App\Center;
-use Crypt;
-use Auth;
-use DB;
+use App\CenterCandidateMap;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\TCFormValidation;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PartnerCenterController extends Controller
 {
@@ -299,14 +300,19 @@ class PartnerCenterController extends Controller
         $partner = $this->guard()->user();
         $centers = $this->guard()->user()->centers;
         $candidates = collect();
+        $list = []; // * list[] is centercandiadtemap id's array;
         foreach ($centers as $center) {
-            foreach ($center->candidates as $candidate) {
-                $candidates->push($candidate);
+            $center_candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
+                ->orderBy('ccm.id', 'desc')
+                ->where('ccm.tc_id',$center->id)
+                ->get()->unique('cd_id')->pluck('id')->toArray();
+            $list = array_unique (array_merge ($list, $center_candidates));
             }
-        }
+
+
         $data = [
             'partner'  => $partner,
-            'candidates' => $candidates,
+            'candidates' => CenterCandidateMap::whereIn('id', $list)->get(),
         ];
         return view('common.candidates')->with($data);
     }
@@ -314,10 +320,11 @@ class PartnerCenterController extends Controller
     public function view_candidate($id){
         if ($id=$this->decryptThis($id)) {
             $candidate = Candidate::findOrFail($id);
-            if ($candidate->center->partner->id == $this->guard()->user()->id) {
+            if ($candidate->centerlatest->center->partner->id == $this->guard()->user()->id) {
                 $partner = $this->guard()->user();
-                $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
-                return view('common.view-candidate')->with(compact('candidate','state_dist','partner'));
+                $state_dist = DB::table('state_district')->where('id',$candidate->centerlatest->state_district)->first();
+                $center_candidate = $candidate->centerlatest;
+                return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
             } else {
                 return abort(404);
             }

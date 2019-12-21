@@ -15,6 +15,7 @@ use App\Mail\TCMail;
 use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
+use App\CenterCandidateMap;
 use App\Events\TCMailEvent;
 use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
@@ -476,9 +477,13 @@ class AdminCenterController extends Controller
     // }
 
     public function candidates(){
+        $candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
+            ->orderBy('ccm.id', 'desc')            
+            ->get()->unique('cd_id')->pluck('id')->toArray();
+        
         $data = [
             'admin'  => $this->guard()->user(),
-            'candidates' => Candidate::all(),
+            'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
         ];
         return view('common.candidates')->with($data);
     }
@@ -486,8 +491,9 @@ class AdminCenterController extends Controller
     public function view_candidate($id){
         if ($id = $this->decryptThis($id)) {
             $candidate = Candidate::findOrFail($id);
-            $state_dist = DB::table('state_district')->where('id',$candidate->state_district)->first();
-            return view('common.view-candidate')->with(compact('candidate','state_dist'));
+            $center_candidate= $candidate->centerlatest;
+            $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
+            return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
         }
     }
 
@@ -497,29 +503,29 @@ class AdminCenterController extends Controller
 
             if ($id=$this->decryptThis($request->data)) {
                 $data = explode(',',$id);
-                $candidate = Candidate::find($data[0]);
+                $center_candidate = CenterCandidateMap::find($data[0]);
 
-                if ($candidate) {
-                    if ($candidate->status) {
+                if ($center_candidate) {
+                    if ($center_candidate->candidate->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
-                            $candidate->status = 0;
-                            $candidate->save();
-                            $reason = new Reason;
-                            $reason->rel_id = $data[0];
+                            $center_candidate->candidate->status = 0;
+                            $center_candidate->candidate->save();
+                            $reason = new Reason; 
+                            $reason->rel_id = $center_candidate->candidate->id;$data[0];
                             $reason->rel_with = 'candidate';
                             $reason->reason = $request->reason;
                             $reason->save();
-                            $this->writeNotification($candidate->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
-                            $this->writeNotification($candidate->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
+                            $this->writeNotification($center_candidate->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
+                            $this->writeNotification($center_candidate->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
                         }
                     } else {
-                        $candidate->status = 1;
-                        $candidate->save();
-                        $this->writeNotification($candidate->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
-                        $this->writeNotification($candidate->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $center_candidate->status = 1;
+                        $center_candidate->save();
+                        $this->writeNotification($center_candidate->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        $this->writeNotification($center_candidate->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$center_candidate->name</span>) is now <span style='color:red;'>Active</span>.");
                         $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
                     return response()->json($array,200);

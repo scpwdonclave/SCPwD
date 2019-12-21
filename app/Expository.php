@@ -14,6 +14,6 @@ class Expository extends Model implements Auditable
     }
 
     public function candidates(){
-        return $this->hasMany('App\Candidate', 'd_type');
+        return $this->hasMany('App\CenterCandidateMap', 'd_type');
     }
 }

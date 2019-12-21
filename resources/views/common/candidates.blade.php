@@ -53,24 +53,24 @@
                                 @if (Request::segment(1) !== 'center')
                                     <td>{{$candidate->center->tc_id}}</td>
                                 @endif
-                                <td>{{$candidate->name}}</td>
-                                <td>{{$candidate->contact}}</td>
-                                <td>{{$candidate->category}}</td>
-                                <td>{{$candidate->dob}}</td>
-                                <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
+                                <td>{{$candidate->candidate->name}}</td>
+                                <td>{{$candidate->candidate->contact}}</td>
+                                <td>{{$candidate->candidate->category}}</td>
+                                <td>{{$candidate->candidate->dob}}</td>
+                                <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->candidate->status)?'Active':'Inactive'}}</td>
                                
-                               @if ($candidate->passed===1)
-                               <td class="text-success">Passed</td>
-                               @elseif ($candidate->passed===0)
-                               <td class="text-danger">Failed</td>
-                               @elseif ($candidate->passed===null)
-                               <td>N/A</td>
+                               @if (is_null($candidate->passed))
+                                   <td>N/A</td>
+                               @elseif ($candidate->passed)
+                                   <td class="text-success">Passed</td>
+                               @elseif ($candidate->passed)
+                                   <td class="text-danger">Failed</td>
                                @endif
                                 
                                 @if (Request::segment(1)==='admin')
-                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($candidate->id).','.$candidate->status.','.$candidate->name}}')" class="badge bg-{{($candidate->status)?'red':'green'}} margin-0">{{($candidate->status)?'Deactivate':'Activate'}}</button></td>
+                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($candidate->candidate->id).','.$candidate->candidate->status.','.$candidate->candidate->name}}')" class="badge bg-{{($candidate->candidate->status)?'red':'green'}} margin-0">{{($candidate->candidate->status)?'Deactivate':'Activate'}}</button></td>
                                 @endif
-                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->id))}}'" >View</button></td>
+                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->candidate->id))}}'" >View</button></td>
                                 </tr>
                                 @endforeach
                                

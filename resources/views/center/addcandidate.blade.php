@@ -373,7 +373,7 @@
                             if (!data.success) {
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
-                                swal('Abort','Candidate With This Addhar/Voter No is Already Present in Our Database','error');
+                                swal('Abort','Candidate With This Addhar/Voter No is Present in Record and maybe or may not be Linked with a Batch as well','error');
                                 ajaxresponse = false;
                                 return false;
                             }
