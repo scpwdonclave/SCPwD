@@ -33,7 +33,7 @@
 
                                         $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=',null]])->orderBy('created_at', 'desc')->get();
                                     }else{
-                                         $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('admin')->user()->id]])->orderBy('created_at', 'desc')->get();
+                                         $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
 
                                     }
                                     break;
