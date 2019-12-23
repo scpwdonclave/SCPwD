@@ -14,6 +14,7 @@ use App\Expository;
 use App\Sector;
 use App\Scheme;
 use App\Holiday;
+use App\Department;
 use Crypt;
 use Carbon\Carbon;
 use DB;
@@ -273,5 +274,20 @@ class AdminHomeController extends Controller
         $data=Holiday::findOrFail($request->id);
         $data->delete();
         return response()->json(['status' => 'done'],200);
+    }
+
+    public function department(){
+        $departments = Department::all();
+        return view('admin.dashboard.department')->with(compact('departments')); 
+    }
+
+    public function departmentInsert(Request $request){
+        
+        $department = new Department;
+        $department->dept_name=$request->dept_name;
+        $department->dept_address=$request->dept_address;
+        $department->save();
+        alert()->success("Department Added <span style='color:blue;'>Successfull</span>", "Done")->html()->autoclose(4000);
+        return Redirect()->back();
     }
 }

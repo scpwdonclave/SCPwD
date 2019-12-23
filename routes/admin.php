@@ -11,6 +11,11 @@ Route::get('dashboard/holiday', 'AdminAuth\AdminHomeController@holiday')->name('
 Route::post('dashboard/holiday-insert', 'AdminAuth\AdminHomeController@holidayInsert')->name('dashboard.holiday-insert');
 Route::post('dashboard/holiday-delete', 'AdminAuth\AdminHomeController@holidayDelete')->name('dashboard.holiday-delete');
 Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->name('dashboard.scheme_action');
+
+Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->name('dashboard.department');
+Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
+
+
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });
 Route::get('training_partners/partners', 'AdminAuth\AdminPartnerController@partners')->name('tp.partners');
