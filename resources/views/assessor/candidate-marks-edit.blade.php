@@ -83,14 +83,14 @@
 
                             <div class="row d-flex justify-content-around">
                             <div class="col-sm-4">
-                                <label>Attendence Sheet *</label>
+                                <label>Attendence Sheet </label>
                                 <div class="form-group form-float">
                                     <input id="attendence_doc" type="file" class="form-control" name="attendence_doc" >
                                     <span id="attendence_doc_error" style="color:red;"></span>                                                            
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label>Mark sheet *</label>
+                                <label>Mark sheet </label>
                                 <div class="form-group form-float">
                                     <input id="marksheet_doc" type="file" class="form-control" name="marksheet_doc" >
                                     <span id="marksheet_doc_error" style="color:red;"></span>                                                            

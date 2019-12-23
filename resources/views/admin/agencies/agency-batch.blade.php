@@ -76,7 +76,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="sector">Sector *</label>
+                                <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector" onchange="fetchBatch(this.value)" data-dropup-auto='false' required>
                                         <option value="">--select--</option>
@@ -93,7 +93,7 @@
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="batch">Batch *</label>
+                                    <label for="batch">Batch <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
                                             
@@ -212,11 +212,11 @@ function fetchBatch(sector){
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 
-<script>
+{{-- <script>
      $("#holiday_date").datepicker({
         format: 'dd-mm-yyyy',
         time: false,
         autoclose:true
     });
-</script>
+</script> --}}
 @endsection
