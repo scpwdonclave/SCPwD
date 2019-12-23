@@ -27,8 +27,8 @@
                                 <tr>
                                     <th>Scheme | Sector | Job Role</th>
                                     <th>Target Allocated</th>
-                                    <th>Student Enroll</th>
-                                    <th>Target Achieve</th>
+                                    <th>Target Distributed</th>
+                                    <th>Student Enrolled</th>
                                     <th>Scheme Status</th>
                                     <th>Edit</th>
                                 </tr>
@@ -39,7 +39,7 @@
                                         <td>{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
                                         <td>{{$job->target}}</td>
                                         <td>{{$job->assigned}}</td>
-                                        <td>{{$job->target}}</td>
+                                        <td>Not Yet Done</td>
                                         <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
                                         @if($job->status)
                                             <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>

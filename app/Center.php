@@ -55,8 +55,8 @@ class Center extends Authenticatable implements Auditable
         return $this->hasMany('App\Trainer', 'tp_id');
     }
     
-    public function candidates(){
-        return $this->hasMany('App\Candidate', 'tc_id');
+    public function candidatemap(){
+        return $this->hasMany('App\CenterCandidateMap', 'tc_id');
     }
 
     public function batches(){

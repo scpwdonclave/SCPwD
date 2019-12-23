@@ -18,7 +18,7 @@ class CenterJobRole extends Model implements Auditable
     }
 
     public function candidates(){
-        return $this->hasMany('App\Candidate', 'tc_job_id');
+        return $this->hasMany('App\CenterCandidateMap', 'tc_job_id');
     }
 
     

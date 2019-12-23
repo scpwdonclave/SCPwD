@@ -381,15 +381,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($centerData->candidates as $key => $candidate)
+                                    @foreach ($centerData->candidates as $key => $centercandidatemap)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$candidate->name}}</td>
-                                        <td>{{$candidate->contact}}</td>
-                                        <td>{{$candidate->category}}</td>
-                                        <td>{{$candidate->dob}}</td>
-                                        <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->status)?'Active':'Inactive'}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($candidate->id))}}" >View</a></td>
+                                        <td>{{$centercandidatemap->candidate->name}}</td>
+                                        <td>{{$centercandidatemap->candidate->contact}}</td>
+                                        <td>{{$centercandidatemap->candidate->category}}</td>
+                                        <td>{{$centercandidatemap->candidate->dob}}</td>
+                                        <td style="color:{{($centercandidatemap->jobrole->partnerjobrole->status && $centercandidatemap->center->partner->status && $centercandidatemap->center->status && $centercandidatemap->candidate->status)?'green':'red'}}">{{($centercandidatemap->jobrole->partnerjobrole->status && $centercandidatemap->center->partner->status && $centercandidatemap->center->status && $centercandidatemap->candidate->status)?'Active':'Inactive'}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($centercandidatemap->candidate->id))}}" >View</a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

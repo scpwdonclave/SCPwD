@@ -100,8 +100,6 @@ td p {
              </tr> 
            </table></td> 
          </tr> 
-       </table> 
-       <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
          <tr style="border-collapse:collapse;"> 
           <td align="center" bgcolor="#34265f" style="padding:0;Margin:0;background-color:#34265F;"> 
            <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#EDEDED;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ededed" align="center"> 
@@ -145,8 +143,6 @@ td p {
              </tr> 
            </table></td> 
          </tr> 
-       </table> 
-       <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
          <tr style="border-collapse:collapse;"> 
           <td align="center" bgcolor="#34265f" style="padding:0;Margin:0;background-color:#34265F;"> 
            <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center"> 
@@ -240,8 +236,6 @@ td p {
              </tr> 
            </table></td> 
          </tr> 
-       </table> 
-       <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
          <tr style="border-collapse:collapse;"> 
           <td align="center" bgcolor="#34265f" style="padding:0;Margin:0;background-color:#34265F;"> 
            <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#EDEDED;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ededed" align="center"> 
