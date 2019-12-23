@@ -4,11 +4,11 @@
 	<div class="container-login100"> 
 		<div class="wrap-login100">
 			<div class="login100-pic-mobile">
-				<img src="{{asset('assets/images/scpwd-trans.png')}}" alt="IMG">
+				<img src="{{asset('assets/images/scpwd-logo.png')}}" alt="IMG">
 			</div>
 			<div class="login100-pic">
 				<div class="logo">
-					<img src="{{asset('assets/images/scpwd-trans.png')}}" alt="IMG">
+					<img src="{{asset('assets/images/scpwd-logo.png')}}" alt="IMG">
 				</div>
 				<div class="js-tilt" data-tilt>
 					<img src="{{asset('assets/images/geek.png')}}" alt="IMG">

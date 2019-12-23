@@ -3,7 +3,7 @@
   <div class="wrap-login100 p-l-40 p-r-40 p-t-45 p-b-20">
     <form method="POST" id="form_reset_process" action="{{ route('center.password.request') }}" class="login100-form">
       @csrf  
-      <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
+      <span class="login100-form-title p-b-10"> <img class="login-logo" src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
       <span class="login100-form-title m-b-10">Training Center Password Reset</span>
 
       @if (session('status'))

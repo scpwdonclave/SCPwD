@@ -4,7 +4,7 @@
     <form method="POST" id="form_admin_login" action="{{ route('admin.login') }}" class="login100-form">
     
       @csrf  
-      <span class="login100-form-title p-b-10"> <img src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
+      <span class="login100-form-title p-b-10"> <img class="login-logo" src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
       <span class="login100-form-title m-b-10">Admin Login</span>
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
