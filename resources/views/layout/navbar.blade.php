@@ -71,12 +71,16 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <div class="navbar-header">
-                <div class="row"><h6>SCPwD</h6>:Partner Management System</div>
-            </div>
+        <li style="width:50%">
+            <span class="d-flex justify-content-center">
+               <strong>SCPwD : PARTNER MANAGEMENT SYSTEM</strong>
+            </span>
         </li>
-        <li class="float-right">  
+        <li class="float-right">
+            <span class="btn_overlay" style="font-size:10px; cursor:default">
+                <strong>Developed & Maintained By <a href="https://onclavesystems.com/" target="blank"> <span style="color:blue">Onclave Systems</span> </a></strong>
+            </span>
+            
             <a class="mega-menu" href="{{strtok(Route::current()->getName(), '.')}}/logout" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
                 <i class="zmdi zmdi-power"></i>
