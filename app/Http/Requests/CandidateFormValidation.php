@@ -48,7 +48,7 @@ class CandidateFormValidation extends FormRequest
             'state_district' => 'required',
             
             'doc_file' => 'required|mimes:jpeg,jpg,png,pdf',
-            'd_cert' => 'nullable|mimes:jpeg,jpg,png,pdf',
+            'd_cert' => 'required|mimes:jpeg,jpg,png,pdf',
             
         ];
 

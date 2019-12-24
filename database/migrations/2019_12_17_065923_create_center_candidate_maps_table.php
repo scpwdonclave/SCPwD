@@ -20,7 +20,7 @@ class CreateCenterCandidateMapsTable extends Migration
             $table->unsignedBigInteger('cd_id');
 
             $table->string('d_type')->comment = 'Disability Type';
-            $table->string('d_cert')->nullable()->comment = 'Disability Certificate';
+            $table->string('d_cert')->comment = 'Disability Certificate';
             $table->string('m_status')->default('Unmarried')->comment = 'Marital Status';
             $table->string('service')->comment = 'Ex Serviced or Not';
 

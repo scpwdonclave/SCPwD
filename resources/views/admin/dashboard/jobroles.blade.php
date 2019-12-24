@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label for="qualification">Qualification <span style="color:red"> <strong>*</strong></span></span></label>
+                                <label for="qualification">Trainer's Qualification <span style="color:red"> <strong>*</strong></span></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="qualification" data-dropup-auto='true' required>
                                         @foreach (config('constants.qualifications') as $qualification)

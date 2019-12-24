@@ -170,9 +170,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="d_cert">Upload Disability Certificate</label>
+                                                    <label for="d_cert">Upload Disability Certificate <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <input type="file" id="d_cert" class="form-control" name="d_cert">
+                                                        <input type="file" id="d_cert" class="form-control" name="d_cert" required>
                                                         <span id="d_cert_error"  style="color:red;"></span>
                                                     </div>
                                                 </div>

@@ -60,6 +60,14 @@ class PartnerBatchController extends Controller
             return false;
         }
     }
+    
+    protected function isHolidayForAssessment($date){
+        if (in_array($date->toDateString(), $this->getHolidays())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     protected function trainer_availability($trainer_id, $starttime, $endtime){
         $trainer_batches = Batch::where([['completed', 0],['tr_id', $trainer_id]])->get();
@@ -288,7 +296,7 @@ class PartnerBatchController extends Controller
                 $assessment_dates = [];             
 
                 for ($edate = $end_date->copy()->addDay(); sizeof($assessment_dates) < 5 ; $edate->addDay()) { 
-                    if (!$this->isHoliday($edate)) {
+                    if (!$this->isHolidayForAssessment($edate)) {
                         array_push($assessment_dates, Carbon::parse($edate->toDateString())->format('d-m-Y l'));
                     }
                 }
