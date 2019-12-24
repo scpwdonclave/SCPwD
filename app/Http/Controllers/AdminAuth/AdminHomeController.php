@@ -288,7 +288,20 @@ class AdminHomeController extends Controller
         $department->dept_name=$request->dept_name;
         $department->dept_address=$request->dept_address;
         $department->save();
-        alert()->success("Department Added <span style='color:blue;'>Successfull</span>", "Done")->html()->autoclose(4000);
+        alert()->success("Department Added <span style='color:blue;'>Successfully</span>", "Done")->html()->autoclose(4000);
         return Redirect()->back();
+    }
+
+    public function departmentDelete(Request $request){
+        $data=Department::findOrFail($request->id);
+       $scheme=Scheme::where('dept_id',$request->id)->first();
+        if(!is_null($scheme)){
+            return response()->json(['status' => 'fail'],200);
+
+        }else{
+            $data->delete();
+            return response()->json(['status' => 'done'],200);
+
+        }
     }
 }

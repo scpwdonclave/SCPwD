@@ -225,30 +225,30 @@ class PartnerBatchController extends Controller
             if ($center) {
                 if ($center->partner->id == $partner->id) {
                     $candidateRow = [[]];
-                    foreach ($center->candidates as $candidate) {
-                        if ($candidate->status && $this->partnerscheme($candidate,'candidate')) {
-                            if (count($candidate->batchmap) == 0) {
-                                $candidateRow[0] = '<input type="checkbox">';
-                                $candidateRow[1] = $candidate->name;
-                                $candidateRow[2] = $candidate->contact;
-                                $candidateRow[3] = $candidate->category;
-                                $candidateRow[4] = $candidate->disability->e_expository;
-                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                $candidateRow[6] = $candidate->id;
-                                array_push($candidateArray, $candidateRow);
-                            } else {
-                                foreach ($candidate->batchmap as $batchmap) {
-                                    if ($batchmap->batch->completed) {
+                    foreach ($center->candidatesmap as $candidate) {
+                        if ($candidate->candidate->status && $this->partnerscheme($candidate,'candidate')) {
+                            if ($candidate->batchcandidate) {
+                                foreach ($candidate->batchcandidate as $batchcandidate) {
+                                    if ($batchcandidate->batch->completed) {
                                         $candidateRow[0] = '<input type="checkbox">';
-                                        $candidateRow[1] = $candidate->name;
-                                        $candidateRow[2] = $candidate->contact;
-                                        $candidateRow[3] = $candidate->category;
+                                        $candidateRow[1] = $candidate->candidate->name;
+                                        $candidateRow[2] = $candidate->candidate->contact;
+                                        $candidateRow[3] = $candidate->candidate->category;
                                         $candidateRow[4] = $candidate->disability->e_expository;
-                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                        $candidateRow[6] = $candidate->id;
+                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                        $candidateRow[6] = $candidate->cd_id;
                                         array_push($candidateArray, $candidateRow);
                                     }
                                 }
+                            } else {
+                                $candidateRow[0] = '<input type="checkbox">';
+                                $candidateRow[1] = $candidate->candidate->name;
+                                $candidateRow[2] = $candidate->candidate->contact;
+                                $candidateRow[3] = $candidate->candidate->category;
+                                $candidateRow[4] = $candidate->disability->e_expository;
+                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$candidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                $candidateRow[6] = $candidate->cd_id;
+                                array_push($candidateArray, $candidateRow);
                             }
                         }
                     }

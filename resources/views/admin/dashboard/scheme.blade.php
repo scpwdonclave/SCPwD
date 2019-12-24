@@ -86,9 +86,9 @@
                             <div class="col-sm-12">
                                 <label for="dept">Department <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="dept"  data-dropup-auto='false' required>
+                                    <select class="form-control show-tick" data-live-search="true" name="dept" data-show-subtext="true" data-dropup-auto='false' required>
                                         @foreach ($departments as $department)
-                                            <option value="{{$department->id}}" >{{ $department->dept_name }}</option>
+                                            <option value="{{$department->id}}" data-subtext="{{ $department->dept_address }}" >{{ $department->dept_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
