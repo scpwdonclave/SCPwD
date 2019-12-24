@@ -85,7 +85,7 @@ class CenterHomeController extends Controller
 
         // $candidates = collect([]);
 
-        // foreach ($center->candidatemap as $candidate) {
+        // foreach ($center->candidatesmap as $candidate) {
 
         //     dump($candidate);
         //     $candidates->push($candidate->candidate);

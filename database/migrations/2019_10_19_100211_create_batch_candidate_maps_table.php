@@ -17,6 +17,7 @@ class CreateBatchCandidateMapsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bt_id');
             $table->unsignedBigInteger('candidate_id');
+            $table->unsignedBigInteger('cc_id');
             $table->timestamps();
         });
     }

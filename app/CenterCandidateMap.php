@@ -21,9 +21,9 @@ class CenterCandidateMap extends Model implements Auditable
         return $this->belongsTo('App\Expository', 'd_type');
     }
 
-    // public function batchmap(){
-    //     return $this->hasMany('App\BatchCandidateMap', 'candidate_id');
-    // }
+    public function batchcandidate(){
+        return $this->belongsTo('App\BatchCandidateMap', 'candidate_id');
+    }
     
     public function candidate()
     {
