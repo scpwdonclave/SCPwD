@@ -244,7 +244,8 @@ class AdminHomeController extends Controller
 
     public function scheme(){
         $schemes = Scheme::all();
-        return view('admin.dashboard.scheme')->with(compact('schemes'));
+        $departments = Department::all();
+        return view('admin.dashboard.scheme')->with(compact('schemes','departments'));
     }
 
     public function scheme_action(Request $request){

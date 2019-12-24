@@ -16,6 +16,7 @@ class CreateSchemesTable extends Migration
         Schema::create('schemes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('scheme');
+            $table->unsignedBigInteger('dept_id');
             $table->string('logo');
             $table->string('cert_format');
             $table->boolean('fin_yr')->default(0);

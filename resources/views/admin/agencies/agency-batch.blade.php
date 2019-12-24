@@ -47,7 +47,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($agency[0]->agencyBatch as $agbatch)
+                                @foreach ($agency[0]->agencyBatch as $agbatch) 
                                 <tr style="height:5px !important">
                                 
                                 <td>{{$agbatch->batch->batch_id}}</td>

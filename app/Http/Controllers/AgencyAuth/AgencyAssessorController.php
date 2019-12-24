@@ -340,15 +340,36 @@ class AgencyAssessorController extends Controller
             $agencyBatch->bt_id=$batch;
             $agencyBatch->save();
          }
+
+          /* Notification For Assessor */
+        
+        $notification = new Notification;
+        $notification->rel_id = $request->as_id;
+        $notification->rel_with = 'assessor';
+        $notification->title = 'New Batch Added';
+        $notification->message = "New Batch added by Agency";
+        $notification->save();
+        /* End Notification For Assessor */
+
          alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessor", 'Job Done')->html()->autoclose(3000);
          return Redirect()->back();
 
     }
 
     public function deleteBatch(Request $request){
-        $agencyBatch=AssessorBatch::findOrFail($request->id);
-           
-            $agencyBatch->delete();
+        $assessorBatch=AssessorBatch::findOrFail($request->id);
+
+        /* Notification For Assessor */
+        $batch_no=$assessorBatch->batch->batch_id;
+        $notification = new Notification;
+        $notification->rel_id = $assessorBatch->as_id;
+        $notification->rel_with = 'assessor';
+        $notification->title = 'Batch cancelled by Agency';
+        $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment cancelled by Agency";
+        $notification->save();
+        /* End Notification For Assessor */
+
+            $assessorBatch->delete();
             return response()->json(['status' => 'done'],200);
 
         

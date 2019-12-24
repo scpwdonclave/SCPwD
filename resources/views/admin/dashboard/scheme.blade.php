@@ -29,7 +29,7 @@
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Scheme</th>
+                                    <th>Department | Scheme</th>
                                     <th>Certificate Format</th>
                                     <th>Logo</th>
                                     <th>Action</th>
@@ -39,9 +39,10 @@
                             <tbody>
                                 @foreach ($schemes as $scheme)
                                 <tr style="height:5px !important">
-                                <td>{{$scheme->scheme}}</td>
+                                <td>{{$scheme->department->dept_name}} | {{$scheme->scheme}}</td>
                                 <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.substr($scheme->year, 2):null)!!}</td>
-                                <td> <img src="{{asset('storage/'.$scheme->logo)}}" width="50" alt="No Image"> </td>
+                                <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
+                                {{-- <td> <img src="{{asset('storage/'.$scheme->logo)}}" width="50" alt="No Image"> </td> --}}
                                 <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
                                 <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                 </tr>
@@ -77,6 +78,18 @@
                                 <label for="year">Year <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="year" class="form-control show-tick" data-live-search="true" name="year" onchange="redesign()" data-dropup-auto='false' required>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="dept">Department <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" data-live-search="true" name="dept"  data-dropup-auto='false' required>
+                                        @foreach ($departments as $department)
+                                            <option value="{{$department->id}}" >{{ $department->dept_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

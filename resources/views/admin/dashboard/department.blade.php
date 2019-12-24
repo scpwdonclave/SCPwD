@@ -9,14 +9,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
-<style>
-.table td {
-    padding: .10rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-    text-align: center;
-}
-</style>
+
 @stop
 @section('parentPageTitle', 'Dashboard')
 @section('content')
@@ -29,23 +22,24 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Department Name</th>
                                     <th>Address</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($departments as $key=>$department)
-                                <tr style="height:5px !important">
+                                <tr>
                                 <td>{{$key+1}}</td>
                                 <td>{{$department->dept_name}}</td>
                                 <td>{{$department->dept_address}}</td>
-                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$department->id}});"><i class="zmdi zmdi-delete"></button></td>
+                                {{-- <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$department->id}});"><i class="zmdi zmdi-delete"></button></td> --}}
                                 </tr>
+                                
                                 @endforeach
                             </tbody>
                         </table>
@@ -92,7 +86,7 @@
 @stop
 @section('page-script')
 
-<script>
+{{-- <script>
  function deleteConfirm(id){
     swal({
         title: "Are you sure?",
@@ -131,7 +125,7 @@
 
  }
 
-</script>
+</script> --}}
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
@@ -147,11 +141,5 @@
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 
-<script>
-     $("#holiday_date").datepicker({
-        format: 'dd-mm-yyyy',
-        time: false,
-        autoclose:true
-    });
-</script>
+
 @endsection

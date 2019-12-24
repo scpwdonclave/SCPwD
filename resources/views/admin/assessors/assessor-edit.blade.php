@@ -134,7 +134,7 @@
                                                 <div class="disabl">
                                                 <label>Disability Certificate</label>
                                                 <div class="form-group form-float">
-                                                    <input id="d_certificate" type="file" class="form-control" name="d_certificate" required>
+                                                    <input id="d_certificate" type="file" class="form-control" name="d_certificate" >
                                                     <span id="d_certificate_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
@@ -594,10 +594,10 @@
 
     function myFunction2(){
          if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
-           console.log('my reject');
-           console.log(dup_email_tag);
-           console.log(dup_mobile_tag);
-           console.log(dup_aadhaar_tag);
+        //    console.log('my reject');
+        //    console.log(dup_email_tag);
+        //    console.log(dup_mobile_tag);
+        //    console.log(dup_aadhaar_tag);
           
             return false;
         }
