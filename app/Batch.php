@@ -29,7 +29,7 @@ class Batch extends Model implements Auditable
         return $this->belongsTo('App\PartnerJobrole', 'tp_job_id');
     }
     public function candidatesmap(){
-        return $this->hasMany('App\BatchCandidateMap', 'bt_id');
+        return $this->hasMany('App\BatchCenterCandidateMap', 'bt_id');
     }
     public function batchassessment(){
         return $this->hasOne('App\BatchAssessment', 'bt_id');

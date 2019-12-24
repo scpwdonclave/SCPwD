@@ -8,7 +8,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use App\BatchUpdate;
 use App\Holiday;
 use App\Batch;
-use App\BatchCandidateMap;
+use App\BatchCenterCandidateMap;
 use App\Mail\BTRejectMail;
 use App\Notification;
 use Carbon\Carbon;
@@ -170,7 +170,7 @@ class AdminBatchController extends Controller
                         $notification->save();
                         /* End Notification For Partner */
                         
-                        BatchCandidateMap::where('bt_id',$id)->delete();
+                        BatchCenterCandidateMap::where('bt_id',$id)->delete();
                         $data->delete();
                         alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(3000);         
                     } else {

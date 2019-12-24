@@ -9,10 +9,10 @@ class Candidate extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    public function batches()
-    {
-        return $this->hasMany('App\BatchCandidateMap');
-    }
+    // public function batches()
+    // {
+    //     return $this->hasMany('App\BatchCenterCandidateMap');
+    // }
 
     public function centermap()
     {

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\BatchCandidateMap;
+use App\BatchCenterCandidateMap;
 use App\BatchAssessment;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
@@ -391,7 +391,7 @@ class PartnerBatchController extends Controller
                 $batch->save();
     
                 foreach ($request->id as $value) {
-                    $batchCandidate = new BatchCandidateMap;
+                    $batchCandidate = new BatchCenterCandidateMap;
                     $batchCandidate->bt_id = $batch->id; 
                     $batchCandidate->candidate_id = $value;
                     $batchCandidate->save();

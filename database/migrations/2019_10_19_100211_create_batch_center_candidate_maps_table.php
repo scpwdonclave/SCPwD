@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBatchCandidateMapsTable extends Migration
+class CreateBatchCenterCandidateMapsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBatchCandidateMapsTable extends Migration
      */
     public function up()
     {
-        Schema::create('batch_candidate_maps', function (Blueprint $table) {
+        Schema::create('batch_center_candidate_maps', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bt_id');
             $table->unsignedBigInteger('candidate_id');
@@ -29,6 +29,6 @@ class CreateBatchCandidateMapsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('batch_candidate_maps');
+        Schema::dropIfExists('batch_center_candidate_maps');
     }
 }
