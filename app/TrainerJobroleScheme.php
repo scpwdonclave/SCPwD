@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TrainerJobroleScheme extends Model
+class TrainerJobroleScheme extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function jobrole(){
         return $this->belongsTo('App\TrainerJobRole','tr_job_id');
     }

@@ -2,14 +2,15 @@
 
 namespace App;
 
-use App\Notifications\AgencyResetPassword;
 use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
+use App\Notifications\AgencyResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Agency extends Authenticatable
+class Agency extends Authenticatable implements Auditable
 {
     use Notifiable;
-
+    use \OwenIt\Auditing\Auditable;
     /**
      * The attributes that are mass assignable.
      *

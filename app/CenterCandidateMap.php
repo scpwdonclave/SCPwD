@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CenterCandidateMap extends Model
+class CenterCandidateMap extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function jobrole(){
         return $this->belongsTo('App\CenterJobRole', 'tc_job_id');
     }

@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class BatchUpdate extends Model
+class BatchUpdate extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     public function batch(){
         return $this->belongsTo('App\Batch', 'bt_id');
     }
