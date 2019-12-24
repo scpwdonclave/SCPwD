@@ -10,7 +10,7 @@ class BatchCandidateMap extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     public function centercandidate(){
-        return $this->hasOne('App\CenterCandidateMap', 'candidate_id');
+        return $this->belongsTo('App\CenterCandidateMap', 'candidate_id');
     }
     public function candidate(){
         return $this->belongsTo('App\Candidate');

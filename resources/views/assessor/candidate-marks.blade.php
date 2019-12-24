@@ -117,10 +117,10 @@ var _URL = window.URL || window.webkitURL;
             image = new Image();
             var fileType = file["type"];
             if(this.id==='marksheet_doc'){
-            var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+            var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
             var txt_msg="File must be in show Excel Format";
             }else if(this.id==='attendence_doc'){
-            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
             var txt_msg='File must be in show jpg, jpeg, png ,pdf,Excel Format';
                 
             }

@@ -155,19 +155,20 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchData->candidatesmap as $key=>$item)
+                                {{-- candidate --}}
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td>{{$item->candidate->name}}</td>
+                                    <td>{{$item->centercandidate->candidate->name}}</td>
                                     @if (Request::segment(1)==='agency')
-                                        <td>{{$item->candidate->category}}</td>
-                                        <td>{{$item->candidate->education}}</td>
-                                        <td>{{$item->candidate->dob}}</td>   
+                                        <td>{{$item->centercandidate->candidate->category}}</td>
+                                        <td>{{$item->centercandidate->education}}</td>
+                                        <td>{{$item->centercandidate->candidate->dob}}</td>   
                                     @else
                                         <td>{{$item->candidate->contact}}</td>
                                         <td>{{$item->candidate->email}}</td>
                                         <td>{{$item->candidate->doc_no}}</td>
                                     @endif
-                                        <td style="color:{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'green':'red'}}">{{($item->candidate->jobrole->partnerjobrole->status && $item->candidate->center->partner->status && $item->candidate->center->status && $item->candidate->status)?'Active':'Inactive'}}</td>
+                                        <td style="color:{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->status)?'green':'red'}}">{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->status)?'Active':'Inactive'}}</td>
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->candidate->id))}}" >View</a></<td>                                                                                
                                     @elseif(Request::segment(1) !='agency')

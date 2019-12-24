@@ -14,6 +14,7 @@ Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->
 
 Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->name('dashboard.department');
 Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
+Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@departmentDelete')->name('dashboard.department-delete');
 
 
 /* Admin Verify Partner */
