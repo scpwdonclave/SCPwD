@@ -39,12 +39,12 @@
                             </thead>
                             <tbody>
                                 @foreach ($assessor->assessorBatch as $asbatch)
-                                <tr style="height:5px !important">
+                                <tr>
                                 
                                 <td>{{$asbatch->batch->batch_id}}</td>
                                 <td>{{$asbatch->batch->batch_start}}</td>
                                 <td>{{$asbatch->batch->batch_end}}</td>
-                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$asbatch->id}});"><i class="zmdi zmdi-delete"></button></td>
+                                <td class="text-center"><button class="badge bg-red margin-0" onclick="deleteConfirm({{$asbatch->id}});">Remove</button></td>
 
                                 {{-- <td class="text-{{$asbatch->verified?'success':'danger'}}"><strong>{{$asbatch->verified?'Verified':'Not Verified'}}</strong></td> --}}
                                 </tr>
@@ -58,7 +58,7 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Add</strong> Batch</h2>                        
+                    <h2><strong>Add</strong> Batch</h2>                         
                 </div>
                 <div class="body">
                     <form id="form_scheme" action="{{route('agency.assessor.batch-insert')}}" method="post">
@@ -114,7 +114,7 @@ function fetchBatch(job){
                     data:{_token,job,as_id},
                     method:'POST',
                     success: function(data){
-                        console.log(data);
+                       
                         
                     $('#batch').empty();
 

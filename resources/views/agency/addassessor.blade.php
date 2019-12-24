@@ -118,7 +118,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="disabl">
-                                                <label for="d_type">Disability type</label>
+                                                <label for="d_type">Disability type <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="d_type" required >
                                                         <option value="">--select--</option>
@@ -131,7 +131,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="disabl">
-                                                <label>Disability Certificate</label>
+                                                <label>Disability Certificate <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input id="d_certificate" type="file" class="form-control" name="d_certificate" required>
                                                     <span id="d_certificate_error" style="color:red;"></span>                                                            
@@ -604,16 +604,16 @@
 
     function myFunction2(){
          if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false || terms_condition_tag==false){
-           console.log('my reject');
-           console.log(dup_email_tag);
-           console.log(dup_mobile_tag);
-           console.log(dup_aadhaar_tag);
-           console.log(terms_condition_tag);
+        //    console.log('my reject');
+        //    console.log(dup_email_tag);
+        //    console.log(dup_mobile_tag);
+        //    console.log(dup_aadhaar_tag);
+        //    console.log(terms_condition_tag);
            
             return false;
         }
         else{
-            console.log('my accept');
+            //console.log('my accept');
 
             var form = document.getElementById("form_assessor");
             form.submit();
@@ -656,7 +656,7 @@
                     
                     /* Disabling Prev & Submit Button and Proceed to Submit */
                          terms_condition_tag=true;
-                        console.log('accept');
+                        //console.log('accept');
                         
                         $("#submit_form").prop("disabled", true);
                         // $("#last_prev_btn").prop("disabled", true);
@@ -667,7 +667,7 @@
                 
 
                 } else {
-                    console.log('reject');
+                    //console.log('reject');
 
                    terms_condition_tag=false;
                     showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
