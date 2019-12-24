@@ -36,7 +36,7 @@
                                 @foreach ($centers as $center)
                                     
                                 <tr>
-                                <td>{{$center->center->tc_id}}</td>
+                                <td>{!!($center->center->verified)?$center->center->tc_id:'<span style="color:red;">TC isn\'t Verified Yet</span>'!!}</td>
                                 <td>{{$center->center->spoc_name}}</td>
                                 <td>{{$center->center->center_name}}</td>
                                 <td>{{$center->target}}</td>
