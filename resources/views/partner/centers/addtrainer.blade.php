@@ -124,7 +124,10 @@
                                 </div>
                                 <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
-                                        <div class="card body field-group" id="form_id">
+                                        <div class="text-center">
+                                            <h6>Note: To View Qualification Domain Teaching Experience Requirements Please <a href="{{route('partner.requirements')}}" target="_blank"> <span style="color:blue">Click Here</span> </a> </h6>
+                                        </div>
+                                        <div class="card body field-group">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
                                                     <label for="sector">Domain/Sector/SSC <span style="color:red"> <strong>*</strong></span></label>
@@ -210,9 +213,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="text-center">
-                                            <h6>Note: To View Qualification Domain Teaching Experience Requirements Please <a href="{{route('partner.requirements')}}" target="_blank"> <span style="color:blue">Click Here</span> </a> </h6>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">

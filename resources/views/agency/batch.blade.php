@@ -39,11 +39,11 @@
                                              
                                             <tr>
                                             <td>{{$key+1}}</td>
-                                            <td>{{is_null($item->batch->batch_id)?'NULL':$item->batch->batch_id}}</td>
+                                            <td>{{is_null($item->batch->batch_id)?Config::get('constants.nullidtext'):$item->batch->batch_id}}</td>
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
                                             @if (is_null($item->batch->assessorbatch))
-                                            <td>NULL</td>
+                                            <td>{{Config::get('constants.nullidtext')}}</td>
                                             @else
                                             <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
                                             @endif

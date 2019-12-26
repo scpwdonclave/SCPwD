@@ -45,6 +45,8 @@ return [
         ],
     ],
 
+    'nullidtext' => "Not Verified By Admin Yet",
+
     'note' => "<h6>NOTE:</h6>
     <span style='color:green'><strong>Active</strong></span>: This Record is Currently in Active State
     <span style='color:red'><strong>Inactive</strong></span>: This Record is Currently in Inactive State

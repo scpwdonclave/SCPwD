@@ -454,7 +454,7 @@
                                         @if ($item->verified)   
                                         <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{is_null($item->batch->batch_id)?'NULL':$item->batch->batch_id}}</td>
+                                        <td>{{is_null($item->batch->batch_id)?Config::get('constants.nullidtext'):$item->batch->batch_id}}</td>
                                         <td>{{$item->batch->partner->tp_id}}</td>
                                         <td>{{$item->batch->center->tc_id}}</td>
                                         <td>{{$item->batch->batch_start}}</td>

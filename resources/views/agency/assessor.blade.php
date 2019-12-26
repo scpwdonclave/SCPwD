@@ -35,26 +35,21 @@
                                              @if ($item->status)
                                              <tr>
                                              <td>{{$key+1}}</td>
-                                             @if ($item->as_id!=null)
-                                             <td>{{$item->as_id}}</td>
-                                             @else
-                                                <td>NULL</td> 
-                                             @endif
-                                             <td>{{$item->name}}</td>
-                                             <td>{{$item->email}}</td>
-                                             <td>{{$item->mobile}}</td>
-                                             <td class="text-{{$item->verified?'success':'danger'}}"><strong>{{$item->verified?'Verified':'Not Verified'}}</strong></td>
-                                                @if ($item->verified)
-                                                <td><a class="badge bg-green margin-0" href="{{route('agency.as.assessor.batch',['id'=>Crypt::encrypt($item->id)])}}" >Batch</a></td>
+                                                @if ($item->as_id!=null)
+                                                    <td>{{$item->as_id}}</td>
                                                 @else
-                                                <td><a class="badge bg-grey margin-0" href="#" >Batch</a></td>
+                                                    <td>{{Config::get('constants.nullidtext')}}</td> 
+                                                @endif
+                                                <td>{{$item->name}}</td>
+                                                <td>{{$item->email}}</td>
+                                                <td>{{$item->mobile}}</td>
+                                                <td class="text-{{$item->verified?'success':'danger'}}"><strong>{{$item->verified?'Verified':'Not Verified'}}</strong></td>
+                                                @if ($item->verified)
+                                                    <td><a class="badge bg-green margin-0" href="{{route('agency.as.assessor.batch',['id'=>Crypt::encrypt($item->id)])}}" >Batch</a></td>
+                                                @else
+                                                    <td><a class="badge bg-grey margin-0" href="#" >Batch</a></td>
                                                 @endif
                                                 <td><a class="badge bg-green margin-0" href="{{route('agency.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                             {{-- @if($item->status==1)
-                                             <td><a class="badge bg-red margin-0" href="#" onclick="showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                             @elseif($item->status==0)
-                                             <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                             @endif --}}
                                              </tr>
                                              @endif   
                                           

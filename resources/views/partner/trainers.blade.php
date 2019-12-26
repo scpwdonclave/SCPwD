@@ -37,7 +37,7 @@
                                 @foreach ($partner->trainers as $key => $trainer)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{is_null($trainer->trainer_id)?'NULL':$trainer->trainer_id}}</td>
+                                        <td>{{is_null($trainer->trainer_id)?Config::get('constants.nullidtext'):$trainer->trainer_id}}</td>
                                         <td>{{$trainer->name}}</td>
                                         <td>{{$trainer->email}}</td>
                                         <td>{{$trainer->mobile}}</td>

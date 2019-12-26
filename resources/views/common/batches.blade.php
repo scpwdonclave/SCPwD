@@ -51,7 +51,7 @@
                                 @foreach ($data as $key=>$item)
                                 <tr>
                                 <td>{{$key+1}}</td>
-                                <td>{{is_null($item->batch_id)?'NULL':$item->batch_id}}</td>
+                                <td>{{is_null($item->batch_id)?Config::get('constants.nullidtext'):$item->batch_id}}</td>
                                 @if (Request::segment(1)==='admin')
                                     <td>{{$item->partner->tp_id}}</td>
                                     <td>{{$item->center->tc_id}}</td>
