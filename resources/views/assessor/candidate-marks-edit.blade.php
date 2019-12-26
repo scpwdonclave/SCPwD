@@ -44,12 +44,12 @@
                                     <tr>
                                     <td>{{$key+1}}</td>
                                     <td>
-                                        {{$item->candidate->name}}
-                                    <input type="hidden" name="candidate_id[]" value="{{$item->candidate->id}}">
+                                        {{$item->centerCandidate->candidate->name}}
+                                    <input type="hidden" name="candidate_id[]" value="{{$item->centerCandidate->id}}">
 
                                     </td>
-                                    <td>{{$item->candidate->dob}}</td>
-                                    <td>{{$item->candidate->gender}}</td>
+                                    <td>{{$item->centerCandidate->candidate->dob}}</td>
+                                    <td>{{$item->centerCandidate->candidate->gender}}</td>
                                     <td>
                                         <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$key+1}})">
                                             <option value="present" {{($item->attendence=='present')?'selected':''}} >Present</option>
@@ -82,7 +82,7 @@
                             
 
                             <div class="row d-flex justify-content-around">
-                            <div class="col-sm-4">
+                            <div class="col-sm-4"> 
                                 <label>Attendence Sheet </label>
                                 <div class="form-group form-float">
                                     <input id="attendence_doc" type="file" class="form-control" name="attendence_doc" >
@@ -110,54 +110,68 @@
 @stop 
 @section('page-script')
 <script>
-$(function(){
-
-var _URL = window.URL || window.webkitURL;
-    $("[type='file']").change(function(e) {
-
-        var image, file;
-
-        // var l = this.files.length;
-        // if (l>6 || l<2) {
-        // alert('You Have To select atleast 2 images ( max limit is 6)');
-        // $("#file").val('');
-        // }
-
-    for (var i = this.files.length - 1; i >= 0; i--) {
-
-        if ((file = this.files[i])) {
-
-            size = file.size/1024/1024;
-            size = Math.round(size * 100) / 100
-
-            image = new Image();
-            var fileType = file["type"];
-            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-            if ($.inArray(fileType, ValidImageTypes) < 0) {
-                // invalid file type code goes here.
-                $("#"+e.currentTarget.id).val('');
-                $("#" + e.currentTarget.id + "_error").text('File must be in show jpg, jpeg, png or pdf Format');
-            } else {
-                $("#" + e.currentTarget.id + "_error").text('');
-            }
-
-            image.onload = function() {
-                if (size > 1.5) {
-                    $("#"+e.currentTarget.id).val('');
-                    $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
-                } else {
-                    $("#" + e.currentTarget.id + "_error").text('');
+    $(function(){
+    
+    var _URL = window.URL || window.webkitURL;
+        $("[type='file']").change(function(e) {
+    
+            var image, file;
+    
+        for (var i = this.files.length - 1; i >= 0; i--) {
+    
+            if ((file = this.files[i])) {
+    
+                size = file.size/1024/1024;
+                size = Math.round(size * 100) / 100
+    
+                image = new Image();
+                var fileType = file["type"];
+                if(this.id==='marksheet_doc'){
+                var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+                var txt_msg="File must be in show Excel Format";
+                }else if(this.id==='attendence_doc'){
+                var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+                var txt_msg='File must be in show jpg, jpeg, png ,pdf,Excel Format';
+                    
                 }
-            };
-
-            image.src = _URL.createObjectURL(file);
+               
+                
+                if ($.inArray(fileType, ValidImageTypes) < 0) {
+                    // invalid file type code goes here.
+                   
+                    
+                    $("#"+e.currentTarget.id).val('');
+                    swal({
+                    title: "File type Error",
+                    text: txt_msg,
+                    type:"error",
+                    timer: 3000,
+                    
+                });
+                    //$('#'+e.currentTarget.id+'_error').text(txt_msg);
+                   
+                   
+                } else {
+                    $("#" + e.currentTarget.id + "_error").text(''); 
+                }
+    
+                image.onload = function() {
+                    if (size > 1.5) {
+                        $("#"+e.currentTarget.id).val('');
+                        $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
+                    } else {
+                        $("#" + e.currentTarget.id + "_error").text('');
+                    }
+                };
+    
+                image.src = _URL.createObjectURL(file);
+                }
             }
-        }
-
+    
+        });
     });
-});
-
-</script>
+    
+    </script>
 <script>
 function markDisable(val,id) {
 //    if(val==='absent'){

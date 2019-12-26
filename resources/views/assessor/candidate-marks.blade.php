@@ -44,12 +44,12 @@
                                     <tr>
                                     <td>{{$key+1}}</td>
                                     <td>
-                                        {{$item->candidate->name}}
-                                    <input type="hidden" name="candidate_id[]" value="{{$item->candidate->id}}">
+                                        {{$item->centercandidate->candidate->name}}
+                                    <input type="hidden" name="candidate_id[]" value="{{$item->centercandidate->id}}"> 
 
                                     </td>
-                                    <td>{{$item->candidate->dob}}</td>
-                                    <td>{{$item->candidate->gender}}</td>
+                                    <td>{{$item->centercandidate->candidate->dob}}</td>
+                                    <td>{{$item->centercandidate->candidate->gender}}</td>
                                     <td>
                                         <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$key+1}})">
                                             <option value="present" >Present</option>
@@ -142,7 +142,7 @@ var _URL = window.URL || window.webkitURL;
                
                
             } else {
-                $("#" + e.currentTarget.id + "_error").text('');
+                $("#" + e.currentTarget.id + "_error").text(''); 
             }
 
             image.onload = function() {

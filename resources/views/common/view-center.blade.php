@@ -381,7 +381,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($centerData->candidates as $key => $centercandidatemap)
+                                    @foreach ($centerData->candidatesmap as $key => $centercandidatemap)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$centercandidatemap->candidate->name}}</td>

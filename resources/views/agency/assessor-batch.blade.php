@@ -166,18 +166,18 @@ function fetchBatch(job){
                     });
 
                     }
-                    // else{
-                    //     swal({
-                    //     title: "Failed",
-                    //     text: "This Batch already been assigned to a Assessor",
-                    //     type:"error",
-                    //     showConfirmButton: true
-                    // },function(isConfirm){
-                    //     if (isConfirm){
-                    //         window.location="{{route('admin.agency.agencies')}}";
-                    //     }
-                    // });
-                    // }
+                    else{
+                        swal({
+                        title: "Failed",
+                        text: "This Batch Assessment already Completed",
+                        type:"error",
+                        showConfirmButton: true
+                    },function(isConfirm){
+                        if (isConfirm){
+                            window.location="{{route('agency.assessors')}}";
+                        }
+                    });
+                    }
                 }
             });
         } else {

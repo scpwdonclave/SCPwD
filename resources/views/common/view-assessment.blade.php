@@ -54,9 +54,9 @@
                                                                     $i++;
                                                                 @endphp
                                                                 <td>{{$i}}</td>
-                                                                <td>{{$item->candidate->name}}</td>
-                                                                <td>{{$item->candidate->dob}}</td>
-                                                                <td>{{$item->candidate->gender}}</td>
+                                                                <td>{{$item->centerCandidate->candidate->name}}</td>
+                                                                <td>{{$item->centerCandidate->candidate->dob}}</td>
+                                                                <td>{{$item->centerCandidate->candidate->gender}}</td>
                                                                 <td>{{$item->attendence}}</td>
                                                                 <td>{{$item->mark}}</td>
                                                                 @if ($item->attendence==='present' && $item->passed)

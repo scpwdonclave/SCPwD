@@ -369,8 +369,20 @@ class AgencyAssessorController extends Controller
         $notification->save();
         /* End Notification For Assessor */
 
-            $assessorBatch->delete();
-            return response()->json(['status' => 'done'],200);
+            
+           // return response()->json(['status' => 'done'],200);
+
+
+            // $data=Department::findOrFail($request->id);
+            // $scheme=Scheme::where('dept_id',$request->id)->first();
+             if(!is_null($assessorBatch->batch->batchassessment)){
+                 return response()->json(['status' => 'fail'],200);
+            
+             }else{
+                $assessorBatch->delete(); 
+                 return response()->json(['status' => 'done'],200);
+     
+             }
 
         
     }
