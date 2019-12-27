@@ -8,6 +8,7 @@ use Crypt;
 use App\Candidate;
 use App\Notification;
 use App\CenterJobRole;
+use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -175,27 +176,52 @@ class CenterHomeController extends Controller
 
     public function candidate_api(Request $request){
         if ($request->has('doc_no')) {
-        /* Checking If There is Any Other Candidate Present with Same Document */    
-            $candidate = Candidate::where('doc_no', $request->doc_no)->first();
-            if ($candidate) {
+        /* Checking If There is Any Other Candidate Present with Same Document */
 
-                foreach ($candidate->centermap as $center) {
-                    if (is_null($center->passed) || !$center->passed) {
-                        return response()->json(['success' => false], 200);
-                    }
+            $data = AppHelper::instance()->checkDoc($request->doc_no);
+            if ($data['status']) {
+                return response()->json(['success' => true, 'candidate' => null], 200);
+            } else {
+                if ($data['user'] == 'candidate') {
+                    $candidate = Candidate::find($data['userid']);
+                    if ($candidate->status) {
+                        foreach ($candidate->centermap as $center) {
+                            if (is_null($center->passed) || !$center->passed) {
+                                return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is already Registered with SCPwD'], 200);
+                            }
+                        }
+                    } else {
+                        return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is Blacklisted, Contact with SCPwD'], 200);
+                    }                    
+                    return response()->json(['success' => true,'candidate'=> $center->candidate], 200);
+                } else {
+                    return response()->json(['success' => false, 'message' => 'We have This Doc No Registered with Someone else'], 200);
                 }
+            }
 
-                return response()->json(['success' => true,'candidate'=> $center->candidate], 200);
-            } else {
-                return response()->json(['success' => true], 200);
-            }
         /* End Checking If There is Any Other Candidate Present with Same Document */    
-        } elseif ($request->has('checkredundancy')) {
-            if (candidate::where($request->section,$request->checkredundancy)->first()) {
-                return response()->json(['success' => false], 200);
-            } else {
+        } elseif ($request->has('email')) {
+            $emaildata = AppHelper::instance()->checkEmail($request->email);
+            $contactdata = AppHelper::instance()->checkContact($request->contact);
+            
+            if ($emaildata['status'] && $contactdata['status']) {
+                // No Duplicate
                 return response()->json(['success' => true], 200);
+                
+            } elseif ($emaildata['status'] && !$contactdata['status']) {
+                // Duplicate Contact
+                return response()->json(['success' => false, 'message' => 'We have This Contact No Registered with Someone else'], 200);
+                
+            } elseif (!$emaildata['status'] && $contactdata['status']) {
+                // Duplicate Email    
+                return response()->json(['success' => false, 'message' => 'We have This Email Registered with Someone else'], 200);
+                
+            } elseif (!$emaildata['status'] || !$contactdata['status']) {
+                // Duplicate Email & Contact    
+                return response()->json(['success' => false, 'message' => 'We have This Email & Contact No Registered with Someone else'], 200);
+           
             }
+
         } elseif ($request->has('jobid')) {
             $centerJob = CenterJobRole::find($request->jobid);
             if ($centerJob) {

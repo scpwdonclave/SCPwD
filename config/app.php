@@ -235,6 +235,8 @@ return [
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
+        'AppHelper' => App\Helpers\AppHelper::class
+
 
     ],
 

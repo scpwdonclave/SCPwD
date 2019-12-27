@@ -692,7 +692,7 @@ $(function () {
         jQuery("#form_trainer").validate({
             rules: {
             mobile: { mobile: true },
-            doc_no: { aadharvoter: true },
+            doc_no: { aadhaarvoter: true },
             "[type=email]": { email: true }
             }
         });

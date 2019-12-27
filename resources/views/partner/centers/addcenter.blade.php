@@ -51,14 +51,14 @@
                                             <div class="col-sm-3">
                                                 <label for="mobile">SPOC Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" name="mobile" required>
                                                     <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">SPOC Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
+                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>

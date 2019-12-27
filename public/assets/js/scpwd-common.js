@@ -94,9 +94,9 @@ $(function() {
     "Please enter a valid Contact number"
   );
   jQuery.validator.addMethod(
-    "aadharvoter",
+    "aadhaarvoter",
     function(value, element) {
-      return this.optional(element) || /^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/.test(value);
+      return this.optional(element) || /^([A-Z]){3}([0-9]){7}$|^(\d){12}$/.test(value);
     },
     "Please enter a valid Aadhaar or Voter number"
   );
@@ -106,6 +106,13 @@ $(function() {
       return this.optional(element) || /^\d{12}$/.test(value);
     },
     "Please enter a valid Aadhaar number"
+  );
+  jQuery.validator.addMethod(
+    "voter",
+    function(value, element) {
+      return this.optional(element) || /^([A-Z]){3}([0-9]){7}$/.test(value);
+    },
+    "Please enter a valid Voter number"
   );
   jQuery.validator.addMethod(
     "time",
