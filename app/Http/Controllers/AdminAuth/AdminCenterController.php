@@ -155,6 +155,9 @@ class AdminCenterController extends Controller
             if ($center->verified) {
                 alert()->info('Training Center Already has been Approved', 'Attention')->autoclose(3000);
                 return redirect()->back();
+            } elseif (!$center->partner->status) {
+                alert()->error('Please <span style="color:blue;">Re-Activate</span> TP of This TC Before you Proceed', 'Aborting')->html()->autoclose(5000);
+                return redirect()->back();
             } else {
                 $dataMail = collect();
                 if ($request->action == 'accept') {

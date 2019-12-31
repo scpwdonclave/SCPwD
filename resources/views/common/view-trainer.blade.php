@@ -4,7 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('content')
 <div class="container-fluid">
@@ -225,8 +225,8 @@
                             @if (Request::segment(1)==='admin')
                                 @if (is_null($trainerData->attached))
                                     @if (!$trainerData->verified)
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.tr.trainer.verify',['trainer_id' => Crypt::encrypt($trainerData->id) ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.tp.trainer.action',Crypt::encrypt($trainerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($trainerData->id.','.'0')}}');">Reject</button>
                                     @else
                                         <button class="btn btn-primary" onclick="location.href='{{route('admin.tr.edit.trainer',['tr_id' => Crypt::encrypt($trainerData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                                     @endif
@@ -292,55 +292,38 @@
 @section('page-script')
 @auth('admin')
     <script>
-        function showPromptMessage() {
+        function popupRejectSwal(id) {
             swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
+                text: 'Please Provide the Reason of Rejection',
+                content: "input",
+                icon: "info",
+                buttons: true,
+                buttons: {
+                        cancel: "No, Cancel",
+                        confirm: {
+                            text: "Confirm Reject",
+                            closeModal: false
+                        }
+                    },
+                closeModal: false,
+                closeOnEsc: false,
+            }).then(function(reason){
+                if (reason != null) {
+                    if (reason === '') {
+                        swal('Attention', 'Please Describe the Reason of Rejection before Proceed', 'info');
+                    } else {
+                        var url = '{{ route("admin.tp.trainer.action",[":id",":reason"]) }}';
+                        url = url.replace(':id', id);
+                        url = url.replace(':reason', reason);
+                        location.href = url;
+                    }
                 }
-                var id={{$trainerData->id}};
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
-            
-                $.ajax({
-                type: "POST",
-                url: "{{route('admin.tr.reject.trainer')}}",
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Deleted",
-                text: "Record Deleted",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-                
-                window.location="{{route('admin.tc.pending-trainers')}}";
-        
-                } 
-                });
-            
-                }
-            });
-                
             });
         }
     </script>
 @endauth
 
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

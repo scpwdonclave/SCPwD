@@ -159,7 +159,7 @@ table.dataTable thead th:first-child {
             autoclose: true,
             format: 'dd-mm-yyyy',
             startDate: new Date(),
-            daysOfWeekDisabled: [0,6],
+            daysOfWeekDisabled: [0],
             datesDisabled: JSON.parse('<?php echo json_encode($holidays)?>'),
         });
 

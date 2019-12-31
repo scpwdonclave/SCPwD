@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\BatchUpdate;
-use App\Holiday;
-use App\Batch;
-use App\BatchCenterCandidateMap;
-use App\Mail\BTRejectMail;
-use App\Notification;
-use Carbon\Carbon;
-use Crypt;
 use DB;
 use Mail;
+use Crypt;
+use App\Batch;
+use App\Holiday;
+use Carbon\Carbon;
+use App\BatchUpdate;
+use App\Notification;
+use App\Mail\BTRejectMail;
+use App\Events\TCMailEvent;
+use App\Events\TPMailEvent;
+use Illuminate\Http\Request;
+use App\BatchCenterCandidateMap;
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminBatchController extends Controller
 {
@@ -34,6 +36,15 @@ class AdminBatchController extends Controller
         } catch (DecryptException $e) {
             return abort(404);
         }
+    }
+
+    protected function writeNotification($relid,$relwith,$title,$msg){
+        $notification = new Notification;
+        $notification->rel_id = $relid;
+        $notification->rel_with = $relwith;
+        $notification->title = $title;
+        $notification->message = $msg;
+        $notification->save();
     }
 
     protected function getHolidays(){
@@ -83,13 +94,13 @@ class AdminBatchController extends Controller
         return true;
     }
     
-    protected function partnerscheme($candidate){
+    protected function partnerscheme($candidate){ 
         return $candidate->jobrole->partnerjobrole->status;
     }
     protected function candidate_availability($batchid){
         $batch = Batch::find($batchid);
-        foreach ($batch->candidatesmap as $candidate) {
-            if (!$candidate->candidate->status || !$this->partnerscheme($candidate->candidate)) {
+        foreach ($batch->candidatesmap as $batchcentercandidate) {
+            if (!$batchcentercandidate->centercandidate->candidate->status || !$this->partnerscheme($batchcentercandidate->centercandidate)) {
                     return false;
             }
         }
@@ -121,6 +132,13 @@ class AdminBatchController extends Controller
             $sch_len=4+strlen($scheme)+1+1;
             
             if (!$data->verified) {
+                $dataMail = collect();
+                $dataMail->tag = 'btacceptreject';
+                $dataMail->tp_name = $data->partner->spoc_name;
+                $dataMail->tc_name = $data->center->spoc_name;
+                $dataMail->email = $data->partner->email;
+
+
                 if ($request->action === 'accept') {
 
                     if ($this->trainer_availability($data->tr_id, Carbon::parse($data->start_time), Carbon::parse($data->end_time)) && $this->candidate_availability($data->id)) {
@@ -143,35 +161,33 @@ class AdminBatchController extends Controller
                         $data->verified=1;
                         $data->save();
                 
-                        /* Notification For Partner */
-                        $notification = new Notification;
-                        $notification->rel_id = $data->tp_id;
-                        $notification->rel_with = 'partner';
-                        $notification->title = 'Batch has been Approved';
-                        $notification->message = "Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved";
-                        $notification->save();
-                        /* End Notification For Partner */
-                
+                        $this->writeNotification($data->tp_id,'partner','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
+                        $this->writeNotification($data->tc_id,'center','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
+                        $dataMail->status = 1;
+                        $dataMail->bt_id = $new_batchid;
+                        event(new TPMailEvent($dataMail));
+                        $dataMail->email = $data->center->email;
+                        event(new TCMailEvent($dataMail));
+                        
                         alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);   
                     } else{
                         alert()->error("Either this Trainer is <span style='color:red;'>Pre-Occupied</span> at Provided Time or Candidate associated with This Batch is <span style='color:red;'>Inactive</span>, Cannot Proceed!", 'Attention')->html()->autoclose(6000);
                     }
                 } elseif ($request->action === 'reject') {
                     if (!is_null($request->reason)) {
-                        $data['note'] = $request->reason;
-                        Mail::to($data->partner->email)->send(new BTRejectMail($data));
+                        $this->writeNotification($data->tp_id,'partner','Batch Rejected',"One of your Batch has been <span style='color:blue;'>Rejected</span>, Kindly Check your Mail");
+                        $this->writeNotification($data->tc_id,'center','Batch Rejected',"One of your Batch (Requested by your TP) has been <span style='color:blue;'>Rejected</span>");
                         
-                        /* Notification For Partner */
-                        $notification = new Notification;
-                        $notification->rel_id = $data->tp_id;
-                        $notification->rel_with = 'partner';
-                        $notification->title = 'Batch Rejected';
-                        $notification->message = "One of your Batch has been <span style='color:blue;'>Rejected</span>, Please Check your Mail";
-                        $notification->save();
-                        /* End Notification For Partner */
-                        
-                        BatchCenterCandidateMap::where('bt_id',$id)->delete();
+                        $dataMail->status = 0;
+                        $dataMail->reason = $request->reason;
+                        event(new TPMailEvent($dataMail));
+
+                        // BatchCenterCandidateMap::where('bt_id',$id)->delete();
+                        DB::table('trainer_batch_map')->where([['tr_id','=', $data->tr_id], ['bt_id','=', $data->id]])->delete();
+                        DB::table('batch_trainer_map')->where([['bt_id','=', $data->id], ['tr_id','=', $data->tr_id]])->delete();
+                        $data->candidatesmap()->delete();
                         $data->delete();
+    
                         alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(3000);         
                     } else {
                         alert()->error('Please Provide a Reason First', 'Job Done')->autoclose(3000);
