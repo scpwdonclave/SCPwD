@@ -92,16 +92,11 @@ class AppHelper
         if ($candidate) {
             return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
         } else {
-            $trainer = Trainer::where('doc_no', $docno)->first();
-            if ($trainer) {
-                return array('status' => false, 'user' => 'trainer', 'userid' => $trainer->id);
+            $trainerstatus = TrainerStatus::where('doc_no', $docno)->latest()->first();
+            if ($trainerstatus) {
+                return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached);
             } else {
-                $trainerstatus = TrainerStatus::where([['doc_no','=', $docno],['attached','=',0]])->first();
-                if ($trainerstatus) {
-                    return array('status' => false, 'user' => 'trainerstatus', 'userid' => $trainerstatus->id);
-                } else {
-                    return array('status' => true);
-                }
+                return array('status' => true);
             }
         }
     }

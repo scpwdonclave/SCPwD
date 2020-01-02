@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\Http\Requests\TRFormValidation;
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
-use App\TrainerJobroleScheme;
-use Illuminate\Http\Request;
-use App\TrainerJobRole;
-use App\PartnerJobrole;
-use App\TrainerStatus;
-use App\Notification;
-use App\Candidate;
+use DB;
+use Auth;
+use Gate;
+use Crypt;
+use Config;
+use Storage;
+use Validator;
 use App\JobRole;
 use App\Trainer;
-use Validator;
-use Storage;
-use Config;
-use Crypt;
-use Gate;
-use Auth;
-use DB;
+use App\Candidate;
+use App\Notification;
+use App\TrainerStatus;
+use App\PartnerJobrole;
+use App\TrainerJobRole;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\TrainerJobroleScheme;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\TRFormValidation;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PartnerTrainerController extends Controller
 {
@@ -80,17 +81,25 @@ class PartnerTrainerController extends Controller
         
         } elseif ($request->has('doc_no')) {
 
-            /* Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
-            $trainerStatus = TrainerStatus::where('doc_no', $request->doc_no)->latest()->first();
-            if ($trainerStatus) {
-                if ($trainerStatus->attached) {
-                    return response()->json(['success' => false], 200);                        
-                } else {
-                    return response()->json(['success' => true, 'present' => true, 'trainerData' => $trainerStatus], 200);
-                }
-            } else {
+            /* Check If Trainer Status have any Trainer in Ditatched State with Provided Document */
+            
+            $data = AppHelper::instance()->checkDoc($request->doc_no);
+            
+            if ($data['status']) {
                 return response()->json(['success' => true, 'present' => false], 200);
+            } else {
+                if ($data['user'] == 'trainer') {
+                    $trainer = TrainerStatus::find($data['userid']);
+                    if ($data['attached']) {
+                        return response()->json(['success' => true, 'present'=> true, 'attached' => true, 'trainerData' => $trainer], 200);
+                    } else {
+                        return response()->json(['success' => true, 'present'=> true, 'attached' => false, 'trainerData' => $trainer], 200);
+                    }
+                } else {
+                    return response()->json(['success' => false], 200);
+                }
             }
+            
             /* End Check If Trainer Status have any Trainer in Ditatched State with Provided Document */    
         } elseif ($request->has('sectorid')) {
             
