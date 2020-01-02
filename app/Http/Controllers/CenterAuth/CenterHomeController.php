@@ -139,6 +139,9 @@ class CenterHomeController extends Controller
 
             $candidate->save();
 
+            $fmonth=date('F');
+            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
 
             $center_candidate = new CenterCandidateMap;
             $center_candidate->tc_id = $this->guard()->user()->id;
@@ -153,6 +156,11 @@ class CenterHomeController extends Controller
             $center_candidate->education = $request->education;
             $center_candidate->g_name = $request->g_name;
             $center_candidate->g_type = $request->g_type;
+
+            $center_candidate->f_month = $fmonth;
+            $center_candidate->f_year = $fyear;
+
+
 
             $center_candidate->address = $request->address;
             $center_candidate->state_district = $request->state_district;

@@ -41,10 +41,11 @@ class AddScheme implements ShouldQueue
         ]);
 
         // dd($request);
+        Storage::disk('myDisk')->put('/adminscheme', $request->logo);
 
         $scheme = new Scheme;
         $scheme->scheme = $request->scheme;
-        $scheme->logo = Storage::disk('myDisk')->put('/adminscheme', $request->logo);
+        $scheme->logo = Storage::disk('public')->put('/adminscheme', $request->logo);
         $scheme->year = $request->year;
         $scheme->dept_id = $request->dept;
         $scheme->cert_format = $request->cert_format.'/';

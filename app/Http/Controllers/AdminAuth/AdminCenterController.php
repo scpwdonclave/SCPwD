@@ -174,8 +174,13 @@ class AdminCenterController extends Controller
                             $new_tcid = 'TC'.$year.'000001';
                         }
 
+                        $fmonth=date('F');
+                        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
                         $center_password = str_random(8);
                         $center->tc_id=$new_tcid;
+                        $center->f_month=$fmonth;
+                        $center->f_year=$fyear;
                         $center->password=Hash::make($center_password);
                         $center->status= $center->verified = 1;
                         $center->save();

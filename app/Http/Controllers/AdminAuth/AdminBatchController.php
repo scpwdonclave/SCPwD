@@ -108,6 +108,7 @@ class AdminBatchController extends Controller
     }
     public function viewBatch($id){
         if ($id=$this->decryptThis($id)) {
+            
             $batchData=Batch::findOrFail($id);
             return view('common.view-batch')->with(compact('batchData'));
         }

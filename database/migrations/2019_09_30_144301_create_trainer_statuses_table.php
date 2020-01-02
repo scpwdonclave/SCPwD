@@ -40,6 +40,10 @@ class CreateTrainerStatusesTable extends Migration
 
             $table->string('resume')->nullable();
             $table->string('other_doc')->nullable();
+
+            $table->string('f_month')->nullable();
+            $table->string('f_year')->nullable();
+
             $table->string('dlink_reason')->nullable();
 
             $table->boolean('status')->default(1);

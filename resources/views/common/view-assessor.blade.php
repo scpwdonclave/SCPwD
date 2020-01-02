@@ -4,7 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('content')
 <div class="container-fluid">
@@ -488,55 +488,105 @@
 @section('page-script')
 @auth('admin')
     <script>
+        // function showPromptMessage() {
+        //     swal({
+        //         title: "Reason of Rejection",
+        //         text: "Please Describe the Reason",
+        //         type: "input",
+        //         showCancelButton: true,
+        //         closeOnConfirm: false,
+        //         animation: "slide-from-top",
+        //         showLoaderOnConfirm: true,
+        //         inputPlaceholder: "Reason"
+        //     }, function (inputValue) {
+        //         if (inputValue === false) return false;
+        //         if (inputValue === "") {
+        //             swal.showInputError("You need to write something!"); return false
+        //         }
+        //         var id={{$assessorData->id}};
+        //         var note=inputValue;
+        //         let _token = $("input[name='_token']").val();
+            
+        //         $.ajax({
+        //         type: "POST",
+        //         url: "{{route('admin.as.reject.assessor')}}",
+        //         data: {_token,id,note},
+        //         success: function(data) {
+        //             // console.log(data);
+        //             swal({
+        //         title: "Deleted",
+        //         text: "Record Deleted",
+        //         type:"success",
+        //         //timer: 2000,
+        //         showConfirmButton: true
+        //     },function(isConfirm){
+        
+        //         if (isConfirm){
+                
+        //         window.location="{{route('admin.as.pending-assessors')}}";
+        
+        //         } 
+        //         });
+            
+        //         }
+        //     });
+                
+        //     });
+        // }
+
         function showPromptMessage() {
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
-                }
-                var id={{$assessorData->id}};
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
+            var id={{$assessorData->id}};
+            let _token = $("input[name='_token']").val();
+        
+         swal({
+            title: "Reason of Rejection",
+            text: "Please Describe the Reason",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                },
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "Cencel",
+                    confirm: {
+                        text: "Confirm",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
             
+            var dataString = {_token:_token, id:id,note:val};
+            if (val) {
                 $.ajax({
-                type: "POST",
-                url: "{{route('admin.as.reject.assessor')}}",
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Deleted",
-                text: "Record Deleted",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-                
-                window.location="{{route('admin.as.pending-assessors')}}";
-        
-                } 
+                    url: "{{ route('admin.as.reject.assessor') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML ="Assessor Record <span style='font-weight:bold; color:red'>Deleted</span>";
+                        swal({title: "Deleted", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false}).then(function(){location="{{route('admin.as.pending-assessors')}}";});
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
                 });
-            
-                }
-            });
-                
-            });
-        }
+            } else if (val!=null) {
+                swal('Attention', 'You need to write something!', 'info');
+            }
+        });
+}
     </script>
 @endauth
 
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

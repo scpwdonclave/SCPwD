@@ -81,6 +81,11 @@ class CreatePartnersTable extends Migration
             $table->string('sanction_doc')->default('No Data');
             /* End Proposal Informatoin */
             /* End Full Registration */
+
+            /* Financial Year and Month */
+            $table->string('f_month')->nullable();
+            $table->string('f_year')->nullable();
+            /*End of Financial Year and Month */
             
             /* Flag Secion */
             $table->boolean('status')->default(1)->comment = 'Active or Deactive';

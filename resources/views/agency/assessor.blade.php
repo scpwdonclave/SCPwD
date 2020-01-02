@@ -117,7 +117,7 @@
 </div>
 @stop
 @section('page-script')
-<script>
+{{-- <script>
 function showCancelMessage(f) {
     swal({
         title: "Deactive!",
@@ -164,7 +164,7 @@ function showCancelMessage(f) {
     });
 }
 
-</script>
+</script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

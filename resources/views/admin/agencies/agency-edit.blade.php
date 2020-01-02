@@ -400,13 +400,13 @@ function yearAdd(){
     if(date!=""){
     var newdate = date.split("-").reverse().join("-");
     var d = new Date(newdate);
-    console.log(d);
+    var startDate = moment(d, 'DD-MM-YYYY');
+    var endDate = startDate.clone();
+    endDate.add(1, 'years').subtract('1', 'days');
+   
+    $('#sla_end_date').val(endDate.format('DD-MM-YYYY'));
     
-    var year = d.getFullYear();
-    var month = d.getMonth();
-    var day = d.getDate();
-    var c = new Date(year, month, day+365);
-  $('#sla_end_date').val(c.getDate().toString()+'-'+(Number(c.getMonth())+1).toString()+'-'+c.getFullYear().toString());
+   
     }
 }
 

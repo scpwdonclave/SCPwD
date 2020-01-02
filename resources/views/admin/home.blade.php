@@ -105,7 +105,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="header">
-                <h2><strong>Statistics</strong></h2>
+                <h2><strong>Statistics</strong> FY : {{$finyear}}</h2>
                 
             </div>
             <div class="body">
@@ -132,60 +132,24 @@
                                     <th>LOCATION</th>
                                     <th>TP</th>
                                     <th>TC</th>
-                                    <th>AB</th>
-                                    <th>STUDENTS</th>
+                                    <th>AA</th>
+                                    <th>CANDIDATES</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($stack as $key=>$item)
+                                @if ($item[0]!=0 || $item[1]!=0 || $item[2]!=0 || $item[3]!=0)
                                 <tr>
-                                    <td>Uttar Pradesh</td>
-                                    <td>1223</td>
-                                    <td>156</td>
-                                    <td>61</td>
-                                    <td>2011</td>
-                                  
-                                </tr>
-                                <tr>
-                                    <td>Madhya pradesh</td>
-                                    <td>665</td>
-                                    <td>69</td>
-                                    <td>63</td>
-                                    <td>7889</td>
-                                   
-                                </tr>
-                                <tr>
-                                    <td>West Bengal</td>
-                                    <td>447</td>
-                                    <td>669</td>
-                                    <td>66</td>
-                                    <td>2009</td>
-                                   
-                                </tr>
-                                <tr>
-                                    <td>Tamil Nadu</td>
-                                    <td>554</td>
-                                    <td>661</td>
-                                    <td>22</td>
-                                    <td>2012</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>Kerala</td>
-                                    <td>332</td>
-                                    <td>226</td>
-                                    <td>330</td>
-                                    <td>2008</td>
-                                   
-                                </tr>
-                                <tr>
-                                    <td>Chennai</td>
-                                    <td>889</td>
-                                    <td>3554</td>
-                                    <td>61</td>
-                                    <td>2012</td>
-                                    
-                                </tr>
+                                <td>{{$key}}</td>
+                                <td>{{$item[0]}}</td>
+                                <td>{{$item[1]}}</td>
+                                <td>{{$item[2]}}</td>
+                                <td>{{$item[3]}}</td>
+                               </tr>
+                                @endif    
+                                @endforeach
+                               
                                
                                
                             </tbody>
@@ -198,7 +162,7 @@
         <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Quick Details</strong></h2>
+                <h2><strong>Quick Details</strong> FY : {{$finyear}}</h2>
                    
                 </div>
                 <div class="body">
@@ -207,7 +171,7 @@
                             <a href="javascript:void(0)">
                                 <i class="zmdi zmdi-pin bg-blue"></i>                    
                                 <div class="info">
-                                    <h4>17 New Training Center</h4>                    
+                                    <h4>{{$conclu[0]}} Training Center</h4>                    
                                     <small>&nbsp;</small>
                                 </div>
                             </a>
@@ -216,7 +180,7 @@
                             <a href="javascript:void(0)">
                                 <i class="zmdi zmdi-file-text bg-red"></i>
                                 <div class="info">
-                                    <h4>7 Training Partner</h4>                    
+                                    <h4>{{$conclu[1]}} Training Partner</h4>                    
                                     <small>&nbsp;</small>
                                 </div>
                             </a>
@@ -225,7 +189,7 @@
                             <a href="javascript:void(0)">
                                 <i class="zmdi zmdi-account-box-phone bg-green"></i>
                                 <div class="info">
-                                    <h4>4 Examinations</h4>                    
+                                    <h4>{{$conclu[2]}} Examinations</h4>                    
                                     <small>&nbsp;</small>
                                 </div>
                             </a>
@@ -234,7 +198,7 @@
                             <a href="javascript:void(0)">
                                 <i class="zmdi zmdi-email bg-amber"></i>
                                 <div class="info">
-                                    <h4>4172 Students Passed</h4>
+                                    <h4>{{$conclu[3]}} Students Passed</h4>
                                     <small>&nbsp;</small>
                                 </div>
                             </a>
@@ -243,7 +207,7 @@
                             <a href="javascript:void(0)">
                                 <i class="zmdi zmdi-refresh-alt bg-red"></i>
                                 <div class="info">
-                                    <h4>172 Students Failed</h4>
+                                    <h4>{{$conclu[4]}} Students Failed</h4>
                                     <small>&nbsp;</small>
                                 </div>
                             </a>
@@ -308,7 +272,7 @@ function getChartJs(type) {
         config = {
             type: 'line',
             data: {
-                labels: ["April", "May", "June", "July","August","September","October","November","December","January", "February", "March"],
+                labels: @json($mnarr),
                 datasets: [{
                     label: "Training partner",
                     data: @json($res),
@@ -342,9 +306,6 @@ function getChartJs(type) {
             }
         }
     }
-    
-    
-      
     return config;
 }
 

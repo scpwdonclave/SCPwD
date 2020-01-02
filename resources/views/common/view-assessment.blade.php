@@ -4,7 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('content')
 <div class="container-fluid">
@@ -200,25 +200,72 @@
 @section('page-script')
 {{-- @auth('admin') --}}
     <script>
+        // function showPromptMessage(f,t = 0) {
+        //     swal({
+        //         title: "Reason of Rejection",
+        //         text: "Please Describe the Reason",
+        //         type: "input",
+        //         showCancelButton: true,
+        //         closeOnConfirm: false,
+        //         animation: "slide-from-top",
+        //         showLoaderOnConfirm: true,
+        //         inputPlaceholder: "Reason"
+        //     }, function (inputValue) {
+        //         if (inputValue === false) return false;
+        //         if (inputValue === "") {
+        //             swal.showInputError("You need to write something!"); return false
+        //         }
+        //         var id='{{$batchAssessment->id}}';
+        //         var note=inputValue;
+        //         let _token = $("input[name='_token']").val();
+        //         if(t==0){
+        //         if(f=='agency'){
+        //             var urlLink="{{route('agency.assessment.reject')}}";
+        //         }else if(f=='admin'){
+        //             var urlLink="{{route('admin.assessment.reject')}}";
+        //         }
+
+        //         }else{
+        //             var urlLink="{{route('admin.assessment.release.reject')}}";
+
+        //         }
+        //         $.ajax({
+        //         type: "POST",
+        //         url: urlLink,
+        //         data: {_token,id,note},
+        //         success: function(data) {
+        //             // console.log(data);
+        //             swal({
+        //         title: "Rejected",
+        //         text: "Assessment Submit for Recheck",
+        //         type:"success",
+        //         //timer: 2000,
+        //         showConfirmButton: true
+        //     },function(isConfirm){
+        
+        //         if (isConfirm){
+        //         if(f=='agency'){
+
+        //         window.location="{{route('agency.assessment.pending-approval')}}";
+        //         }else if(f=='admin'){
+        //         window.location="{{route('admin.assessment.all-assessment')}}";
+
+        //         }
+        
+        //         } 
+        //         });
+            
+        //         }
+        //     });
+                
+        //     });
+        // }
+
         function showPromptMessage(f,t = 0) {
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
-                }
-                var id='{{$batchAssessment->id}}';
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
-                if(t==0){
+            var id={{$batchAssessment->id}};
+            let _token = $("input[name='_token']").val();
+                
+                 if(t==0){
                 if(f=='agency'){
                     var urlLink="{{route('agency.assessment.reject')}}";
                 }else if(f=='admin'){
@@ -229,41 +276,66 @@
                     var urlLink="{{route('admin.assessment.release.reject')}}";
 
                 }
-                $.ajax({
-                type: "POST",
-                url: urlLink,
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Rejected",
-                text: "Assessment Submit for Recheck",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
         
-                if (isConfirm){
-                if(f=='agency'){
-
-                window.location="{{route('agency.assessment.pending-approval')}}";
-                }else if(f=='admin'){
-                window.location="{{route('admin.assessment.all-assessment')}}";
-
-                }
-        
-                } 
-                });
+         swal({
+            title: "Reason of Rejection",
+            text: "Please Describe the Reason",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                },
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "Cencel",
+                    confirm: {
+                        text: "Confirm",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
             
-                }
-            });
-                
-            });
-        }
+            var dataString = {_token:_token, id:id,note:val};
+            if (val) {
+                $.ajax({
+                    url: urlLink,
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML ="Assessment Submit for <span style='font-weight:bold; color:red'>Recheck</span>";
+                       
+                        swal({title: "Rejected", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false})
+                        .then(function(){
+                            if(f=='agency'){
+                            location="{{route('agency.assessment.pending-approval')}}";
+                            }else if(f=='admin'){
+                            location="{{route('admin.assessment.all-assessment')}}";
+
+                            }
+                           // location="{{route('admin.tc.pending-trainers')}}";
+                            });
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
+                });
+            } else if (val!=null) {
+                swal('Attention', 'You need to write something!', 'info');
+            }
+        });
+}
     </script>
 {{-- @endauth --}}
 
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

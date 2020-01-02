@@ -44,7 +44,7 @@
                                     <td style="color:{{($item->batch->status)?'green':'red'}}"><strong>{{($item->batch->status)?'Active':'Inactive'}}</strong></td>
                                     <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}"><strong>{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</strong></td>
                                     @if (\Carbon\Carbon::now()>\Carbon\Carbon::parse($item->batch->assessment))
-                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>$item->batch->id])}}" >Enter Marks</a></td>
+                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>Crypt::encrypt($item->batch->id)])}}" >Enter Marks</a></td>
                                      @else
                                       <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
                                     @endif

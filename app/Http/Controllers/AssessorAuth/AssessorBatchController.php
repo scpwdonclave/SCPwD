@@ -50,7 +50,8 @@ class AssessorBatchController extends Controller
     }
 
     public function candidateMarks($id){
-
+        
+        $id= $this->decryptThis($id);
         $batch=Batch::findOrFail($id);
         
         if(!$batch->status || !$batch->tpjobrole->status || Carbon::now() < Carbon::parse($batch->assessment) || !is_null($batch->batchassessment)){
@@ -70,8 +71,15 @@ class AssessorBatchController extends Controller
              }	
         if($request->hasFile('marksheet_doc')){
             $batchAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
-             }	
-             $batchAssessment->save();
+             }
+
+            $fmonth=date('F');
+            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
+            $batchAssessment->f_month=$fmonth;
+            $batchAssessment->f_year=$fyear;
+            
+            $batchAssessment->save();
 
         foreach ($request->candidate_id as $key => $value) {
             $a='remark'.($key+1);
@@ -79,7 +87,7 @@ class AssessorBatchController extends Controller
             $candidatemark->bt_assessment_id=$batchAssessment->id;	
             $candidatemark->candidate_id=$value;
             if($request->mark[$key]==null){
-                $candidatemark->mark=0;	
+                $candidatemark->mark=0;	 
                     }else{
                 $candidatemark->mark=$request->mark[$key];	
                     }	

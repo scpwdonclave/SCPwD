@@ -9,7 +9,11 @@ use App\JobRole;
 use App\JobQualification;
 use App\Partner;
 use App\Center;
+use App\Agency;
 use App\Candidate;
+use App\CenterCandidateMap;
+use App\CandidateMark;
+use App\BatchAssessment;
 use App\Expository;
 use App\Sector;
 use App\Scheme;
@@ -71,90 +75,146 @@ class AdminHomeController extends Controller
     
       
 
-            $chart = [ 
-                'partners' => Partner::where('pending_verify',0)->get(),
-                'centers' => Center::where('verified',1)->get(),
-                'candidates' => Candidate::all(),
+    //         $chart = [ 
+    //             'partners' => Partner::where('pending_verify',0)->get(),
+    //             'centers' => Center::where('verified',1)->get(),
+    //             'candidates' => CenterCandidateMap::all(),
             
-            ];
-        $fyear =( date('m') > 3) ? date('Y') : (date('Y')-1);
-        // $fyear1 =( date('m') > 3) ? date('y').'-'.(date('y')+1) : (date('y')-1).'-'.date('y');
-        // dd($fyear1);
-        $res=$res1=$res2=[];
+    //         ];
+    //     $fyear =( date('m') > 3) ? date('Y') : (date('Y')-1);
+    //     // $fyear1 =( date('m') > 3) ? date('y').'-'.(date('y')+1) : (date('y')-1).'-'.date('y');
+    //     // dd($fyear1);
+    //     $res=$res1=$res2=[];
        
         
-       foreach ($chart as $key => $query) {
+    //    foreach ($chart as $key => $query) {
           
        
         
-        // $query = DB::table('partners')
-        //  ->select(\DB::raw('SUBSTRING(tp_id,3,4) as tp_id'))
-        // ->groupBy(DB::raw('MONTH(created_at)'))
-        // ->where(DB::raw('SUBSTRING(tp_id,3,4)'), '=', $fyear)
-        // ->select('created_at', DB::raw('count(*) as total'),DB::raw('MONTHNAME(created_at) as month'))
-        // ->get();
-        $apr=$may=$jun=$jul=$aug=$sep=$oct=$nov=$dec=$jan=$feb=$mar=0;
-        foreach ($query as $value) {
-            if(Carbon::parse($value->created_at)->format('m')>3){
-                $fyr=Carbon::parse($value->created_at)->format('Y');
-            }else{
-                $fyr=(Carbon::parse($value->created_at)->format('Y')-1);
+    //     // $query = DB::table('partners')
+    //     //  ->select(\DB::raw('SUBSTRING(tp_id,3,4) as tp_id'))
+    //     // ->groupBy(DB::raw('MONTH(created_at)'))
+    //     // ->where(DB::raw('SUBSTRING(tp_id,3,4)'), '=', $fyear)
+    //     // ->select('created_at', DB::raw('count(*) as total'),DB::raw('MONTHNAME(created_at) as month'))
+    //     // ->get();
+    //     $apr=$may=$jun=$jul=$aug=$sep=$oct=$nov=$dec=$jan=$feb=$mar=0;
+    //     foreach ($query as $value) {
+    //         if(Carbon::parse($value->created_at)->format('m')>3){
+    //             $fyr=Carbon::parse($value->created_at)->format('Y');
+    //         }else{
+    //             $fyr=(Carbon::parse($value->created_at)->format('Y')-1);
 
-            }
+    //         }
 
-            if($fyear==$fyr){
-                switch (Carbon::parse($value->created_at)->format('m')) {
-                    case 4:
-                        $apr=$apr+1;
-                        break;
-                    case 5:
-                        $may=$may+1;
-                        break;
-                    case 6:
-                        $jun=$jun+1;
-                        break;
-                    case 7:
-                        $jul=$jul+1;
-                        break;
-                    case 8:
-                        $aug=$aug+1;
-                        break;
-                    case 9:
-                        $sep=$sep+1;
-                        break;
-                    case 10:
-                        $oct=$oct+1;
-                        break;
-                    case 11:
-                        $nov=$nov+1;
-                        break;
-                    case 12:
-                        $dec=$dec+1;
-                        break;
-                    case 1:
-                        $jan=$jan+1;
-                        break;
-                    case 2:
-                        $feb=$feb+1;
-                        break;
-                    case 3:
-                        $mar=$mar+1;
-                        break;
-                    }  
-                }
-            }
-            if($key=='partners'){
-                $res=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
-            }else if($key=='centers'){
-                $res1=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+    //         if($fyear==$fyr){
+    //             switch (Carbon::parse($value->created_at)->format('m')) {
+    //                 case 4:
+    //                     $apr=$apr+1;
+    //                     break;
+    //                 case 5:
+    //                     $may=$may+1;
+    //                     break;
+    //                 case 6:
+    //                     $jun=$jun+1;
+    //                     break;
+    //                 case 7:
+    //                     $jul=$jul+1;
+    //                     break;
+    //                 case 8:
+    //                     $aug=$aug+1;
+    //                     break;
+    //                 case 9:
+    //                     $sep=$sep+1;
+    //                     break;
+    //                 case 10:
+    //                     $oct=$oct+1;
+    //                     break;
+    //                 case 11:
+    //                     $nov=$nov+1;
+    //                     break;
+    //                 case 12:
+    //                     $dec=$dec+1;
+    //                     break;
+    //                 case 1:
+    //                     $jan=$jan+1;
+    //                     break;
+    //                 case 2:
+    //                     $feb=$feb+1;
+    //                     break;
+    //                 case 3:
+    //                     $mar=$mar+1;
+    //                     break;
+    //                 }  
+    //             }
+    //         }
+    //         if($key=='partners'){
+    //             $res=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+    //         }else if($key=='centers'){
+    //             $res1=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
 
-            }else if($key=='candidates'){
-                $res2=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
+    //         }else if($key=='candidates'){
+    //             $res2=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
 
-            }
+    //         }
+    //     }
+
+        // Start New portion Graph
+        $finyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+        $res=$res1=$res2=[];
+        $mnarr=["April", "May", "June", "July","August","September","October","November","December","January","February","March"];
+        foreach ($mnarr as $key => $month) {
+            $prtnr=Partner::select(DB::raw('count(*) as total'))->where([['pending_verify','=',0],['f_month','=',$month],['f_year','=',$finyear]])->first();
+            $cntr=Center::select(DB::raw('count(*) as total'))->where([['verified','=',1],['f_month','=',$month],['f_year','=',$finyear]])->first();
+            $candidate=CenterCandidateMap::select(DB::raw('count(*) as total'))->where([['f_month','=',$month],['f_year','=',$finyear]])->first();
+            array_push($res,$prtnr->total);
+            array_push($res1,$cntr->total);
+            array_push($res2,$candidate->total);
+        
+        }
+        
+        //End New Portion Graph
+
+        $states=DB::table('state_district')->groupBy('state')->get();
+        $stack = array();
+        foreach ($states as $key => $state) {
+            $tp_count=$tc_count=$aa_count=$can_count=0;
+        $st_dist_id=DB::table('state_district')->select('id')->where('state','=',$state->state)->get();
+
+        foreach ($st_dist_id as  $ids) {
+            $partner=Partner::where([['state_district','=',$ids->id],['pending_verify','=',0]])->get();
+            $center=Center::where([['state_district','=',$ids->id],['verified','=',1]])->get();
+            $agency=Agency::where('state_district',$ids->id)->get();
+            $candidate=CenterCandidateMap::where('state_district',$ids->id)->get();
+            $tp_count=$tp_count+ count($partner);
+            $tc_count=$tc_count+ count($center);
+            $aa_count=$aa_count+ count($agency);
+            $can_count=$can_count+ count($candidate);
+        }
+        
+        $stack[$state->state]=[$tp_count,$tc_count,$aa_count,$can_count];
         }
 
-        return view('admin.home')->with($data)->with($rr)->with(compact('res','res1','res2'));
+        $tc_number=Center::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['status','=',1],['verified','=',1]])->first();
+        $tp_number=Partner::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['status','=',1],['complete_profile','=',1],['pending_verify','=',0]])->first();
+        
+        $exams=BatchAssessment::where('f_year','=',$finyear)->get();
+        $can_pass=$can_fail=0;
+        foreach ($exams as $exam) {
+            foreach ($exam->candidateMarks as  $candidate) {
+                if($candidate->passed){
+                    $can_pass=$can_pass+1; 
+                }else{
+                    $can_fail=$can_fail+1;  
+                }
+            }
+            
+        }
+        
+
+        $conclu=[$tc_number->total,$tp_number->total,count($exams),$can_pass,$can_fail];
+        
+       
+        return view('admin.home')->with($data)->with($rr)->with(compact('res','res1','res2','stack','conclu','mnarr','finyear'));
     }
     
     public function job_roles(){

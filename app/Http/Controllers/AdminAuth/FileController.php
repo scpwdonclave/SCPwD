@@ -18,8 +18,9 @@ class FileController extends Controller
 
     public function schemeFiles($logo)
     {
+        
         try {
-            return Storage::disk('myDisk')->response("adminscheme/{$logo}");
+            return Storage::disk('public')->response("adminscheme/{$logo}");
         } catch (Exception $e) {
             return abort(404);
         }

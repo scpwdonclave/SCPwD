@@ -62,6 +62,11 @@ class CreateAssessorsTable extends Migration
             $table->string('certi_date')->nullable(); 
             $table->string('scpwd_doc')->nullable(); 
             $table->string('certi_end_date')->nullable();
+
+            /* Financial Year and Month */
+            $table->string('f_month')->nullable();
+            $table->string('f_year')->nullable();
+            /*End of Financial Year and Month */
             
             $table->boolean('status')->default(1); 
             $table->boolean('verified')->default(0);

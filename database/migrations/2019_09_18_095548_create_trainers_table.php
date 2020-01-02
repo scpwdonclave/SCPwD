@@ -40,6 +40,9 @@ class CreateTrainersTable extends Migration
             $table->string('resume')->nullable();
             $table->string('other_doc')->nullable();
 
+            $table->string('f_month')->nullable();
+            $table->string('f_year')->nullable();
+
             $table->boolean('status')->default(0);
             $table->boolean('reassign')->default(0);
             $table->boolean('verified')->default(0);

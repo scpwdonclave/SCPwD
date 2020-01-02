@@ -18,6 +18,10 @@ class CreateBatchAssessmentsTable extends Migration
             $table->unsignedBigInteger('bt_id');
             $table->string('attendence_sheet');
             $table->string('mark_sheet');
+            /* Financial Year and Month */
+            $table->string('f_month');
+            $table->string('f_year');
+            /*End of Financial Year and Month */
             $table->boolean('aa_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';
             $table->boolean('admin_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';
             $table->boolean('sup_admin_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';

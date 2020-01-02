@@ -3,7 +3,7 @@
 @section('parentPageTitle', 'Assessor')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -119,51 +119,51 @@
 @stop
 @section('page-script')
 <script>
-function showCancelMessage(f) {
-    swal({
-        title: "Deactivation!",
-        text: "Write Reason for Deactivation:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
+// function showCancelMessage(f) {
+//     swal({
+//         title: "Deactivation!",
+//         text: "Write Reason for Deactivation:",
+//         type: "input",
+//         showCancelButton: true,
+//         closeOnConfirm: false,
+//         animation: "slide-from-top",
+//         showLoaderOnConfirm: true,
+//         inputPlaceholder: "Write reason"
+//     }, function (inputValue) {
+//         if (inputValue === false) return false;
+//         if (inputValue === "") {
+//             swal.showInputError("You need to write something!"); return false
+//         }
+//         var id=f;
+//         var reason=inputValue;
+//         let _token = $("input[name='_token']").val();
    
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.as.assessor.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Assessor Record Deactivated",
-        type:"success",
+//         $.ajax({
+//         type: "POST",
+//         url: "{{route('admin.as.assessor.deactive')}}",
+//         data: {_token,id,reason},
+//         success: function(data) {
+//            // console.log(data);
+//            swal({
+//         title: "Deactive",
+//         text: "Assessor Record Deactivated",
+//         type:"success",
         
-        showConfirmButton: true
-    },function(isConfirm){
+//         showConfirmButton: true
+//     },function(isConfirm){
 
-        if (isConfirm){
+//         if (isConfirm){
        
-        window.location="{{route('admin.assessor.assessors')}}";
+//         window.location="{{route('admin.assessor.assessors')}}";
 
-        } 
-        });
+//         } 
+//         });
     
-        }
-    });
+//         }
+//     });
         
-    });
-}
+//     });
+// }
 //======================================
 
 
@@ -179,5 +179,5 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 @stop

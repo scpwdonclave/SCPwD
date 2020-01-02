@@ -10,6 +10,7 @@ use App\BatchAssessment;
 use App\Notification;
 use Auth;
 use Crypt;
+use Image;
 use PDF;
 use DB;
 
@@ -140,7 +141,7 @@ class AdminAssessmentController extends Controller
             $batchAssessment->admin_cert_rel=1;
             $batchAssessment->supadmin_cert_rel=0;
             $batchAssessment->reject_note=null;
-            $text="<p>Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Released</span> Wait for Super Admin <span style='color:red;font-weight:bold;'>Approval</span>.</p>";
+            $text="<p>Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Request For Released</span> Wait for Super Admin <span style='color:red;font-weight:bold;'>Approval</span>.</p>";
             
             /* Notification For Super Admin */
             $batch_no=$batchAssessment->batch->batch_id;
@@ -208,7 +209,7 @@ class AdminAssessmentController extends Controller
                
                 }
 
-                $eachcand= $value->candidate;
+                $eachcand= $value->centerCandidate;
                 if($value->attendence==='present'){
                 $eachcand->passed=$value->passed;
                 }else{
@@ -272,9 +273,12 @@ class AdminAssessmentController extends Controller
 
     public function  certificatePrint($id){
         $id= $this->decryptThis($id);
+        
         $batchAssessment=BatchAssessment::findOrFail($id);
         if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
             $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
+            
+            
             return $pdf->stream($batchAssessment->id.'.pdf');
         }else{
             abort(404);

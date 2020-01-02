@@ -231,7 +231,13 @@ class AdminPartnerController extends Controller
                     } else {
                         $new_tpid = 'TP'.$year.'000001';
                     }
+
+                    $fmonth=date('F');
+                    $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
                     $partner->tp_id=$new_tpid;
+                    $partner->f_month=$fmonth;
+                    $partner->f_year=$fyear;
                     $partner->pending_verify=0;
                     $partner->save();
                     $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");

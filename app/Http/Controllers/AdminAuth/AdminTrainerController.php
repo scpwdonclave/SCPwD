@@ -141,6 +141,13 @@ class AdminTrainerController extends Controller
                 if(is_null($trainer->trainer_id)){
                     $trainer->trainer_id=$new_trid;
                 }
+
+                $fmonth=date('F');
+                $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
+                $trainer->f_month=$fmonth;
+                $trainer->f_year=$fyear;
+
                 $trainer->status=1;
                 $trainer->verified=1;
                 $trainer->save();
@@ -173,6 +180,10 @@ class AdminTrainerController extends Controller
                 
                 $neutral->resume=$trainer->resume;
                 $neutral->other_doc=$trainer->other_doc;
+
+                $neutral->f_month=$fmonth;
+                $neutral->f_year=$fyear;
+
                 $neutral->status=1;
                 $neutral->attached=1;
                 $neutral->save();

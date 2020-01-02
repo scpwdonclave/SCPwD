@@ -49,6 +49,11 @@ class CreateAgenciesTable extends Migration
             $table->string('org_landline')->nullable();
             $table->string('website')->nullable();
 
+            /* Financial Year and Month */
+            $table->string('f_month');
+            $table->string('f_year');
+            /*End of Financial Year and Month */
+
             $table->boolean('status')->default(1);
             $table->rememberToken();
             $table->timestamps();

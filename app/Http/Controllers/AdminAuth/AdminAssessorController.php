@@ -153,7 +153,7 @@ class AdminAssessorController extends Controller
         $notification->save();
         /* End Notification For Partner */
 
-        alert()->success('Assessor has been Activated', 'Job Done')->autoclose(3000);
+        alert()->success("Assessor has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();
     }
 
@@ -184,9 +184,15 @@ class AdminAssessorController extends Controller
             $new_asid = 'AS'.$year.'000001';
         }
 
+        $fmonth=date('F');
+        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
         $assessor_password = str_random(8);
         $assessor->as_id=$new_asid;
         $assessor->password=Hash::make($assessor_password);
+        $assessor->f_month=$fmonth;
+        $assessor->f_year=$fyear;
+
         $assessor->verified=1;
         $assessor->save();
 

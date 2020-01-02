@@ -28,16 +28,15 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 <body >
       
         @foreach ($batchAssessment->candidateMarks as $item)
-        @if($item->passed)  
+        @if($item->passed)   
        
  <div style="height:1000px;width:1500px;position:relative">
 <img src="{{asset('assets/images/certi.png')}}" style="height:1000px;width:1500px;">
  <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{$item->certi_no}}</span></div>
 <div style="position:absolute;left:138px;top:160px;height:100px;">
    
+    
     <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="height:120px;width:300px;">
-    {{-- <img src="{{storage_path('app/files/'.$batchAssessment->batch->scheme->logo)}}" style="height:120px;width:300px;"> --}}
-    {{-- <img src="{{ Storage::disk('public')->get('adminscheme/nTeO9ifXDLI2ST6tUhyXKXc96v1J8RK72v6dMF1O.png') }}" style="height:120px;width:300px;"> --}}
 </div>
 <div style="position:absolute;left:360px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
 <div style="position:absolute;left:510px;top:360px" class="cls_004"><span class="cls_004">Ministry of Social Justice and Empowerment</span></div>
@@ -45,43 +44,43 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 
 <div style="height:250px;width:1000px;position:absolute;left:290px;top:470px;" class="cls_006">
     <span class="cls_006">This is to certify that </span>
-    @if ($item->candidate->gender=='Male')
-        <span class="cls_007">Mr. {{$item->candidate->name}}</span>
-        @if ($item->candidate->g_type=='Father')
+    @if ($item->centerCandidate->candidate->gender=='Male')
+        <span class="cls_007">Mr. {{$item->centerCandidate->candidate->name}}</span>
+        @if ($item->centerCandidate->g_type=='Father')
         <span class="cls_006"> Son of</span>
-        <span class="cls_007"> Mr. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Mother')
+        <span class="cls_007"> Mr. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Mother')
         <span class="cls_006"> Son of</span>
-        <span class="cls_007"> Ms. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Wife')
+        <span class="cls_007"> Ms. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Wife')
         <span class="cls_006"> Husband of</span>
-        <span class="cls_007"> Ms. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Uncle')
+        <span class="cls_007"> Ms. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Uncle')
         <span class="cls_006"> Nephew of</span>
-        <span class="cls_007"> Mr. {{$item->candidate->g_name}}</span>
+        <span class="cls_007"> Mr. {{$item->centerCandidate->g_name}}</span>
         @endif
-    @elseif($item->candidate->gender=='Female') 
-        <span class="cls_007">Ms. {{$item->candidate->name}}</span>
-        @if ($item->candidate->g_type=='Father')
+    @elseif($item->centerCandidate->candidate->gender=='Female') 
+        <span class="cls_007">Ms. {{$item->centerCandidate->candidate->name}}</span>
+        @if ($item->centerCandidate->g_type=='Father')
         <span class="cls_006"> Daughter of</span>
-        <span class="cls_007"> Mr. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Mother')
+        <span class="cls_007"> Mr. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Mother')
         <span class="cls_006"> Daughter of</span>
-        <span class="cls_007"> Ms. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Husband')
+        <span class="cls_007"> Ms. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Husband')
         <span class="cls_006"> Wife of</span>
-        <span class="cls_007"> Mr. {{$item->candidate->g_name}}</span>
-        @elseif($item->candidate->g_type=='Uncle')
+        <span class="cls_007"> Mr. {{$item->centerCandidate->g_name}}</span>
+        @elseif($item->centerCandidate->g_type=='Uncle')
         <span class="cls_006"> Niece of</span>
-        <span class="cls_007"> Mr. {{$item->candidate->g_name}}</span>
+        <span class="cls_007"> Mr. {{$item->centerCandidate->g_name}}</span>
         @endif
     @endif
-    @if (strlen($item->candidate->doc_no)==12)
+    @if (strlen($item->centerCandidate->candidate->doc_no)==12)
         <span class="cls_006">Aadhaar No. </span>
-        <span class="cls_007">******{{substr($item->candidate->doc_no,-6)}}</span>
+        <span class="cls_007">******{{substr($item->centerCandidate->candidate->doc_no,-6)}}</span>
     @else
     <span class="cls_006">Voter No. </span>
-    <span class="cls_007">*****{{substr($item->candidate->doc_no,-5)}}</span>  
+    <span class="cls_007">*****{{substr($item->centerCandidate->candidate->doc_no,-5)}}</span>  
     @endif
     <span class="cls_006">has successfully completed the course of</span>
     <span class="cls_007"> {{$batchAssessment->batch->jobrole->job_role}}  (QP No.  {{$batchAssessment->batch->jobrole->qp_code}}) </span>

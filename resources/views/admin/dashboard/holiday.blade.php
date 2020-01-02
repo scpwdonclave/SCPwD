@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <style>
 .table td {
     padding: .10rem;
@@ -97,43 +97,90 @@
 @section('page-script')
 
 <script>
- function deleteConfirm(id){
-    swal({
-        title: "Are you sure?",
-        text: "Your Holiday Data will be deleted",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            let _token = $("input[name='_token']").val();
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.dashboard.holiday-delete')}}",
-                data: {_token,id},
-                success: function(data) {
-                   swal({
-                        title: "Deleted",
-                        text: "Holiday Record Deleted",
-                        type:"success",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.dashboard.holiday')}}";
-                        }
-                    });
-                }
-            });
-        } else {
-            swal("Cancelled", "Your Holiday Data Remain safe", "error");
-        }
-    });
+//  function deleteConfirm(id){
+//     swal({
+//         title: "Are you sure?",
+//         text: "Your Holiday Data will be deleted",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#DD6B55",
+//         confirmButtonText: "Yes, delete it!",
+//         cancelButtonText: "No, cancel!",
+//         closeOnConfirm: false,
+//         closeOnCancel: false
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             let _token = $("input[name='_token']").val();
+//             $.ajax({
+//                 type: "POST",
+//                 url: "{{route('admin.dashboard.holiday-delete')}}",
+//                 data: {_token,id},
+//                 success: function(data) {
+//                    swal({
+//                         title: "Deleted",
+//                         text: "Holiday Record Deleted",
+//                         type:"success",
+//                         showConfirmButton: true
+//                     },function(isConfirm){
+//                         if (isConfirm){
+//                             window.location="{{route('admin.dashboard.holiday')}}";
+//                         }
+//                     });
+//                 }
+//             });
+//         } else {
+//             swal("Cancelled", "Your Cancel this process", "error");
+//         }
+//     });
 
- }
+//  }
+
+function deleteConfirm(id){
+    //var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        //var color=''; var text='';
+        var _token=$('[name=_token]').val();
+        //if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
+        //var scheme=data[2];
+        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Delete</span> This <span style='font-weight:bold; color:blue;'>Holiday</span>";
+        swal({
+            text: "Are you Sure ?",
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Delete Holiday",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(){
+            var dataString = {_token, id:id};
+            //if (val) {
+                $.ajax({
+                    url: "{{ route('admin.dashboard.holiday-delete') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML = "Holiday Record <span style='font-weight:bold; color:red;'>Deleted</span>";
+                        setTimeout(function () {
+                            swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
+                });
+           // }
+        });
+}
 
 </script>
 
@@ -148,7 +195,7 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 
 
 <script>

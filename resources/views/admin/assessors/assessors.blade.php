@@ -3,7 +3,7 @@
 @section('parentPageTitle', 'Assessor')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -43,7 +43,7 @@
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                                
                                                 @if($item->status==1)
-                                                <td><button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Deactivate</button></td>
+                                                <td><a class="badge bg-red margin-0" href="javascript:showCancelMessage({{$item->id}})">Deactivate</a></td>
                                                 @elseif($item->status==0)
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
                                                 @endif
@@ -119,50 +119,98 @@
 @stop
 @section('page-script')
 <script>
-function showCancelMessage(f) {
-    swal({
-        title: "Deactivation!",
-        text: "Write Reason for Deactivation:",
-        type: "input",
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: "slide-from-top",
-        showLoaderOnConfirm: true,
-        inputPlaceholder: "Write reason"
-    }, function (inputValue) {
-        if (inputValue === false) return false;
-        if (inputValue === "") {
-            swal.showInputError("You need to write something!"); return false
-        }
-        var id=f;
-        var reason=inputValue;
-        let _token = $("input[name='_token']").val();
+// function showCancelMessage(f) {
+//     swal({
+//         title: "Deactivation!",
+//         text: "Write Reason for Deactivation:",
+//         type: "input",
+//         showCancelButton: true,
+//         closeOnConfirm: false,
+//         animation: "slide-from-top",
+//         showLoaderOnConfirm: true,
+//         inputPlaceholder: "Write reason"
+//     }, function (inputValue) {
+//         if (inputValue === false) return false;
+//         if (inputValue === "") {
+//             swal.showInputError("You need to write something!"); return false
+//         }
+//         var id=f;
+//         var reason=inputValue;
+//         let _token = $("input[name='_token']").val();
    
-        $.ajax({
-        type: "POST",
-        url: "{{route('admin.as.assessor.deactive')}}",
-        data: {_token,id,reason},
-        success: function(data) {
-           // console.log(data);
-           swal({
-        title: "Deactive",
-        text: "Assessor Record Deactivated",
-        type:"success",
+//         $.ajax({
+//         type: "POST",
+//         url: "{{route('admin.as.assessor.deactive')}}",
+//         data: {_token,id,reason},
+//         success: function(data) {
+//            // console.log(data);
+//            swal({
+//         title: "Deactive",
+//         text: "Assessor Record Deactivated",
+//         type:"success",
         
-        showConfirmButton: true
-    },function(isConfirm){
+//         showConfirmButton: true
+//     },function(isConfirm){
 
-        if (isConfirm){
+//         if (isConfirm){
        
-        window.location="{{route('admin.assessor.assessors')}}";
+//         window.location="{{route('admin.assessor.assessors')}}";
 
-        } 
-        });
+//         } 
+//         });
     
-        }
-    });
+//         }
+//     });
         
-    });
+//     });
+// }
+
+function showCancelMessage(f) { 
+        var id=f;
+       let _token = $("input[name='_token']").val();
+        swal({
+            title: "Deactive!",
+            text: "Write Reason for Deactive:",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                },
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "Cencel",
+                    confirm: {
+                        text: "Confirm",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            var dataString = {_token:_token, id:id,reason:val};
+            if (val) {
+                $.ajax({
+                    url: "{{ route('admin.as.assessor.deactive') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML ="Assessor Record <span style='font-weight:bold; color:red'>Deactivated</span>";
+                        swal({title: "Deactive", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
+                });
+            } else if (val!=null) {
+                swal('Attention', 'You need to write something!', 'info');
+            }
+        });
 }
 //======================================
 
@@ -180,5 +228,5 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 @stop

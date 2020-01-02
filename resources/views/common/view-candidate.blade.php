@@ -212,7 +212,7 @@
 
 @stop
 @section('page-script')
-@auth('admin')
+{{-- @auth('admin')
     <script>
         function showPromptMessage() {
             swal({
@@ -260,7 +260,7 @@
             });
         }
     </script>
-@endauth
+@endauth --}}
 
 @auth('partner')
     @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $center_candidate->center))

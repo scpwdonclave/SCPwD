@@ -69,14 +69,14 @@
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'trainer' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts-alt"></i><span>Trainers</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-tumblr"></i><span>Trainers</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/trainer/trainers') ? 'active' : null }}"><a href="{{route('admin.tc.trainers')}}">Trainers</a></li>
                         <li class="{{ Request::is('admin/trainer/pending-trainers') ? 'active' : null }}"><a href="{{route('admin.tc.pending-trainers')}}">Pending Trainers</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'batches' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Batches</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-badge-check"></i><span>Batches</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/batches/batches') ? 'active' : null }}"><a href="{{route('admin.batch.batches')}}"> Approved Batches</a></li>
                         <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li>
@@ -84,14 +84,14 @@
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'agency' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Agencies</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-globe-alt"></i><span>Agencies</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/agency/agencies') ? 'active' : null }}"><a href="{{route('admin.agency.agencies')}}"> All Agency</a></li>
                         {{-- <li class="{{ Request::is('admin/batches/pending-batches') ? 'active' : null }}"><a href="{{route('admin.batch.pb')}}"> Pending Batches</a></li> --}}
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'assessor' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Assessors</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-balance"></i><span>Assessors</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/assessor/assessors') ? 'active' : null }}"><a href="{{route('admin.assessor.assessors')}}">Assessors</a></li>
                         <li class="{{ Request::is('admin/assessor/pending-assessors') ? 'active' : null }}"><a href="{{route('admin.as.pending-assessors')}}"> Pending Assessors</a></li>
@@ -99,7 +99,7 @@
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'assessment' ? 'active open' : null }}">
-                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Assessment</span></a>
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment-check"></i><span>Assessment</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.all-assessment')}}">All Assessment</a></li>
                         <li class="{{ Request::is('admin/assessment/pending-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.pending-assessment')}}">Pending Approval</a></li>

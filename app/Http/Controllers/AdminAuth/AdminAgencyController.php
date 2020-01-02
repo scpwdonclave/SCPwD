@@ -80,6 +80,9 @@ class AdminAgencyController extends Controller
             $new_aaid = 'AA'.$year.'000001';
         }
 
+        $fmonth=date('F');
+        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
         $agency_password = str_random(8);
 
         $agency = new Agency;
@@ -116,6 +119,8 @@ class AdminAgencyController extends Controller
         $agency->pin=$request->pin;	
         $agency->org_landline=$request->org_landline;	
         $agency->website=$request->website;	
+        $agency->f_month=$fmonth;	
+        $agency->f_year=$fyear;	
         $agency->save();
 
         foreach ($request->sector as $sector) {

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <style>
 .table td {
     padding: .10rem;
@@ -144,57 +144,107 @@ function fetchBatch(sector){
                      });
                 }
 
- function deleteConfirm(id){
-    swal({
-        title: "Are you sure?",
-        text: "Your Batch Data will be deleted",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            let _token = $("input[name='_token']").val();
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.agency.batch-delete')}}",
-                data: {_token,id},
-                success: function(data) {
-                    if(data.status=='done'){
-                   swal({
-                        title: "Deleted",
-                        text: "Batch Record Deleted",
-                        type:"success",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.agency.agencies')}}";
-                        }
-                    });
+//  function deleteConfirm(id){
+//     swal({
+//         title: "Are you sure?",
+//         text: "Your Batch Data will be deleted",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#DD6B55",
+//         confirmButtonText: "Yes, delete it!",
+//         cancelButtonText: "No, cancel!",
+//         closeOnConfirm: false,
+//         closeOnCancel: false
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             let _token = $("input[name='_token']").val();
+//             $.ajax({
+//                 type: "POST",
+//                 url: "{{route('admin.agency.batch-delete')}}",
+//                 data: {_token,id},
+//                 success: function(data) {
+//                     if(data.status=='done'){
+//                    swal({
+//                         title: "Deleted",
+//                         text: "Batch Record Deleted",
+//                         type:"success",
+//                         showConfirmButton: true
+//                     },function(isConfirm){
+//                         if (isConfirm){
+//                             window.location="{{route('admin.agency.agencies')}}";
+//                         }
+//                     });
 
-                    }else{
-                        swal({
-                        title: "Failed",
-                        text: "This Batch already been assigned to a Assessor",
-                        type:"error",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.agency.agencies')}}";
-                        }
-                    });
+//                     }else{
+//                         swal({
+//                         title: "Failed",
+//                         text: "This Batch already been assigned to a Assessor",
+//                         type:"error",
+//                         showConfirmButton: true
+//                     },function(isConfirm){
+//                         if (isConfirm){
+//                             window.location="{{route('admin.agency.agencies')}}";
+//                         }
+//                     });
+//                     }
+//                 }
+//             });
+//         } else {
+//              swal("Cancelled", "Your Cancel the process", "error");
+//         }
+//     });
+
+//  }
+
+function deleteConfirm(id){
+    //var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        //var color=''; var text='';
+        var _token=$('[name=_token]').val();
+        //if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
+        //var scheme=data[2];
+        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Delete</span> This <span style='font-weight:bold; color:blue;'>Batch</span>";
+        swal({
+            text: "Are you Sure ?",
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Delete Batch",
+                        closeModal: false
                     }
-                }
-            });
-        } else {
-             swal("Cancelled", "Your Cancel the process", "error");
-        }
-    });
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(){
+            var dataString = {_token, id:id};
+            //if (val) {
+                $.ajax({
+                    url: "{{ route('admin.agency.batch-delete') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        if(data.status=='done'){
+                        SuccessResponseText.innerHTML = "Batch Record <span style='font-weight:bold; color:red;'>Deleted</span> from Agency";
+                        setTimeout(function () {
+                            swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
+                         }else{
+                        SuccessResponseText.innerHTML = "This Batch Record already <span style='font-weight:bold; color:red;'>Assigned </span>to a Assessor";
+                        setTimeout(function () {
+                            swal({title: "Already Assigned", content: SuccessResponseText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
 
- }
+                         }
+                    
+                    }
+                });
+           // }
+        });
+}
 
 </script>
 
@@ -209,7 +259,7 @@ function fetchBatch(sector){
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 
 
 {{-- <script>

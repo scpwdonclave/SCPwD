@@ -44,76 +44,76 @@
               <th>#</th>
               <th>Details</th>
             </tr>
-        @if ($candidateMark->candidate->gender=='Male')
+        @if ($candidateMark->centerCandidate->candidate->gender=='Male')
         <tr>
         <td style="font-weight:bold;">Candidates Name</td>
-        <td>Mr. {{$candidateMark->candidate->name}}</td>
+        <td>Mr. {{$candidateMark->centerCandidate->candidate->name}}</td>
         </tr>
         
-            @if ($candidateMark->candidate->g_type=='Father')
+            @if ($candidateMark->centerCandidate->g_type=='Father')
             <tr>
               <td style="font-weight:bold;">Son of</td>
-              <td> Mr. {{$candidateMark->candidate->g_name}}</td>
+              <td> Mr. {{$candidateMark->centerCandidate->g_name}}</td>
             </tr>
-            @elseif($candidateMark->candidate->g_type=='Mother')
+            @elseif($candidateMark->centerCandidate->g_type=='Mother')
             <tr>
               <td style="font-weight:bold;">Son of</td>
-              <td> Ms. {{$candidateMark->candidate->g_name}}</td>
+              <td> Ms. {{$candidateMark->centerCandidate->g_name}}</td>
             </tr>
-            @elseif($candidateMark->candidate->g_type=='Wife')
+            @elseif($candidateMark->centerCandidate->g_type=='Wife')
             <tr>
               <td style="font-weight:bold;"> Husband of</td>
-              <td> Ms. {{$candidateMark->candidate->g_name}}</td>
+              <td> Ms. {{$candidateMark->centerCandidate->g_name}}</td>
             </tr>
-          @elseif($candidateMark->candidate->g_type=='Uncle')
+          @elseif($candidateMark->centerCandidate->g_type=='Uncle')
           <tr>
             <td style="font-weight:bold;"> Nephew of</td>
-            <td> Mr. {{$candidateMark->candidate->g_name}}</td>
+            <td> Mr. {{$candidateMark->centerCandidate->g_name}}</td>
           </tr>
           @endif
 
-        @elseif($candidateMark->candidate->gender=='Female') 
+        @elseif($candidateMark->centerCandidate->candidate->gender=='Female') 
             <tr>
               <td style="font-weight:bold;">Candidates Name</td>
-              <td>Ms. {{$candidateMark->candidate->name}}</td>
+              <td>Ms. {{$candidateMark->centerCandidate->candidate->name}}</td>
             </tr>
           
-          @if ($candidateMark->candidate->g_type=='Father')
+          @if ($candidateMark->centerCandidate->g_type=='Father')
             <tr>
               <td style="font-weight:bold;"> Daughter of</td>
-              <td> Mr. {{$candidateMark->candidate->g_name}}</td>
+              <td> Mr. {{$candidateMark->centerCandidate->g_name}}</td>
             </tr>
           
-          @elseif($candidateMark->candidate->g_type=='Mother')
+          @elseif($candidateMark->centerCandidate->g_type=='Mother')
           <tr>
             <td style="font-weight:bold;"> Daughter of</td>
-            <td> Ms. {{$candidateMark->candidate->g_name}}</td>
+            <td> Ms. {{$candidateMark->centerCandidate->g_name}}</td>
           </tr>
           
-          @elseif($candidateMark->candidate->g_type=='Husband')
+          @elseif($candidateMark->centerCandidate->g_type=='Husband')
           <tr>
             <td style="font-weight:bold;"> Wife of</td>
-            <td> Mr. {{$candidateMark->candidate->g_name}}</td>
+            <td> Mr. {{$candidateMark->centerCandidate->g_name}}</td>
           </tr>
           
-          @elseif($candidateMark->candidate->g_type=='Uncle')
+          @elseif($candidateMark->centerCandidate->g_type=='Uncle')
           <tr>
             <td style="font-weight:bold;"> Niece of</td>
-            <td> Mr. {{$candidateMark->candidate->g_name}}</td>
+            <td> Mr. {{$candidateMark->centerCandidate->g_name}}</td>
           </tr>
           @endif
         @endif
             
-        @if (strlen($candidateMark->candidate->doc_no)==12)
+        @if (strlen($candidateMark->centerCandidate->candidate->doc_no)==12)
             <tr>
               <td style="font-weight:bold;">Aadhaar No. </td>
-              <td>******{{substr($candidateMark->candidate->doc_no,-6)}}</td>
+              <td>******{{substr($candidateMark->centerCandidate->candidate->doc_no,-6)}}</td>
             </tr>
             
         @else
             <tr>
               <td style="font-weight:bold;">Voter No. </td>
-              <td>*****{{substr($candidateMark->candidate->doc_no,-5)}}</td>
+              <td>*****{{substr($candidateMark->centerCandidate->candidate->doc_no,-5)}}</td>
             </tr>
              
         @endif

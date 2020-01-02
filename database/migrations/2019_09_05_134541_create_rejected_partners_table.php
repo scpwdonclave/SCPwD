@@ -80,6 +80,8 @@ class CreateRejectedPartnersTable extends Migration
             $table->string('sanction_doc');
             /* End Proposal Informatoin */
             /* End Full Registration */
+
+             
             
             /* Flag Secion */
             $table->text('reason')->comment = 'Reason of Rejection';

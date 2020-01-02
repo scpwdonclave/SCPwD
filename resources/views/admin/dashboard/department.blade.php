@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 
 @stop
 @section('parentPageTitle', 'Dashboard')
@@ -85,61 +85,117 @@
 @section('page-script')
 
 <script>
- function deleteConfirm(id){
-    swal({
-        title: "Are you sure?",
-        text: "Your Department Data will be deleted",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            let _token = $("input[name='_token']").val();
-            console.log(id);
+//  function deleteConfirm(id){
+//     swal({
+//         title: "Are you sure?",
+//         text: "Your Department Data will be deleted",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#DD6B55",
+//         confirmButtonText: "Yes, delete it!",
+//         cancelButtonText: "No, cancel!",
+//         closeOnConfirm: false,
+//         closeOnCancel: false
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             let _token = $("input[name='_token']").val();
+//             console.log(id);
             
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.dashboard.department-delete')}}",
-                data: {_token,id},
-                success: function(data) {
-                    console.log(data);
+//             $.ajax({
+//                 type: "POST",
+//                 url: "{{route('admin.dashboard.department-delete')}}",
+//                 data: {_token,id},
+//                 success: function(data) {
+//                     console.log(data);
                     
-                    if(data.status=='done'){
-                   swal({
-                        title: "Deleted",
-                        text: "Department Record Deleted",
-                        type:"success",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.dashboard.department')}}";
-                        }
-                    });
+//                     if(data.status=='done'){
+//                    swal({
+//                         title: "Deleted",
+//                         text: "Department Record Deleted",
+//                         type:"success",
+//                         showConfirmButton: true
+//                     },function(isConfirm){
+//                         if (isConfirm){
+//                             window.location="{{route('admin.dashboard.department')}}";
+//                         }
+//                     });
 
-                    }else{
-                        swal({
-                        title: "Failed",
-                        text: "This Department already been assigned to a Scheme",
-                        type:"error",
-                        showConfirmButton: true
-                    },function(isConfirm){
-                        if (isConfirm){
-                            window.location="{{route('admin.dashboard.department')}}";
-                        }
-                    });
+//                     }else{
+//                         swal({
+//                         title: "Failed",
+//                         text: "This Department already been assigned to a Scheme",
+//                         type:"error",
+//                         showConfirmButton: true
+//                     },function(isConfirm){
+//                         if (isConfirm){
+//                             window.location="{{route('admin.dashboard.department')}}";
+//                         }
+//                     });
+//                     }
+//                 }
+//             });
+//         } else {
+//             swal("Cancelled", "You Cancel this process", "error");
+//         }
+//     });
+
+//  }
+
+function deleteConfirm(id){
+    //var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        //var color=''; var text='';
+        var _token=$('[name=_token]').val();
+        //if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
+        //var scheme=data[2];
+        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Delete</span> This <span style='font-weight:bold; color:blue;'>Department</span>";
+        swal({
+            text: "Are you Sure ?",
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cencel",
+                    confirm: {
+                        text: "Confirm Delete Department",
+                        closeModal: false
                     }
-                }
-            });
-        } else {
-            swal("Cancelled", "You Cancel this process", "error");
-        }
-    });
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(){
+            var dataString = {_token, id:id};
+            //if (val) {
+                $.ajax({
+                    url: "{{ route('admin.dashboard.department-delete') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        if(data.status=='done'){
+                        SuccessResponseText.innerHTML = "Department Record <span style='font-weight:bold; color:red;'>Deleted</span>";
+                        setTimeout(function () {
+                            swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
+                         }else{
+                        SuccessResponseText.innerHTML = "This Department Record already <span style='font-weight:bold; color:red;'>Assigned </span>to a Scheme";
+                        setTimeout(function () {
+                            swal({title: "Already Assigned", content: SuccessResponseText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
 
- }
+                         }
+                    
+                    }//,
+                    // error:function(data){
+                    //     var errors = JSON.parse(data.responseText);
+                    //     setTimeout(function () {
+                    //         swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                    //     }, 2000);
+                    // }
+                });
+           // }
+        });
+}
 
 </script>
 
@@ -154,7 +210,7 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 
 
 
