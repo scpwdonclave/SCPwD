@@ -50,11 +50,22 @@
                                 </div>
                                 <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="panel-body">
+                                        
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-5">
-                                                <label for="doc_no">Aadhaar/Voter Number <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="state_district">Choose State District of Candidate <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar No or Voter No" name="doc_no" required>
+                                                    <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
+                                                        @foreach ($states as $state)
+                                                            <option value="{{$state->id}}">{{ $state->district.' ('.$state->state.')' }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <label id="doc_label" for="doc_no">Aadhaar Number <span style="color:red"> <strong>*</strong></span></label>
+                                                <div class="form-group form-float">
+                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar Number" name="doc_no" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,14 +94,14 @@
                                             <div class="col-sm-3">
                                                 <label for="contact">Candidate Contact <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Candidate Contact" value="{{ old('contact') }}" onchange="checkduplicacy('contact')" name="contact" required>
+                                                    <input type="number" class="form-control" placeholder="Candidate Contact" value="{{ old('contact') }}" name="contact" required>
                                                     <span id="contact_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">Candidate Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="Candidate Email" value="{{ old('email') }}" onchange="checkduplicacy('email')" name="email" required>
+                                                    <input type="email" class="form-control" placeholder="Candidate Email" value="{{ old('email') }}" name="email" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
@@ -178,20 +189,10 @@
                                                 </div>
                                             </div>
                                             <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-8">
+                                                <div class="col-sm-12">
                                                     <label for="address">Address <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Candidate's Address" value="{{ old('address') }}" name="address" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="state_district">State District <span style="color:red"> <strong>*</strong></span></label>
-                                                    <div class="form-group form-float">
-                                                        <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
-                                                            @foreach ($states as $state)
-                                                                <option value="{{$state->id}}" data-subtext="{{ $state->state }}">{{ $state->district }}</option>
-                                                            @endforeach
-                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -302,45 +303,12 @@
 
 
 
+    /* Ajax Call */
+        // function callapi(dataValidate,swalText,div) {
+            
+        // }
+    /* End Ajax Call */
 
-    /* Duplicate Email Checking */
-    var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
-         
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('center.addcandidate.api') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
-                    } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_mobile_tag = false;
-            } 
-        });
-    }
-    /* End Duplicate Email Checking */
 
     /* Validation of Each Sections */
 
@@ -355,16 +323,18 @@
             }
         });
 
-        if (tag && dup_email_tag && dup_mobile_tag) {
+        if (tag) {
             switch (div[0]) {
                 case 'collapseOne':
-                    var ajaxresponse = true;
+                    // var ajaxresponse = true;
                     var doc_no = $('[name=doc_no]').val();
                 
                     $("#btnOne").prop("disabled", true);
                     $("#btnOne").html("Please Wait...");
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, doc_no };
+                    var swalText = document.createElement("div");
+                    // callapi(dataValidate,swalText,div);
                     $.ajax({
                         url: "{{ route('center.addcandidate.api') }}",
                         method: "POST",
@@ -373,27 +343,68 @@
                             if (!data.success) {
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
-                                swal('Abort','Candidate With This Addhar/Voter No is Present in Record and maybe or may not be Linked with a Batch as well','error');
-                                ajaxresponse = false;
-                                return false;
+                                swalText.innerHTML = data.message;
+                                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false});
+                            } else {
+                                // if (data.candidate == null) {
+                                    
+                                // } else {
+                                    
+                                // }
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
                             }
-                            ajaxresponse = true;
-                            return true;
                         },
                         error: function(){
-                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                            swalText.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Abort", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false}).then(()=>{location.reload();});
                         }
-                    }).done(function(){
-                        if (ajaxresponse) {
-                            $('#'+div[0]).collapse('hide');
-                            $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                $('#'+div[1]).collapse('show');
-                            });
-                        }
-
                     });
                     break;
                 case 'collapseTwo':
+                    // var ajaxresponse = true;
+                    // var doc_no = $('[name=doc_no]').val();
+                
+                    var _token = $('[name=_token]').val();
+                    let email = $('[name=email]').val();
+                    let contact = $('[name=contact]').val();
+                    var dataValidate = {_token, email, contact};
+                    var swalText = document.createElement("div");
+
+                    $("#btnTwo").prop("disabled", true);
+                    $("#btnTwo").html("Please Wait...");
+                    $.ajax({
+                        url: "{{ route('center.addcandidate.api') }}",
+                        method: "POST",
+                        data: dataValidate,
+                        success: function(data){
+                            
+                            if (!data.success) {
+                                $("#btnTwo").prop("disabled", false);
+                                $("#btnTwo").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
+                                swalText.innerHTML = data.message;
+                                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false});
+                            } else {
+                                // if (data.candidate == null) {
+                                    
+                                // } else {
+                                    
+                                // }
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
+                            }
+                        },
+                        error: function(){
+                            swalText.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Abort", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false}).then(()=>{location.reload();});
+                        }
+                    });
+
+                    break;
                 case 'collapseThree':
                     $('#'+div[0]).collapse('hide');
                     $('#'+div[0]).on('hidden.bs.collapse', function () {
@@ -503,6 +514,7 @@
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
 <script>
+
 $(function () {
     
     /* Intializing Bootstrap DatePicker */
@@ -510,7 +522,7 @@ $(function () {
         $('.date_picker .form-control').datepicker({
             autoclose: true,
             format: 'dd MM yyyy',
-            endDate: new Date()
+            endDate: '-14y'
         });
     
     /* End Bootstrap DatePicker */
@@ -522,11 +534,32 @@ $(function () {
     jQuery("#form_candidate").validate({
         rules: {
         contact: { mobile: true },
-        doc_no: { aadharvoter: true },
+        doc_no: { aadhaarvoter: true },
         "[type=email]": { email: true }
         }
     });
 
 /* End Custom Valiadtions */
+
+/* State District Checks */
+    $(function(){
+        $('#state_district').on('change', function(){
+        val = "{{Config::get('constants.statedistricts')}}";
+        
+        if ($.parseJSON(val).find(v => v == $('#state_district').val()) === undefined) {
+            $('#doc_label').html('Aadhaar Number <span style="color:red"> <strong>*</strong></span>');
+            $('[name=doc_no]').rules('remove', 'aadhaarvoter');  
+            $('[name=doc_no]').rules('add', {aadhaar: true});  
+            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar Number");
+        } else {
+            $('#doc_label').html('Aadhaar Number or Voter Number <span style="color:red"> <strong>*</strong></span>');
+            $('[name=doc_no]').rules('remove', 'aadhaar');  
+            $('[name=doc_no]').rules('add', {aadhaarvoter: true});  
+            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar or Voter Number");            
+        }
+        });
+    })
+/* End State District Checks */
+
 </script>
 @endsection

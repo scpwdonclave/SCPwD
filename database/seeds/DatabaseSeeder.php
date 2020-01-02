@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ExpositoriesTableSeeder::class);
         $this->call(ExpositoryJobRoleTableSeeder::class);
         $this->call(JobRolesTableSeeder::class);
+        $this->call(JobQualificationsTableSeeder::class);
     }
 }

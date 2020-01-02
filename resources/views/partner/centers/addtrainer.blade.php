@@ -350,48 +350,50 @@
                     $("#btnOne").html("Please Wait...");
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, doc_no };
+                    var swalText = document.createElement("div");
+
                     $.ajax({
                         url: "{{ route('partner.addtrainer.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
                             if (!data.success) {
-                                var swalText = document.createElement("div");
-                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Present</span> in our Trainer Database'; 
-                                swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
+                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registered</span> with Someone Else'; 
+                                swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
+
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = false;
                                 return false;
                             } else {
                                 if (data.present) {
-                                    $('[name=prsnt]').val('1');
-                                    if (data.trainerData.status) {
+                                    if (data.attached) {
+                                        $('[name=prsnt]').val('1');
+                                        swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Present</span> in our Record';
+                                        swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
+                                        $("#btnOne").prop("disabled", false);
+                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                        ajaxresponse = false;
+                                        return false;
+                                    } else {
                                         $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
                                         $('#doc_file_div').remove();
                                         $('[name=name]').val(data.trainerData.name);
                                         $('[name=email]').val(data.trainerData.email);
                                         $('[name=mobile]').val(data.trainerData.mobile);
                                         ajaxresponse = true;
-                                        return true;
-                                    } else {
-                                        var swalText = document.createElement("div");
-                                        swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Deactivated</span> in our Record, Please Contact SCPwD';
-                                        swal({title: "Abort", content: swalText, icon: "error", closeOnEsc: true});
-                                        $("#btnOne").prop("disabled", false);
-                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                        ajaxresponse = false;
-                                        return false;
+                                        return true; 
                                     }
-                                } else {
-                                    $('[name=prsnt]').val('0');
-                                    ajaxresponse = true;
-                                    return true;
-                                }
+                                
+                                }   
+                                $('[name=prsnt]').val('0');
+                                ajaxresponse = true;
+                                return true;
                             }
                         },
                         error: function(){
-                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                            swalText.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>location.reload());
                         }
                     }).done(function(){
                         if (ajaxresponse) {
@@ -692,7 +694,7 @@ $(function () {
         jQuery("#form_trainer").validate({
             rules: {
             mobile: { mobile: true },
-            doc_no: { aadharvoter: true },
+            doc_no: { aadhaarvoter: true },
             "[type=email]": { email: true }
             }
         });

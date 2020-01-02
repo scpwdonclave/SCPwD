@@ -68,8 +68,9 @@ Route::get('trainer/trainers', 'AdminAuth\AdminTrainerController@trainers')->nam
 Route::get('trainer/pending-trainers', 'AdminAuth\AdminTrainerController@pendingTrainers')->name('tc.pending-trainers');
 Route::get('trainer/trainers/{id}', 'AdminAuth\AdminTrainerController@trainerView')->name('tc.trainer.view'); 
 Route::get('trainer/dlink-trainers/{id}', 'AdminAuth\AdminTrainerController@dlinkTrainerView')->name('tc.dlink.trainer.view');
-Route::get('trainer/trainer-verify/{id}', 'AdminAuth\AdminTrainerController@trainerAccept')->name('tr.trainer.verify');
-Route::post('trainer/trainer-reject', 'AdminAuth\AdminTrainerController@trainerReject')->name('tr.reject.trainer');
+Route::get('trainer/trainer-action/{id}/{reason?}', 'AdminAuth\AdminTrainerController@trainerAction')->name('tp.trainer.action');
+// Route::get('trainer/trainer-verify/{id}', 'AdminAuth\AdminTrainerController@trainerAccept')->name('tr.trainer.verify');
+// Route::post('trainer/trainer-reject', 'AdminAuth\AdminTrainerController@trainerReject')->name('tr.reject.trainer');
 
 Route::post('trainer/trainers/status-action', 'AdminAuth\AdminTrainerController@trainerStatusAction')->name('trainer.status-action');
 

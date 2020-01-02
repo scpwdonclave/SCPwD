@@ -26,9 +26,10 @@
                             <thead>
                                 <tr>
                                     <th>Scheme | Sector | Job Role</th>
-                                    <th>Target Allocated</th>
-                                    <th>Target Distributed</th>
-                                    <th>Student Enrolled</th>
+                                    <th>Allocated</th>
+                                    <th>Distributed</th>
+                                    <th>Enrolled</th>
+                                    <th>Achieved</th>
                                     <th>Scheme Status</th>
                                     <th>Edit</th>
                                 </tr>
@@ -39,6 +40,13 @@
                                         <td>{{$job->scheme->scheme.' | '.$job->sector->sector.' | '.$job->jobrole->job_role}}</td>
                                         <td>{{$job->target}}</td>
                                         <td>{{$job->assigned}}</td>
+                                        @php
+                                            $count = 0;
+                                            foreach ($job->centerjobroles as $centerJob) {
+                                                $count += $centerJob->candidates->count();
+                                            }
+                                        @endphp
+                                        <td>{{$count}}</td>
                                         <td>Not Yet Done</td>
                                         <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
                                         @if($job->status)

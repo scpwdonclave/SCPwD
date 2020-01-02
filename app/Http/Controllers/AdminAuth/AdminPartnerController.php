@@ -15,6 +15,7 @@ use App\Mail\TPMail;
 use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
+use App\Helpers\AppHelper;
 use App\Events\TCMailEvent;
 use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
@@ -44,14 +45,6 @@ class AdminPartnerController extends Controller
         }
     }
 
-    protected function writeNotification($relid,$relwith,$title,$msg){
-        $notification = new Notification;
-        $notification->rel_id = $relid;
-        $notification->rel_with = $relwith;
-        $notification->title = $title;
-        $notification->message = $msg;
-        $notification->save();
-    }
 
     public function partners(){
         $data=Partner::where('pending_verify',0)->get();
@@ -240,7 +233,7 @@ class AdminPartnerController extends Controller
                     $partner->f_year=$fyear;
                     $partner->pending_verify=0;
                     $partner->save();
-                    $this->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
+                    AppHelper::instance()->writeNotification($partner->id,'partner','Account Activated',"Your Profile has been <span style='color:blue;'>Approved</span>.");
                     $dataMail->tag = 'tpaccept';
                     $dataMail->tp_id = $new_tpid;
                     alert()->success("Training Partner Account has been <span style='color:blue;font-weight:bold;'>Approved</span>", "Job Done")->html()->autoclose(4000);
@@ -634,7 +627,7 @@ class AdminPartnerController extends Controller
                 $partnerjob->target=$request->target;
                 $partnerjob->save();
                 
-                $this->writeNotification($request->userid,'partner','New Job Target',"New Jobrole with Target has been <span style='color:blue;'>Assigned</span> to you.");        
+                AppHelper::instance()->writeNotification($request->userid,'partner','New Job Target',"New Jobrole with Target has been <span style='color:blue;'>Assigned</span> to you.");        
                 alert()->success("New Job with Target has been <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Partner", 'Job Done')->html()->autoclose(4000);
                 return redirect()->back(); 
             }
@@ -653,7 +646,7 @@ class AdminPartnerController extends Controller
                         $partnerJob->jobrole_id=$request->jobrole;
                         $partnerJob->target=$request->target;
                         $partnerJob->save();
-                        $this->writeNotification($request->userid,'partner','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.");        
+                        AppHelper::instance()->writeNotification($request->userid,'partner','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.");        
                         alert()->success("Jobrole of This Training Partner has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
                     }
                 }

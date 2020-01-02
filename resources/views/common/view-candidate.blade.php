@@ -212,55 +212,6 @@
 
 @stop
 @section('page-script')
-{{-- @auth('admin')
-    <script>
-        function showPromptMessage() {
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "Reason"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("You need to write something!"); return false
-                }
-                var id='{{$center_candidate->candidate->id}}';
-                var note=inputValue;
-                let _token = $("input[name='_token']").val();
-            
-                $.ajax({
-                type: "POST",
-                url: "{{route('admin.tr.reject.trainer')}}",
-                data: {_token,id,note},
-                success: function(data) {
-                    // console.log(data);
-                    swal({
-                title: "Deleted",
-                text: "Record Deleted",
-                type:"success",
-                //timer: 2000,
-                showConfirmButton: true
-            },function(isConfirm){
-        
-                if (isConfirm){
-                
-                window.location="{{route('admin.tc.pending-trainers')}}";
-        
-                } 
-                });
-            
-                }
-            });
-                
-            });
-        }
-    </script>
-@endauth --}}
 
 @auth('partner')
     @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $center_candidate->center))

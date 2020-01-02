@@ -92,13 +92,13 @@
                                 @endcannot
                             @endif
                         @endauth
-                        {{-- @auth('center')
-                            @if (Request::segment(1) === 'center') --}}
+                        @auth('center')
+                            @if (Request::segment(1) === 'center')
                                 <div class="row d-flex justify-content-around">
                                     <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span>  UPDATE</button>
                                 </div>
-                            {{-- @endif
-                        @endauth --}}
+                            @endif
+                        @endauth
                         {{-- {{Auth::shouldUse('partner')->complete_profile}} --}}
                     </form>
                 </div>

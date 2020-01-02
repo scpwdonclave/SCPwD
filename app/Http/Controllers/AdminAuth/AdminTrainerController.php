@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\TrainerJobRole;
-use App\TrainerStatus;
-use App\Notification;
-use App\Trainer;
-use App\Reason;
-use App\Batch;
-use Crypt;
-use Auth;
 use DB;
+use Auth;
+use Crypt;
+use App\Batch;
+use App\Reason;
+use App\Trainer;
+use App\Notification;
+use App\TrainerStatus;
+use App\TrainerJobRole;
+use App\Helpers\AppHelper;
+use App\Events\TPMailEvent;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminTrainerController extends Controller
 {
@@ -38,6 +40,16 @@ class AdminTrainerController extends Controller
     }
 
     protected function updateTrainerStatus($trainer,$for,$request,$id){
+        
+        $dataMail = collect();
+        if ($for == 'trainer') {
+            $dataMail->tag = 'tractivedeactive';
+            $dataMail->name = $trainer->name;
+            $dataMail->tp_name = $trainer->partner->spoc_name;
+            $dataMail->tr_id = $trainer->trainer_id;
+            $dataMail->email = $trainer->partner->email;
+        }
+
         if ($trainer->status) {
             // * Trainer is Active
             if (!is_null($request->reason) && $request->reason != '') {
@@ -50,7 +62,8 @@ class AdminTrainerController extends Controller
                 $reason->rel_with = $for;
                 $reason->reason = $request->reason;
                 $reason->save();
-                return array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:red'>Deactive</span> now", 'title' => "Job Done");
+                $dataMail->reason = $request->reason;
+                $array = array('type' => 'success', 'message' => "Trainer (<span style='font-weight:bold;color:blue'>$trainer->name</span>) is <span style='font-weight:bold;color:red'>Deactive</span> now", 'title' => "Job Done");
                 
             } else {
                 // * Trainer Deactivation Reason Not Provided so Aborting
@@ -59,12 +72,25 @@ class AdminTrainerController extends Controller
             }
             
         } else {
-        // * Trainer is Inactive so Activating
+            // * Trainer is Inactive so Activating
         
             $trainer->status = 1;
             $trainer->save();
-            return array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>Active</span> now", 'title' => "Job Done");
+            $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>Active</span> now", 'title' => "Job Done");
         }
+        
+        if ($for == 'trainer') {
+            $stat = ($trainer->status)?'Re-Activated':'Deactivated';
+            AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer '.$stat,"Your Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
+            foreach ($trainer->batches as $batch) {
+                if ($batch->status && $batch->verified && !$batch->completed) {
+                    AppHelper::instance()->writeNotification($batch->center->id,'center','Trainer '.$stat,"Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
+                }
+            }
+            $dataMail->status = $trainer->status;
+            event(new TPMailEvent($dataMail));
+        }
+        return $array;
     }
 
 
@@ -97,201 +123,129 @@ class AdminTrainerController extends Controller
             return view('common.view-trainer')->with(compact('trainerData','trainerdoc','delinked'));
         }
     }
-    public function trainerAccept($id){
-        if ($id=$this->decryptThis($id)) {
-            $trainer=Trainer::findOrFail($id);
-            if($trainer->verified){
-                alert()->error("Trainer Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-                return redirect()->back(); 
-            }
+
+    // * Trainer Accept Reject Function
     
-            DB::transaction(function() use($trainer){
-                $data=DB::table('trainers')
-                ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
-                ->where("trainer_id", "LIKE", "TR%")->get();
-            
-            
-                $dataStatus=DB::table('trainer_statuses')
-                ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
-                ->where('attached',0)
-                ->orderBy('id', 'desc')->get()->unique('trainer_id');
-            
-            
-                $year = date('Y');
-                if (count($data) > 0 || count($dataStatus) > 0 ) {
-        
-                    $priceprod1 = array();
-                        foreach ($data as $key=>$data) {
-                            $priceprod1[$key]=$data->trainer_id;
-                        }
-                    $priceprod2 = array();
-                        foreach ($dataStatus as $key=>$dataStatus) {
-                            $priceprod2[$key]=$dataStatus->trainer_id;
-                        }
-                    $priceprod= array_merge($priceprod1,$priceprod2);
-                        $lastid= max($priceprod);
-                    
-                    
-                        $new_trid = (substr($lastid, 0, 4)== $year) ? 'TR'.($lastid + 1) : 'TR'.$year.'000001' ;
-                
+    public function trainerAction(Request $request)
+    {
+        if ($req=$this->decryptThis($request->id)) {
+            $data = explode(',',$req);
+            $trainer = Trainer::findOrFail($data[0]);
+            if (!$trainer->verify) {
+                if (!$trainer->partner->status) {
+                    alert()->error('Please <span style="color:blue;">Re-Activate</span> TP of This Trainer Before you Proceed', 'Aborting')->html()->autoclose(5000);
+                    return redirect()->back();
                 } else {
-                    $new_trid = 'TR'.$year.'000001';
+                    $dataMail = collect();
+                    $dataMail->tag = 'tracceptreject';
+                    $dataMail->status = $data[1];
+                    if ($data[1]) {
+                        DB::transaction(function() use($trainer){
+                            $data=DB::table('trainers')
+                            ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
+                            ->where("trainer_id", "LIKE", "TR%")->get();
+                            
+                            
+                            $dataStatus=DB::table('trainer_statuses')
+                            ->select(\DB::raw('SUBSTRING(trainer_id,3) as trainer_id'))
+                            ->where('attached',0)
+                            ->orderBy('id', 'desc')->get()->unique('trainer_id');
+                            
+                            
+                            $year = date('Y');
+                            if (count($data) > 0 || count($dataStatus) > 0 ) {
+                                
+                                $priceprod1 = array();
+                                foreach ($data as $key=>$data) {
+                                    $priceprod1[$key]=$data->trainer_id;
+                                }
+                                $priceprod2 = array();
+                                foreach ($dataStatus as $key=>$dataStatus) {
+                                    $priceprod2[$key]=$dataStatus->trainer_id;
+                                }
+                                $priceprod= array_merge($priceprod1,$priceprod2);
+                                $lastid= max($priceprod);
+                                
+                                
+                                $new_trid = (substr($lastid, 0, 4)== $year) ? 'TR'.($lastid + 1) : 'TR'.$year.'000001' ;
+                                
+                            } else {
+                                $new_trid = 'TR'.$year.'000001';
+                            }
+                            
+                            if(is_null($trainer->trainer_id)){
+                                $trainer->trainer_id=$new_trid;
+                            }
+                            $trainer->status=1;
+                            $trainer->verified=1;
+                            $trainer->save();
+                            
+                            $neutral=new TrainerStatus;
+                            $neutral->prv_id=$trainer->id;
+                            $neutral->trainer_id=$trainer->trainer_id;
+                            $neutral->tp_id=$trainer->tp_id;
+                            $neutral->name=$trainer->name;
+                            $neutral->doc_no=$trainer->doc_no;
+                            $neutral->doc_type=$trainer->doc_type;
+                            $neutral->doc_file=$trainer->doc_file;
+                            $neutral->mobile=$trainer->mobile;
+                            $neutral->email=$trainer->email;
+                            
+                            $neutral->scpwd_no=$trainer->scpwd_no;
+                            $neutral->scpwd_doc=$trainer->scpwd_doc;
+                            $neutral->scpwd_issued=$trainer->scpwd_issued;
+                            $neutral->scpwd_valid=$trainer->scpwd_valid;
+                            
+                            $neutral->qualification=$trainer->qualification;
+                            $neutral->sector_exp=$trainer->sector_exp;
+                            $neutral->teaching_exp=$trainer->teaching_exp;
+                            
+                            $neutral->qualification_doc=$trainer->qualification_doc;
+                            $neutral->ssc_no=$trainer->ssc_no;
+                            $neutral->ssc_doc=$trainer->ssc_doc;
+                            $neutral->ssc_issued=$trainer->ssc_issued;
+                            $neutral->ssc_valid=$trainer->ssc_valid;
+                            
+                            $neutral->resume=$trainer->resume;
+                            $neutral->other_doc=$trainer->other_doc;
+                            $neutral->status=1;
+                            $neutral->attached=1;
+                            $neutral->save();
+                        });
+                        
+                        $dataMail->tr_id = $trainer->trainer_id;
+                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Accepted',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>Approved</span>.");
+                        alert()->success("Trainer has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+                    } else {
+                        $trainer->trainer_jobroles()->delete();
+                        $trainer->delete();
+                        $dataMail->reason = $request->reason;
+                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Rejected',"Your Requested Trainer has been <span style='color:red;'>Rejected</span>.Kindly check your mail");
+                        alert()->success("Trainer has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
+                    }
+                    $dataMail->name = $trainer->name;
+                    $dataMail->tp_name = $trainer->partner->spoc_name;
+                    $dataMail->email = $trainer->partner->email;
+                    
+                    event(new TPMailEvent($dataMail));
+                    return redirect(route('admin.tc.trainers'));
                 }
-        
-                if(is_null($trainer->trainer_id)){
-                    $trainer->trainer_id=$new_trid;
-                }
-
-                $fmonth=date('F');
-                $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-                $trainer->f_month=$fmonth;
-                $trainer->f_year=$fyear;
-
-                $trainer->status=1;
-                $trainer->verified=1;
-                $trainer->save();
-        
-                $neutral=new TrainerStatus;
-                $neutral->prv_id=$trainer->id;
-                $neutral->trainer_id=$trainer->trainer_id;
-                $neutral->tp_id=$trainer->tp_id;
-                $neutral->name=$trainer->name;
-                $neutral->doc_no=$trainer->doc_no;
-                $neutral->doc_type=$trainer->doc_type;
-                $neutral->doc_file=$trainer->doc_file;
-                $neutral->mobile=$trainer->mobile;
-                $neutral->email=$trainer->email;
-            
-                $neutral->scpwd_no=$trainer->scpwd_no;
-                $neutral->scpwd_doc=$trainer->scpwd_doc;
-                $neutral->scpwd_issued=$trainer->scpwd_issued;
-                $neutral->scpwd_valid=$trainer->scpwd_valid;
-                
-                $neutral->qualification=$trainer->qualification;
-                $neutral->sector_exp=$trainer->sector_exp;
-                $neutral->teaching_exp=$trainer->teaching_exp;
-                
-                $neutral->qualification_doc=$trainer->qualification_doc;
-                $neutral->ssc_no=$trainer->ssc_no;
-                $neutral->ssc_doc=$trainer->ssc_doc;
-                $neutral->ssc_issued=$trainer->ssc_issued;
-                $neutral->ssc_valid=$trainer->ssc_valid;
-                
-                $neutral->resume=$trainer->resume;
-                $neutral->other_doc=$trainer->other_doc;
-
-                $neutral->f_month=$fmonth;
-                $neutral->f_year=$fyear;
-
-                $neutral->status=1;
-                $neutral->attached=1;
-                $neutral->save();
-            });
-            alert()->success("Trainer has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
-            return redirect()->back();   
-        }
-    }
-
-    public function trainerReject(Request $request){
-        $trainer=Trainer::findOrFail($request->id);
-        TrainerJobRole::where('tr_id',$request->id)->delete();
-        $trainer->delete();
-        return response()->json(['status' => 'done'],200);
-    }
-
-    public function trainerDlink(Request $request){
-        $trainer=Trainer::findOrFail($request->id);
-        $trainerStatus=TrainerStatus::where('prv_id',$request->id)->first();
-
-        $batch=Batch::where('tr_id',$request->id)->get();
-        if(count($batch)>0){
-            return response()->json(['status' => 'fail'],200);
-        }else{
-
-        $trainerStatus->attached=0;        
-        $trainerStatus->dlink_reason=$request->reason;   
-        $trainerStatus->save();  
-        $trainer->delete();   
-        return response()->json(['status' => 'done'],200);
-        }
-    }
-
-    public function trainerDeactive(Request $request){
-        $trainer=Trainer::findOrFail($request->id);
-        $trainer->status=0;
-        $trainer->save(); 
-
-        $reason = new Reason;
-        $reason->rel_id = $trainer->id;
-        $reason->rel_with = 'trainer';
-        $reason->reason = $request->reason;
-        $reason->save();
-
-        /* Notification For Partner */
-        $notification = new Notification;
-        $notification->rel_id = $trainer->tp_id;
-        $notification->rel_with = 'partner';
-        $notification->title = 'Trainer Deactivated';
-        $notification->message = "Trainer (ID $trainer->trainer_id) has been <span style='color:blue;'>Deactivated</span>.";
-        $notification->save();
-        /* End Notification For Partner */
-
-        return response()->json(['status' => 'done'],200);
-
-    }
-    public function dlinkTrainerDeactive(Request $request){
-        $trainer=TrainerStatus::findOrFail($request->id);
-        $trainer->status=0;
-        $trainer->save();
-
-        $reason = new Reason;
-        $reason->rel_id = $trainer->id;
-        $reason->rel_with = 'dlink trainer';
-        $reason->reason = $request->reason;
-        $reason->save();
-
-        return response()->json(['status' => 'done'],200);
-
-    }
-    public function trainerActive($id){
-        if ($id=$this->decryptThis($id)) {
-            $trainer=Trainer::findOrFail($id);
-            $trainer->status=1;
-            $trainer->save();
-    
-            /* Notification For Partner */
-            $notification = new Notification;
-            $notification->rel_id = $trainer->tp_id;
-            $notification->rel_with = 'partner';
-            $notification->title = 'Trainer Activated';
-            $notification->message = "Trainer (ID $trainer->trainer_id) has been <span style='color:blue;'>Activated</span>.";
-            $notification->save();
-            /* End Notification For Partner */
-    
-            alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
-            return redirect()->back();
-        }
-    }
-    public function dlinkTrainerActive($id){
-        if ($id=$this->decryptThis($id)) {
-            if ($id=$this->decryptThis($id)) {
-                $trainer=TrainerStatus::findOrFail($id);
-                $trainer->status=1;
-                $trainer->save();
-                
-                alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
-                return Redirect()->back();
+            } else {
+                alert()->error("Trainer has already been <span style='color:blue;font-weight:bold'>Approved</span>", "Done")->html()->autoclose(3000);
+                return redirect(route('admin.tc.trainers'));
             }
         }
     }
-
+    
+    // * End Trainer Accept Reject Function
+    
+    // * Trainer Status Update (Both for Linked and DeLinked)
 
     public function trainerStatusAction(Request $request)
     {
         if ($request->has('data')) {
-        $data = explode(',',$request->data);
-
+            $data = explode(',',$request->data);
+            
             if ($id=$this->decryptThis($data[0])) {
                 
                 if ($data[2]) {
@@ -303,30 +257,40 @@ class AdminTrainerController extends Controller
                             // * Request for Change Trainer Status
                             $array = $this->updateTrainerStatus($trainer,'trainer',$request,$id);
                         } else {
-                            // * Deling Process of a Trainer
+                            // * Delinking Process of a Trainer
                             $batch=Batch::where([['tr_id','=',$id],['completed','=',0]])->first();
                             if($batch){
                                 // * Requested Trainer Linked with a Batch that is not yet Completed so Aborting
-
+                                
                                 $array = array('type' => 'error', 'message' => "This Trainer is Actively Attached with a Batch That is not yet <span style='font-weight:bold;color:red'>Completed</span>", 'title' => "Aborted");
                             }else{
                                 // * Proceeding to De Link the Requested Trainer
                                 $trainerStatus=TrainerStatus::where('prv_id',$id)->orderBy('created_at', 'desc')->first();
                                 $trainerStatus->attached=0;        
-                                $trainerStatus->dlink_reason=$request->reason;   
+                                $trainerStatus->dlink_reason=$request->reason;
                                 $trainerStatus->save();  
+                                
+                                $dataMail = collect();
+                                $dataMail->tag = 'trdelink';
+                                $dataMail->name = $trainer->name;
+                                $dataMail->tp_name = $trainer->partner->spoc_name;
+                                $dataMail->tr_id = $trainer->trainer_id;
+                                $dataMail->reason = $request->reason;
+                                $dataMail->email = $trainer->partner->email;
                                 $trainer->delete();
-                                $array = array('type' => 'success', 'message' => "Trainer ($trainer->name) is <span style='font-weight:bold;color:blue'>De Linked</span> Successfully", 'title' => "Job Done");
+                                event(new TPMailEvent($dataMail));
+                                AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer De Linked',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>DeLinked</span> from You.");
+                                $array = array('type' => 'success', 'message' => "Trainer (<span style='font-weight:bold;color:blue'>$trainer->name</span>) is <span style='font-weight:bold;color:blue'>De Linked</span> Successfully", 'title' => "Job Done");
                             }
                         }
                     } else {
                         // * Trainer Not Found With That ID
-
+                        
                         return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),200);
                     }
                 } else {
                     // * Request for TrainerStatuses Table
-                
+                    
                     $trainer = TrainerStatus::find($id);
                     if ($trainer) {
                         // * Trainer is Present with That ID
@@ -335,25 +299,26 @@ class AdminTrainerController extends Controller
                             $array = $this->updateTrainerStatus($trainer,'dlink trainer',$request,$id);
                         } else {
                             // * Bad Request
-
+                            
                             return response()->json(array('type' => 'error'),400);
                         }
                     } else {
                         // * Trainer Not Found With That ID
-
+                        
                         return response()->json(array('type' => 'error', 'message' => "We Could not find this Training Partner Account", 'title' =>  "Aborted"),200);
                     }
                 }
-
+                
                 return response()->json($array, 200);
             }
         }
     }
-
-
-
-
-
+    
+    // * End Trainer Status Update (Both for Linked and DeLinked)
+    
+    
+    
+    
     public function trainerEdit($id){
         if ($id=$this->decryptThis($id)) {
             $trainer=Trainer::findOrFail($id);

@@ -237,6 +237,8 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Image' => Intervention\Image\Facades\Image::class
 
+        'AppHelper' => App\Helpers\AppHelper::class
+
 
     ],
 

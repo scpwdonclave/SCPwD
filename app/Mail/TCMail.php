@@ -79,6 +79,18 @@ class TCMail extends Mailable
                 ];
                 $subject = "Training Center Account Suspended | SCPwD";
                 break;
+            case 'btacceptreject':
+                $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Approved by SCPwD. For More Details on This Kindly login to your Account</p>";
+                $subject = "Batch Requested Approved | SCPwD";
+            
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tc_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('center.login'),
+                ];
+                break;
         }
         
         return $this->view('emails.email')->subject($subject)->with($dataToSend);

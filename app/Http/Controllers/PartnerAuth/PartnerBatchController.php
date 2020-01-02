@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\BatchCenterCandidateMap;
-use App\BatchAssessment;
-use App\PartnerJobrole;
-use App\TrainerJobRole;
-use App\Notification;
-use App\BatchUpdate;
-use Carbon\Carbon;
-use App\Holiday;
-use App\Center;
-use App\Batch;
-use Config;
-use Crypt;
-use Gate;
+use DB;
 use PDF;
 use Auth;
-use DB;
+use Gate;
+use Crypt;
+use Config;
+use App\Batch;
+use App\Center;
+use App\Holiday;
+use Carbon\Carbon;
+use App\BatchUpdate;
+use App\Notification;
+use App\PartnerJobrole;
+use App\TrainerJobRole;
+use App\BatchAssessment;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\BatchCenterCandidateMap;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PartnerBatchController extends Controller
 {
@@ -457,6 +458,9 @@ class PartnerBatchController extends Controller
                         $batchstore->end_date = $request->batch_end;
                         $batchstore->assessment = $request->assessment;
                         $batchstore->save();
+
+                        AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
+
                         alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                         return redirect()->back();
                     }
@@ -470,6 +474,9 @@ class PartnerBatchController extends Controller
                     $batchstore->end_date = $request->batch_end;
                     $batchstore->assessment = $request->assessment;
                     $batchstore->save();
+
+                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
+
                     alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                     return redirect()->back();
                 }

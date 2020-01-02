@@ -121,6 +121,80 @@ class TPMail extends Mailable
                 ];
                 $subject = "Training Center Account Deactivated | SCPwD";
                 break;
+            case 'tracceptreject':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Trainer <span style='color:#0000CD;'>".$this->data->name."</span> (ID: <strong><span style='color:#0000CD;'>".$this->data->tr_id."</span></strong>) has been Approved by SCPwD. Please log in to your portal to Manage your Trainers</p>";
+                    $subject = "Trainer Request Accepted | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Trainer <span style='color:#0000CD;'>".$this->data->name."</span> has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can start over again whenever you want.</p>";
+                    $subject = "Trainer Request Rejected | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                break;
+            case 'tractivedeactive':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Trainer ".$this->data->name." (ID: <span style='color:#0000CD'>".$this->data->tr_id."</span>) has been Re-Activated by SCPwD. For More Details on This Kindly login to your Account</p>";
+                    $subject = "Trainer Re-Activated | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Trainer ".$this->data->name." (ID: <span style='color:#0000CD'>".$this->data->tr_id."</span>) has been Deactivated by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>If you think this is by mistake. Please Contact SCPwD.</p>";
+                    $subject = "Trainer Deactivated | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                break;
+            case 'trdelink':
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Trainer <span style='color:#0000CD;'>".$this->data->name."</span> (ID: <span style='color:blue'>".$this->data->tr_id."</span>) has been De Linked from your Registered Trainers List by SCPwD with Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can re-register them whenever you want.</p>",
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                $subject = "Trainer has been De Linked | SCPwD";        
+                break;
+            case 'btacceptreject':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Approved by SCPwD. For More Details on This Kindly login to your Account</p>";
+                    $subject = "Batch Requested Approved | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Batch has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can start over again whenever you want.</p>";
+                    $subject = "Batch Request Rejected | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+            break;
+            case 'btupdateacceptreject':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Update for Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Approved by SCPwD. For More Details on This Kindly login to your Account</p>";
+                    $subject = "Batch Update Requested Approved | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Update for Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can equest again whenever you want.</p>";
+                    $subject = "Batch Update Request Rejected | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->tp_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('partner.login'),
+                ];
+                break;
         }
         
         return $this->view('emails.email')->subject($subject)->with($dataToSend);

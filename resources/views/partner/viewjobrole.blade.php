@@ -41,7 +41,7 @@
                                 <td>{{$center->center->center_name}}</td>
                                 <td>{{$center->target}}</td>
                                 <td>{{$center->enrolled}}</td>
-                                <td>{{$center->enrolled}}</td>
+                                <td>Not Yet Done</td>
                                 <td> <a class="badge bg-green margin-0" href="{{route('partner.tc.center.view',Crypt::encrypt($center->tc_id))}}">View</a></td>
                                 </tr>
                                 @endforeach
