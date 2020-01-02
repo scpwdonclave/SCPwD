@@ -9,8 +9,7 @@ use App\Batch;
 use App\Holiday;
 use Carbon\Carbon;
 use App\BatchUpdate;
-use App\Notification;
-use App\Mail\BTRejectMail;
+use App\Helpers\AppHelper;
 use App\Events\TCMailEvent;
 use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
@@ -36,15 +35,6 @@ class AdminBatchController extends Controller
         } catch (DecryptException $e) {
             return abort(404);
         }
-    }
-
-    protected function writeNotification($relid,$relwith,$title,$msg){
-        $notification = new Notification;
-        $notification->rel_id = $relid;
-        $notification->rel_with = $relwith;
-        $notification->title = $title;
-        $notification->message = $msg;
-        $notification->save();
     }
 
     protected function getHolidays(){
@@ -161,8 +151,8 @@ class AdminBatchController extends Controller
                         $data->verified=1;
                         $data->save();
                 
-                        $this->writeNotification($data->tp_id,'partner','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
-                        $this->writeNotification($data->tc_id,'center','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
+                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
+                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
                         $dataMail->status = 1;
                         $dataMail->bt_id = $new_batchid;
                         event(new TPMailEvent($dataMail));
@@ -175,8 +165,8 @@ class AdminBatchController extends Controller
                     }
                 } elseif ($request->action === 'reject') {
                     if (!is_null($request->reason)) {
-                        $this->writeNotification($data->tp_id,'partner','Batch Rejected',"One of your Batch has been <span style='color:blue;'>Rejected</span>, Kindly Check your Mail");
-                        $this->writeNotification($data->tc_id,'center','Batch Rejected',"One of your Batch (Requested by your TP) has been <span style='color:blue;'>Rejected</span>");
+                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Rejected',"One of your Batch has been <span style='color:blue;'>Rejected</span>, Kindly Check your Mail");
+                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Rejected',"One of your Batch (Requested by your TP) has been <span style='color:blue;'>Rejected</span>");
                         
                         $dataMail->status = 0;
                         $dataMail->reason = $request->reason;
@@ -212,6 +202,11 @@ class AdminBatchController extends Controller
     public function batchUpdateAction(Request $request){
         if ($id=$this->decryptThis($request->id)) {
             $batchupdate = BatchUpdate::findOrFail($id);
+            $dataMail = collect();
+            $dataMail->tag = 'btupdateacceptreject';
+            $dataMail->tp_name = $batchupdate->batch->partner->spoc_name;
+            $dataMail->bt_id = $batchupdate->batch->batch_id;
+            $dataMail->email = $batchupdate->batch->partner->email;
             if (!$batchupdate->action) {
                 if ($request->action === 'accept') {
                     if ($this->isHoliday(Carbon::parse($batchupdate->end_date))) {
@@ -240,7 +235,12 @@ class AdminBatchController extends Controller
                         $batchupdate->approved = 1;
                         $batchupdate->save();
                     });
-    
+
+                    $dataMail->status = 1;
+                    event(new TPMailEvent($dataMail));
+
+                    AppHelper::instance()->writeNotification($batch->tp_id,'partner','Batch Update Accepted',"Your Requested Batch(ID: <span style='color:blue'>$batch->batch_id</span>) Update has been Accepted.");
+                    AppHelper::instance()->writeNotification($batch->tc_id,'center','Batch Update Accepted',"Your Batch(ID: <span style='color:blue'>$batch->batch_id</span>) details has been Updated.");    
                     alert()->success('Batch Update Request has been <span style="color:blue;font-weight:bold">Approved</span> Successfully', 'Job Done')->html()->autoclose(3000);
                 
                 } elseif ($request->action === 'reject') {
@@ -251,8 +251,12 @@ class AdminBatchController extends Controller
                         $batchupdate->approved = 0;
                         $batchupdate->save();
 
-                        $batchupdate['note'] = $request->reason;
-                        Mail::to($batchupdate->partner->email)->send(new BTRejectMail($batchupdate));
+                        
+                        $dataMail->reason = $request->reason;
+                        $dataMail->status = 0;
+                        event(new TPMailEvent($dataMail));
+                        $batchid = $batchupdate->batch->batch_id;
+                        AppHelper::instance()->writeNotification($batchupdate->batch->tp_id,'partner','Batch Update Rejected',"Your Requested Batch(ID: <span style='color:blue'>$batchid</span>) Update has been Rejected.Kindly Check your Mail");
 
                         alert()->success('Batch Update Request has been <span style="color:red;font-weight:bold">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
                     } else {

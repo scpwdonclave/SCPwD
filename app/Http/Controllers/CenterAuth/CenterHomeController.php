@@ -39,15 +39,6 @@ class CenterHomeController extends Controller
         }
     }
 
-    protected function writeNotification($relid,$relwith,$title,$msg){
-        $notification = new Notification;
-        $notification->rel_id = $relid;
-        $notification->rel_with = $relwith;
-        $notification->title = $title;
-        $notification->message = $msg;
-        $notification->save();
-    }
-
     public function index() {
         return view('center.home')->with('center',$this->guard()->user());
     }
@@ -167,7 +158,7 @@ class CenterHomeController extends Controller
 
             /* For Admin */
             $center = $this->guard()->user();
-            $this->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.");
+            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.");
 
         });
         alert()->success("Candidate has been <span style='font-weight:bold;color:blue'>Registered</span> Successfully", 'Job Done')->html()->autoclose(6000);

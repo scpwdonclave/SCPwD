@@ -5,6 +5,7 @@ use App\Center;
 use App\Partner;
 use App\Trainer;
 use App\Candidate;
+use App\Notification;
 use App\TrainerStatus;
 
 class AppHelper
@@ -12,6 +13,15 @@ class AppHelper
     public static function instance()
     {
         return new AppHelper();
+    }
+
+    public function writeNotification($relid,$relwith,$title,$msg){
+        $notification = new Notification;
+        $notification->rel_id = $relid;
+        $notification->rel_with = $relwith;
+        $notification->title = $title;
+        $notification->message = $msg;
+        $notification->save();
     }
 
     public function checkEmail($email){

@@ -15,6 +15,7 @@ use App\Mail\TCMail;
 use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
+use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
 use App\Events\TCMailEvent;
 use App\Events\TPMailEvent;
@@ -46,16 +47,6 @@ class AdminCenterController extends Controller
         }
     }
 
-    
-    protected function writeNotification($relid,$relwith,$title,$msg){
-        $notification = new Notification;
-        $notification->rel_id = $relid;
-        $notification->rel_with = $relwith;
-        $notification->title = $title;
-        $notification->message = $msg;
-        $notification->save();
-    }
-
     public function centers(){ 
 
         $data=Center::where('verified',1)->get();
@@ -80,72 +71,6 @@ class AdminCenterController extends Controller
         }
         
     }
-    // public function centerAccept($id){
-    //     if ($center_id=$this->decryptThis($id)) {
-    //         $center=Center::findOrFail($center_id);
-    //         if($center->verified==1){
-    //             alert()->error("Training center Account already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-    //             return Redirect()->back(); 
-    //         }
-    //         $data=DB::table('centers')
-    //         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
-    //         ->where("tc_id", "LIKE", "TC%")->get();
-    //         $year = date('Y');
-    //         if (count($data) > 0) {
-    
-    //             $priceprod = array();
-    //                 foreach ($data as $key=>$data) {
-    //                     $priceprod[$key]=$data->tc_id;
-    //                 }
-    //                 $lastid= max($priceprod);
-                   
-    //                 $new_tcid = (substr($lastid, 0, 4)== $year) ? 'TC'.($lastid + 1) : 'TC'.$year.'000001' ;
-    //             //dd($new_tpid);
-    //         } else {
-    //             $new_tcid = 'TC'.$year.'000001';
-    //         }
-    //         $center_password = str_random(8);
-    //         $center->tc_id=$new_tcid;
-    //         $center->password=Hash::make($center_password);
-    //         $center->status=1;
-    //         $center->verified=1;
-    //         $center->save();
-    
-    //          /* Notification For Partner */
-    //          $notification = new Notification;
-    //          $notification->rel_id = $center->tp_id;
-    //          $notification->rel_with = 'partner';
-    //          $notification->title = 'TC has been Approved';
-    //          $notification->message = "Training Center <br>(ID: <span style='color:blue;'>$new_tcid</span>) has been Approved";
-    //          $notification->save();
-    //          /* End Notification For Partner */
-    //          $center['password']=$center_password;
-    //          Mail::to($center['email'])->send(new TCConfirmationMail($center));
-    
-    //          alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
-    //          return redirect()->back();
-    //     }
-    // }
-
-    // public function centerReject(Request $request){
-    //     $data=Center::findOrFail($request->id);
-    //     $data['note'] = $request->note;
-    //     Mail::to($data->email)->send(new TCRejectMail($data));
-    //      /* Notification For Partner */
-    //      $notification = new Notification;
-    //      $notification->rel_id = $data->tp_id;
-    //      $notification->rel_with = 'partner';
-    //      $notification->title = 'Training Center Rejected';
-    //      $notification->message = "Training Center (Spoc Name: <span style='color:blue;'>$data->spoc_name</span>) has been Rejected";
-    //      $notification->save();
-    //      /* End Notification For Partner */
-
-    //      CenterDoc::where('tc_id',$request->id)->delete();
-    //      CenterJobRole::where('tc_id',$request->id)->delete();
-       
-    //      $data->delete();
-    //     return response()->json(['status' => 'done'],200);
-    // }
 
 
     public function centerAction(Request $request)
@@ -183,7 +108,7 @@ class AdminCenterController extends Controller
                         $center->status= $center->verified = 1;
                         $center->save();
 
-                        $this->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
+                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
                         alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
                 
                         $dataMail->tag = 'tcaccept';
@@ -197,7 +122,7 @@ class AdminCenterController extends Controller
                         event(new TPMailEvent($dataMail));
 
                 } elseif ($request->action == 'reject' && $request->reason != '') {
-                    $this->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
+                    AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
                     $spoc_name = $center->partner->spoc_name;
                     $tc_name = $center->spoc_name;
                     $email = $center->email;
@@ -397,7 +322,7 @@ class AdminCenterController extends Controller
                             $dataMail->tag = 'tcdeactive'; // * Mailling Tag
                             $dataMail->reason = $request->reason; 
                             
-                            $this->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
+                            AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -408,7 +333,7 @@ class AdminCenterController extends Controller
 
                         $dataMail->tag = 'tcactive'; // * Mailling Tag
 
-                        $this->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
+                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
                         $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
 
@@ -434,50 +359,6 @@ class AdminCenterController extends Controller
 
     // * End Training Partner Activation Deactvation
 
-
-
-    // public function centerDeactive(Request $request){
-    //     $center=Center::findOrFail($request->id);
-    //     $center->status=0;
-    //     $center->save();
-
-    //     $reason = new Reason;
-    //     $reason->rel_id = $center->id;
-    //     $reason->rel_with = 'center';
-    //     $reason->reason = $request->reason;
-    //     $reason->save();
-
-    //       /* Notification For Partner */
-    //       $notification = new Notification;
-    //       $notification->rel_id = $center->tp_id;
-    //       $notification->rel_with = 'partner';
-    //       $notification->title = 'Training Center Deactive';
-    //       $notification->message = "One of Your Center has been <span style='color:blue;'>Deactivated</span>.";
-    //       $notification->save();
-    //       /* End Notification For Partner */
-
-    //     return response()->json(['status' => 'done'],200);
-    // }
-    // public function centerActive($id){
-        
-    //     if ($id = $this->decryptThis($id)) {
-    //         $center=Center::findOrFail($id);
-    //         $center->status=1;
-    //         $center->save();
-    
-    //          /* Notification For Partner */
-    //          $notification = new Notification;
-    //          $notification->rel_id = $center->tp_id;
-    //          $notification->rel_with = 'partner';
-    //          $notification->title = 'Training Center Active';
-    //          $notification->message = "One of Your Center has been <span style='color:blue;'>Activated</span>.";
-    //          $notification->save();
-    //          /* End Notification For Partner */
-    
-    //         alert()->success('Center Activated', 'Done')->autoclose(2000);
-    //         return redirect()->back();
-    //     }
-    // }
 
     public function candidates(){
         $candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
@@ -518,8 +399,8 @@ class AdminCenterController extends Controller
                             $reason->rel_with = 'candidate';
                             $reason->reason = $request->reason;
                             $reason->save();
-                            $this->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
-                            $this->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
+                            AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
+                            AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
                             $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -527,8 +408,8 @@ class AdminCenterController extends Controller
                     } else {
                         $candidate->status = 1;
                         $candidate->save();
-                        $this->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
-                        $this->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
                         $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
                     return response()->json($array,200);
@@ -542,51 +423,6 @@ class AdminCenterController extends Controller
         } 
     }
 
-
-    // public function candidateActive($id){
-    //     if ($id=$this->decryptThis($id)) {
-    //         $candidate=Candidate::findOrFail($id);
-    //         $candidate->status=1;
-    //         $candidate->save();
-    
-    //         /* Notification For Center */
-    //         $notification = new Notification;
-    //         $notification->rel_id = $candidate->tc_id;
-    //         $notification->rel_with = 'center';
-    //         $notification->title = 'Candidate Active';
-    //         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Activated</span>.";
-    //         $notification->save();
-    //         /* End Notification For Center */
-    
-    //         alert()->success('Candidate Activated', 'Done')->autoclose(2000);
-    //         return redirect()->back();
-    //     }
-    // }
-
-    // public function candidateDeactive(Request $request){
-
-    //     $candidate=Candidate::findOrFail($request->id);
-    //     $candidate->status=0;
-    //     $candidate->save();
-
-    //     $reason = new Reason;
-    //     $reason->rel_id = $candidate->id;
-    //     $reason->rel_with = 'candidate';
-    //     $reason->reason = $request->reason;
-    //     $reason->save();
-
-    //      /* Notification For Center */
-    //      $notification = new Notification;
-    //      $notification->rel_id = $candidate->tc_id;
-    //      $notification->rel_with = 'center';
-    //      $notification->title = 'Candidate Deactive';
-    //      $notification->message = "One of Your Candidate has been <span style='color:blue;'>Deactivated</span>.";
-    //      $notification->save();
-    //      /* End Notification For Center */
-
-    //      return response()->json(['status' => 'done'],200);
-
-    // }
 
     public function candidateEdit($id){
         if ($id = $this->decryptThis($id)) {
@@ -623,6 +459,8 @@ class AdminCenterController extends Controller
          $notification->message = "One of Your Candidate has been <span style='color:blue;'>Updated</span>.";
          $notification->save();
          /* End Notification For center */
+         AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
+
 
          $candidate->save();
          alert()->success('Candidate Details Updated', 'Done')->autoclose(2000);
