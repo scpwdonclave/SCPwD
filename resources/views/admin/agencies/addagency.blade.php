@@ -5,25 +5,12 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/animate-css/animate.css')}}">
 
-{{-- <link rel="stylesheet" href="{{asset('assets/css/monthpicker.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/spinner.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/slider_button.css')}}"> --}}
-{{-- <link href="{{asset('vendor/bootstrap-datetimepicker.css')}}" rel="stylesheet"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}"> --}}
-<link rel="stylesheet" href="{{asset('assets/plugins/jquery-steps/jquery.steps.css')}}">
-
-
 {{-- <link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css"> --}}
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-
-
-
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 @stop
 @section('content')
 <div class="container-fluid home">
@@ -44,80 +31,79 @@
                     </div>
                 @endif
                 <div class="body">
-                    
-                <form id="form2" method="POST" action="{{route('admin.aa.insert-agency')}}" onsubmit="event.preventDefault();return myFunction2()">
+                    <form id="form_agency" method="POST" action="{{route('admin.aa.insert-agency')}}" onsubmit="event.preventDefault();return myFunction2()">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                     <div class="panel panel-primary">
-                                            <div class="panel-heading" role="tab" id="headingThree">
-                                                <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Single Point of Contact (SPOC)</a> </h4>
-                                            </div>
-                                            <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                                                <div class="panel-body">
-                                                    <div class="row d-flex justify-content-around">
-                                                        <div class="col-sm-4">
-                                                            <label for="name">SPOC Name <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="SPOC Name"  name="name" required>
-                                                            </div>
+                                        <div class="panel-heading" role="tab" id="headingThree">
+                                            <h4 class="panel-title "> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne"><span style="color:blue">Single Point of Contact (SPOC)</span></a> </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                            <div class="panel-body">
+                                                <div class="row d-flex justify-content-around">
+                                                    <div class="col-sm-4">
+                                                        <label for="name">SPOC Name <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <input type="text" class="form-control" placeholder="SPOC Name"  name="name" required>
                                                         </div>
-                                                        <div class="col-sm-4">
-                                                            <label for="aadhaar">SPOC Aadhaar <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('aadhaar')" placeholder="Enter Aadhaar No" name="aadhaar" required>
-                                                                <span id="aadhaar_error" style="color:red"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <label for="spoc_email">SPOC Email Address <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
-                                                                <span id="email_error" style="color:red"></span>
-                                                            </div>
-                                                        </div>
-                                                       
                                                     </div>
-                                                    <div class="row d-flex justify-content-around">
-                                                        <div class="col-sm-3">
-                                                            <label for="spoc_mobile">SPOC Mobile Number <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
-                                                                <span id="mobile_error" style="color:red"></span>
-                                                            </div>
+                                                    <div class="col-sm-4">
+                                                        <label for="aadhaar">SPOC Aadhaar <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" onchange="checkduplicacy('aadhaar')" placeholder="Enter Aadhaar No" name="aadhaar" required>
+                                                            <span id="aadhaar_error" style="color:red"></span>
                                                         </div>
-                                                        <div class="col-sm-3">
-                                                            <label for="gender">SPOC Gender <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                                    <option>Male</option>
-                                                                    <option>Female</option>
-                                                                    <option>Transgender</option>
-                                                                </select>
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label for="spoc_email">SPOC Email Address <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" required>
+                                                            <span id="email_error" style="color:red"></span>
                                                         </div>
-                                                        <div class="col-sm-3">
-                                                            <label for="designation">SPOC Designation <span style="color:red"> <strong>*</strong></span></label>
-                                                            <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="Designation"  name="designation" required>
-                                                            </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="row d-flex justify-content-around">
+                                                    <div class="col-sm-3">
+                                                        <label for="spoc_mobile">SPOC Mobile Number <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" required>
+                                                            <span id="mobile_error" style="color:red"></span>
                                                         </div>
-                                                        <div class="col-sm-3">
-                                                            <label for="landline">SPOC Landline Number</label>
-                                                            <div class="form-group form-float">
-                                                                <input type="text" class="form-control" placeholder="Landline No"  name="landline">
-                                                            </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="gender">SPOC Gender <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
+                                                                <option>Male</option>
+                                                                <option>Female</option>
+                                                                <option>Transgender</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="designation">SPOC Designation <span style="color:red"> <strong>*</strong></span></label>
+                                                        <div class="form-group form-float">
+                                                            <input type="text" class="form-control" placeholder="Designation"  name="designation" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <label for="landline">SPOC Landline Number</label>
+                                                        <div class="form-group form-float">
+                                                            <input type="text" class="form-control" placeholder="Landline No"  name="landline">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
 
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingOne">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne"> General Information </a> </h4>
+                                        <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo"><span style="color:blue"> General Information </span></a> </h4>
                                     </div>
-                                    <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div id="collapseTwo" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-3">
@@ -183,9 +169,9 @@
                                 
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo">CEO/Head of the Organization Details</a> </h4>
+                                        <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree"><span style="color:blue"> CEO/Head of the Organization Details </span></a> </h4>
                                     </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                                         <div class="panel-body">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
@@ -247,7 +233,7 @@
 
                                 <div class="panel panel-primary">
                                     <div class="panel-heading" role="tab" id="headingFour">
-                                        <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">Address of The Organization</a> </h4>
+                                        <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour"><span style="color:blue"> Address of The Organization </span></a> </h4>
                                     </div>
                                     <div id="collapseFour" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
                                         <div class="panel-body">
@@ -329,14 +315,6 @@
                                                 </div>
                                             </div>
                                             
-                                            {{-- <div class="row">
-                                                <div class="col-sm-6">
-                                                    <button type="button" onclick="validatedata('collapseFour,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                                </div>
-                                                <div class="col-sm-6 text-right">
-                                                    <button type="button" onclick="validatedata('collapseFour,collapseFive');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                                                </div>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -362,10 +340,8 @@
 {{-- <script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 
-<script src="{{asset('assets/plugins/jquery-steps/jquery.steps.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
 
-<script src="{{asset('assets/js/pages/forms/form-wizard.js')}}"></script>
 <script src="{{asset('assets/js/pages/common/notifications.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
@@ -387,7 +363,7 @@
     });
 /* Custom Valiadtions */    
     
-    jQuery("#form2").validate({
+    jQuery("#form_agency").validate({
             rules: {
                 aadhaar: { aadhaar: true },
                 website: { website: true },
@@ -476,7 +452,7 @@ function yearAdd(){
             return false;
         }
         else{
-            var form = document.getElementById("form2");
+            var form = document.getElementById("form_agency");
             form.submit();
             return true;
         }

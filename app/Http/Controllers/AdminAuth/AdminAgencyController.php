@@ -248,20 +248,20 @@ class AdminAgencyController extends Controller
 
         if ($request->section=='mobile') {
             if($request->has('aa_id')){
-            $validator = Validator::make($request->all(), [ 
-              
-                'checkredundancy' => [
-                    'required',
-                    'numeric',
-                    'unique:trainers,mobile',
-                    'unique:partners,spoc_mobile',
-                    'unique:centers,mobile',
-                    'unique:trainer_statuses,mobile',
-                    'unique:assessors,mobile',
-                    'unique:agencies,mobile,'.$request->aa_id,
-                    
-                ],
-            ]);
+                $validator = Validator::make($request->all(), [ 
+                
+                    'checkredundancy' => [
+                        'required',
+                        'numeric',
+                        'unique:trainers,mobile',
+                        'unique:partners,spoc_mobile',
+                        'unique:centers,mobile',
+                        'unique:trainer_statuses,mobile',
+                        'unique:assessors,mobile',
+                        'unique:agencies,mobile,'.$request->aa_id,
+                        
+                    ],
+                ]);
             }else{
                 $validator = Validator::make($request->all(), [ 
               
