@@ -209,9 +209,9 @@ function deleteConfirm(id){
                 },
             closeModal: false,
             closeOnEsc: false,
-        }).then(function(){
+        }).then(function(val){
             var dataString = {_token, id:id};
-            //if (val) {
+            if (val) {
                 $.ajax({
                     url: "{{ route('agency.as.batch-delete') }}",
                     method: "POST",
@@ -233,7 +233,7 @@ function deleteConfirm(id){
                     
                     }
                 });
-           // }
+            }
         });
 }
 

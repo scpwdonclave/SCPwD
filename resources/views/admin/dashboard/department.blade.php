@@ -163,9 +163,9 @@ function deleteConfirm(id){
                 },
             closeModal: false,
             closeOnEsc: false,
-        }).then(function(){
+        }).then(function(val){
             var dataString = {_token, id:id};
-            //if (val) {
+            if (val) {
                 $.ajax({
                     url: "{{ route('admin.dashboard.department-delete') }}",
                     method: "POST",
@@ -185,15 +185,15 @@ function deleteConfirm(id){
 
                          }
                     
-                    }//,
-                    // error:function(data){
-                    //     var errors = JSON.parse(data.responseText);
-                    //     setTimeout(function () {
-                    //         swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                    //     }, 2000);
-                    // }
+                    },
+                    error:function(data){
+                        var errors = JSON.parse(data.responseText);
+                        setTimeout(function () {
+                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+                        }, 2000);
+                    }
                 });
-           // }
+            }
         });
 }
 
