@@ -31,7 +31,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_agency" method="POST" action="{{route('admin.aa.insert-agency')}}" onsubmit="event.preventDefault();return myFunction2()">
+                    <form id="form_agency" method="POST" action="{{route('admin.aa.insert-agency')}}">
                             @csrf
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                     <div class="panel panel-primary">
@@ -367,6 +367,8 @@
             rules: {
                 aadhaar: { aadhaar: true },
                 website: { website: true },
+                ceo_mobile: { mobile: true },
+                mobile: { mobile: true },
                 pin: { pin: true },
                 ceo_aadhaar: { aadhaar: true },
                 "[type=email]": { email: true }
@@ -408,7 +410,6 @@ function yearAdd(){
                 method: "POST",
                 data: dataString,
                 success: function(data){
-                       // console.log(data);
                     if (data.success) {
                         $('#'+val+'_error').html('');
                         if (val == 'email') {
@@ -420,44 +421,33 @@ function yearAdd(){
                         }
                     } else {
                         if(val=='aadhaar'){
-
-                        $('#'+val+'_error').html('Aadhaar already exists');
-                        }else{
-
-                        $('#'+val+'_error').html(val+' already exists');
-                        }
-                        if (val == 'email') {
-                            dup_email_tag = false;
-                        } else  if (val == 'mobile'){
-                            dup_mobile_tag = false; 
-                        }else{
+                            $('#aadhaar_error').html('Aadhaar already exists');
                             dup_aadhaar_tag = false; 
-                        } 
+                        }else if (val=='email') {
+                            $('#email_error').html('Email already exists');
+                            dup_email_tag = false; 
+                        }else if (val=='mobile') {
+                            $('#mobile_error').html('Mobile No already exists');
+                            dup_mobile_tag = false; 
+                        }
                     }
                 },
 
                 error:function(data){
-                   // console.log(data);
-                    
-                    swal('Oops!','Something Went Wrong','error');
-                    
+                    let swalText = document.createElement("div");
+                    swalText.innerHTML = 'Something Went Wrong, Please Try Again'; 
+                    swal({title: "Oops!", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});                    
                 } 
             });
         }
     /* End Check Redundancy */
 
-    function myFunction2(){
-         if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
-           
-            return false;
+    $('#form_agency').on('submit', function (e) {
+        e.preventDefault();
+        if ($('#form_agency').valid() && dup_email_tag && dup_mobile_tag && dup_aadhaar_tag) {
+           $('#form_agency').unbind().submit();
         }
-        else{
-            var form = document.getElementById("form_agency");
-            form.submit();
-            return true;
-        }
-    }
-    
+    });
     
 </script>
 @endsection
