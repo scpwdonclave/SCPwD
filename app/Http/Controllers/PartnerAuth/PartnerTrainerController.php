@@ -54,30 +54,75 @@ class PartnerTrainerController extends Controller
     public function addtrainer_api(Request $request){
 
         if ($request->has('mobile')) {
-            $validator = Validator::make($request->all(), [ 
-                'email' => [
-                    'required',
-                    'email',
-                    'unique:trainers,email',
-                    'unique:partners,email',
-                    'unique:centers,email',
-                    Rule::unique('trainer_statuses','email')->ignore($request->email,'email'),
-                ],
-                'mobile' => [
-                    'required',
-                    'numeric',
-                    'unique:trainers,mobile',
-                    'unique:partners,spoc_mobile',
-                    'unique:centers,mobile',
-                    Rule::unique('trainer_statuses','mobile')->ignore($request->mobile,'mobile'),
-                ],
-            ]);
 
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors'=>$validator->errors()]);
+            $dataEmail = AppHelper::instance()->checkEmail($request->email);
+            $dataMob = AppHelper::instance()->checkContact($request->mobile);
+            $array = [];
+            if ($dataEmail['status']) {
+                $array['email'] = true;
             } else {
-                return response()->json(['success' => true], 200);
+                if ($dataEmail['user'] == 'trainer') {
+                    $trainer = TrainerStatus::find($dataEmail['userid']);
+                    if ($dataEmail['docno'] == $request->doc_no) {
+                        $array['email'] = true;
+                    } else {
+                        $array['email'] = false;
+                    }
+                } else {
+                    $array['email'] = false;
+                }
             }
+            
+            if ($dataMob['status']) {
+                $array['mobile'] = true;
+            } else {
+                if ($dataMob['user'] == 'trainer') {
+                    $trainer = TrainerStatus::find($dataMob['userid']);
+                    if ($dataMob['docno'] == $request->doc_no) {
+                        $array['mobile'] = true;
+                    } else {
+                        $array['mobile'] = false;
+                    }
+                } else {
+                    $array['mobile'] = false;
+                }
+            }
+            
+            if ($array['mobile'] && $array['email']) {
+                return response()->json(['success' => true], 200);
+            } elseif ($array['mobile'] && !$array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Email ID is Registered with Someone Else'], 200);
+            } elseif (!$array['mobile'] && $array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Mobile No is Registered with Someone Else'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
+            }
+            
+
+            // $validator = Validator::make($request->all(), [ 
+            //     'email' => [
+            //         'required',
+            //         'email',
+            //         'unique:trainers,email',
+            //         'unique:partners,email',
+            //         'unique:centers,email',
+            //         Rule::unique('trainer_statuses','email')->ignore($request->email,'email'),
+            //     ],
+            //     'mobile' => [
+            //         'required',
+            //         'numeric',
+            //         'unique:trainers,mobile',
+            //         'unique:partners,spoc_mobile',
+            //         'unique:centers,mobile',
+            //         Rule::unique('trainer_statuses','mobile')->ignore($request->mobile,'mobile'),
+            //     ],
+            // ]);
+
+            // if ($validator->fails()) {
+            //     return response()->json(['success' => false, 'errors'=>$validator->errors()]);
+            // } else {
+            //     return response()->json(['success' => true], 200);
+            // }
         
         } elseif ($request->has('doc_no')) {
 

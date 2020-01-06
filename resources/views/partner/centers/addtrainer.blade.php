@@ -376,7 +376,7 @@
                                         ajaxresponse = false;
                                         return false;
                                     } else {
-                                        $('#doc_message').text('Note: This Aadhaar/Voter Number is Registred in our Trainer Database');
+                                        $('#doc_message').text('Note: Trainer with This Aadhaar/Voter Number is Registred in our Database');
                                         $('#doc_file_div').remove();
                                         $('[name=name]').val(data.trainerData.name);
                                         $('[name=email]').val(data.trainerData.email);
@@ -414,16 +414,15 @@
                     $("#btnTwo").html("Please Wait...");
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, mobile, email, doc_no };
+                    var SwalResponse = document.createElement("div");
                     $.ajax({
                         url: "{{ route('partner.addtrainer.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
-                            
                             if (!data.success) {
-                                Object.keys(data.errors).forEach(function(k){
-                                    $('#'+k+'_error').html(data.errors[k][0]);
-                                });
+                                SwalResponse.innerHTML = data['message'];
+                                swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
                                 $("#btnTwo").prop("disabled", false);
                                 $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = false;
@@ -434,10 +433,10 @@
                                 ajaxresponse = true;
                                 return true;
                             }
-
                         },
                         error: function(data){
-                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
+                            SwalResponse.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});
                         }
                     }).done(function(){
                         if (ajaxresponse) {

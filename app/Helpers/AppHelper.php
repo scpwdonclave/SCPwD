@@ -1,9 +1,11 @@
 <?php
 namespace App\Helpers;
 
+use App\Agency;
 use App\Center;
 use App\Partner;
 use App\Trainer;
+use App\Assessor;
 use App\Candidate;
 use App\Notification;
 use App\TrainerStatus;
@@ -33,20 +35,25 @@ class AppHelper
             if ($center) {
                 return array('status' => false, 'user' => 'center', 'userid' => $center->id);
             } else {
-                $partner = Partner::where('email', $email)->first();
-                if ($partner) {
-                    return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
+                $agency = Agency::where('email', $email)->first();
+                if ($agency) {
+                    return array('status' => false, 'user' => 'agency', 'userid' => $agency->id);
                 } else {
-                    $trainer = Trainer::where('email', $email)->first();
-                    if ($trainer) {
-                        return array('status' => false, 'user' => 'trainer', 'userid' => $trainer->id);
+                    $assessor = Assessor::where('email', $email)->first();
+                    if ($assessor) {
+                        return array('status' => false, 'user' => 'assessor', 'userid' => $assessor->id);
                     } else {
-                        $trainerstatus = TrainerStatus::where([['email','=', $email],['attached','=',0]])->first();
-                        if ($trainerstatus) {
-                            return array('status' => false, 'user' => 'trainerstatus', 'userid' => $trainerstatus->id);
+                        $partner = Partner::where('email', $email)->first();
+                        if ($partner) {
+                            return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
                         } else {
-                            return array('status' => true);
-                        }
+                            $trainerstatus = TrainerStatus::where('email', $email)->latest()->first();
+                            if ($trainerstatus) {
+                                return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached, 'docno' => $trainerstatus->doc_no);
+                            } else {
+                                return array('status' => true);
+                            }
+                        }            
                     }
                 }
             }
@@ -61,19 +68,24 @@ class AppHelper
             if ($center) {
                 return array('status' => false, 'user' => 'center', 'userid' => $center->id);
             } else {
-                $partner = Partner::where('spoc_mobile', $contact)->first();
-                if ($partner) {
-                    return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
+                $agency = Agency::where('mobile', $contact)->first();
+                if ($agency) {
+                    return array('status' => false, 'user' => 'agency', 'userid' => $agency->id);
                 } else {
-                    $trainer = Trainer::where('mobile', $contact)->first();
-                    if ($trainer) {
-                        return array('status' => false, 'user' => 'trainer', 'userid' => $trainer->id);
+                    $assessor = Assessor::where('mobile', $contact)->first();
+                    if ($assessor) {
+                        return array('status' => false, 'user' => 'assessor', 'userid' => $assessor->id);
                     } else {
-                        $trainerstatus = TrainerStatus::where([['mobile','=', $contact],['attached','=',0]])->first();
-                        if ($trainerstatus) {
-                            return array('status' => false, 'user' => 'trainerstatus', 'userid' => $trainerstatus->id);
+                        $partner = Partner::where('spoc_mobile', $contact)->first();
+                        if ($partner) {
+                            return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
                         } else {
-                            return array('status' => true);
+                            $trainerstatus = TrainerStatus::where('mobile', $contact)->latest()->first();
+                            if ($trainerstatus) {
+                                return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached, 'docno' => $trainerstatus->doc_no);
+                            } else {
+                                return array('status' => true);
+                            }
                         }
                     }
                 }
@@ -92,11 +104,21 @@ class AppHelper
         if ($candidate) {
             return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
         } else {
-            $trainerstatus = TrainerStatus::where('doc_no', $docno)->latest()->first();
-            if ($trainerstatus) {
-                return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached);
+            $agency = Agency::where('aadhaar', $docno)->first();
+            if ($agency) {
+                return array('status' => false, 'user' => 'agency', 'userid' => $agency->id);
             } else {
-                return array('status' => true);
+                $assessor = Assessor::where('aadhaar', $docno)->first();
+                if ($assessor) {
+                    return array('status' => false, 'user' => 'assessor', 'userid' => $assessor->id);
+                } else {
+                    $trainerstatus = TrainerStatus::where('doc_no', $docno)->latest()->first();
+                    if ($trainerstatus) {
+                        return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached);
+                    } else {
+                        return array('status' => true);
+                    }        
+                }
             }
         }
     }
