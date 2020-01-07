@@ -89,14 +89,12 @@
                                                 <label for="mobile">Trainer Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" name="mobile" required>
-                                                    <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">Trainer Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" name="email" required>
-                                                    <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -381,6 +379,8 @@
                                         $('[name=name]').val(data.trainerData.name);
                                         $('[name=email]').val(data.trainerData.email);
                                         $('[name=mobile]').val(data.trainerData.mobile);
+                                        $("#btnOne").prop("disabled", false);
+                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                         ajaxresponse = true;
                                         return true; 
                                     }
@@ -428,8 +428,8 @@
                                 ajaxresponse = false;
                                 return false;
                             } else {
-                                $('#mobile_error').html('');
-                                $('#email_error').html('');
+                                $("#btnTwo").prop("disabled", false);
+                                $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = true;
                                 return true;
                             }

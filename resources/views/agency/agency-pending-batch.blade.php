@@ -58,7 +58,7 @@
                                             @endif
                                                 <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
                                            
-                                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.aa.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
                                                  <td>
                                                     <a class="badge bg-green margin-0" href="{{route('agency.aa.accept.batch',['id'=>Crypt::encrypt($item->id)])}}" >Accept</a>
                                                     <button class="badge bg-red margin-0" onclick="showCancelMessage({{$item->id}})">Reject</button>   

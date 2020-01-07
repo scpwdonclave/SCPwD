@@ -52,20 +52,18 @@
                                                 <label for="mobile">SPOC Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ old('mobile') }}" name="mobile" required>
-                                                    <span id="mobile_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">SPOC Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="SPOC Email" value="{{ old('email') }}" name="email" required>
-                                                    <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
-                                                <button type="button" onclick="validatedata('collapseOne,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                                <button type="button" id="btnOne" onclick="validatedata('collapseOne,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +170,7 @@
                                                 <button type="button" onclick="validatedata('collapseTwo,collapseOne');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-6 text-right">
-                                                <button type="button" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                                <button type="button" id="btnTwo" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
                                     </div>
@@ -218,7 +216,7 @@
                                                 @endif
                                             </div>
                                             <div class="col-sm-4 text-right">
-                                                <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+                                                <button type="button" id="btnThree" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
                                     </div>
@@ -365,42 +363,42 @@
 <script>
 
     /* Duplicate Email Checking */
-    var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
+    // var dup_email_tag = true;
+    // var dup_mobile_tag = true;
+    // function checkduplicacy(val){
+    //     var _token = $('[name=_token]').val();
+    //     // console.log('Token :'+ _token);
          
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('partner.tc.addcenter.api') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
-                    } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_email_tag = false;
-            } 
-        });
-    }
+    //     let value = $('[name='+val+']').val();
+    //     let dataString = { checkredundancy : value, section: val, _token: _token};
+    //     $.ajax({
+    //         url: "{{ route('partner.tc.addcenter.api') }}",
+    //         method: "POST",
+    //         data: dataString,
+    //         success: function(data){
+    //             if (data.success) {
+    //                 $('#'+val+'_error').html('');
+    //                 if (val == 'email') {
+    //                     dup_email_tag = true;
+    //                 } else {
+    //                     dup_mobile_tag = true;
+    //                 } 
+    //             } else {
+    //                 $('#'+val+'_error').html(val+' already exists');
+    //                 if (val == 'email') {
+    //                     dup_email_tag = false;                        
+    //                 } else {
+    //                     dup_mobile_tag = false;
+    //                 } 
+    //             }
+    //         },
+    //         error:function(data){
+    //             $('#'+val+'_error').html(val+' already exists');
+    //             dup_email_tag = false;
+    //             dup_email_tag = false;
+    //         } 
+    //     });
+    // }
     /* End Duplicate Email Checking */
 
     /* Validation of Each Sections */
@@ -420,47 +418,42 @@
                 }
             });
             
-            if (div[0] == 'collapseThree' && tag) {
-                var array = [];
-                var arrayValues = [];
-                var ajaxresponse = true;
-                $('select[id^=jobrole_]').each(function (){
-                    array.push(this.value);
-                    var temp = this.id.split('_');
-                    var last = temp[temp.length - 1];
-                    arrayValues.push($('#target_'+last).val());
-                });
-                
-                
-                if (checkIfDuplicateExists(array)) {
-                    swal('','Please Select Unique Job Roles','info');
-                    return false;
-                } else {
-                    ajaxreqst = true;
+            if (tag) {
+            var SwalResponse = document.createElement("div");
+            switch (div[0]) {
+                case 'collapseOne':
+                    var ajaxresponse = true;
+                    var mobile = $('[name=mobile]').val();
+                    var email = $('[name=email]').val();
+                    $("#btnOne").prop("disabled", true);
+                    $("#btnOne").html("Please Wait...");
                     var _token = $('[name=_token]').val();
-                    var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
+                    var dataValidate = { _token, mobile, email };
                     $.ajax({
                         url: "{{ route('partner.tc.addcenter.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
                             if (!data.success) {
-                                swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
+                                SwalResponse.innerHTML = data['message'];
+                                swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
+                                $("#btnOne").prop("disabled", false);
+                                $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = false;
-                                return true;
+                                return false;
                             } else {
+                                $("#btnOne").prop("disabled", false);
+                                $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = true;
                                 return true;
                             }
-                            
                         },
-                        error: function(){
-                            swal('Abort','Something went Wrong','error');
-                            ajaxresponse = false;
-                            return false;
+                        error: function(data){
+                            SwalResponse.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});
                         }
                     }).done(function(){
-                        if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
+                        if (ajaxresponse) {
                             $('#'+div[0]).collapse('hide');
                             $('#'+div[0]).on('hidden.bs.collapse', function () {
                                 $('#'+div[1]).collapse('show');
@@ -468,17 +461,134 @@
                         }
 
                     });
-                }
-                // console.log($('select[id^=jobrole_]')[0].value);
-                
-            } else {
-                if (tag && dup_email_tag && dup_mobile_tag) {
+                    break;
+                case 'collapseTwo':
                         $('#'+div[0]).collapse('hide');
                         $('#'+div[0]).on('hidden.bs.collapse', function () {
                             $('#'+div[1]).collapse('show');
                         });
+                    break;
+                case 'collapseThree':
+                    var array = [];
+                    var arrayValues = [];
+                    var ajaxresponse = true;
+                    $('select[id^=jobrole_]').each(function (){
+                        array.push(this.value);
+                        var temp = this.id.split('_');
+                        var last = temp[temp.length - 1];
+                        arrayValues.push($('#target_'+last).val());
+                    });
+                    
+                    
+                    if (checkIfDuplicateExists(array)) {
+                        SwalResponse.innerHTML = 'Please Select Unique Job Roles';
+                        swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
+                        return false;
+                    } else {
+                        ajaxreqst = true;
+                        var _token = $('[name=_token]').val();
+                        var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
+                        $.ajax({
+                            url: "{{ route('partner.tc.addcenter.api') }}",
+                            method: "POST",
+                            data: dataValidate,
+                            success: function(data){
+                                if (!data.success) {
+                                    SwalResponse.innerHTML = 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role';
+                                    swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 5000, buttons: false});
+                                    ajaxresponse = false;
+                                    return true;
+                                } else {
+                                    ajaxresponse = true;
+                                    return true;
+                                }
+                                
+                            },
+                            error: function(){
+                                SwalResponse.innerHTML = 'Something went Wrong, Please Try Again';
+                                swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
+                                ajaxresponse = false;
+                                return false;
+                            }
+                        }).done(function(){
+                            if (ajaxresponse) {
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
+                            }
+                        });
                     }
+                    break;
+                case 'collapseFour':
+                    $('#'+div[0]).collapse('hide');
+                    $('#'+div[0]).on('hidden.bs.collapse', function () {
+                        $('#'+div[1]).collapse('show');
+                    });
+                    break;
+                }
             }
+
+
+            // if (div[0] == 'collapseThree' && tag) {
+            //     var array = [];
+            //     var arrayValues = [];
+            //     var ajaxresponse = true;
+            //     $('select[id^=jobrole_]').each(function (){
+            //         array.push(this.value);
+            //         var temp = this.id.split('_');
+            //         var last = temp[temp.length - 1];
+            //         arrayValues.push($('#target_'+last).val());
+            //     });
+                
+                
+            //     if (checkIfDuplicateExists(array)) {
+            //         swal('','Please Select Unique Job Roles','info');
+            //         return false;
+            //     } else {
+            //         ajaxreqst = true;
+            //         var _token = $('[name=_token]').val();
+            //         var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
+            //         $.ajax({
+            //             url: "{{ route('partner.tc.addcenter.api') }}",
+            //             method: "POST",
+            //             data: dataValidate,
+            //             success: function(data){
+            //                 if (!data.success) {
+            //                     swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
+            //                     ajaxresponse = false;
+            //                     return true;
+            //                 } else {
+            //                     ajaxresponse = true;
+            //                     return true;
+            //                 }
+                            
+            //             },
+            //             error: function(){
+            //                 swal('Abort','Something went Wrong','error');
+            //                 ajaxresponse = false;
+            //                 return false;
+            //             }
+            //         }).done(function(){
+            //             if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
+            //                 $('#'+div[0]).collapse('hide');
+            //                 $('#'+div[0]).on('hidden.bs.collapse', function () {
+            //                     $('#'+div[1]).collapse('show');
+            //                 });
+            //             }
+
+            //         });
+            //     }
+            //     // console.log($('select[id^=jobrole_]')[0].value);
+                
+            // } else {
+            //     if (tag && dup_email_tag && dup_mobile_tag) {
+            //             $('#'+div[0]).collapse('hide');
+            //             $('#'+div[0]).on('hidden.bs.collapse', function () {
+            //                 $('#'+div[1]).collapse('show');
+            //             });
+            //         }
+            // }
 
             
 

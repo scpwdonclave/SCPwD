@@ -7,6 +7,7 @@ use Validator;
 use App\Partner;
 use App\Mail\TPMail;
 use App\Notification;
+use App\Helpers\AppHelper;
 use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -60,9 +61,26 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'spoc_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:partners',
-            'spoc_mobile' => 'required|numeric|min:10|unique:partners',
-            'incorp_doc' => 'required|mimes:jpeg,jpg,png,pdf'
+            'incorp_doc' => 'required|mimes:jpeg,jpg,png,pdf',
+            'email' => [
+                'required',
+                'email',
+                'unique:partners,email',
+                'unique:centers,email',
+                'unique:trainer_statuses,email',
+                'unique:agencies,email',
+                'unique:assessors,email',
+            ],
+            'spoc_mobile' => [
+                'required',
+                'numeric',
+                'min:10',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                'unique:trainer_statuses,mobile',
+                'unique:agencies,mobile',
+                'unique:assessors,mobile',
+            ],
         ]);
     }
 
@@ -71,18 +89,11 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
+
+
         event(new Registered($user = $this->create($request->all())));
 
-        /* Updating Notification */
-        /* For Partner */
-        $notification = new Notification;
-        $notification->rel_id = $user->id;
-        $notification->rel_with = 'partner';
-        $notification->title = 'Activate your Account';
-        $notification->message = 'Kindly Complete your Full Registration to gain Full Access.';
-        $notification->save();
-        /* End Updating Notification */
-        
+        AppHelper::instance()->writeNotification($user->id,'partner','Activate your Account',"Kindly Complete your Full Registration to gain Full Access.");        
         Session::flash('message', 'Account Created, Please Check your Mail'); 
         Session::flash('alert-class', 'alert-success');
 

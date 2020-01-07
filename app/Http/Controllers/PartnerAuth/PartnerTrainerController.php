@@ -53,7 +53,7 @@ class PartnerTrainerController extends Controller
 
     public function addtrainer_api(Request $request){
 
-        if ($request->has('mobile')) {
+        if ($request->has('mobile') && $request->has('email')) {
 
             $dataEmail = AppHelper::instance()->checkEmail($request->email);
             $dataMob = AppHelper::instance()->checkContact($request->mobile);
@@ -97,32 +97,6 @@ class PartnerTrainerController extends Controller
             } else {
                 return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
             }
-            
-
-            // $validator = Validator::make($request->all(), [ 
-            //     'email' => [
-            //         'required',
-            //         'email',
-            //         'unique:trainers,email',
-            //         'unique:partners,email',
-            //         'unique:centers,email',
-            //         Rule::unique('trainer_statuses','email')->ignore($request->email,'email'),
-            //     ],
-            //     'mobile' => [
-            //         'required',
-            //         'numeric',
-            //         'unique:trainers,mobile',
-            //         'unique:partners,spoc_mobile',
-            //         'unique:centers,mobile',
-            //         Rule::unique('trainer_statuses','mobile')->ignore($request->mobile,'mobile'),
-            //     ],
-            // ]);
-
-            // if ($validator->fails()) {
-            //     return response()->json(['success' => false, 'errors'=>$validator->errors()]);
-            // } else {
-            //     return response()->json(['success' => true], 200);
-            // }
         
         } elseif ($request->has('doc_no')) {
 

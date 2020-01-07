@@ -11,6 +11,7 @@ use App\CenterDoc;
 use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
+use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -119,12 +120,25 @@ class PartnerCenterController extends Controller
     }
 
     public function addcenter_api(Request $request){
-        if ($request->has('checkredundancy')) {
-            if (Center::where($request->section,$request->checkredundancy)->first()) {
-                return response()->json(['success' => false], 200);
-            } else {
+        if ($request->has('mobile') && $request->has('email')) {
+
+            $dataEmail = AppHelper::instance()->checkEmail($request->email);
+            $dataMob = AppHelper::instance()->checkContact($request->mobile);
+            $array = [];
+
+            $array['email'] = ($dataEmail['status'])? true : false;
+            $array['mobile'] = ($dataMob['status'])? true : false;
+            
+            if ($array['mobile'] && $array['email']) {
                 return response()->json(['success' => true], 200);
+            } elseif ($array['mobile'] && !$array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Email ID is Registered with Someone Else'], 200);
+            } elseif (!$array['mobile'] && $array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Mobile No is Registered with Someone Else'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
             }
+        
         } elseif ($request->has('array')) {
             foreach ($request->array as $key => $value) {
                 $partnerJobRole = PartnerJobrole::find($value);
