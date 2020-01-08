@@ -9,6 +9,8 @@ use App\Assessor;
 use App\Candidate;
 use App\Notification;
 use App\TrainerStatus;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AppHelper
 {
@@ -24,6 +26,14 @@ class AppHelper
         $notification->title = $title;
         $notification->message = $msg;
         $notification->save();
+    }
+
+    public function decryptThis($id){
+        try {
+            return Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            return abort(404);
+        }
     }
 
     public function checkEmail($email){
@@ -114,7 +124,7 @@ class AppHelper
                 } else {
                     $trainerstatus = TrainerStatus::where('doc_no', $docno)->latest()->first();
                     if ($trainerstatus) {
-                        return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached);
+                        return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached, 'trainer_status' => $trainerstatus->status);
                     } else {
                         return array('status' => true);
                     }        

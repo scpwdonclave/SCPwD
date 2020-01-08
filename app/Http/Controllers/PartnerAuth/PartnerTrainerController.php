@@ -62,7 +62,7 @@ class PartnerTrainerController extends Controller
                 $array['email'] = true;
             } else {
                 if ($dataEmail['user'] == 'trainer') {
-                    $trainer = TrainerStatus::find($dataEmail['userid']);
+                    // $trainer = TrainerStatus::find($dataEmail['userid']);
                     if ($dataEmail['docno'] == $request->doc_no) {
                         $array['email'] = true;
                     } else {
@@ -77,7 +77,7 @@ class PartnerTrainerController extends Controller
                 $array['mobile'] = true;
             } else {
                 if ($dataMob['user'] == 'trainer') {
-                    $trainer = TrainerStatus::find($dataMob['userid']);
+                    // $trainer = TrainerStatus::find($dataMob['userid']);
                     if ($dataMob['docno'] == $request->doc_no) {
                         $array['mobile'] = true;
                     } else {
@@ -112,7 +112,7 @@ class PartnerTrainerController extends Controller
                     if ($data['attached']) {
                         return response()->json(['success' => true, 'present'=> true, 'attached' => true, 'trainerData' => $trainer], 200);
                     } else {
-                        return response()->json(['success' => true, 'present'=> true, 'attached' => false, 'trainerData' => $trainer], 200);
+                        return response()->json(['success' => true, 'present'=> true, 'attached' => false, 'trainerData' => $trainer, 'trainer_status' => $data['trainer_status']], 200);
                     }
                 } else {
                     return response()->json(['success' => false], 200);

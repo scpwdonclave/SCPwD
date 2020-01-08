@@ -44,6 +44,7 @@
                     <form id="form_trainer" method="POST" action="{{ route('partner.submittrainer') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="prsnt" value="0">
+                        <input type="hidden" name="id" value="0">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingOne">
@@ -363,29 +364,41 @@
                                 $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                 ajaxresponse = false;
                                 return false;
-                            } else {
+                            } else {                                
                                 if (data.present) {
+                                    $('[name=prsnt]').val('1');
                                     if (data.attached) {
-                                        $('[name=prsnt]').val('1');
+                                    
                                         swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Present</span> in our Record';
                                         swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
                                         $("#btnOne").prop("disabled", false);
                                         $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
                                         ajaxresponse = false;
                                         return false;
-                                    } else {
-                                        $('#doc_message').text('Note: Trainer with This Aadhaar/Voter Number is Registred in our Database');
-                                        $('#doc_file_div').remove();
-                                        $('[name=name]').val(data.trainerData.name);
-                                        $('[name=email]').val(data.trainerData.email);
-                                        $('[name=mobile]').val(data.trainerData.mobile);
-                                        $("#btnOne").prop("disabled", false);
-                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                        ajaxresponse = true;
-                                        return true; 
+                                    } else {                                        
+                                        if (data.trainer_status) {
+                                            $('#doc_message').text('Note: Trainer with This Aadhaar/Voter Number is Registred in our Database');
+                                            $('#doc_file_div').remove();
+                                            $('[name=name]').val(data.trainerData.name);
+                                            $('[name=email]').val(data.trainerData.email);
+                                            $('[name=mobile]').val(data.trainerData.mobile);
+                                            $('[name=id]').val(data.trainerData.id);
+                                            $("#btnOne").prop("disabled", false);
+                                            $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                            ajaxresponse = true;
+                                            return true;
+                                        } else {
+                                            swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Black Listed</span> in our Record, Please Contact SCPwD';
+                                            swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 5000, buttons: false});
+                                            $("#btnOne").prop("disabled", false);
+                                            $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
+                                            ajaxresponse = false;
+                                            return false;
+                                        }
                                     }
                                 
-                                }   
+                                }
+                                
                                 $('[name=prsnt]').val('0');
                                 ajaxresponse = true;
                                 return true;

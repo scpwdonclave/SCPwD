@@ -60,7 +60,9 @@ class TRFormValidation extends FormRequest
                 'unique:trainers,email',
                 'unique:partners,email',
                 'unique:centers,email',
-                Rule::unique('trainer_statuses','email')->ignore($this->email,'email'),                
+                'unique:trainer_statuses,email,'.$this->id,
+                'unique:agencies,email',
+                'unique:assessors,email',
             ];
             $rules['mobile'] = [
                 'required',
@@ -68,7 +70,9 @@ class TRFormValidation extends FormRequest
                 'unique:trainers,mobile',
                 'unique:partners,spoc_mobile',
                 'unique:centers,mobile',
-                Rule::unique('trainer_statuses','mobile')->ignore($this->mobile,'mobile'),
+                'unique:trainer_statuses,mobile,'.$this->id,
+                'unique:agencies,mobile',
+                'unique:assessors,mobile',
             ];
             $rules['doc_file'] = 'nullable|mimes:jpeg,jpg,png,pdf';
         } else {

@@ -41,7 +41,7 @@
                     </div>
                 @endif
                 <div class="body">
-                <form id="form_trainer" method="POST" action="{{route('admin.tr.update.trainer')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2()">
+                <form id="form_trainer" method="POST" action="{{route('admin.tr.update.trainer')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -84,15 +84,13 @@
                                             <div class="col-sm-3">
                                                 <label for="mobile">Trainer Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{$trainer->mobile}}" onchange="checkduplicacy('mobile')"  name="mobile" required>
-                                                    <span id="mobile_error" style="color:red"></span>
+                                                    <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{$trainer->mobile}}" name="mobile" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">Trainer Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="Trainer Email" value="{{$trainer->email}}" onchange="checkduplicacy('email')" name="email" required>
-                                                    <span id="email_error" style="color:red"></span>
+                                                    <input type="email" class="form-control" placeholder="Trainer Email" value="{{$trainer->email}}" name="email" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -217,7 +215,7 @@
                                         
                                         <div class="row">
                                             <div class="col-sm-12 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
+                                                <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                             </div>
                                         </div>
                                     </div>
@@ -233,61 +231,44 @@
 @endsection
 @section('page-script')
 <script>
-  /* Check Redundancy */
-        var dup_email_tag = true;
-        var dup_mobile_tag = true;
-        function checkduplicacy(val){
+    $('#form_trainer').on('submit', function (e) {
+        e.preventDefault();
+        if ($('#form_trainer').valid()) {
+            $("#btnSubmit").prop("disabled", true);
+            $("#btnSubmit").html("Please Wait...");
             var _token = $('[name=_token]').val();
-            let value = $('[name='+val+']').val();
+            let email = $('[name=email]').val();
+            let mobile = $('[name=mobile]').val();
             let id = '{{$trainer->id}}';
-            let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
+            let dataString = { mobile, email, id, _token };
+            var SwalResponse = document.createElement("div");
             $.ajax({
                 url: "{{route('admin.tr.trainer.api')}}",
                 method: "POST",
                 data: dataString,
                 success: function(data){
-                       // console.log(data);
-                    if (data.success) {
-                        $('#'+val+'_error').html('');
-                        if (val == 'email') {
-                            dup_email_tag = true;
-                        } else {
-                            dup_mobile_tag = true;
-                        } 
+                    if (!data.success) {
+                        SwalResponse.innerHTML = data['message'];
+                        swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
+                        $("#btnSubmit").prop("disabled", false);
+                        $("#btnSubmit").html('<span class="glyphicon glyphicon-cloud-upload"></span> UPDATE');
                     } else {
-                        $('#'+val+'_error').html(val+' already exists');
-                        if (val == 'email') {
-                            dup_email_tag = false;
-                        } else {
-                            dup_mobile_tag = false; 
-                        } 
+                        // Good to Go
+                        $('#form_trainer').unbind().submit();
                     }
                 },
                 error:function(data){
-                    swal('Oops!','Something Went Wrong','error');
-                    
+                    SwalResponse.innerHTML = 'Something Went Wrong, Please Try Again';
+                    swal({title: "Oops!", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
                 } 
             });
-        }
-    /* End Check Redundancy */
-    function myFunction2(){
-        
-            if(dup_email_tag==false ||dup_mobile_tag==false){
-               
-                return false;
-            }
-            else{
-                var form = document.getElementById("form_trainer");
-                form.submit();
-                return true;
-            }
-        }
+        } 
+    });
 </script>
 <script>
 
     /* Onload Function */
     $(() => {
-        var ajaxresponse = true;
         filevalidate();
     });
     /* End Onload Function */

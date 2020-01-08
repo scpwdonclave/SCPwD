@@ -256,6 +256,7 @@ class AdminAgencyController extends Controller
                         'unique:trainers,mobile',
                         'unique:partners,spoc_mobile',
                         'unique:centers,mobile',
+                        'unique:candidates,contact',
                         'unique:trainer_statuses,mobile',
                         'unique:assessors,mobile',
                         'unique:agencies,mobile,'.$request->aa_id,
@@ -271,6 +272,7 @@ class AdminAgencyController extends Controller
                         'unique:trainers,mobile',
                         'unique:partners,spoc_mobile',
                         'unique:centers,mobile',
+                        'unique:candidates,contact',
                         'unique:trainer_statuses,mobile',
                         'unique:assessors,mobile',
                         'unique:agencies,mobile',
@@ -295,6 +297,7 @@ class AdminAgencyController extends Controller
                     'unique:trainers,email',
                     'unique:partners,email',
                     'unique:centers,email',
+                    'unique:candidates,email',
                     'unique:trainer_statuses,email',
                     'unique:assessors,email',
                     'unique:agencies,email,'.$request->aa_id,
@@ -306,9 +309,11 @@ class AdminAgencyController extends Controller
               
                     'checkredundancy' => [
                         'required',
+                        'email',
                         'unique:trainers,email',
                         'unique:partners,email',
                         'unique:centers,email',
+                        'unique:candidates,contact',
                         'unique:trainer_statuses,email',
                         'unique:assessors,email',
                         'unique:agencies,email',
@@ -331,21 +336,22 @@ class AdminAgencyController extends Controller
                     'unique:trainers,doc_no',
                     'unique:trainer_statuses,doc_no',
                     'unique:assessors,aadhaar',
+                    'unique:candidates,doc_no',
                     'unique:agencies,aadhaar,'.$request->aa_id,
                     
                 ],
-            ]);
+                ]);
                 
             }else{
                 $validator = Validator::make($request->all(), [ 
                     'checkredundancy' => [
-                         'required',
-                         'unique:trainers,doc_no',
-                         'unique:trainer_statuses,doc_no',
-                         'unique:assessors,aadhaar',
-                         'unique:agencies,aadhaar',
-                         
-                     ],
+                        'required',
+                        'unique:trainers,doc_no',
+                        'unique:trainer_statuses,doc_no',
+                        'unique:assessors,aadhaar',
+                        'unique:agencies,aadhaar',
+                        'unique:candidates,doc_no',
+                    ],
                  ]);
             }
 

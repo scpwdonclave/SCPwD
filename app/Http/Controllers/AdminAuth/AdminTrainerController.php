@@ -372,15 +372,49 @@ class AdminTrainerController extends Controller
 
     public function trainerApi(Request $request){
 
-        if ($request->has('checkredundancy')) {
-            if ($request->has('id')) {
-                if (Trainer::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
-                    return response()->json(['success' => false], 200);
+        if ($request->has('mobile') && $request->has('email') && $request->has('id')) {
+            $dataEmail = AppHelper::instance()->checkEmail($request->email);
+            $dataMob = AppHelper::instance()->checkContact($request->mobile);
+            $array = [];
+            if ($dataEmail['status']) {
+                $array['email'] = true;
+            } else {
+                if ($dataEmail['user'] == 'trainer') {
+                    $trainer = TrainerStatus::find($dataEmail['userid']);
+                    if ($trainer->prv_id == $request->id) {
+                        $array['email'] = true;
+                    } else {
+                        $array['email'] = false;
+                    }
                 } else {
-                    return response()->json(['success' => true], 200);
+                    $array['email'] = false;
                 }
             }
+            
+            if ($dataMob['status']) {
+                $array['mobile'] = true;
+            } else {
+                if ($dataMob['user'] == 'trainer') {
+                    $trainer = TrainerStatus::find($dataMob['userid']);
+                    if ($trainer->prv_id == $request->id) {
+                        $array['mobile'] = true;
+                    } else {
+                        $array['mobile'] = false;
+                    }
+                } else {
+                    $array['mobile'] = false;
+                }
+            }
+            
+            if ($array['mobile'] && $array['email']) {
+                return response()->json(['success' => true], 200);
+            } elseif ($array['mobile'] && !$array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Email ID is Registered with Someone Else'], 200);
+            } elseif (!$array['mobile'] && $array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Mobile No is Registered with Someone Else'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
+            }
         }
-
     }
 }

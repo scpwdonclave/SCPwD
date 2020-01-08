@@ -202,10 +202,29 @@ class PartnerHomeController extends Controller
                 return redirect()->back();
             } else {
                 $request->validate([
-                    'spoc_name' => 'required',
-                    'email' => 'required|email|unique:partners,email,'.$this->guard()->user()->id,
-                    'spoc_mobile' => 'required|numeric',
+                    'spoc_name' => 'required', 
                     'password' => 'nullable',
+                    'email' => [
+                        'required',
+                        'email',
+                        'unique:partners,email,'.$this->guard()->user()->id,
+                        'unique:centers,email',
+                        'unique:trainer_statuses,email',
+                        'unique:agencies,email',
+                        'unique:assessors,email',
+                        'unique:candidates,email',
+                    ],
+                    'spoc_mobile' => [
+                        'required',
+                        'numeric',
+                        'min:10',
+                        'unique:partners,spoc_mobile,'.$this->guard()->user()->id,
+                        'unique:centers,mobile',
+                        'unique:trainer_statuses,mobile',
+                        'unique:agencies,mobile',
+                        'unique:assessors,mobile',
+                        'unique:candidates,contact',
+                    ],
                 ]);
                 if (!is_null($request->password)) {
                     $partner->password =  Hash::make($request->password);

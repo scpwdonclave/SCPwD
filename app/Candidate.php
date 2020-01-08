@@ -14,6 +14,8 @@ class Candidate extends Model implements Auditable
     //     return $this->hasMany('App\BatchCenterCandidateMap');
     // }
 
+    protected $guarded = [];
+
     public function centermap()
     {
         return $this->hasMany('App\CenterCandidateMap', 'cd_id');

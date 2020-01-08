@@ -12,15 +12,6 @@
 
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-<style>
-.datepicker-inline {
-    width: 100%;
-}
-.datepicker table {
-    width: 100%;
-}
-
-</style>
 @stop
 @section('content')
 <div class="container-fluid home">
@@ -41,54 +32,36 @@
                     </div>
                 @endif
                 <div class="body">
+                    <div class="row d-flex justify-content-center">
+                        <h6>Candidate's {{(strlen($candidate->candidate->doc_no)==12)?'Aadhaar':'Voter'}} Number <span style="color:blue;">{{$candidate->candidate->doc_no}}</span></h6>
+                    </div>
                     <form id="form_candidate" method="POST" action="{{route('admin.tc.update.candidate')}}" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="id" value="{{Crypt::encrypt($candidate->id)}}">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingOne">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne"> Identity </a> </h4>
+                                    <h4 class="panel-title"> <a role="button" href="#collapseOne" onclick="return false" aria-expanded="true" aria-controls="collapseOne">Candidate Basic Details</a> </h4>
                                 </div>
                                 <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="panel-body">
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-5">
-                                                <label for="doc_no">Aadhar/Voter Number </label>
-                                                <div class="form-group form-float">
-                                                <input type="text" class="form-control" value="{{$candidate->doc_no}}" readonly>
-                                                <input type="hidden"  value="{{$candidate->id}}" name="candidate_id">
-                                                </div>
-                                            </div>
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="panel panel-primary">
-                                <div class="panel-heading" role="tab" id="headingTwo">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo">Candidate Basic Details</a> </h4>
-                                </div>
-                                <div id="collapseTwo" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
                                                 <label for="name">Candidate Name <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Candidate Name" value="{{ $candidate->name }}" name="name" required>
+                                                    <input type="text" class="form-control" placeholder="Candidate Name" value="{{ $candidate->candidate->name }}" name="name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="contact">Candidate Contact <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Candidate Contact" value="{{$candidate->contact}}"  name="contact" required>
-                                                    <span id="contact_error" style="color:red"></span>
+                                                    <input type="text" class="form-control" placeholder="Candidate Contact" value="{{$candidate->candidate->contact}}"  name="contact" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">Candidate Email <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="Candidate Email" value="{{ $candidate->email }}"  name="email" required>
-                                                    <span id="email_error" style="color:red"></span>
+                                                    <input type="email" class="form-control" placeholder="Candidate Email" value="{{ $candidate->candidate->email }}"  name="email" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -97,16 +70,16 @@
                                                 <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
-                                                        <option {{($candidate->gender=="Male")?'selected':null}}>Male</option>
-                                                        <option {{($candidate->gender=="Female")?'selected':null}}>Female</option>
-                                                        <option {{($candidate->gender=="Transgender")?'selected':null}}>Transgender</option>
+                                                        <option {{($candidate->candidate->gender=="Male")?'selected':null}}>Male</option>
+                                                        <option {{($candidate->candidate->gender=="Female")?'selected':null}}>Female</option>
+                                                        <option {{($candidate->candidate->gender=="Transgender")?'selected':null}}>Transgender</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="mobile">Date of Birth <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float date_picker">
-                                                    <input type="text" class="form-control" placeholder="Candidate's Date of Birth" value="{{ $candidate->dob }}" name="dob" required>
+                                                    <input type="text" class="form-control" placeholder="Candidate's Date of Birth" value="{{ $candidate->candidate->dob }}" name="dob" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
@@ -121,32 +94,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col-sm-6">
-                                                {{-- <label for="doc_file">Aadhar / Voter Document <span style="color:red"> <strong>*</strong></span></label>
-                                                <div class="form-group form-float">
-                                                    <input type="file" id="doc_file" class="form-control" name="doc_file" required>
-                                                    <span id="doc_file_error"  style="color:red;"></span>
-                                                </div> --}}
-                                            </div>
-                                        </div>
-                                        {{-- <div class="row d-flex justify-content-end">
-                                            <div class="col-sm-6 d-flex justify-content-end">
-                                                <button type="button" id="btnTwo" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
 
                             <div class="panel panel-primary">
-                                <div class="panel-heading" role="tab" id="headingThree">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Candidate Other Details</a> </h4>
+                                <div class="panel-heading" role="tab" id="headingTwo">
+                                    <h4 class="panel-title"> <a role="button" href="#collapseTwo" onclick="return false" aria-expanded="true" aria-controls="collapseTwo">Candidate Other Details</a> </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div id="collapseTwo" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="card body field-group">
-                                           
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-8">
                                                     <label for="address">Address <span style="color:red"> <strong>*</strong></span></label>
@@ -169,7 +127,7 @@
                                                 <div class="col-sm-4">
                                                     <label for="category">Category <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="eg: SC / ST / OBC" value="{{ $candidate->category}}" name="category" required>
+                                                        <input type="text" class="form-control" placeholder="eg: SC / ST / OBC" value="{{ $candidate->candidate->category}}" name="category" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -207,12 +165,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                         </div>
-                                        <div class="repeatable-container"></div>
                                         <div class="row">
-                                           
-                                           
                                             <div class="col-sm-12 text-right">
                                                 <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                             </div>
@@ -231,196 +185,33 @@
 
 @section('page-script')
 <script>
-
-    /* Onload Function */
-    $(() => {
-       // updatejob();
-        filevalidate();
-    });
-    /* End Onload Function */
-
-
-
-
-    /* Duplicate Email Checking */
-    var dup_email_tag = true;
-    var dup_mobile_tag = true;
-    function checkduplicacy(val){
-        var _token = $('[name=_token]').val();
-        // console.log('Token :'+ _token);
-         
-        let value = $('[name='+val+']').val();
-        let dataString = { checkredundancy : value, section: val, _token: _token};
-        $.ajax({
-            url: "{{ route('center.addcandidate.api') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                if (data.success) {
-                    $('#'+val+'_error').html('');
-                    if (val == 'email') {
-                        dup_email_tag = true;
-                    } else {
-                        dup_mobile_tag = true;
-                    } 
-                } else {
-                    $('#'+val+'_error').html(val+' already exists');
-                    if (val == 'email') {
-                        dup_email_tag = false;                        
-                    } else {
-                        dup_mobile_tag = false;
-                    } 
-                }
-            },
-            error:function(data){
-                $('#'+val+'_error').html(val+' already exists');
-                dup_email_tag = false;
-                dup_mobile_tag = false;
-            } 
-        });
-    }
-    /* End Duplicate Email Checking */
-
-    /* Validation of Each Sections */
-
-    function validatedata(divs){
-        div = divs.split(',');
-        let tag = true;
-        var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
-        fields.forEach(function (field) {
-        if (!$("[name='"+ field.name +"']").valid()) {
-                tag = false;
-                return false;
-            }
-        });
-
-        if (tag && dup_email_tag && dup_mobile_tag) {
-            switch (div[0]) {
-                case 'collapseOne':
-                    var ajaxresponse = true;
-                    var doc_no = $('[name=doc_no]').val();
-                
-                    $("#btnOne").prop("disabled", true);
-                    $("#btnOne").html("Please Wait...");
-                    var _token = $('[name=_token]').val();
-                    var dataValidate = { _token, doc_no };
-                    $.ajax({
-                        url: "{{ route('center.addcandidate.api') }}",
-                        method: "POST",
-                        data: dataValidate,
-                        success: function(data){
-                            if (!data.success) {
-                                $("#btnOne").prop("disabled", false);
-                                $("#btnOne").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
-                                swal('Abort','Candidate With This Addhar/Voter No is Already Present in Our Database','error');
-                                ajaxresponse = false;
-                                return false;
-                            }
-                            ajaxresponse = true;
-                            return true;
-                        },
-                        error: function(){
-                            swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
-                        }
-                    }).done(function(){
-                        if (ajaxresponse) {
-                            $('#'+div[0]).collapse('hide');
-                            $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                $('#'+div[1]).collapse('show');
-                            });
-                        }
-
-                    });
-                    break;
-                case 'collapseTwo':
-                case 'collapseThree':
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
-                    });
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-
-    /* End Validation of Each Sections */
-
-    /* Making Sure That the Terms & Condition is Accepted */
+    /* Form Submission & Checking for Email Contact Duplicacy */
     
         $('#form_candidate').submit(function(e){
             e.preventDefault();
             if ($('#form_candidate').valid()) {
-                if ($('input:checkbox', this).length == $('input:checked', this).length) {
-                    
-                    /* Disabling Prev & Submit Button and Proceed to Submit */
-                    
-                        $("#submit_form").prop("disabled", true);
-                        $("#last_prev_btn").prop("disabled", true);
-                        $("#submit_form").html("Please Wait...");
                         $(this).unbind().submit();
+                
+                // if ($('input:checkbox', this).length == $('input:checked', this).length) {
                     
-                    /* End Disabling Prev & Submit Button and Proceed to Submit */
+                //     /* Disabling Prev & Submit Button and Proceed to Submit */
+                    
+                //         $("#submit_form").prop("disabled", true);
+                //         $("#last_prev_btn").prop("disabled", true);
+                //         $("#submit_form").html("Please Wait...");
+                //         $(this).unbind().submit();
+                    
+                //     /* End Disabling Prev & Submit Button and Proceed to Submit */
                 
 
-                } else {
-                    showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
-                }
+                // } else {
+                //     showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
+                // }
             }
         });
         
-    /* End Making Sure That the Terms & Condition is Accepted */
+    /* End Form Submission & Checking for Email Contact Duplicacy */
 
-    /* Fetch SelectPicker Data */
-
-        function updatejob(){
-            var _token = $('[name=_token]').val();
-            var jobid = $("#job :selected").val();
-            $.ajax({
-                url: "{{ route('center.addcandidate.api') }}",
-                method: "POST",
-                data: { _token, jobid },
-                success: function(data){
-                    if (data.success) {
-                        $('#d_type').empty();
-                        data.disabilities.forEach(value => {
-                            $('#d_type').append('<option value="'+value.id+'">'+value.e_expository+'</option>');
-                        });
-                        $('#d_type').selectpicker('refresh');
-                    } else {
-                        swal('Abort','Something went Wrong, Please Try Again','error').then((value) => {location.reload();} );
-                    }
-                    
-                } 
-            });
-        }
-
-    /* End Fetch SelectPicker Data */
-
-    /* File Type Validation */
-        function filevalidate(){
-            var _URL = window.URL || window.webkitURL;
-            $("[type='file']").change(function(e) {
-            var image, file;
-            for (var i = this.files.length - 1; i >= 0; i--) {
-            if ((file = this.files[i])) {
-                    image = new Image();
-                    var fileType = file["type"];
-                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-                    if ($.inArray(fileType, ValidImageTypes) < 0) {
-                    $("#"+e.currentTarget.id).val('');
-                    
-                    $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
-                    } else {
-                    $("#" + e.currentTarget.id + "_error").text('');
-                    }
-                    image.src = _URL.createObjectURL(file);
-                }
-            }
-            });
-        }
-    /* End File Type Validation */
 
 </script>
 
@@ -459,7 +250,6 @@ $(function () {
     jQuery("#form_candidate").validate({
         rules: {
         contact: { mobile: true },
-        doc_no: { aadhaarvoter: true },
         "[type=email]": { email: true }
         }
     });

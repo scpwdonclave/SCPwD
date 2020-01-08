@@ -70,6 +70,7 @@ class RegisterController extends Controller
                 'unique:trainer_statuses,email',
                 'unique:agencies,email',
                 'unique:assessors,email',
+                'unique:candidates,email',
             ],
             'spoc_mobile' => [
                 'required',
@@ -80,6 +81,7 @@ class RegisterController extends Controller
                 'unique:trainer_statuses,mobile',
                 'unique:agencies,mobile',
                 'unique:assessors,mobile',
+                'unique:candidates,contact',
             ],
         ]);
     }

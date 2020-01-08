@@ -15,15 +15,6 @@
                 <div class="header">
                     <h2><strong>My</strong> Profile</h2>
                 </div>
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
                 <div class="body">
                     <form id="form_profile" method="POST" action="{{ route(Request::segment(1).'.profile') }}">
                         @csrf
@@ -51,13 +42,15 @@
                             <div class="col-sm-4">
                                 <label for="email">{{(Request::segment(1) !='assessor')?'SPOC Email':'Email'}}</label>
                                 <div class="form-group form-float">
-                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{ $email }}" name="email" {{(Request::segment(1)==='partner')?'required':'readonly'}} >
+                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{($errors->has('email'))?old('email'):$email}}" name="email" {{(Request::segment(1)==='partner')?'required':'readonly'}} >
+                                    <span style="color:red">{{($errors->has('email'))?$errors->first('email'):null}}</span>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <label for="spoc_mobile">{{(Request::segment(1) !='assessor')?'SPOC Phone':'Phone'}}</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ $mobile }}" name="spoc_mobile" {{(Request::segment(1)==='partner')?'required':'readonly'}} >
+                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{($errors->has('spoc_mobile'))?old('spoc_mobile'):$mobile}}" name="spoc_mobile" {{(Request::segment(1)==='partner')?'required':'readonly'}} >
+                                    <span style="color:red">{{($errors->has('spoc_mobile'))?$errors->first('spoc_mobile'):null}}</span>
                                 </div>
                             </div>
                         </div>

@@ -430,56 +430,133 @@ class AdminCenterController extends Controller
 
 
     public function candidateEdit($id){
-        if ($id = $this->decryptThis($id)) {
-            $candidate=Candidate::findOrFail($id);
-            $center=Center::where('id',$candidate->tc_id)->first();
+        if ($id = AppHelper::instance()->decryptThis($id)) {
+            $candidate=CenterCandidateMap::findOrFail($id);
             $states=DB::table('state_district')->get();
-            return view('admin.centers.candidate-edit')->with(compact('candidate','center','states'));
+            return view('admin.centers.candidate-edit')->with(compact('candidate','states'));
         }
     }
 
     public function candidateUpdate(Request $request){
-        $candidate=Candidate::findOrFail($request->candidate_id);
+        if ($id = AppHelper::instance()->decryptThis($request->id)) {
+            $candidate=CenterCandidateMap::findOrFail($id);
 
-        $candidate->name = $request->name;
-        $candidate->gender = $request->gender;
-        $candidate->contact = $request->contact;
-        $candidate->email = $request->email;
-        $candidate->dob = $request->dob;
-        $candidate->m_status = $request->m_status;
+            $validator = Validator::make($request->all(), [ 
+                  
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:trainers,email',
+                    'unique:partners,email',
+                    'unique:centers,email',
+                    'unique:candidates,email,'.$candidate->cd_id,
+                    'unique:trainer_statuses,email',
+                    'unique:agencies,email',
+                    'unique:assessors,email',
+                ],
+                'contact' => [
+                    'required',
+                    'numeric',
+                    'unique:trainers,mobile',
+                    'unique:partners,spoc_mobile',
+                    'unique:centers,mobile',
+                    'unique:candidates,contact,'.$candidate->cd_id,
+                    'unique:trainer_statuses,mobile',
+                    'unique:agencies,mobile',
+                    'unique:assessors,mobile',
+                ],
+                'name' =>  'required',
+                'gender' =>  'required',
+                'dob' =>  'required',
+                'category' =>  'required',
+                'm_status' =>  'required',
+                'address' =>  'required',
+                'state_district' =>  'required',
+                'service' =>  'required',
+                'education' =>  'required',
+                'g_name' =>  'required',
+                'g_type' =>  'required',
+            ]);
 
-        $candidate->address = $request->address;
-        $candidate->state_district = $request->state_district;
-        $candidate->category = $request->category;
-        $candidate->service = $request->service;
-        $candidate->education = $request->education;
-        $candidate->g_name = $request->g_name;
-        $candidate->g_type = $request->g_type;
-
-         /* Notification For center */
-         $notification = new Notification;
-         $notification->rel_id = $candidate->tc_id;
-         $notification->rel_with = 'center';
-         $notification->title = 'Candidate Updated';
-         $notification->message = "One of Your Candidate has been <span style='color:blue;'>Updated</span>.";
-         $notification->save();
-         /* End Notification For center */
-         AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
-
-
-         $candidate->save();
-         alert()->success('Candidate Details Updated', 'Done')->autoclose(2000);
-         return Redirect()->back();
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            } else {
+                $state = CenterCandidateMap::findOrFail($id)->candidate()->update(array(
+                        'name' => $request->name,
+                        'gender' => $request->gender,
+                        'contact' => $request->contact,
+                        'email' => $request->email,
+                        'dob' => $request->dob,
+                        'category' => $request->category,
+                    ));
+                if ($state) {
+                    $candidate->m_status = $request->m_status;
+                    $candidate->address = $request->address;
+                    $candidate->state_district = $request->state_district;
+                    $candidate->service = $request->service;
+                    $candidate->education = $request->education;
+                    $candidate->g_name = $request->g_name;
+                    $candidate->g_type = $request->g_type;
+                    $candidate->save();
+    
+                    $docno = $candidate->candidate->doc_no;
+                    $tpid = $candidate->center->partner->id;
+                    AppHelper::instance()->writeNotification($candidate->tc_id,'center','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin");
+                    AppHelper::instance()->writeNotification($tpid,'partner','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin");
+    
+                    alert()->success('Candidate Details have been <span style="color:blue;">Updated</span>', 'Done')->html()->autoclose(3000);
+                } else {
+                    alert()->error('Something went Wrong, Please Try Again', 'Attention')->autoclose(3000);
+                }
+                return redirect()->back();
+            }
+            
+        }
     }
 
     public function centerApi(Request $request){
-        if ($request->has('checkredundancy')) {
-            if ($request->has('id')) { 
-                if (Center::where([[$request->section,$request->checkredundancy],['id','!=',$request->id]])->first()) {
-                    return response()->json(['success' => false], 200);
+        if ($request->has('mobile') && $request->has('email') && $request->has('id')) {
+            $dataEmail = AppHelper::instance()->checkEmail($request->email);
+            $dataMob = AppHelper::instance()->checkContact($request->mobile);
+            $array = [];
+            if ($dataEmail['status']) {
+                $array['email'] = true;
+            } else {
+                if ($dataEmail['user'] == 'center') {
+                    $center = Center::find($dataEmail['userid']);
+                    if ($center->id == $request->id) {
+                        $array['email'] = true;
+                    } else {
+                        $array['email'] = false;
+                    }
                 } else {
-                    return response()->json(['success' => true], 200);
+                    $array['email'] = false;
                 }
+            }
+            
+            if ($dataMob['status']) {
+                $array['mobile'] = true;
+            } else {
+                if ($dataMob['user'] == 'center') {
+                    $center = Center::find($dataMob['userid']);
+                    if ($center->id == $request->id) {
+                        $array['mobile'] = true;
+                    } else {
+                        $array['mobile'] = false;
+                    }
+                } else {
+                    $array['mobile'] = false;
+                }
+            }
+            
+            if ($array['mobile'] && $array['email']) {
+                return response()->json(['success' => true], 200);
+            } elseif ($array['mobile'] && !$array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Email ID is Registered with Someone Else'], 200);
+            } elseif (!$array['mobile'] && $array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Mobile No is Registered with Someone Else'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
             }
         }
 

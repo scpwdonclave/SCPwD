@@ -31,7 +31,7 @@
                    
                 </div>
                 <div class="body">
-                <form id="form_center" method="POST" action="{{route('admin.tc.update.center')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2()">
+                <form id="form_center" method="POST" action="{{route('admin.tc.update.center')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -51,15 +51,13 @@
                                             <div class="col-sm-3">
                                                 <label for="mobile">SPOC Mobile</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ $center->mobile  }}" onchange="checkduplicacy('mobile')" name="mobile" >
-                                                    <span id="mobile_error" style="color:red"></span>
+                                                    <input type="text" class="form-control" placeholder="SPOC Mobile" value="{{ $center->mobile  }}" name="mobile" >
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label for="email">SPOC Email</label>
                                                 <div class="form-group form-float">
-                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{$center->email }}" onchange="checkduplicacy('email')" name="email" >
-                                                    <span id="email_error" style="color:red"></span>
+                                                    <input type="email" class="form-control" placeholder="SPOC Email" value="{{$center->email }}" name="email" >
                                                 </div>
                                             </div>
                                         </div>
@@ -272,7 +270,7 @@
                                                 </div> --}}
                                             </div>
                                             <div class="col-sm-4 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
+                                                <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> UPDATE</button>
                                             </div>
                                         </div>
                                     </div>
@@ -289,131 +287,86 @@
 
 @section('page-script')
 <script>
-
-    /* Check Redundancy */
-    var dup_email_tag = true;
-        var dup_mobile_tag = true;
-        function checkduplicacy(val){
+    $('#form_center').on('submit', function (e) {
+        e.preventDefault();
+        if ($('#form_center').valid()) {
+            $("#btnSubmit").prop("disabled", true);
+            $("#btnSubmit").html("Please Wait...");
             var _token = $('[name=_token]').val();
-            let value = $('[name='+val+']').val();
+            let email = $('[name=email]').val();
+            let mobile = $('[name=mobile]').val();
             let id = '{{$center->id}}';
-            let dataString = { checkredundancy : value, section: val, _token: _token, id:id};
+            let dataString = { mobile, email, id, _token };
+            var SwalResponse = document.createElement("div");
             $.ajax({
                 url: "{{route('admin.tc.center.api')}}",
                 method: "POST",
                 data: dataString,
                 success: function(data){
-                       // console.log(data);
-                    if (data.success) {
-                        $('#'+val+'_error').html('');
-                        if (val == 'email') {
-                            dup_email_tag = true;
-                        } else {
-                            dup_mobile_tag = true;
-                        } 
+                    if (!data.success) {
+                        SwalResponse.innerHTML = data['message'];
+                        swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
+                        $("#btnSubmit").prop("disabled", false);
+                        $("#btnSubmit").html('<span class="glyphicon glyphicon-cloud-upload"></span> UPDATE');
                     } else {
-                        $('#'+val+'_error').html(val+' already exists');
-                        if (val == 'email') {
-                            dup_email_tag = false;
-                        } else {
-                            dup_mobile_tag = false; 
-                        } 
+                        // Good to Go
+                        $('#form_center').unbind().submit();
                     }
                 },
                 error:function(data){
-                    swal('Oops!','Something Went Wrong','error');
-                    
+                    SwalResponse.innerHTML = 'Something Went Wrong, Please Try Again';
+                    swal({title: "Oops!", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
                 } 
             });
-        }
-    /* End Check Redundancy */
-    function myFunction2(){
-        
-            if(dup_email_tag==false ||dup_mobile_tag==false){
-               
-                return false;
-            }
-            else{
-                var form = document.getElementById("form_center");
-                form.submit();
-                return true;
-            }
-        }
-
-    /* Validation of Each Sections */
-
-    function validatedata(divs){
-            div = divs.split(',');
-            let tag = true;
-            var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
-            fields.forEach(function (field) {
-            if (!$("[name='"+ field.name +"']").valid()) {
-                tag = false;
-                return false;
-                }
-            });
-
-            if (true) {
-
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
-                    });
-            }
-        }
-
-    /* End Validation of Each Sections */
-
-    
+        } 
+    });
 
 
+    $(function(){
+        var _URL = window.URL || window.webkitURL;
+            $("[type='file']").change(function(e) {
 
-        $(function(){
+                var image, file;
 
-            var _URL = window.URL || window.webkitURL;
-                $("[type='file']").change(function(e) {
+                // var l = this.files.length;
+                // if (l>6 || l<2) {
+                // alert('You Have To select atleast 2 images ( max limit is 6)');
+                // $("#file").val('');
+                // }
 
-                    var image, file;
+            for (var i = this.files.length - 1; i >= 0; i--) {
 
-                    // var l = this.files.length;
-                    // if (l>6 || l<2) {
-                    // alert('You Have To select atleast 2 images ( max limit is 6)');
-                    // $("#file").val('');
-                    // }
+                if ((file = this.files[i])) {
 
-                for (var i = this.files.length - 1; i >= 0; i--) {
+                    size = file.size/1024/1024;
+                    size = Math.round(size * 100) / 100
 
-                    if ((file = this.files[i])) {
+                    image = new Image();
+                    var fileType = file["type"];
+                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
+                    if ($.inArray(fileType, ValidImageTypes) < 0) {
+                        // invalid file type code goes here.
+                        $("#"+e.currentTarget.id).val('');
+                        $("#" + e.currentTarget.id + "_error").text('File must be in show jpg, jpeg, png or pdf Format');
+                    } else {
+                        $("#" + e.currentTarget.id + "_error").text('');
+                    }
 
-                        size = file.size/1024/1024;
-                        size = Math.round(size * 100) / 100
-
-                        image = new Image();
-                        var fileType = file["type"];
-                        var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-                        if ($.inArray(fileType, ValidImageTypes) < 0) {
-                            // invalid file type code goes here.
+                    image.onload = function() {
+                        if (size > 1.5) {
                             $("#"+e.currentTarget.id).val('');
-                            $("#" + e.currentTarget.id + "_error").text('File must be in show jpg, jpeg, png or pdf Format');
+                            $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
                         } else {
                             $("#" + e.currentTarget.id + "_error").text('');
                         }
+                    };
 
-                        image.onload = function() {
-                            if (size > 1.5) {
-                                $("#"+e.currentTarget.id).val('');
-                                $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
-                            } else {
-                                $("#" + e.currentTarget.id + "_error").text('');
-                            }
-                        };
-
-                        image.src = _URL.createObjectURL(file);
-                        }
+                    image.src = _URL.createObjectURL(file);
                     }
+                }
 
-                });
             });
+        });
 
 
 </script>

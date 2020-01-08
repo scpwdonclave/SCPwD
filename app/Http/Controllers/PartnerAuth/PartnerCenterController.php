@@ -78,20 +78,32 @@ class PartnerCenterController extends Controller
                     $center->spoc_name = $request->value;
                     break;
                 case 'email':
-                    $duplicate = Center::where([['email','=', $request->value],['email', '!=', $center->email]])->first();
-                        if ($duplicate) {
-                            return response()->json(array('type' => 'error','title' => 'Duplicate Entry', 'message' => "This <span style='font-weight:bold;color:red'>Email</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);        
+                    $emaildata = AppHelper::instance()->checkEmail($request->value);
+                    if (!$emaildata['status']) {
+                        if ($emaildata['user'] == 'center') {
+                            if ($emaildata['userid']!=$request->id) {
+                                return response()->json(array('type' => 'error','title' => 'Attention', 'message' => "This <span style='font-weight:bold;color:red'>Email</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);
+                            }
                         } else {
-                            $center->email = $request->value;
+                            return response()->json(array('type' => 'error','title' => 'Attention', 'message' => "This <span style='font-weight:bold;color:red'>Email</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);
                         }
-                    break;
+                    }
+                    
+                    $center->email = $request->value;
+                break;
                 case 'mobile':
-                    $duplicate = Center::where([['mobile','=', $request->value],['mobile', '!=', $center->mobile]])->first();
-                        if ($duplicate) {
-                            return response()->json(array('type' => 'error','title' => 'Duplicate Entry', 'message' => "This <span style='font-weight:bold;color:red'>Mobile No</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);        
-                        } else {
-                            $center->mobile = $request->value;
+                    $mobiledata = AppHelper::instance()->checkContact($request->value);
+                    if (!$mobiledata['status']) {
+                            if ($mobiledata['user'] == 'center') {
+                                if ($mobiledata['userid']!=$request->id) {
+                                    return response()->json(array('type' => 'error','title' => 'Attention', 'message' => "This <span style='font-weight:bold;color:red'>Mobile No</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);
+                                }
+                            } else {
+                                return response()->json(array('type' => 'error','title' => 'Attention', 'message' => "This <span style='font-weight:bold;color:red'>Mobile No</span> has Already been <span style='font-weight:bold;color:red'>Taken</span>"),200);
+                            }
                         }
+                        
+                        $center->mobile = $request->value;
                     break;
             }
             $center->save();

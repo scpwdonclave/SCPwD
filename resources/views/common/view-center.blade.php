@@ -447,6 +447,7 @@
         <script>
             function update(v){
                 dataValues = v.split(',');
+                var SwalText = document.createElement("div");
                 
                 swal({
                     text: "Update TC SPOC Details",
@@ -471,7 +472,8 @@
                 }).then(function(value){
                     if (value != null) {
                         if (value === '') {
-                            swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                            SwalText.innerHTML='You have not Changed anything yet';
+                            swal({title: 'Attention', content: SwalText, icon: 'info', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                         } else {
                             var id='{{$centerData->id}}';
                             let _token = $("[name='_token']").val();
@@ -481,9 +483,8 @@
                                 url: "{{ route('partner.tc.center.update') }}",
                                 data: {_token,id,name,value},
                                 success: function(data) {
-                                    var ResponseText = document.createElement("div");
-                                    ResponseText.innerHTML=data['message'];
-                                    swal({title: data['title'], content: ResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                                    SwalText.innerHTML=data['message'];
+                                    swal({title: data['title'], content: SwalText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                                 },
                                 error:function(){
                                     swal('Oops', 'Something Went Wrong, Try Again Later', 'error').then(function () {
