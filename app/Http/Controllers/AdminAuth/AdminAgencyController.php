@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use App\Mail\AAConfirmationMail;
-use App\Agency;
-use App\AgencyBatch;
-use App\AssessorBatch;
-use App\Reason;
-use App\AgencySector;
-use App\JobRole;
-use Validator;
-use Crypt;
 use DB;
 use Mail;
-use Storage;
+use Crypt;
+use Validator;
+use App\Agency;
+use App\Reason;
+use App\Sector;
+use App\JobRole;
+use App\AgencyBatch;
+use App\AgencySector;
+use App\AssessorBatch;
+use App\Helpers\AppHelper;
+use App\Events\AAMailEvent;
+use App\Events\ASMailEvent;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Mail\AAConfirmationMail;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminAgencyController extends Controller
 {
@@ -30,14 +33,6 @@ class AdminAgencyController extends Controller
     protected function guard()
     {
         return Auth::guard('admin');
-    }
-
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
     }
 
     protected function partnerstatus($batch){
@@ -57,14 +52,13 @@ class AdminAgencyController extends Controller
     public function addAgency(){
         $states=DB::table('state_district')->get();
         $parliaments=DB::table('parliament')->get();
-        $sectors=DB::table('sectors')->get();
+        $sectors=Sector::all();
         return view('admin.agencies.addagency')->with(compact('states','parliaments','sectors'));
     }
     public function insertAgency(Request $request){
         $data=DB::table('agencies')
         ->select(\DB::raw('SUBSTRING(aa_id,3) as aa_id'))
         ->where("aa_id", "LIKE", "AA%")->get();
-       // dd(count($data));
         $year = date('Y');
         if (count($data) > 0) {
 
@@ -132,15 +126,23 @@ class AdminAgencyController extends Controller
         }
 
         $agency['password']=$agency_password;
-        Mail::to($agency['email'])->send(new AAConfirmationMail($agency));
+        
+        $dataMail = collect();
+        $dataMail->tag = 'aaconfirmation';
+        $dataMail->name = $request->name;
+        $dataMail->aaid = $new_aaid;
+        $dataMail->password = $agency_password;
+        $dataMail->email = $request->email;
 
-        alert()->success("Assessment Agency has been <span style='color:blue;font-weight:bold'>Registered</span>", 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
+        event(new AAMailEvent($dataMail));
+
+        alert()->success("A New Assessment Agency account has been <span style='color:blue;font-weight:bold'>Created</span>", 'Job Done')->html()->autoclose(4000);
+        return redirect()->back();
 
     }
 
     public function agencyView($id){
-        $id=$this->decryptThis($id);
+        $id=AppHelper::instance()->decryptThis($id);
         $agency=Agency::findOrFail($id);
         $agencyState=DB::table('agencies')
         ->join('state_district','agencies.state_district','=','state_district.id')
@@ -150,20 +152,18 @@ class AdminAgencyController extends Controller
     }
 
     public function agencyEdit($id){
-        $aa_id =$this->decryptThis($id);
-         $agency=Agency::findOrFail($aa_id);
-         $states=DB::table('state_district')->get();
-         $parliaments=DB::table('parliament')->get();
-         $sectors=DB::table('sectors')->get();
+        $aa_id=AppHelper::instance()->decryptThis($id);
+        $agency=Agency::findOrFail($aa_id);
+        $states=DB::table('state_district')->get();
+        $parliaments=DB::table('parliament')->get();
+        $sectors=DB::table('sectors')->get();
 
-         $selSector=array();
-         foreach ($agency->agencySector as $item){
-           
+        $selSector=array();
+        foreach ($agency->agencySector as $item){
             array_push($selSector,$item->sector); 
-            
-         }
-         
-         return view('admin.agencies.agency-edit')->with(compact('agency','states','parliaments','sectors','selSector'));
+        }
+        
+        return view('admin.agencies.agency-edit')->with(compact('agency','states','parliaments','sectors','selSector'));
     }
 
     public function agencyUpdate(Request $request){
@@ -216,32 +216,66 @@ class AdminAgencyController extends Controller
         return Redirect()->back();
         }
 
-    public function agencyDeactive(Request $request){
-        $agency=Agency::findOrFail($request->id);
-        $agency->status=0;
-        $agency->save();
+    public function agencyStatusAction(Request $request){
+        if ($request->has('data')) {
 
-        $reason = new Reason;
-        $reason->rel_id = $agency->id;
-        $reason->rel_with = 'agency';
-        $reason->reason = $request->reason;
-        $reason->save();
+            if ($id=AppHelper::instance()->decryptThis($request->data)) {
+                $data = explode(',',$id);
+                $agency = Agency::find($data[0]);
 
-        return response()->json(['status' => 'done'],200);
-    }
+                if ($agency) {
+                    $dataMail = collect();
 
-    public function agencyActive($id){
-        try {
-           $aa_id = Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            abort(404);
+                    if ($agency->status) {
+                        if (!is_null($request->reason) && $request->reason != '') {
+                            $agency->status = 0;
+                            $agency->save();
+                            $reason = new Reason;
+                            $reason->rel_id = $data[0];
+                            $reason->rel_with = 'agency';
+                            $reason->reason = $request->reason;
+                            $reason->save();
+
+                            $dataMail->reason = $request->reason;
+                            $dataMail->tag = 'aadeactive';
+                            
+                            $array = array('type' => 'success', 'message' => "Assessment Agency Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
+                        } else {
+                            $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                        }
+                    } else {
+                        $agency->status = 1;
+                        $agency->save();
+                        $dataMail->aa_id = $agency->tp_id;
+                        $dataMail->tag = 'aaactive';
+                        
+                        $array = array('type' => 'success', 'message' => "Assessment Agency Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
+                    }
+
+                    // * Mail Events
+                    if ($array['type'] == 'success') {
+                        $dataMail->name = $agency->name;
+                        $dataMail->email = $agency->email;
+                        event(new AAMailEvent($dataMail));
+                        foreach ($agency->assessors as $assessor) {
+                            if ($assessor->status) {
+                                $dataMail->name = $assessor->name;
+                                $dataMail->email = $assessor->email;
+                                event(new ASMailEvent($dataMail));
+                            }
+                        }
+                    }
+                    // * End Mail Events
+
+                    return response()->json($array,200);
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "We Could not find this Assessment Agency Account"),400);
+                }
+
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+            }
         }
-        $agency=Agency::findOrFail($aa_id);
-        $agency->status=1;
-        $agency->save();
-
-        alert()->success("Assessment Agency has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
     }
 
     public function agencyApi(Request $request){
@@ -253,7 +287,6 @@ class AdminAgencyController extends Controller
                     'checkredundancy' => [
                         'required',
                         'numeric',
-                        'unique:trainers,mobile',
                         'unique:partners,spoc_mobile',
                         'unique:centers,mobile',
                         'unique:candidates,contact',
@@ -269,7 +302,6 @@ class AdminAgencyController extends Controller
                     'checkredundancy' => [
                         'required',
                         'numeric',
-                        'unique:trainers,mobile',
                         'unique:partners,spoc_mobile',
                         'unique:centers,mobile',
                         'unique:candidates,contact',
@@ -287,14 +319,13 @@ class AdminAgencyController extends Controller
                 return response()->json(['success' => true], 200);
             }
         
-        }
-        else if ($request->section=='email') {
+        } else if ($request->section=='email') {
             if($request->has('aa_id')){
             $validator = Validator::make($request->all(), [ 
               
                 'checkredundancy' => [
                     'required',
-                    'unique:trainers,email',
+                    'email',
                     'unique:partners,email',
                     'unique:centers,email',
                     'unique:candidates,email',
@@ -310,7 +341,6 @@ class AdminAgencyController extends Controller
                     'checkredundancy' => [
                         'required',
                         'email',
-                        'unique:trainers,email',
                         'unique:partners,email',
                         'unique:centers,email',
                         'unique:candidates,contact',
@@ -327,13 +357,11 @@ class AdminAgencyController extends Controller
                 return response()->json(['success' => true], 200);
             }
         
-        }
-        else if ($request->section=='aadhaar') {
+        } else if ($request->section=='aadhaar') {
             if($request->has('aa_id')){
             $validator = Validator::make($request->all(), [ 
                'checkredundancy' => [
                     'required',
-                    'unique:trainers,doc_no',
                     'unique:trainer_statuses,doc_no',
                     'unique:assessors,aadhaar',
                     'unique:candidates,doc_no',
@@ -346,7 +374,6 @@ class AdminAgencyController extends Controller
                 $validator = Validator::make($request->all(), [ 
                     'checkredundancy' => [
                         'required',
-                        'unique:trainers,doc_no',
                         'unique:trainer_statuses,doc_no',
                         'unique:assessors,aadhaar',
                         'unique:agencies,aadhaar',
@@ -366,7 +393,7 @@ class AdminAgencyController extends Controller
     }
 
     public function agencyBatch($id){
-        $id=$this->decryptThis($id); 
+        $id=AppHelper::instance()->decryptThis($id); 
         $agency=Agency::where([['id','=',$id],['status','=',1]])->get();
         if(count($agency)==null){
            abort(404);

@@ -91,8 +91,9 @@ Route::get('batches/batch-view/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchCo
 Route::get('agency/agencies', 'AdminAuth\AdminAgencyController@agencies')->name('agency.agencies');
 Route::get('agency/add-agency', 'AdminAuth\AdminAgencyController@addAgency')->name('aa.add-agency');
 Route::post('agency/add-agency', 'AdminAuth\AdminAgencyController@insertAgency')->name('aa.insert-agency');
-Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDeactive')->name('aa.agency.deactive');
-Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
+Route::post('agency/agency-action', 'AdminAuth\AdminAgencyController@agencyStatusAction')->name('tp.agency.status-action');
+// Route::post('agency/agency-deactive', 'AdminAuth\AdminAgencyController@agencyDeactive')->name('aa.agency.deactive');
+// Route::get('agency/agency-active/{id}', 'AdminAuth\AdminAgencyController@agencyActive')->name('aa.agency.active');
 Route::get('agency/agency-view/{id}', 'AdminAuth\AdminAgencyController@agencyView')->name('aa.agency.view');
 Route::get('agency/agency-batch/{id}', 'AdminAuth\AdminAgencyController@agencyBatch')->name('aa.agency.batch');
 Route::get('agency/agency-edit/{id}', 'AdminAuth\AdminAgencyController@agencyEdit')->name('aa.edit.agency');

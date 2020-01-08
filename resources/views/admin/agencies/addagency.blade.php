@@ -329,22 +329,10 @@
 @stop
 @section('page-script')
 
-
-
-
-
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
-<script src="{{asset('assets/js/pages/partner/jquery.repeatable.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
-
-<script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-
-<script src="{{asset('assets/js/pages/common/notifications.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-
 
 
 <script type="text/javascript">
@@ -352,7 +340,6 @@
     
         /* Intializing Bootstrap DatePicker */
         
-            
             $('.date_picker .form-control').datepicker({
                 autoclose: true,
                 format: 'dd-mm-yyyy'
@@ -445,7 +432,7 @@ function yearAdd(){
     $('#form_agency').on('submit', function (e) {
         e.preventDefault();
         if ($('#form_agency').valid() && dup_email_tag && dup_mobile_tag && dup_aadhaar_tag) {
-           $('#form_agency').unbind().submit();
+           $(this).unbind().submit();
         }
     });
     

@@ -25,6 +25,12 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\TCMailEvent::class => [
             \App\Listeners\TCMailListener::class
         ],
+        \App\Events\AAMailEvent::class => [
+            \App\Listeners\AAMailListener::class
+        ],
+        \App\Events\ASMailEvent::class => [
+            \App\Listeners\ASMailListener::class
+        ],
     ];
 
     /**

@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Mail\TCMail;
+use App\Mail\AAMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class TCMailLIstener implements ShouldQueue
+class AAMailListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -18,6 +18,6 @@ class TCMailLIstener implements ShouldQueue
     public function handle($event)
     {
         sleep(2); // 2 Sec Delay
-        Mail::to($event->data->email)->send(new TCMail($event->data));
+        Mail::to($event->data->email)->send(new AAMail($event->data));
     }
 }
