@@ -1,15 +1,11 @@
 @extends('layout.master')
 @section('title', 'Batches')
 @section('page-style')
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
-<link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
-
 @stop
 @section('parentPageTitle', 'Agency')
 @section('content')
@@ -21,37 +17,31 @@
                     <h2><strong>Batch</strong> Section</h2>                        
                 </div>
                 <div class="text-center">
-                    @if (!is_null($agency[0]->aa_id))
-                    <h6><strong>Agency ID: {{$agency[0]->aa_id}}</strong></h6>
-                    @endif
+                    <h6><strong>Agency ID: <span style="color:blue">{{$agency->aa_id}}</span></strong></h6>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="agency_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                   
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
-                                    <th>Status</th>
+                                    <th>Agency</th>
                                     <th>View</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($agency[0]->agencyBatch as $agbatch) 
-                                <tr style="height:5px !important">
-                                
-                                <td>{{$agbatch->batch->batch_id}}</td>
-                                <td>{{$agbatch->batch->batch_start}}</td>
-                                <td>{{$agbatch->batch->batch_end}}</td>
-                                <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Verified':'Not Verified'}}</strong></td>
-                                {{-- <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td> --}}
-                                <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($agbatch->batch->id)])}}'"><i class="zmdi zmdi-eye"></button></td>
-                                <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$agbatch->id}});"><i class="zmdi zmdi-delete"></button></td>
-                                {{-- <button class="btn" onclick="location.href='{{route('admin.tc.edit.center',['center_id' => Crypt::encrypt($centerData->id) ])}}'">Edit</button>                          --}}
-                                </tr>
+                                @foreach ($agency->agencyBatch as $agbatch) 
+                                    <tr style="height:5px !important">
+                                        <td>{{$agbatch->batch->batch_id}}</td>
+                                        <td>{{$agbatch->batch->batch_start}}</td>
+                                        <td>{{$agbatch->batch->batch_end}}</td>
+                                        <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Approved':'Not Approved Yet'}}</strong></td>
+                                        <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($agbatch->batch->id))}}'"><i class="zmdi zmdi-eye"></button></td>
+                                        <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm('{{$agbatch->batch->batch_id.','.$agbatch->id}}');"><i class="zmdi zmdi-delete"></button></td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -73,25 +63,22 @@
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="sector" onchange="fetchBatch(this.value)" data-dropup-auto='false' required>
                                         <option value="">--select--</option>
-                                        @foreach ($agency[0]->agencySector as $item)
-                                       
-                                        <option value="{{$item->sectors->id}}">{{ $item->sectors->sector }}</option>
-                                       
+                                        @foreach ($agency->agencySector as $item)
+                                            <option value="{{$item->sectors->id}}">{{ $item->sectors->sector }}</option>
                                         @endforeach
                                     </select>
-                                <input type="hidden" name="aa_id" value="{{$agency[0]->id}}">
+                                    <input type="hidden" name="aa_id" value="{{$agency->id}}">
                                 </div>
                             </div>
                         </div>
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="batch">Batch <span style="color:red"> <strong>*</strong></span></label>
-                                    <div class="form-group form-float">
-                                        <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
-                                            
-                                        </select>
-                                    </div>
+                                <label for="batch">Batch <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
@@ -108,135 +95,74 @@
 
 <script>
 
-function fetchBatch(sector){
-       
+    function fetchBatch(sector){
         let _token = $("input[name='_token']").val();
         let aa_id = $("input[name='aa_id']").val();
-            var sector=sector;
-            $.ajax({
-                    url:"{{route('admin.aa.fetch-batch')}}", 
-                    data:{_token,sector,aa_id},
-                    method:'POST',
-                    success: function(data){
-                        //console.table(data.batch);
-                        
-                    $('#batch').empty();
-
-                    $.each (data.batch, function (index) {
+        var sector=sector;
+        $.ajax({
+            url:"{{route('admin.aa.fetch-batch')}}", 
+            data:{_token,sector,aa_id},
+            method:'POST',
+            success: function(data){
+                $('#batch').empty();
+                $.each (data.batch, function (index) {
                     var id=data.batch[index].id;
                     var batch_id=data.batch[index].batch_id;
                     if(!data.selbatch.includes(id)){
-                    $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
-
-                    }
-                    });
-                   
-                    $('#batch').selectpicker('refresh');
-
-                        }
-                     });
-                }
-
-//  function deleteConfirm(id){
-//     swal({
-//         title: "Are you sure?",
-//         text: "Your Batch Data will be deleted",
-//         type: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#DD6B55",
-//         confirmButtonText: "Yes, delete it!",
-//         cancelButtonText: "No, cancel!",
-//         closeOnConfirm: false,
-//         closeOnCancel: false
-//     }, function (isConfirm) {
-//         if (isConfirm) {
-//             let _token = $("input[name='_token']").val();
-//             $.ajax({
-//                 type: "POST",
-//                 url: "{{route('admin.agency.batch-delete')}}",
-//                 data: {_token,id},
-//                 success: function(data) {
-//                     if(data.status=='done'){
-//                    swal({
-//                         title: "Deleted",
-//                         text: "Batch Record Deleted",
-//                         type:"success",
-//                         showConfirmButton: true
-//                     },function(isConfirm){
-//                         if (isConfirm){
-//                             window.location="{{route('admin.agency.agencies')}}";
-//                         }
-//                     });
-
-//                     }else{
-//                         swal({
-//                         title: "Failed",
-//                         text: "This Batch already been assigned to a Assessor",
-//                         type:"error",
-//                         showConfirmButton: true
-//                     },function(isConfirm){
-//                         if (isConfirm){
-//                             window.location="{{route('admin.agency.agencies')}}";
-//                         }
-//                     });
-//                     }
-//                 }
-//             });
-//         } else {
-//              swal("Cancelled", "Your Cancel the process", "error");
-//         }
-//     });
-
-//  }
-
-function deleteConfirm(id){
-    //var data = v.split(',');
-        var confirmatonText = document.createElement("div");
-        //var color=''; var text='';
-        var _token=$('[name=_token]').val();
-        //if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
-        //var scheme=data[2];
-        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Delete</span> This <span style='font-weight:bold; color:blue;'>Batch</span>";
-        swal({
-            text: "Are you Sure ?",
-            content: confirmatonText,
-            icon: "info",
-            buttons: true,
-            buttons: {
-                    cancel: "No, Cencel",
-                    confirm: {
-                        text: "Confirm Delete Batch",
-                        closeModal: false
-                    }
-                },
-            closeModal: false,
-            closeOnEsc: false,
-        }).then(function(val){
-            var dataString = {_token, id:id};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('admin.agency.batch-delete') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        if(data.status=='done'){
-                        SuccessResponseText.innerHTML = "Batch Record <span style='font-weight:bold; color:red;'>Deleted</span> from Agency";
-                        setTimeout(function () {
-                            swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                        }, 2000);
-                         }else{
-                        SuccessResponseText.innerHTML = "This Batch Record already <span style='font-weight:bold; color:red;'>Assigned </span>to a Assessor";
-                        setTimeout(function () {
-                            swal({title: "Already Assigned", content: SuccessResponseText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                        }, 2000);
-
-                         }
-                    
+                        $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
                     }
                 });
+                $('#batch').selectpicker('refresh');
             }
         });
+    }
+
+
+function deleteConfirm(v){
+    var data = v.split(',');
+    var confirmatonText = document.createElement("div");
+    var _token=$('[name=_token]').val();
+    var id=data[1];
+    var aa='{{$agency->aa_id}}';
+    confirmatonText.innerHTML = "You are about to Remove <span style='font-weight:bold; color:red;'>"+data[0]+"</span> Batch from <span style='font-weight:bold; color:blue;'>"+aa+"</span> Agency";
+    swal({
+        text: "Are you Sure ?",
+        content: confirmatonText,
+        icon: "info",
+        buttons: true,
+        buttons: {
+            cancel: "No, Cencel",
+            confirm: {
+                text: "Confirm Remove Batch",
+                closeModal: false
+            }
+        },
+        closeModal: false,
+        closeOnEsc: false,
+    }).then(function(val){
+        var dataString = {_token, id:id};
+        if (val) {
+            $.ajax({
+                url: "{{ route('admin.agency.batch-delete') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                    var SuccessResponseText = document.createElement("div");
+                    if(data.status=='done'){
+                        SuccessResponseText.innerHTML = "Batch Record has been <span style='font-weight:bold; color:red;'>Removed</span> from <span style='font-weight:bold; color:blue;'>"+aa+"</span>";
+                        setTimeout(function () {
+                        swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 4000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
+                    }else{
+                        SuccessResponseText.innerHTML = "This Batch Record ahve already been <span style='font-weight:bold; color:blue;'>Assigned</span> to a Assessor, can not proceed further";
+                        setTimeout(function () {
+                            swal({title: "Already Assigned", content: SuccessResponseText, icon: 'error', closeModal: true,timer: 4000, buttons: false}).then(function(){location.reload();});
+                        }, 2000);
+                    }
+                }
+            });
+        }
+    });
 }
 
 </script>

@@ -394,12 +394,8 @@ class AdminAgencyController extends Controller
 
     public function agencyBatch($id){
         $id=AppHelper::instance()->decryptThis($id); 
-        $agency=Agency::where([['id','=',$id],['status','=',1]])->get();
-        if(count($agency)==null){
-           abort(404);
-        }
+        $agency=Agency::findOrFail($id);
         return view('admin.agencies.agency-batch')->with(compact('agency'));
-        
     }
 
     public function agencyFetchBatch(Request $request){
@@ -408,19 +404,18 @@ class AdminAgencyController extends Controller
         $agencyBatch=AgencyBatch::all();
         $selBatch=array();
         foreach ($agencyBatch as $value) {
-            array_push($selBatch,$value->batch->id); 
+            if ($value->batch->status) {
+                array_push($selBatch,$value->batch->id); 
+            }
         }
         $batch=array();
         foreach ($jobroles as  $job) {
-        foreach ($job->batches as  $job2) {
-            if($job2->status && $job2->verified && !$job2->completed && $this->partnerstatus($job2)){
-                array_push($batch,$job2); 
+            foreach ($job->batches as  $job2) {
+                if($job2->status && $job2->verified && !$job2->completed && $this->partnerstatus($job2)){
+                    array_push($batch,$job2); 
+                }
             }
-            
         }
-    }
-  
-
         return response()->json(['batch' => $batch,'selbatch'=>$selBatch],200);  
     }
 
@@ -431,8 +426,10 @@ class AdminAgencyController extends Controller
            $agencyBatch->bt_id=$batch;
            $agencyBatch->save();
         }
-        alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
+
+        AppHelper::instance()->writeNotification($request->aa_id,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you one or more batch(es) Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> Them");
+        alert()->success("Batch(s) has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
+        return redirect()->back();
     }
 
     public function agencyBatchDelete(Request $request){
