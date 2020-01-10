@@ -428,21 +428,18 @@ class AdminAgencyController extends Controller
         }
 
         AppHelper::instance()->writeNotification($request->aa_id,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you one or more batch(es) Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> Them");
-        alert()->success("Batch(s) has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
+        alert()->success("Batch(es) has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
         return redirect()->back();
     }
 
     public function agencyBatchDelete(Request $request){
         $agencyBatch=AgencyBatch::findOrFail($request->id);
 
-        $assessorBatch=AssessorBatch::where('bt_id',$agencyBatch->bt_id)->first();
-        if($assessorBatch !=null){
+        if ($agencyBatch->batch->assessorbatch) {
             return response()->json(['status' => 'fail'],200);
-
-        }else{
+        } else {
             $agencyBatch->delete();
             return response()->json(['status' => 'done'],200);
-
         }
     }
 }

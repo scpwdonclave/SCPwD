@@ -1,16 +1,15 @@
 @extends('layout.master')
 @section('title', 'Batches')
 @section('page-style')
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('parentPageTitle', 'Agency')
 @section('content')
 <div class="container-fluid">
-    <div class="row clearfix">
+    <div class="row clearfix"> 
         <div class="col-lg-8">
             <div class="card">
                 <div class="header">

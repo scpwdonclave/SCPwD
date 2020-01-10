@@ -3,7 +3,8 @@
 @section('parentPageTitle', 'Agency')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -17,53 +18,37 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
-                                            <tr>
+                                        <tr>
                                             <th>#</th>
                                             <th>Batch ID</th>
                                             <th>Partner ID</th>
                                             <th>Center ID</th>
                                             <th>Assessor</th>
-                                            {{-- <th>Start Date</th>
-                                            <th>End Date</th> --}}
                                             <th>Assessment Date</th>
-                                            <th>Status</th>
-                                            <th>Scheme Status</th>
+                                            <th>Overall Status</th>
                                             <th>View</th>
-                                           
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($agencyBatch as $key=>$item) 
-                                             
-                                            <tr>
+                                        @foreach ($agencyBatch as $key=>$item) 
+                                        <tr>
                                             <td>{{$key+1}}</td>
-                                            <td>{{is_null($item->batch->batch_id)?Config::get('constants.nullidtext'):$item->batch->batch_id}}</td>
+                                            <td>{{$item->batch->batch_id}}</td>
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
-                                            @if (is_null($item->batch->assessorbatch))
-                                            <td>{{Config::get('constants.nullidtext')}}</td>
-                                            @else
-                                            <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
-                                            @endif
-                                            {{-- <td>{{$item->batch->batch_start}}</td>
-                                            <td>{{$item->batch->batch_end}}</td> --}}
+                                            <td>{{is_null($item->batch->assessorbatch)?'Not Assigned Yet':$item->batch->assessorbatch->assessor->as_id}}</td>
                                             <td>{{$item->batch->assessment}}</td>
-                                            @if ($item->batch->verified)
-                                            <td style="color:{{($item->batch->status)?'green':'red'}}">{{($item->batch->status)?'Active':'Inactive'}}</td>
+                                            @if ($item->batch->completed)
+                                                <td style="color:green">Waiting for Results</td>
                                             @else
-                                                <td style="color:red">Not Verified</td>
+                                                <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
                                             @endif
-                                                <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
-                                           
-                                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
-                                                                                                               
-                                            </tr>
-                                           
-                                            @endforeach
-                                           
-                                        </tbody>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->batch->id))}}">View</a></td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
                                 </table>
                                 </div>
                                 <div class="text-muted">
@@ -92,5 +77,4 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @stop

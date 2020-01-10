@@ -90,11 +90,15 @@ table.dataTable thead th:first-child {
                                 </div>
                             </div>
                             @if (Auth::guard('partner')->user()->can('partner-batch-update', $batchData->id))
-                                <div class="row d-fle justify-content-center">
-                                    <button type="submit" class="btn btn-primary waves-effect">REQUEST FOR AN UPDATE</button>
+                                <div class="row d-flex justify-content-center" style="margin-top:20px">
+                                    @if (Carbon\Carbon::parse($batchData->batch_end.' 23:59:00')->gte(Carbon\Carbon::now()))
+                                        <button type="submit" class="btn btn-primary waves-effect">REQUEST FOR AN UPDATE</button>
+                                    @else
+                                        <h6>You can only update batches which are not finished yet</h6>
+                                    @endif
                                 </div>
                             @else
-                                <div class="row d-fle justify-content-center" style="margin-top:20px">
+                                <div class="row d-flex justify-content-center" style="margin-top:20px">
                                     <h6>You Can only request for an update after your pending update request gets cleared</h6>
                                 </div>
                             @endif

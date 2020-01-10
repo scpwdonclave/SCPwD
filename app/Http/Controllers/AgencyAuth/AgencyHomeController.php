@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers\AgencyAuth;
 
-
-// use App\Http\Requests\CandidateFormValidation;
-// use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
-// use Illuminate\Support\Facades\Gate;
-// use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-// use App\CenterJobRole;
 use App\Notification;
-
-// use App\Candidate;
 use Auth;
-// use DB;
 
 class AgencyHomeController extends Controller
 {

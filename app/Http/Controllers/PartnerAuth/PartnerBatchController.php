@@ -426,29 +426,46 @@ class PartnerBatchController extends Controller
             'batch_end' => 'required',
             'assessment' => 'required',
         ]);
-
+        
         $batch = Batch::findOrFail($request->batchid);
-        if ($batch->tp_id == $this->guard()->user()->id) {
-            $batchupdate = BatchUpdate::where([['bt_id', $batch->id],['action', 0]])->first();
-            if ($batchupdate) {
-                alert()->error("You Cannot Request for an Update, While Your Last Request is still <span style='font-weight:bold;color:red'>Pending</span>, Contact Admin for Further Action", 'Abort')->html()->autoclose(6000);
-                return redirect()->back();
-            } else {
-                if ($this->isHoliday(Carbon::parse($request->batch_end))) {
-                    alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+        if (Carbon::parse($batch->batch_end.' 23:59:00')->gte(Carbon::now())) {
+            if ($batch->tp_id == $this->guard()->user()->id) {
+                $batchupdate = BatchUpdate::where([['bt_id', $batch->id],['action', 0]])->first();
+                if ($batchupdate) {
+                    alert()->error("You Cannot Request for an Update, While Your Last Request is still <span style='font-weight:bold;color:red'>Pending</span>, Contact Admin for Further Action", 'Abort')->html()->autoclose(6000);
                     return redirect()->back();
-                }
-
-
-                if ($batch->tr_id != $request->trainer) {
-                    if (!$this->trainer_availability($request->trainer, Carbon::parse($batch->start_time), Carbon::parse($batch->end_time))) {
-                        alert()->error("The Selected Trainer in <span style='font-weight:bold;color:blue'>Preoccupied</span> on provided Time with Another Active Batch, Kindly Change it to Another Trainer", 'Abort')->html()->autoclose(6000);
+                } else {
+                    if ($this->isHoliday(Carbon::parse($request->batch_end))) {
+                        alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
                         return redirect()->back();
-                    } else {
-                        if ($this->isHoliday(Carbon::parse($request->trainer_start))) {
-                            alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                    }
+
+
+                    if ($batch->tr_id != $request->trainer) {
+                        if (!$this->trainer_availability($request->trainer, Carbon::parse($batch->start_time), Carbon::parse($batch->end_time))) {
+                            alert()->error("The Selected Trainer in <span style='font-weight:bold;color:blue'>Preoccupied</span> on provided Time with Another Active Batch, Kindly Change it to Another Trainer", 'Abort')->html()->autoclose(6000);
+                            return redirect()->back();
+                        } else {
+                            if ($this->isHoliday(Carbon::parse($request->trainer_start))) {
+                                alert()->error('Batch End Date is on a <span style="color:red">Holiday</span>, Can not Proceed', 'Abort')->html()->autoclose(3000);
+                                return redirect()->back();
+                            }
+                            $batchstore = new BatchUpdate;
+                            $batchstore->bt_id = $batch->id;
+                            $batchstore->tr_id = $batch->tr_id;
+                            $batchstore->tp_id = $this->guard()->user()->id;
+                            $batchstore->new_tr_id = $request->trainer;
+                            $batchstore->new_tr_start = $request->trainer_start;
+                            $batchstore->end_date = $request->batch_end;
+                            $batchstore->assessment = $request->assessment;
+                            $batchstore->save();
+
+                            AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
+
+                            alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                             return redirect()->back();
                         }
+                    } else {
                         $batchstore = new BatchUpdate;
                         $batchstore->bt_id = $batch->id;
                         $batchstore->tr_id = $batch->tr_id;
@@ -464,31 +481,16 @@ class PartnerBatchController extends Controller
                         alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                         return redirect()->back();
                     }
-                } else {
-                    $batchstore = new BatchUpdate;
-                    $batchstore->bt_id = $batch->id;
-                    $batchstore->tr_id = $batch->tr_id;
-                    $batchstore->tp_id = $this->guard()->user()->id;
-                    $batchstore->new_tr_id = $request->trainer;
-                    $batchstore->new_tr_start = $request->trainer_start;
-                    $batchstore->end_date = $request->batch_end;
-                    $batchstore->assessment = $request->assessment;
-                    $batchstore->save();
 
-                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
 
-                    alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
-                    return redirect()->back();
+                    /* Codes for Notification */
+                    /* End Codes for Notification */
+
                 }
-
-
-                /* Codes for Notification */
-                /* End Codes for Notification */
-
+                
+            } else {
+                return abort(401);
             }
-            
-        } else {
-            return abort(401);
         }
         
     }

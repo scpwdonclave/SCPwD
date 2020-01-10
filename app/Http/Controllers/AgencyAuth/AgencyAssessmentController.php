@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\AgencyAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\AgencyBatch;
-use App\BatchAssessment;
-use App\Notification;
-use App\Reason;
 use Auth;
 use Crypt;
+use App\Reason;
+use App\AgencyBatch;
+use App\Notification;
+use App\BatchAssessment;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AgencyAssessmentController extends Controller
 {
@@ -22,14 +24,6 @@ class AgencyAssessmentController extends Controller
     protected function guard()
     {
         return Auth::guard('agency');
-    }
-
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
     }
 
     public function pendingAssessmentApproval(){
@@ -46,14 +40,14 @@ class AgencyAssessmentController extends Controller
     }
 
     public function assessmentView($id){
-        $id= $this->decryptThis($id);
+        $id= AppHelper::instance()->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
         return view('common.view-assessment')->with(compact('batchAssessment'));
 
     }
 
     public function assessmentAccept($id){
-        $id= $this->decryptThis($id);
+        $id= AppHelper::instance()->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
         if($batchAssessment->aa_verified==0 || ($batchAssessment->aa_verified==2 && $batchAssessment->recheck==1)){
         $batchAssessment->aa_verified=1;
@@ -108,48 +102,39 @@ class AgencyAssessmentController extends Controller
         return view('agency.agency-pending-batch')->with(compact('agencyBatch'));
         }
 
-    public function pendingBatchApproved($id){
-        $id= $this->decryptThis($id);
-        $agency_batch=AgencyBatch::findOrFail($id);
-        $agency_batch->aa_verified=1;
-        $agency_batch->save();
-
-         /* Notification For Admin */
-         $batch_no=$agency_batch->batch->batch_id;
-         $notification = new Notification;
-         $notification->rel_with = 'admin';
-         $notification->title = 'Batch Accept by Agency';
-         $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) accept by Agency";
-         $notification->save();
-         /* End Notification For Admin */
-         alert()->success("Batch ID: <span style='color:blue;font-weight:bold'>$batch_no</span> has been <span style='color:blue;font-weight:bold'>Accepted</span>", 'Job Done')->html()->autoclose(3000);
-         return Redirect()->back();
-        
-    }
-
-    public function pendingBatchReject(Request $request){
-        $data=AgencyBatch::findOrFail($request->id);
-        $data['note'] = $request->note;
-    //     // Mail::to($data->agency->email)->send(new ASRejectMail($data));
-
-         /* Notification For Agency */
-         $batch_no=$data->batch->batch_id;
-
-         $notification = new Notification;
-         $notification->rel_with = 'admin';
-         $notification->title = 'Agency Batch Rejected';
-         $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) rejected by Agency";
-         $notification->save();
-         /* End Notification For Agency */
-         $data->delete();
-
-         $reason = new Reason;
-         $reason->rel_with = 'admin';
-         $reason->reason = $request->note;
-         $reason->save();
-
-         return response()->json(['status' => 'done'],200);
-
+    public function batchAction(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $agencyBatch = AgencyBatch::findOrFail($id);
+            if (!$agencyBatch->agency->status) {
+                alert()->info('Kindly <span style="color:blue">Enable</span> Assessment Agency before proceed ', 'Attention')->html()->autoclose(4000);
+                return redirect()->back();
+            } else {
+                $batchID = $agencyBatch->batch->batch_id;
+                $agencyID = $agencyBatch->agency->aa_id;
+                if ($request->action == 'accept') {
+                        
+                    $agencyBatch->aa_verified=1;
+                    $agencyBatch->save();
+                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Approved by Agency',"Agency (ID: <span style='color:blue;'>$agencyID</span>) Approved Batch (ID: <span style='color:blue;'>$batchID</span>).");
+                    alert()->success('Batch has been <span style="color:blue">Approved</span>', 'Job Done')->html()->autoclose(4000);
+            
+                } elseif ($request->action == 'reject' && $request->reason != '') {
+                  
+                    $agencyBatch->delete();
+                    $reason = new Reason;
+                    $reason->rel_with = 'admin';
+                    $reason->reason = $request->reason;
+                    $reason->save();
+                    
+                    AppHelper::instance()->writeNotification($agencyBatch->tp_id,'admin','Batch Rejected by Agency',"Agency (ID <span style='color:blue;'>$agencyID</span>) Rejected your assigned Batch.");
+                    alert()->success("Batch(ID: <span style='color:blue'>$batchID</span>) has been <span style='color:red'>Rejeted</span>", 'job Done')->html()->autoclose(3000);
+                } else {
+                    alert()->error('Something went Wrong, Try Again', 'Oops!')->autoclose(3000);
+                }
+                return redirect()->route('agency.batch');
+            }
+        }
     }
     
 }

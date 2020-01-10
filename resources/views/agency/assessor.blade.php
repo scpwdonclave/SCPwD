@@ -3,7 +3,8 @@
 @section('parentPageTitle', 'Agency')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 
@@ -17,7 +18,7 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                             <tr>
                                             <th>#</th>
@@ -172,5 +173,4 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @stop
