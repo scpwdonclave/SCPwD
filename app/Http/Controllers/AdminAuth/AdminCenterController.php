@@ -446,6 +446,7 @@ class AdminCenterController extends Controller
                 'email' => [
                     'required',
                     'email',
+                    'unique:admins,email',
                     'unique:trainers,email',
                     'unique:partners,email',
                     'unique:centers,email',

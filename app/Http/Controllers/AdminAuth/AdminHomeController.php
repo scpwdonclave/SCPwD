@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\JobRole;
-use App\JobQualification;
-use App\Partner;
-use App\Center;
+use DB;
+use Crypt;
 use App\Agency;
+use App\Center;
+use App\Scheme;
+use App\Sector;
+use App\Holiday;
+use App\JobRole;
+use App\Partner;
 use App\Candidate;
-use App\CenterCandidateMap;
+use Carbon\Carbon;
+use App\Department;
+use App\Expository;
 use App\CandidateMark;
 use App\BatchAssessment;
-use App\Expository;
-use App\Sector;
-use App\Scheme;
-use App\Holiday;
-use App\Department;
-use Crypt;
-use Carbon\Carbon;
-use DB;
+use App\JobQualification;
+use App\Helpers\AppHelper;
+use App\CenterCandidateMap;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AdminHomeController extends Controller
 {
@@ -44,13 +45,47 @@ class AdminHomeController extends Controller
         return Auth::guard('admin');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
+    public function profile(){
+        $admin = $this->guard()->user();
+        return view('common.profile')->with(compact('admin'));
     }
+
+    public function profile_update(Request $request){
+
+
+        $admin = $this->guard()->user();
+        if ($admin->name == $request->name && $admin->email == $request->email && is_null($request->password)) {
+            alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
+            return redirect()->back();
+        } else {
+            $request->validate([
+                'name' => 'required', 
+                'password' => 'nullable',
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:admins,email,'.$this->guard()->user()->id,
+                    'unique:partners,email',
+                    'unique:centers,email',
+                    'unique:trainer_statuses,email',
+                    'unique:agencies,email',
+                    'unique:assessors,email',
+                    'unique:candidates,email',
+                ],
+            ]);
+            if (!is_null($request->password)) {
+                $admin->password =  Hash::make($request->password);
+            }
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->save();
+            
+            alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('4000');
+            return redirect()->back();
+        }
+
+    }
+
 
     public function dashboard(){
 
@@ -257,7 +292,7 @@ class AdminHomeController extends Controller
 
     public function jobroleQualification(Request $request){
 
-        if ($id=$this->decryptThis($request->data)) { 
+        if ($id=AppHelper::instance()->decryptThis($request->data)) { 
             $jobrole = JobRole::findOrFail($id);   
             $qualificationRow = [[]];
             $qualificationArray = [];
@@ -282,7 +317,7 @@ class AdminHomeController extends Controller
             'teaching_exp' => 'required',
         ]);
 
-        if ($id=$this->decryptThis($request->jobid)) {
+        if ($id=AppHelper::instance()->decryptThis($request->jobid)) {
             $job = JobQualification::where([['job_id',$id],['qualification',$request->qualification]])->first();
             if ($job) {
                 alert()->error("This Qualification Details already <span style='color:red;'>Persent</span> for This Jobrole", "Aborted")->html()->autoclose(4000);

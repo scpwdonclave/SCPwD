@@ -65,6 +65,7 @@ class RegisterController extends Controller
             'email' => [
                 'required',
                 'email',
+                'unique:admins,email',
                 'unique:partners,email',
                 'unique:centers,email',
                 'unique:trainer_statuses,email',

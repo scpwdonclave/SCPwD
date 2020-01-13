@@ -16,6 +16,8 @@ Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->
 Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
 Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@departmentDelete')->name('dashboard.department-delete');
 
+Route::get('profile', 'AdminAuth\AdminHomeController@profile')->name('profile');
+Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('profile');
 
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });

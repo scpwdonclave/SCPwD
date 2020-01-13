@@ -35,12 +35,11 @@ class AssessorHomeController extends Controller
             'password' => 'required',
         ]);
 
-        
-            $assessor = $this->guard()->user();
-            $assessor->password = Hash::make($request->password);
-            $assessor->save();
+        $assessor = $this->guard()->user();
+        $assessor->password = Hash::make($request->password);
+        $assessor->save();
 
-            alert()->success("Your <span style='font-weight:bold;color:blue'>Password</span> has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
-            return redirect()->back();
+        alert()->success("Your <span style='font-weight:bold;color:blue'>Password</span> has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+        return redirect()->back();
     }
 }

@@ -58,7 +58,7 @@ class CenterHomeController extends Controller
             $center->password = Hash::make($request->password);
             $center->save();
 
-            alert()->success("Your <span style='font-weight:bold;color:blue'>Password</span> has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+            alert()->success("Your <span style='font-weight:bold;color:blue'>Password</span> has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Awesome')->html()->autoclose(4000);
             return redirect()->back();
         }
     }

@@ -197,16 +197,17 @@ class PartnerHomeController extends Controller
         if (Gate::allows('partner-profile-verified', Auth::shouldUse('partner'))) {
 
             $partner = $this->guard()->user();
-            if ($partner->spoc_name == $request->spoc_name && $partner->email == $request->email && $partner->spoc_mobile == $request->spoc_mobile && is_null($request->password)) {
+            if ($partner->spoc_name == $request->name && $partner->email == $request->email && $partner->spoc_mobile == $request->mobile && is_null($request->password)) {
                 alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
                 return redirect()->back();
             } else {
                 $request->validate([
-                    'spoc_name' => 'required', 
+                    'name' => 'required', 
                     'password' => 'nullable',
                     'email' => [
                         'required',
                         'email',
+                        'unique:admins,email',
                         'unique:partners,email,'.$this->guard()->user()->id,
                         'unique:centers,email',
                         'unique:trainer_statuses,email',
@@ -214,7 +215,7 @@ class PartnerHomeController extends Controller
                         'unique:assessors,email',
                         'unique:candidates,email',
                     ],
-                    'spoc_mobile' => [
+                    'mobile' => [
                         'required',
                         'numeric',
                         'min:10',
@@ -229,12 +230,12 @@ class PartnerHomeController extends Controller
                 if (!is_null($request->password)) {
                     $partner->password =  Hash::make($request->password);
                 }
-                $partner->spoc_name = $request->spoc_name;
+                $partner->spoc_name = $request->name;
                 $partner->email = $request->email;
-                $partner->spoc_mobile = $request->spoc_mobile;
+                $partner->spoc_mobile = $request->mobile;
                 $partner->save();
                 
-                alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('8000');
+                alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('4000');
                 return redirect()->back();
             }
 

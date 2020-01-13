@@ -37,33 +37,38 @@ class AppHelper
     }
 
     public function checkEmail($email){
-        $candidate = Candidate::where('email', $email)->first();
-        if ($candidate) {
-            return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
+        $candidate = Admin::where('email', $email)->first();
+        if ($admin) {
+            return array('status' => false, 'user' => 'admin', 'userid' => $admin->id);
         } else {
-            $center = Center::where('email', $email)->first();
-            if ($center) {
-                return array('status' => false, 'user' => 'center', 'userid' => $center->id);
+            $candidate = Candidate::where('email', $email)->first();
+            if ($candidate) {
+                return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
             } else {
-                $agency = Agency::where('email', $email)->first();
-                if ($agency) {
-                    return array('status' => false, 'user' => 'agency', 'userid' => $agency->id);
+                $center = Center::where('email', $email)->first();
+                if ($center) {
+                    return array('status' => false, 'user' => 'center', 'userid' => $center->id);
                 } else {
-                    $assessor = Assessor::where('email', $email)->first();
-                    if ($assessor) {
-                        return array('status' => false, 'user' => 'assessor', 'userid' => $assessor->id);
+                    $agency = Agency::where('email', $email)->first();
+                    if ($agency) {
+                        return array('status' => false, 'user' => 'agency', 'userid' => $agency->id);
                     } else {
-                        $partner = Partner::where('email', $email)->first();
-                        if ($partner) {
-                            return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
+                        $assessor = Assessor::where('email', $email)->first();
+                        if ($assessor) {
+                            return array('status' => false, 'user' => 'assessor', 'userid' => $assessor->id);
                         } else {
-                            $trainerstatus = TrainerStatus::where('email', $email)->latest()->first();
-                            if ($trainerstatus) {
-                                return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached, 'docno' => $trainerstatus->doc_no);
+                            $partner = Partner::where('email', $email)->first();
+                            if ($partner) {
+                                return array('status' => false, 'user' => 'partner', 'userid' => $partner->id);
                             } else {
-                                return array('status' => true);
-                            }
-                        }            
+                                $trainerstatus = TrainerStatus::where('email', $email)->latest()->first();
+                                if ($trainerstatus) {
+                                    return array('status' => false, 'user' => 'trainer', 'userid' => $trainerstatus->id, 'attached' => $trainerstatus->attached, 'docno' => $trainerstatus->doc_no);
+                                } else {
+                                    return array('status' => true);
+                                }
+                            }            
+                        }
                     }
                 }
             }

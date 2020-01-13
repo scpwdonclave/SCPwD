@@ -58,6 +58,7 @@ class AssessorApiController extends Controller
                   
                     'checkredundancy' => [
                         'required',
+                        'unique:admins,email',
                         'unique:trainers,email',
                         'unique:partners,email',
                         'unique:centers,email',
@@ -72,6 +73,7 @@ class AssessorApiController extends Controller
                   
                         'checkredundancy' => [
                             'required',
+                            'unique:admins,email',
                             'unique:trainers,email',
                             'unique:partners,email',
                             'unique:centers,email',

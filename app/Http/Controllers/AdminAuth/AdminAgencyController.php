@@ -326,6 +326,7 @@ class AdminAgencyController extends Controller
                 'checkredundancy' => [
                     'required',
                     'email',
+                    'unique:admins,email',
                     'unique:partners,email',
                     'unique:centers,email',
                     'unique:candidates,email',
@@ -341,6 +342,7 @@ class AdminAgencyController extends Controller
                     'checkredundancy' => [
                         'required',
                         'email',
+                        'unique:admins,email',
                         'unique:partners,email',
                         'unique:centers,email',
                         'unique:candidates,contact',
