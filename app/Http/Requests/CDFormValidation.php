@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CandidateFormValidation extends FormRequest
+class CDFormValidation extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +25,43 @@ class CandidateFormValidation extends FormRequest
     {
         $rules = [
 
-            'doc_no' => ['required','unique:candidates','regex:/^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/'],
+            'doc_no' => [
+                'required',
+                'regex:/^([A-Z]){3}([0-9]){7}|^(\d){12}$/',
+                'unique:candidates,doc_no',
+                'unique:trainer_statuses,doc_no',
+                'unique:agencies,aadhaar',
+                'unique:assessors,aadhaar',
+            ],
             
             /* TR Basic Details */
             'name' => 'required',
-            'email' => 'nullable|email|unique:candidates',
-            'contact' => 'required|numeric|unique:candidates',
+            'email' => [
+                'nullable',
+                'email',
+                'unique:admins,email',
+                'unique:trainers,email',
+                'unique:partners,email',
+                'unique:centers,email',
+                'unique:candidates,email',
+                'unique:trainer_statuses,email',
+                'unique:agencies,email',
+                'unique:assessors,email'
+            ],
+
+            'contact' => [
+                'required',
+                'numeric',
+                'min:10',
+                'unique:trainers,mobile',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                'unique:candidates,contact',
+                'unique:trainer_statuses,mobile',
+                'unique:agencies,mobile',
+                'unique:assessors,mobile',
+            ],
+
             /* End TR Basic Details */
             
             'gender' => 'required',

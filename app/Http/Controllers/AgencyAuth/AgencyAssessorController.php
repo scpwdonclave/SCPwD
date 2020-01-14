@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers\AgencyAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\AgencySector;
-use App\AgencyBatch;
-use App\Notification;
-use App\Assessor;
-use App\AssessorJobRole;
-use App\AssessorBatch;
-use App\AssessorLanguage;
-use App\Sector;
-use App\Batch;
-use Validator;
+use DB;
 use Auth;
 use Crypt;
-use DB;
+use App\Batch;
+use Validator;
+use App\Sector;
+use App\Assessor;
+use App\AgencyBatch;
+use App\AgencySector;
+use App\Notification;
+use App\AssessorBatch;
+use App\AssessorJobRole;
+use App\AssessorLanguage;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ASFormValidation;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AgencyAssessorController extends Controller
 {
@@ -72,8 +74,7 @@ class AgencyAssessorController extends Controller
         return response()->json(['jobroles' => $jobroles],200); 
     }
 
-    public function assessorInsert(Request $request){
-       // dd($request);
+    public function assessorInsert(ASFormValidation $request){
         $assessor=new Assessor;
         $assessor->aa_id=$this->guard()->user()->id;	
         $assessor->name=$request->name;	
@@ -85,23 +86,23 @@ class AgencyAssessorController extends Controller
        
         if($request->hasFile('d_certificate')){
            $assessor->d_certificate = Storage::disk('myDisk')->put('/assessor', $request['d_certificate']);
-            }	
+        }	
         $assessor->aadhaar=$request->aadhaar;	
       
         if($request->hasFile('aadhaar_doc')){
             $assessor->aadhaar_doc = Storage::disk('myDisk')->put('/assessor', $request['aadhaar_doc']);
-             }	
+        }	
         $assessor->pan=$request->pan;	
        
         if($request->hasFile('pan_doc')){
             $assessor->pan_doc = Storage::disk('myDisk')->put('/assessor', $request['pan_doc']);
-             }	
+        }	
         $assessor->mobile=$request->mobile;	
         $assessor->email=$request->email;	
        
         if($request->hasFile('photo')){
             $assessor->photo = Storage::disk('myDisk')->put('/assessor', $request['photo']);
-             }
+        }
         $assessor->applicant_cat=$request->applicant_cat;	
         $assessor->address=$request->address;	
         $assessor->post_office=$request->post_office;	
@@ -115,7 +116,7 @@ class AgencyAssessorController extends Controller
         
         if($request->hasFile('edu_doc')){
             $assessor->edu_doc = Storage::disk('myDisk')->put('/assessor', $request['edu_doc']);
-             }	
+        }	
         $assessor->relevant_sector=$request->relevant_sector;	
         $assessor->exp_year	=$request->exp_year;
         $assessor->exp_month=$request->exp_month;	
@@ -139,31 +140,26 @@ class AgencyAssessorController extends Controller
         $assessor->save();
 
         foreach ($request->job_role as $value) {
+            
             $job=new AssessorJobRole;
             $job->as_id=$assessor->id;
-           
             $job->job_role_id=$value;
-
             $job->save();
+
         }
         foreach ($request->language as $language) {
+            
             $languages=new AssessorLanguage;
             $languages->as_id=$assessor->id;
             $languages->language_id=$language;
             $languages->save();
+        
         }
-
-         /* Notification For Admin */
-         $notification = new Notification;
-         //$notification->rel_id =1;
-         $notification->rel_with = 'admin';
-         $notification->title = 'Assessor has been Register';
-         $notification->message = "One assessor has been <span style='color:blue;'>Register</span>";
-         $notification->save();
-         /* End Notification For Admin */
-         alert()->success("Assessor data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);     
-         return Redirect()->back();
-
+        $aaid = $this->guard()->user()->aa_id;
+        AppHelper::instance()->writeNotification(NULL,'admin','New Assessor Added',"Agency <br>(ID: <span style='color:blue;'>$aaid</span>) has added an <span style='color:blue;'>Assessor</span>. Pending Approval");
+        
+        alert()->success("Assessor data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
+        return redirect()->back();
     }
 
     public function assessorView($id){
@@ -187,6 +183,60 @@ class AgencyAssessorController extends Controller
             $batchData=Batch::findOrFail($id);
             return view('common.view-batch')->with(compact('batchData'));
         }
+    }
+
+    public function addassessor_api(Request $request){
+
+        switch ($request->section) {
+            case 'aadhaar':
+                $data = AppHelper::instance()->checkDoc($request->checkredundancy);
+                $message = 'This Aadhaar is already present';
+            break;
+            case 'mobile':
+                $data = AppHelper::instance()->checkContact($request->checkredundancy);
+                $message = 'This Mobile No is already taken';
+            break;
+            case 'email':
+                $data = AppHelper::instance()->checkEmail($request->checkredundancy);
+                $message = 'This Email is already taken';
+            break;
+            default:
+                return abort(401);
+            break;
+
+        }
+        if ($data['status']) {
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message'=>$message]);
+        }
+
+
+        // if ($request->has('mobile')) {
+        //     $dataMob = AppHelper::instance()->checkContact($request->mobile);
+        //     if ($dataMob['status']) {
+        //         return response()->json(['success' => true]);
+        //     } else {
+        //         return response()->json(['success' => false, 'message'=>'This Mobile no is already taken']);
+        //     }
+        // }
+        // if ($request->has('email')) {
+        //     $dataEmail = AppHelper::instance()->checkEmail($request->email);
+        //     if ($dataEmail['status']) {
+        //         return response()->json(['success' => true]);
+        //     } else {
+        //         return response()->json(['success' => false, 'message'=>'This Email is already taken']);
+        //     }
+        // }
+        // if ($request->has('aadhaar')) {
+        //     $dataDoc = AppHelper::instance()->checkDoc($request->aadhaar);
+        //     if ($dataDoc['status']) {
+        //         return response()->json(['success' => true]);
+        //     } else {
+        //         return response()->json(['success' => false, 'message'=>'This Aadhaar is already present']);
+        //     }
+        // }
+
     }
 
     // public function assessorApi(Request $request){
@@ -324,11 +374,11 @@ class AgencyAssessorController extends Controller
         }
 
         $batch=array();
-        foreach ($agencyBatch as  $batches) {
+        foreach ($agencyBatch as $batches) {
             $batchind= $batches->batch;
             if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified && !$batchind->completed && $this->partnerstatus($batchind))
-            array_push($batch,$batchind); 
-        }
+                array_push($batch,$batchind); 
+            }
         
         return response()->json(['batch' => $batch,'selbatch'=>$selBatch],200);
     }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Admin;
 use App\Agency;
 use App\Center;
 use App\Partner;
@@ -37,7 +38,7 @@ class AppHelper
     }
 
     public function checkEmail($email){
-        $candidate = Admin::where('email', $email)->first();
+        $admin = Admin::where('email', $email)->first();
         if ($admin) {
             return array('status' => false, 'user' => 'admin', 'userid' => $admin->id);
         } else {

@@ -48,7 +48,7 @@
                                                 @if ($item->verified)
                                                     <td><a class="badge bg-green margin-0" href="{{route('agency.as.assessor.batch',['id'=>Crypt::encrypt($item->id)])}}" >Batch</a></td>
                                                 @else
-                                                    <td><a class="badge bg-grey margin-0" href="#" >Batch</a></td>
+                                                    <td><button type="button" class="badge bg-grey margin-0">Batch</button></td>
                                                 @endif
                                                 <td><a class="badge bg-green margin-0" href="{{route('agency.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                              </tr>

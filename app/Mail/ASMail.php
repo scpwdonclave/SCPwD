@@ -49,6 +49,18 @@ class ASMail extends Mailable
                 ];
                 $subject = "Assessor Account Suspended | SCPwD";
                 break;
+            case 'asacceptreject':
+                $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Account has been Approved by SCPwD. Please log in to the portal using the following credentials:</p><br><p>Login ID: <strong><span style='color:#0000CD;'>".$this->data->as_id."</span></strong></p><p >Password: <strong><span style='color:#0000FF;'>".$this->data->password."</span></strong></p><br><p>You can now Manage your Account Details.</p>";
+                $subject = "Assessor Account Created and Approved | SCPwD";
+            
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('assessor.login'),
+                ];
+                break;
         }
         return $this->view('emails.email')->subject($subject)->with($dataToSend);
     }

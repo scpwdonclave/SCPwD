@@ -29,7 +29,14 @@ class TRFormValidation extends FormRequest
         $rules = [
 
             /* TR Basic Details */
-            'doc_no' => ['required','unique:trainers','regex:/^([a-zA-Z]){3}([0-9]){7}|^(\d){12}$/'],
+            'doc_no' => [
+                'required',
+                'regex:/^([A-Z]){3}([0-9]){7}|^(\d){12}$/',
+                'unique:candidates,doc_no',
+                'unique:trainer_statuses,doc_no',
+                'unique:agencies,aadhaar',
+                'unique:assessors,aadhaar',
+            ],
             'name' => 'required',
             /* End TR Basic Details */
 
@@ -61,6 +68,7 @@ class TRFormValidation extends FormRequest
                 'unique:trainers,email',
                 'unique:partners,email',
                 'unique:centers,email',
+                'unique:candidates,email',
                 'unique:trainer_statuses,email,'.$this->id,
                 'unique:agencies,email',
                 'unique:assessors,email',
@@ -71,6 +79,7 @@ class TRFormValidation extends FormRequest
                 'unique:trainers,mobile',
                 'unique:partners,spoc_mobile',
                 'unique:centers,mobile',
+                'unique:candidates,contact',
                 'unique:trainer_statuses,mobile,'.$this->id,
                 'unique:agencies,mobile',
                 'unique:assessors,mobile',
@@ -84,15 +93,22 @@ class TRFormValidation extends FormRequest
                 'unique:trainers,email',
                 'unique:partners,email',
                 'unique:centers,email',
+                'unique:candidates,email',
                 'unique:trainer_statuses,email',
+                'unique:agencies,email',
+                'unique:assessors,email',
             ];
             $rules['mobile'] = [
                 'required',
                 'numeric',
+                'min:10',
                 'unique:trainers,mobile',
                 'unique:partners,spoc_mobile',
                 'unique:centers,mobile',
+                'unique:candidates,contact',
                 'unique:trainer_statuses,mobile',
+                'unique:agencies,mobile',
+                'unique:assessors,mobile',
             ];
             $rules['doc_file'] = 'required|mimes:jpeg,jpg,png,pdf';
         }        

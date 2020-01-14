@@ -89,7 +89,8 @@ $(function() {
     function(value, element) {
       // return this.optional(element) || /^[6-9]\d{9}$/.test(value);
       // return this.optional(element) || /^\d*$/.test(value);
-      return this.optional(element) || /^\d{10,}$/.test(value);
+      // return this.optional(element) || /^\d{10,}$/.test(value);
+      return this.optional(element) || /^[1-9]\d{9,11}?$/.test(value);
     },
     "Please enter a valid Contact number"
   );

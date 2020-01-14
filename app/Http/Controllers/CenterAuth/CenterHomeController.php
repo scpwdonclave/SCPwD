@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\CandidateFormValidation;
+use App\Http\Requests\CDFormValidation;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class CenterHomeController extends Controller
@@ -113,7 +113,7 @@ class CenterHomeController extends Controller
         return view('center.addcandidate')->with($data);
     }
 
-    public function submit_candidate(CandidateFormValidation $request){
+    public function submit_candidate(CDFormValidation $request){
 
         DB::transaction(function() use ($request){ 
             $candidate = new Candidate;

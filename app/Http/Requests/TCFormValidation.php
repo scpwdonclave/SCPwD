@@ -25,8 +25,31 @@ class TCFormValidation extends FormRequest
     {
         $rules = [
             'spoc_name' => 'required',
-            'email' => 'required|email|unique:centers',
-            'mobile' => 'required|numeric|min:10|unique:centers',
+            'email' => [
+                'required',
+                'email',
+                'unique:admins,email',
+                'unique:trainers,email',
+                'unique:partners,email',
+                'unique:centers,email',
+                'unique:candidates,email',
+                'unique:trainer_statuses,email',
+                'unique:agencies,email',
+                'unique:assessors,email'
+            ],
+
+            'mobile' => [
+                'required',
+                'numeric',
+                'min:10',
+                'unique:trainers,mobile',
+                'unique:partners,spoc_mobile',
+                'unique:centers,mobile',
+                'unique:candidates,contact',
+                'unique:trainer_statuses,mobile',
+                'unique:agencies,mobile',
+                'unique:assessors,mobile',
+            ],
 
             /* Address of the Organization */
             'center_name' => 'nullable',

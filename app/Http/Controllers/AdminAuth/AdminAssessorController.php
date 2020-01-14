@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
-use App\Mail\ASConfirmationMail;
-use App\Mail\ASRejectMail;
-use App\Assessor;
-use App\Notification;
+use DB;
+use Auth;
+use Mail;
+use Crypt;
 use App\Reason;
-use App\AssessorLanguage;
+use App\Sector;
+use App\Assessor;
+use App\AgencySector;
+use App\Notification;
 use App\AssessorBatch;
 use App\AssessorJobRole;
-use App\AgencySector;
-use App\Sector;
-use Auth;
-use Crypt;
-use DB;
-use Mail;
+use App\AssessorLanguage;
+use App\Helpers\AppHelper;
+use App\Events\AAMailEvent;
+use App\Events\ASMailEvent;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminAssessorController extends Controller
 {
@@ -34,21 +35,13 @@ class AdminAssessorController extends Controller
         return Auth::guard('admin');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     public function assessor(){
         $data=Assessor::where('verified',1)->get();
         return view('admin.assessors.assessors')->with(compact('data'));
     }
 
     public function assessorView($id){
-        $id=$this->decryptThis($id);
+        $id=AppHelper::instance()->decryptThis($id);
         $assessorData=Assessor::findOrFail($id);
         $assessorState=DB::table('assessors')
         ->join('state_district','assessors.state_district','=','state_district.id')
@@ -72,7 +65,7 @@ class AdminAssessorController extends Controller
     // }
 
     // public function viewBatch($id){
-    //     $id=$this->decryptThis($id);
+    //     $id=AppHelper::instance()->decryptThis($id);
     //     $assessorBatch=AssessorBatch::where('as_id',$id)->where('verified',0)->get();
     //     return view('admin.assessors.pending-batch-details')->with(compact('assessorBatch'));
     // }
@@ -95,7 +88,7 @@ class AdminAssessorController extends Controller
     // }
 
     // public function acceptBatch($id){
-    //     $as_batch_id=$this->decryptThis($id);
+    //     $as_batch_id=AppHelper::instance()->decryptThis($id);
     //     $assessor_batch=AssessorBatch::findOrFail($as_batch_id);
     //     $assessor_batch->verified=1;
     //     $assessor_batch->save();
@@ -139,7 +132,7 @@ class AdminAssessorController extends Controller
 
     public function assessorActive($id){
         
-        $as_id=$this->decryptThis($id);
+        $as_id=AppHelper::instance()->decryptThis($id);
         $assessor=Assessor::findOrFail($as_id);
         $assessor->status=1;
         $assessor->save();
@@ -157,87 +150,179 @@ class AdminAssessorController extends Controller
         return Redirect()->back();
     }
 
-    public function assessorAccept($id){
+    // public function assessorAccept($id){
         
-        $id=$this->decryptThis($id);
-        $assessor=Assessor::findOrFail($id);
-        if($assessor->verified==1){
-            alert()->error("This Assessor already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-            return Redirect()->back(); 
-        }
-        $data=DB::table('assessors')
-        ->select(\DB::raw('SUBSTRING(as_id,3) as as_id'))
-        ->where("as_id", "LIKE", "AS%")->get();
-       // dd(count($data));
-        $year = date('Y');
-        if (count($data) > 0) {
+    //     $id=AppHelper::instance()->decryptThis($id);
+    //     $assessor=Assessor::findOrFail($id);
+    //     if($assessor->verified==1){
+    //         alert()->error("This Assessor already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
+    //         return Redirect()->back(); 
+    //     }
+    //     $data=DB::table('assessors')
+    //     ->select(\DB::raw('SUBSTRING(as_id,3) as as_id'))
+    //     ->where("as_id", "LIKE", "AS%")->get();
+    //    // dd(count($data));
+    //     $year = date('Y');
+    //     if (count($data) > 0) {
 
-            $priceprod = array();
-                foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->as_id;
-                }
-                $lastid= max($priceprod);
+    //         $priceprod = array();
+    //             foreach ($data as $key=>$data) {
+    //                 $priceprod[$key]=$data->as_id;
+    //             }
+    //             $lastid= max($priceprod);
                
-                $new_asid = (substr($lastid, 0, 4)== $year) ? 'AS'.($lastid + 1) : 'AS'.$year.'000001' ;
-            //dd($new_tpid);
-        } else {
-            $new_asid = 'AS'.$year.'000001';
+    //             $new_asid = (substr($lastid, 0, 4)== $year) ? 'AS'.($lastid + 1) : 'AS'.$year.'000001' ;
+    //         //dd($new_tpid);
+    //     } else {
+    //         $new_asid = 'AS'.$year.'000001';
+    //     }
+
+    //     $fmonth=date('F');
+    //     $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
+    //     $assessor_password = str_random(8);
+    //     $assessor->as_id=$new_asid;
+    //     $assessor->password=Hash::make($assessor_password);
+    //     $assessor->f_month=$fmonth;
+    //     $assessor->f_year=$fyear;
+
+    //     $assessor->verified=1;
+    //     $assessor->save();
+
+    //       /* Notification For Agency */
+    //       $notification = new Notification;
+    //       $notification->rel_id = $assessor->aa_id;
+    //       $notification->rel_with = 'agency';
+    //       $notification->title = 'Assessor has been Approved';
+    //       $notification->message = "assessor <br>(ID: <span style='color:blue;'>$new_asid</span>) has been Approved";
+    //       $notification->save();
+    //       /* End Notification For Agency */
+    //       $assessor['password']=$assessor_password;
+    //       Mail::to($assessor->email)->send(new ASConfirmationMail($assessor));
+
+    //       alert()->success('Assessor has been Approved', 'Job Done')->autoclose(3000);
+    //       return Redirect()->back();
+
+    // }
+
+    // public function assessorReject(Request $request){
+    //     $data=Assessor::findOrFail($request->id);
+    //     $data['note'] = $request->note;
+    //      Mail::to($data->agency->email)->send(new ASRejectMail($data));
+    //      /* Notification For Agency */
+    //      $notification = new Notification;
+    //      $notification->rel_id = $data->aa_id;
+    //      $notification->rel_with = 'agency';
+    //      $notification->title = 'Assessor Rejected';
+    //      $notification->message = "One of your Assessor has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
+    //      $notification->save();
+    //      /* End Notification For Agency */
+    //      AssessorLanguage::where('as_id',$request->id)->delete();
+    //      AssessorJobRole::where('as_id',$request->id)->delete();
+         
+    //      $data->delete();
+    //      return response()->json(['status' => 'done'],200);
+    // }
+
+
+    public function assessorAction(Request $request)
+    {
+        if ($req=AppHelper::instance()->decryptThis($request->id)) {
+            $data = explode(',',$req);
+            $assessor = Assessor::findOrFail($data[0]);
+            if (!$assessor->verified) {
+                if (!$assessor->agency->status) {
+                    alert()->error('Please <span style="color:blue;">Re-Activate</span> Assessment Agency of This Assessor Before you Proceed', 'Aborting')->html()->autoclose(5000);
+                    return redirect()->back();
+                } else {
+                    $dataMail = collect();
+                    $dataMail->tag = 'asacceptreject';
+                    $dataMail->name = $assessor->name;
+                    $dataMail->aa_name = $assessor->agency->name;
+                    $dataMail->status = $data[1];
+                    if ($data[1]) {
+                        $assessor_password = str_random(8);
+
+                        DB::transaction(function() use($assessor, $assessor_password){
+                            $data=DB::table('assessors')
+                            ->select(\DB::raw('SUBSTRING(as_id,3) as as_id'))
+                            ->where("as_id", "LIKE", "AS%")->get();
+                            $year = date('Y');
+                            if (count($data) > 0) {
+                    
+                                $priceprod = array();
+                                    foreach ($data as $key=>$data) {
+                                        $priceprod[$key]=$data->as_id;
+                                    }
+                                    $lastid= max($priceprod);
+                                   
+                                    $new_asid = (substr($lastid, 0, 4)== $year) ? 'AS'.($lastid + 1) : 'AS'.$year.'000001' ;
+                            } else {
+                                $new_asid = 'AS'.$year.'000001';
+                            }
+                    
+                            $fmonth=date('F');
+                            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+                    
+                            $assessor->as_id=$new_asid;
+
+                            if(is_null($assessor->as_id)){
+                                $assessor->as_id=$new_asid;
+                            }
+
+                            $assessor->password=Hash::make($assessor_password);
+                            $assessor->f_month=$fmonth;
+                            $assessor->f_year=$fyear;
+
+                            $assessor->status=1;
+                            $assessor->verified=1;
+                            $assessor->save();                            
+                        });
+
+                        $dataMail->as_id = $assessor->as_id;
+                        $dataMail->password = $assessor_password;
+                        $dataMail->email = $assessor->email;
+                        event(new ASMailEvent($dataMail));
+                        $dataMail->email = $assessor->agency->email;
+                        event(new AAMailEvent($dataMail));
+                        
+                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Accepted',"Your Assessor (ID: <span style='color:blue'>$assessor->as_id</span>) has been <span style='color:blue;'>Approved</span>.");
+                        alert()->success("Assessor has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+                        
+                        
+                    } else {
+                        $dataMail->email = $assessor->agency->email;
+                        $dataMail->reason = $request->reason;
+                        DB::transaction(function() use ($assessor){
+                            $assessor->assessorJob()->delete();
+                            $assessor->assessorLanguage()->delete();
+                            $assessor->delete();
+                        });
+
+                        $dataMail->reason = $request->reason;
+
+                        event(new AAMailEvent($dataMail));
+
+                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Rejected',"Your Requested Assessor has been <span style='color:red;'>Rejected</span>.Kindly check your mail");
+                        alert()->success("Assessor has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
+                    }
+                    return redirect(route('admin.as.assessors'));
+                }
+            } else {
+                alert()->error("Assessor has already been <span style='color:blue;font-weight:bold'>Approved</span>", "Done")->html()->autoclose(3000);
+                return redirect(route('admin.as.assessors'));
+            }
         }
-
-        $fmonth=date('F');
-        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-        $assessor_password = str_random(8);
-        $assessor->as_id=$new_asid;
-        $assessor->password=Hash::make($assessor_password);
-        $assessor->f_month=$fmonth;
-        $assessor->f_year=$fyear;
-
-        $assessor->verified=1;
-        $assessor->save();
-
-          /* Notification For Agency */
-          $notification = new Notification;
-          $notification->rel_id = $assessor->aa_id;
-          $notification->rel_with = 'agency';
-          $notification->title = 'Assessor has been Approved';
-          $notification->message = "assessor <br>(ID: <span style='color:blue;'>$new_asid</span>) has been Approved";
-          $notification->save();
-          /* End Notification For Agency */
-          $assessor['password']=$assessor_password;
-          Mail::to($assessor->email)->send(new ASConfirmationMail($assessor));
-
-          alert()->success('Assessor has been Approved', 'Job Done')->autoclose(3000);
-          return Redirect()->back();
-
     }
 
+    
     public function fetchJobrole(Request $request){
         $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get(); 
         return response()->json(['jobroles' => $jobroles],200); 
     }
 
-    public function assessorReject(Request $request){
-        $data=Assessor::findOrFail($request->id);
-        $data['note'] = $request->note;
-         Mail::to($data->agency->email)->send(new ASRejectMail($data));
-         /* Notification For Agency */
-         $notification = new Notification;
-         $notification->rel_id = $data->aa_id;
-         $notification->rel_with = 'agency';
-         $notification->title = 'Assessor Rejected';
-         $notification->message = "One of your Assessor has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
-         $notification->save();
-         /* End Notification For Agency */
-         AssessorLanguage::where('as_id',$request->id)->delete();
-         AssessorJobRole::where('as_id',$request->id)->delete();
-         
-         $data->delete();
-         return response()->json(['status' => 'done'],200);
-    }
-
     public function assessorEdit($id){
-        $as_id=$this->decryptThis($id);
+        $as_id=AppHelper::instance()->decryptThis($id);
         $assessor=Assessor::findOrFail($as_id);
         $states=DB::table('state_district')->get();
         $parliaments=DB::table('parliament')->get();

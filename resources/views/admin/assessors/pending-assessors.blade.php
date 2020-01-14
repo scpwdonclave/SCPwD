@@ -154,7 +154,7 @@
 
 //         if (isConfirm){
        
-//         window.location="{{route('admin.assessor.assessors')}}";
+//         window.location="{{route('admin.as.assessors')}}";
 
 //         } 
 //         });

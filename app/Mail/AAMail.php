@@ -59,6 +59,22 @@ class AAMail extends Mailable
                 ];
                 $subject = "Assessment Agency Account Deactivated | SCPwD";
                 break;
+            case 'asacceptreject':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Assessor <span style='color:#0000CD;'>".$this->data->name."</span> (ID: <strong><span style='color:#0000CD;'>".$this->data->as_id."</span></strong>) has been Approved by SCPwD. Please log in to your portal to Manage your Assessors</p>";
+                    $subject = "Assessor Request Accepted | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Assessor <span style='color:#0000CD;'>".$this->data->name."</span> has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can start over again whenever you want.</p>";
+                    $subject = "Assessor Request Rejected | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->aa_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('agency.login'),
+                ];
+                break;
         }
         return $this->view('emails.email')->subject($subject)->with($dataToSend);
     }

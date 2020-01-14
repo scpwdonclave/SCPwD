@@ -252,23 +252,16 @@
                             <div class="cbp_tmicon bg-brown"> <i class="zmdi zmdi-vimeo"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">Relevant Sector</small>
                                         <p>{{$assessorData->relevantSectors->sector}}</p>
                                         <hr>
                                     </div>
-                                
-                                    <div class="col-sm-4">
-                                        <small class="text-muted">Experience Year</small>
-                                        <p>{{$assessorData->exp_year}}</p>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Experience</small>
+                                        <p>{{(is_null($assessorData->exp_year)?null:($assessorData->exp_year.' '.(($assessorData->exp_year>1)?'years':'year'))).((!is_null($assessorData->exp_month) || !is_null($assessorData->exp_month))?' and ':null).(is_null($assessorData->exp_month)?null:($assessorData->exp_month.' '.(($assessorData->exp_month>1)?'months':'month')))}}</p>
                                         <hr>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <small class="text-muted">Experience Month</small>
-                                        <p>{{$assessorData->exp_month}}</p>
-                                        <hr>
-                                    </div>
-                                  
+                                    </div>                                  
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -405,11 +398,11 @@
                         <div class="text-center" >
                             @if (Request::segment(1)==='admin')
                                 @if (is_null($assessorData->attached))
-                                    @if (!$assessorData->verified )
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.as.assessor.verify',['trainer_id' => Crypt::encrypt($assessorData->id) ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
-                                    @elseif ( $assessorData->verified==1)
+                                    @if ($assessorData->verified)
                                         <button class="btn btn-primary" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($assessorData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
+                                    @else
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.as.assessor.action',Crypt::encrypt($assessorData->id.','.'1'))}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($assessorData->id.','.'0')}}');">Reject</button>
                                     @endif
                                 @endif
                             @endif
@@ -487,103 +480,36 @@
 @stop
 @section('page-script')
 @auth('admin')
-    <script>
-        // function showPromptMessage() {
-        //     swal({
-        //         title: "Reason of Rejection",
-        //         text: "Please Describe the Reason",
-        //         type: "input",
-        //         showCancelButton: true,
-        //         closeOnConfirm: false,
-        //         animation: "slide-from-top",
-        //         showLoaderOnConfirm: true,
-        //         inputPlaceholder: "Reason"
-        //     }, function (inputValue) {
-        //         if (inputValue === false) return false;
-        //         if (inputValue === "") {
-        //             swal.showInputError("You need to write something!"); return false
-        //         }
-        //         var id={{$assessorData->id}};
-        //         var note=inputValue;
-        //         let _token = $("input[name='_token']").val();
-            
-        //         $.ajax({
-        //         type: "POST",
-        //         url: "{{route('admin.as.reject.assessor')}}",
-        //         data: {_token,id,note},
-        //         success: function(data) {
-        //             // console.log(data);
-        //             swal({
-        //         title: "Deleted",
-        //         text: "Record Deleted",
-        //         type:"success",
-        //         //timer: 2000,
-        //         showConfirmButton: true
-        //     },function(isConfirm){
-        
-        //         if (isConfirm){
-                
-        //         window.location="{{route('admin.as.pending-assessors')}}";
-        
-        //         } 
-        //         });
-            
-        //         }
-        //     });
-                
-        //     });
-        // }
-
-        function showPromptMessage() {
-            var id={{$assessorData->id}};
-            let _token = $("input[name='_token']").val();
-        
-         swal({
-            title: "Reason of Rejection",
-            text: "Please Describe the Reason",
-            content: {
-                element: "input",
-                attributes: {
-                    type: "text",
-                },
-            },
+<script>
+    function popupRejectSwal(id) {
+        swal({
+            text: 'Please Provide the Reason of Rejection',
+            content: "input",
             icon: "info",
             buttons: true,
             buttons: {
-                    cancel: "Cencel",
+                    cancel: "No, Cancel",
                     confirm: {
-                        text: "Confirm",
+                        text: "Confirm Reject",
                         closeModal: false
                     }
                 },
             closeModal: false,
             closeOnEsc: false,
-        }).then(function(val){
-            
-            var dataString = {_token:_token, id:id,note:val};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('admin.as.reject.assessor') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML ="Assessor Record <span style='font-weight:bold; color:red'>Deleted</span>";
-                        swal({title: "Deleted", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false}).then(function(){location="{{route('admin.as.pending-assessors')}}";});
-                    },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
-            } else if (val!=null) {
-                swal('Attention', 'You need to write something!', 'info');
+        }).then(function(reason){
+            if (reason != null) {
+                if (reason === '') {
+                    swal('Attention', 'Please Describe the Reason of Rejection before Proceed', 'info');
+                } else {
+                    var url = '{{ route("admin.as.assessor.action",[":id",":reason"]) }}';
+                    url = url.replace(':id', id);
+                    url = url.replace(':reason', reason);
+                    location.href = url;
+                }
             }
         });
-}
-    </script>
+    }
+</script>
 @endauth
 
 {{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}

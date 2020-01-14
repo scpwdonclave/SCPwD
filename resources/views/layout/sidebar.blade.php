@@ -90,7 +90,7 @@
                 <li class="{{ Request::segment(2) === 'assessor' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-balance"></i><span>Assessors</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('admin/assessor/assessors') ? 'active' : null }}"><a href="{{route('admin.assessor.assessors')}}">Assessors</a></li>
+                        <li class="{{ Request::is('admin/assessor/assessors') ? 'active' : null }}"><a href="{{route('admin.as.assessors')}}">Assessors</a></li>
                         <li class="{{ Request::is('admin/assessor/pending-assessors') ? 'active' : null }}"><a href="{{route('admin.as.pending-assessors')}}"> Pending Assessors</a></li>
                         
                     </ul>

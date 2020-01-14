@@ -106,7 +106,7 @@ Route::post('agency/agency-api', 'AdminAuth\AdminAgencyController@agencyApi')->n
 Route::post('agency/agency-batch-delete', 'AdminAuth\AdminAgencyController@agencyBatchDelete')->name('agency.batch-delete');
 
 /* Assessors */
-Route::get('assessor/assessors', 'AdminAuth\AdminAssessorController@assessor')->name('assessor.assessors');
+Route::get('assessor/assessors', 'AdminAuth\AdminAssessorController@assessor')->name('as.assessors');
 Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pendingAssessors')->name('as.pending-assessors');
 
 
@@ -115,8 +115,9 @@ Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pend
 Route::get('assessor/assessor-view/{id}', 'AdminAuth\AdminAssessorController@assessorView')->name('as.assessor.view');
 Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
 Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');
-Route::get('assessor/assessor-verify/{id}', 'AdminAuth\AdminAssessorController@assessorAccept')->name('as.assessor.verify');
-Route::post('assessor/assessor-reject', 'AdminAuth\AdminAssessorController@assessorReject')->name('as.reject.assessor');
+Route::get('assessor/assessor-action/{id}/{reason?}', 'AdminAuth\AdminAssessorController@assessorAction')->name('as.assessor.action');
+// Route::get('assessor/assessor-verify/{id}', 'AdminAuth\AdminAssessorController@assessorAccept')->name('as.assessor.verify');
+// Route::post('assessor/assessor-reject', 'AdminAuth\AdminAssessorController@assessorReject')->name('as.reject.assessor');
 Route::post('assessors/fetch-jobrole', 'AdminAuth\AdminAssessorController@fetchJobrole')->name('aa.fetch-jobrole'); 
 Route::get('assessor/assessor-edit/{id}', 'AdminAuth\AdminAssessorController@assessorEdit')->name('as.edit.assessor');
 Route::post('assessor/assessor-update', 'AdminAuth\AdminAssessorController@assessorUpdate')->name('as.update.assessor');

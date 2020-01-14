@@ -24,14 +24,13 @@
 @section('content')
 <div class="container-fluid home">
     <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>Add</strong> Assessor</h2>
                     <a class="btn btn-primary btn-round waves-effect" href="{{route('agency.assessors')}}">My Assessor</a> 
                 </div>
                 <div class="body">
-                <form id="form_assessor" method="POST" action="{{route('agency.as.assessor.insert')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();">
+                <form id="form_assessor" method="POST" action="{{route('agency.as.assessor.insert')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -66,7 +65,7 @@
                                             </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="language">Language known <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="language[]" multiple>
@@ -76,7 +75,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                     <label for="religion">Religion </label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="religion" data-dropup-auto='false' >
@@ -92,7 +91,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="category">Category</label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick"  name="category" data-dropup-auto='false' >
@@ -104,46 +103,43 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="disability">Disability</label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick"  name="disability" data-dropup-auto='false' onchange="disabilityview()" >
                                                         <option value="yes">Yes</option>
                                                         <option value="no">No</option>
-                                                       
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="disabl">
-                                                <label for="d_type">Disability type <span style="color:red"> <strong>*</strong></span></label>
-                                                <div class="form-group form-float">
-                                                    <select class="form-control show-tick" data-live-search="true" name="d_type" required >
-                                                        <option value="">--select--</option>
-                                                        @foreach ($expositories as $expository)
-                                                            <option value="{{$expository->id}}">{{ $expository->e_expository }}</option>
-                                                        @endforeach
-                                                    </select>
+                                        </div>
+                                        <div class="row disable_row">
+                                            <div class="col-sm-12 d-flex justify-content-around">
+                                                <div class="col-sm-6">
+                                                    <label for="d_type">Disability type <span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick" data-live-search="true" name="d_type" required >
+                                                            <option value="">--select--</option>
+                                                            @foreach ($expositories as $expository)
+                                                                <option value="{{$expository->id}}">{{ $expository->e_expository }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="disabl">
-                                                <label>Disability Certificate <span style="color:red"> <strong>*</strong></span></label>
-                                                <div class="form-group form-float">
-                                                    <input id="d_certificate" type="file" class="form-control" name="d_certificate" required>
-                                                    <span id="d_certificate_error" style="color:red;"></span>                                                            
+                                                <div class="col-sm-6">
+                                                    <label>Disability Certificate <span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input id="d_certificate" type="file" class="form-control" name="d_certificate" required>
+                                                        <span id="d_certificate_error" style="color:red;"></span>                                                            
+                                                    </div>
                                                 </div>
                                             </div>
-                                         </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
                                                 <label for="aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="aadhaar" onchange="checkduplicacy('aadhaar')" required>
+                                                    <input type="text" class="form-control" placeholder="Enter Aadhaar No" name="aadhaar" onchange="checkduplicacy('aadhaar')" required>
                                                     <span id="aadhaar_error" style="color:red;"></span>
                                                 </div>
                                             </div>
@@ -160,7 +156,7 @@
                                             <div class="col-sm-4">
                                                 <label for="pan">PAN No</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="PAN No" name="pan" >
+                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="PAN No" name="pan" >
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
@@ -288,9 +284,9 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="education">Education Attaind </label>
+                                                <label for="education">Education </label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Full Address"  name="education" >
+                                                    <input type="text" class="form-control" placeholder="Education"  name="education" >
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
@@ -328,15 +324,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="exp_year">Experience Year</label>
+                                                <label for="exp_year">Experience in Years</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Experience Year"  name="exp_year">
+                                                    <input type="number" min="0" step="1" class="form-control" placeholder="Experience in Years"  name="exp_year">
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="exp_month">Experience Month</label>
+                                                <label for="exp_month">Experience in Months</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Experience Month"  name="exp_month">
+                                                    <input type="number" min="0" max="12" step="1" class="form-control" placeholder="Experience in Months"  name="exp_month">
                                                 </div>
                                             </div>
                                         </div>
@@ -380,14 +376,14 @@
                                 <div id="collapseFive" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label>Domain Certificate</label>
                                                 <div class="form-group form-float">
                                                     <input id="domain_doc" type="file" class="form-control" name="domain_doc">
                                                     <span id="domain_doc_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="sector"  onchange="fetchJob(this.value)"  data-dropup-auto='false' required >
@@ -398,7 +394,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="job_role">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="job_role[]" id="job_role" data-dropup-auto='false' multiple >
@@ -406,9 +402,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label for="scpwd">SCPwD Certified</label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick"  name="scpwd" onchange="scpwdSection()" data-dropup-auto='false' >
@@ -417,34 +411,30 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="scpwd_certi_no">SCPwD Certificate No</label>
+                                        </div>
+                                        <div class="row d-flex justify-content-around">
+                                            <div class="vld row">
+                                                <div class="col-sm-3">
+                                                    <label for="scpwd_certi_no">SCPwD Certificate No <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="SCPwD Certificate No"  name="scpwd_certi_no" required>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="certi_date">Date of Certification</label>
+                                                <div class="col-sm-3">
+                                                    <label for="certi_date">Date of Certification <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Date of Certification" id="certi_date"  onchange="startchangescpwd('new')" name="certi_date" required>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label>Upload Certificate</label>
+                                                <div class="col-sm-3">
+                                                    <label>Upload Certificate <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="scpwd_doc" type="file" class="form-control" name="scpwd_doc" required>
                                                         <span id="scpwd_doc_error" style="color:red;"></span>                                                            
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="certi_end_date">Certification valid Upto</label>
+                                                <div class="col-sm-3">
+                                                    <label for="certi_end_date">Certification valid Upto <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Certification valid Upto" id="certi_end_date" name="certi_end_date" required>
                                                     </div>
@@ -474,7 +464,6 @@
                     </form>  
                 </div>
             </div>
-        </div>
     </div>
 </div>
 @endsection
@@ -499,9 +488,9 @@
     function scpwdSection(){
        var scpwd= $('[name=scpwd]').val();
                 if(scpwd=='no'){
-                 $('.vld').hide();
+                 $('.vld').slideUp();
                 }else{
-                 $('.vld').show();
+                 $('.vld').slideDown();
 
                 }
             }
@@ -509,9 +498,9 @@
     function disabilityview(){
        var disability= $('[name=disability]').val();
                 if(disability=='no'){
-                 $('.disabl').hide();
+                 $('.disable_row').slideUp();
                 }else{
-                 $('.disabl').show();
+                 $('.disable_row').slideDown();
 
                 }
             }
@@ -551,109 +540,56 @@
         function checkduplicacy(val){
            
             
-        dup_email_tag = true;
-        dup_mobile_tag = true;
-        dup_aadhaar_tag = true;
-            var _token = $('[name=_token]').val();
-            
-            let value = $('[name='+val+']').val();
-           
-            let dataString = { checkredundancy : value, section: val, _token: _token};
-            $.ajax({
-                url: "{{route('agency.as.assessor.api')}}",
-                method: "POST",
-                data: dataString,
-                success: function(data){
-                       // console.log(data);
-                    if (data.success) {
-                        $('#'+val+'_error').html('');
-                        if (val == 'email') {
-                            dup_email_tag = true;
-                        } else  if (val == 'mobile'){
-                            dup_mobile_tag = true;
-                        } else{
-                            dup_aadhaar_tag = true;
-                        }
-                    } else {
-                        if(val=='aadhaar'){
-
-                        $('#'+val+'_error').html('Aadhaar already exists');
-                        }else{
-
-                        $('#'+val+'_error').html(val+' already exists');
-                        }
-                        if (val == 'email') {
-                            dup_email_tag = false;
-                        } else  if (val == 'mobile'){
-                            dup_mobile_tag = false; 
-                        }else{
-                            dup_aadhaar_tag = false; 
-                        } 
-                    }
-                },
-
-                error:function(data){
-                   // console.log(data);
-                    
-                    swal('Oops!','Something Went Wrong','error');
-                    
-                } 
-            });
-        }
+           dup_email_tag = true;
+           dup_mobile_tag = true;
+           dup_aadhaar_tag = true;
+               var _token = $('[name=_token]').val();
+               
+               let value = $('[name='+val+']').val();
+              
+               let dataString = { checkredundancy : value, section: val, _token: _token};
+               $.ajax({
+                   url: "{{route('agency.as.assessor.api')}}",
+                   method: "POST",
+                   data: dataString,
+                   success: function(data){
+                       if (data.success) {
+                           $('#'+val+'_error').html('');
+                           if (val == 'email') {
+                               dup_email_tag = false;
+                           } else  if (val == 'mobile'){
+                               dup_mobile_tag = false;
+                           } else{
+                               dup_aadhaar_tag = false;
+                           }
+                       } else {
+                           $('#'+val+'_error').html(data.message);
+                           if (val == 'email') {
+                               dup_email_tag = true;
+                           } else  if (val == 'mobile'){
+                               dup_mobile_tag = true;
+                           } else{
+                               dup_aadhaar_tag = true;
+                           }
+                       }
+                   },
+   
+                   error:function(data){
+                       swal('Oops!','Something Went Wrong','error');
+                   } 
+               });
+           }
     /* End Check Redundancy */
-
-    function myFunction2(){
-         if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false || terms_condition_tag==false){
-        //    console.log('my reject');
-        //    console.log(dup_email_tag);
-        //    console.log(dup_mobile_tag);
-        //    console.log(dup_aadhaar_tag);
-        //    console.log(terms_condition_tag);
-           
-            return false;
-        }
-        else{
-            //console.log('my accept');
-
-            var form = document.getElementById("form_assessor");
-            form.submit();
-            return true;
-        }
-    }
-
-    /* Validation of Each Sections */
-
-    function validatedata(divs){
-            div = divs.split(',');
-            let tag = true;
-            var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
-            fields.forEach(function (field) {
-            if (!$("[name='"+ field.name +"']").valid()) {
-                tag = false;
-                return false;
-                }
-            });
-
-            if (true) {
-
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
-                    });
-            }
-        }
-
-    /* End Validation of Each Sections */
-
 
     /* Making Sure That the Terms & Condition is Accepted */
     
-            var terms_condition_tag = false;
+        var terms_condition_tag = false;
         $('#form_assessor').submit(function(e){
-            //e.preventDefault();
+            e.preventDefault();
+            
             if ($('#form_assessor').valid()) {
                 if ($('input:checkbox', this).length == $('input:checked', this).length) {
-                    
+                        
                     /* Disabling Prev & Submit Button and Proceed to Submit */
                          terms_condition_tag=true;
                         //console.log('accept');
@@ -662,9 +598,9 @@
                         // $("#last_prev_btn").prop("disabled", true);
                         $("#submit_form").html("Please Wait...");
                         
-                    
                     /* End Disabling Prev & Submit Button and Proceed to Submit */
                 
+                    $(this).unbind().submit();
 
                 } else {
                     //console.log('reject');
@@ -673,7 +609,6 @@
                     showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
                 }
             }
-           return myFunction2(); 
         });
         
     /* End Making Sure That the Terms & Condition is Accepted */
@@ -779,7 +714,8 @@ function startchangescpwd(){
 jQuery("#form_assessor").validate({
         rules: {
         pin: { pin: true },
-         aadhaar: { aadhaar: true },
+        pan: { pan: true },
+        aadhaar: { aadhaar: true },
         "[type=email]": { email: true }
         }
     });

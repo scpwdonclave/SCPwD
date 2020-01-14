@@ -39,13 +39,11 @@
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
-                                              
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                               
-                                                @if($item->status==1)
-                                                <td><a class="badge bg-red margin-0" href="javascript:showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                                @elseif($item->status==0)
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
+                                                @if($item->status)
+                                                    <td><a class="badge bg-red margin-0" href="javascript:showCancelMessage({{$item->id}})">Deactivate</a></td>
+                                                @else
+                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
                                                 @endif
                                             </tr>
                                           
@@ -154,7 +152,7 @@
 
 //         if (isConfirm){
        
-//         window.location="{{route('admin.assessor.assessors')}}";
+//         window.location="{{route('admin.as.assessors')}}";
 
 //         } 
 //         });
