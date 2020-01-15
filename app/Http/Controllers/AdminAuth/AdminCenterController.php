@@ -357,12 +357,12 @@ class AdminCenterController extends Controller
                 }
 
             } else {
-                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+                return response()->json(array('type' => 'error', 'message' => "Requested Account is not Found"),400);
             }
         }        
     }
 
-    // * End Training Partner Activation Deactvation
+    // * End Training Center Activation Deactvation
 
 
     public function candidates(){
@@ -423,7 +423,7 @@ class AdminCenterController extends Controller
                 }
 
             } else {
-                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+                return response()->json(array('type' => 'error', 'message' => "Requested Account is not Found"),400);
             }
         } 
     }

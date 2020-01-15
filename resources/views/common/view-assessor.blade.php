@@ -15,7 +15,8 @@
                     @if (!is_null($assessorData->as_id))
                         <div class="text-center">
                             <h6>
-                                AS ID: <span style='color:blue'>{{$assessorData->as_id}}</span>
+                                AS ID: <span style='color:blue'>{{$assessorData->as_id}}</span> <br> <br>
+                                <span style='color:{{($assessorData->status)?"green":"red"}}'>{{($assessorData->status)?"Active":"Inactive"}}</span>
                             </h6>
                         </div>
                         <br>
@@ -47,6 +48,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4">
+                                        <small class="text-muted">Assessment Agency</small>
+                                        <p>{{$assessorData->agency->aa_id}} <span style='color:{{($assessorData->agency->status)?"green":"red"}}'><strong>{{($assessorData->agency->status)?"Active":"Inactive"}}</strong></span></p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <small class="text-muted">Date of Birth</small>
                                         <p>{{$assessorData->birth}}</p>
                                         <hr>
@@ -56,30 +62,31 @@
                                         <p>{{$assessorData->gender}}</p>
                                         <hr>
                                     </div>
-                                
-                                    <div class="col-sm-4">
-                                        <small class="text-muted">Language</small>
-                                       <p>
-                                        @foreach ($language as $item)
-                                           {{$item->language}},
-                                       @endforeach
-                                       </p>
-                                        <hr>
-                                    </div>
-                
+                              
                                 </div>
                                 <div class="row">
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Language</small>
+                                        <p>
+                                        @foreach ($language as $item)
+                                           {{$item->language}},
+                                        @endforeach
+                                        </p>
+                                        <hr>
+                                    </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Religion</small>
                                         <p>{{$assessorData->religion}}</p>
                                         <hr>
-                                    </div>
-                                
+                                    </div>                                
                                     <div class="col-sm-4">
                                         <small class="text-muted">Category</small>
                                         <p>{{$assessorData->category}}</p>
                                         <hr>
                                     </div>
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Disability Type</small>
                                         @if (!is_null($assessorData->d_type))
@@ -87,9 +94,6 @@
                                         @endif
                                         <hr>
                                     </div>
-                
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Disability Certificate</small>
                                         @if (!is_null($assessorData->d_certificate))
@@ -108,6 +112,9 @@
                                         <p>{{$assessorData->aadhaar}}</p>
                                         <hr>
                                     </div>
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Aadhaar Document</small>
                                         @if (!is_null($assessorData->aadhaar_doc))
@@ -120,9 +127,6 @@
                                         @endif
                                         <hr>
                                     </div>
-                
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">PAN No</small>
                                         <p>{{$assessorData->pan}}</p>
@@ -141,14 +145,14 @@
                                         <hr>
                                     </div>
                                 
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Applicant Category</small>
                                         <p>{{$assessorData->applicant_cat}}</p>
                                         <hr>
                                     </div>
-                
-                                </div>
-                                <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Photo</small>
                                         @if (!is_null($assessorData->photo))

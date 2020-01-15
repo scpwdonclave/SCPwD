@@ -225,6 +225,12 @@ class AdminAgencyController extends Controller
 
                 if ($agency) {
                     $dataMail = collect();
+                    $dataMail->tag = 'aaactivedeactive';
+                    $dataMail->status = !$agency->status;
+
+                    $dataMail->aa_id = $agency->aa_id;
+                    $dataMail->name = $agency->name;
+                    $dataMail->email = $agency->email;
 
                     if ($agency->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
@@ -237,7 +243,6 @@ class AdminAgencyController extends Controller
                             $reason->save();
 
                             $dataMail->reason = $request->reason;
-                            $dataMail->tag = 'aadeactive';
                             
                             $array = array('type' => 'success', 'message' => "Assessment Agency Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
@@ -246,16 +251,12 @@ class AdminAgencyController extends Controller
                     } else {
                         $agency->status = 1;
                         $agency->save();
-                        $dataMail->aa_id = $agency->tp_id;
-                        $dataMail->tag = 'aaactive';
                         
                         $array = array('type' => 'success', 'message' => "Assessment Agency Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
 
                     // * Mail Events
                     if ($array['type'] == 'success') {
-                        $dataMail->name = $agency->name;
-                        $dataMail->email = $agency->email;
                         event(new AAMailEvent($dataMail));
                         foreach ($agency->assessors as $assessor) {
                             if ($assessor->status) {
@@ -273,7 +274,7 @@ class AdminAgencyController extends Controller
                 }
 
             } else {
-                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+                return response()->json(array('type' => 'error', 'message' => "Requested Account is not Found"),400);
             }
         }
     }

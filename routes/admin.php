@@ -113,8 +113,10 @@ Route::get('assessor/pending-assessors', 'AdminAuth\AdminAssessorController@pend
 
 
 Route::get('assessor/assessor-view/{id}', 'AdminAuth\AdminAssessorController@assessorView')->name('as.assessor.view');
-Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
-Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');
+
+Route::post('assessor/assessors/', 'AdminAuth\AdminAssessorController@assessorStatusAction')->name('as.assessor.status-action');
+// Route::post('assessor/assessor-deactive', 'AdminAuth\AdminAssessorController@assessorDeactive')->name('as.assessor.deactive');
+// Route::get('assessor/assessor-active/{id}', 'AdminAuth\AdminAssessorController@assessorActive')->name('as.assessor.active');
 Route::get('assessor/assessor-action/{id}/{reason?}', 'AdminAuth\AdminAssessorController@assessorAction')->name('as.assessor.action');
 // Route::get('assessor/assessor-verify/{id}', 'AdminAuth\AdminAssessorController@assessorAccept')->name('as.assessor.verify');
 // Route::post('assessor/assessor-reject', 'AdminAuth\AdminAssessorController@assessorReject')->name('as.reject.assessor');

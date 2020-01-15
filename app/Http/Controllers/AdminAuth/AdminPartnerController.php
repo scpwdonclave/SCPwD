@@ -120,7 +120,7 @@ class AdminPartnerController extends Controller
                 }
 
             } else {
-                return response()->json(array('type' => 'error', 'message' => "Reqested Account is not Found"),400);
+                return response()->json(array('type' => 'error', 'message' => "Requested Account is not Found"),400);
             }
         }        
     }
@@ -784,7 +784,7 @@ class AdminPartnerController extends Controller
                     return response()->json(array('type' => 'error', 'message' => "Scheme Cannot be <span style='font-weight:bold;color:blue'>Modified</span>, as Scheme Origin is <span style='font-weight:bold;color:red'>Deactivated</span>"),200);
                 }
             } else {
-                return response()->json(array('type' => 'error', 'message' => "Reqested Scheme is not Found"),400);
+                return response()->json(array('type' => 'error', 'message' => "Requested Scheme is not Found"),400);
             }
         }
     }

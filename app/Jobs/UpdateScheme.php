@@ -82,7 +82,7 @@ class UpdateScheme implements ShouldQueue
                     return response()->json(array('type' => 'success', 'message' => "Scheme has been <span style='font-weight:bold;color:blue'>Updated</span> Successfully"),200);
                     
                 } else {
-                    return response()->json(array('type' => 'error', 'message' => "Reqested Scheme is not Found"),200);
+                    return response()->json(array('type' => 'error', 'message' => "Requested Scheme is not Found"),200);
                 }
             }
         }

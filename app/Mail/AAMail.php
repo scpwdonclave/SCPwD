@@ -39,25 +39,21 @@ class AAMail extends Mailable
                 ];
                 $subject = "Assessment Agency Account Confirmation | SCPwD";
                 break;
-            case 'aaactive':
-                $dataToSend = [
-                    'initial' => 'Let\'s Begin',
-                    'name' => $this->data->name,
-                    'messagedata' => "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Account has been Re-Activated by SCPwD. Now you can log in to the portal using the following credentials:</p><br><p>Login ID: <strong><span style='color:#0000CD;'>".$this->data->aa_id."</span></strong></p><p >Password: <strong><span style='color:#0000FF;'>your existing password</span></strong></p>",
-                    'confirmBtnText' => 'Get Started',
-                    'confirmBtnLink' => route('agency.login'),
-                ];
-                $subject = "Assessment Agency Account Re-Activated | SCPwD";
-                break;
-            case 'aadeactive':
+            case 'aaactivedeactive':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Account has been Re-Activated by SCPwD. Now you can log in to the portal using the following credentials:</p><br><p>Login ID: <strong><span style='color:#0000CD;'>".$this->data->aa_id."</span></strong></p><p >Password: <strong><span style='color:#0000FF;'>your existing password</span></strong></p>";
+                    $subject = "Assessment Agency Account Re-Activated  | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Account has been Deactivated by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>If you think this is by mistake. Please Contact SCPwD.</p>";
+                    $subject = "Assessment Agency Account Deactivated | SCPwD";
+                }
                 $dataToSend = [
                     'initial' => 'Important',
                     'name' => $this->data->name,
-                    'messagedata' => "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Account has been Deactivated by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>If you think this is by mistake. Please Contact SCPwD.</p>",
-                    'confirmBtnText' => 'Try Loging in',
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
                     'confirmBtnLink' => route('agency.login'),
                 ];
-                $subject = "Assessment Agency Account Deactivated | SCPwD";
                 break;
             case 'asacceptreject':
                 if($this->data->status){
@@ -66,6 +62,22 @@ class AAMail extends Mailable
                 } else {
                     $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Assessor <span style='color:#0000CD;'>".$this->data->name."</span> has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can start over again whenever you want.</p>";
                     $subject = "Assessor Request Rejected | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->aa_name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('agency.login'),
+                ];
+                break;
+            case 'asactivedeactive':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Assessor ".$this->data->name." (ID: <span style='color:#0000CD'>".$this->data->as_id."</span>) has been Re-Activated by SCPwD. For More Details on This Kindly login to your Account</p>";
+                    $subject = "Assessor Re-Activated | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Assessor ".$this->data->name." (ID: <span style='color:#0000CD'>".$this->data->as_id."</span>) has been Deactivated by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>If you think this is by mistake. Please Contact SCPwD.</p>";
+                    $subject = "Assessor Deactivated | SCPwD";
                 }
                 $dataToSend = [
                     'initial' => 'Important',

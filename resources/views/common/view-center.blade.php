@@ -33,9 +33,6 @@
                                             <span class="d-flex justify-content-between">
                                                 <small class="text-muted">SPOC Name</small>
                                                 @auth('partner')
-                                                {{-- @if (Gate::forUser(Auth::guard('partner')->user())->allows('partner-center-profile-active-verified', $centerData))
-                                                    hi
-                                                @endif --}}
                                                 @if (Auth::guard('partner')->user()->can('partner-center-profile-active-verified', $centerData))
                                                     <span class="badge badge-success"onclick="update('{{$centerData->spoc_name}},name')">Change</span>
                                                 @endif

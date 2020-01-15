@@ -27,7 +27,7 @@ class AdminAssessorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['admin','prevent-back-history']);
+        $this->middleware(['admin','prevent-back-history']); 
     }
 
     protected function guard()
@@ -58,175 +58,77 @@ class AdminAssessorController extends Controller
         return view('admin.assessors.pending-assessors')->with(compact('data'));
     }
 
-    // public function pendingBatch(){
-    //     $pending_as_batch=AssessorBatch::where('verified',0)->orderBy('id', 'desc')->get()->unique('as_id');
-
-    //     return view('admin.assessors.pending-batch')->with(compact('pending_as_batch')); 
-    // }
-
-    // public function viewBatch($id){
-    //     $id=AppHelper::instance()->decryptThis($id);
-    //     $assessorBatch=AssessorBatch::where('as_id',$id)->where('verified',0)->get();
-    //     return view('admin.assessors.pending-batch-details')->with(compact('assessorBatch'));
-    // }
-
-    // public function rejectBatch(Request $request){
-    //     $data=AssessorBatch::findOrFail($request->id);
-    //     $data['note'] = $request->note;
-    //     // Mail::to($data->agency->email)->send(new ASRejectMail($data));
-
-    //      /* Notification For Agency */
-    //      $notification = new Notification;
-    //      $notification->rel_id = $data->assessor->agency->id;
-    //      $notification->rel_with = 'agency';
-    //      $notification->title = 'Assessor Batch Rejected';
-    //      $notification->message = "One of your Batch has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
-    //      $notification->save();
-    //      /* End Notification For Agency */
-    //      $data->delete();
-    //      return response()->json(['status' => 'done'],200);
-    // }
-
-    // public function acceptBatch($id){
-    //     $as_batch_id=AppHelper::instance()->decryptThis($id);
-    //     $assessor_batch=AssessorBatch::findOrFail($as_batch_id);
-    //     $assessor_batch->verified=1;
-    //     $assessor_batch->save();
-
-    //     /* Notification For Agency */
-    //     $notification = new Notification;
-    //     $notification->rel_id = $assessor_batch->assessor->agency->id;
-    //     $notification->rel_with = 'agency';
-    //     $notification->title = 'Assessor Batch Activated';
-    //     $notification->message = "Assessor (BATCH ID ".$assessor_batch->batch->batch_id.") has been <span style='color:blue;'>Accepted</span>.";
-    //     $notification->save();
-    //     /* End Notification For Agency */
-
-    //     alert()->success('Assessor Batch has been Activated', 'Job Done')->autoclose(3000);
-    //     return Redirect()->back();
-    // }
-
-    public function assessorDeactive(Request $request){
-
-        $assessor=Assessor::findOrFail($request->id);
-        $assessor->status=0;
-        $assessor->save(); 
-
-        $reason = new Reason;
-        $reason->rel_id = $assessor->id;
-        $reason->rel_with = 'assessor';
-        $reason->reason = $request->reason;
-        $reason->save();
-
-        /* Notification For Partner */
-        $notification = new Notification;
-        $notification->rel_id = $assessor->aa_id;
-        $notification->rel_with = 'agency';
-        $notification->title = 'assessor Deactivated';
-        $notification->message = "assessor (ID $assessor->as_id) has been <span style='color:blue;'>Deactivated</span>.";
-        $notification->save();
-        /* End Notification For Partner */
-
-        return response()->json(['status' => 'done'],200);
-    }
-
-    public function assessorActive($id){
-        
-        $as_id=AppHelper::instance()->decryptThis($id);
-        $assessor=Assessor::findOrFail($as_id);
-        $assessor->status=1;
-        $assessor->save();
-
-        /* Notification For Partner */
-        $notification = new Notification;
-        $notification->rel_id = $assessor->aa_id;
-        $notification->rel_with = 'agency';
-        $notification->title = 'Assessor Activated';
-        $notification->message = "Assessor (ID $assessor->as_id) has been <span style='color:blue;'>Activated</span>.";
-        $notification->save();
-        /* End Notification For Partner */
-
-        alert()->success("Assessor has been <span style='color:blue;font-weight:bold'>Activated</span>", 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
-    }
-
-    // public function assessorAccept($id){
-        
-    //     $id=AppHelper::instance()->decryptThis($id);
-    //     $assessor=Assessor::findOrFail($id);
-    //     if($assessor->verified==1){
-    //         alert()->error("This Assessor already <span style='color:blue;'>Approved</span>", "Done")->html()->autoclose(2000);
-    //         return Redirect()->back(); 
-    //     }
-    //     $data=DB::table('assessors')
-    //     ->select(\DB::raw('SUBSTRING(as_id,3) as as_id'))
-    //     ->where("as_id", "LIKE", "AS%")->get();
-    //    // dd(count($data));
-    //     $year = date('Y');
-    //     if (count($data) > 0) {
-
-    //         $priceprod = array();
-    //             foreach ($data as $key=>$data) {
-    //                 $priceprod[$key]=$data->as_id;
-    //             }
-    //             $lastid= max($priceprod);
-               
-    //             $new_asid = (substr($lastid, 0, 4)== $year) ? 'AS'.($lastid + 1) : 'AS'.$year.'000001' ;
-    //         //dd($new_tpid);
-    //     } else {
-    //         $new_asid = 'AS'.$year.'000001';
-    //     }
-
-    //     $fmonth=date('F');
-    //     $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-    //     $assessor_password = str_random(8);
-    //     $assessor->as_id=$new_asid;
-    //     $assessor->password=Hash::make($assessor_password);
-    //     $assessor->f_month=$fmonth;
-    //     $assessor->f_year=$fyear;
-
-    //     $assessor->verified=1;
-    //     $assessor->save();
-
-    //       /* Notification For Agency */
-    //       $notification = new Notification;
-    //       $notification->rel_id = $assessor->aa_id;
-    //       $notification->rel_with = 'agency';
-    //       $notification->title = 'Assessor has been Approved';
-    //       $notification->message = "assessor <br>(ID: <span style='color:blue;'>$new_asid</span>) has been Approved";
-    //       $notification->save();
-    //       /* End Notification For Agency */
-    //       $assessor['password']=$assessor_password;
-    //       Mail::to($assessor->email)->send(new ASConfirmationMail($assessor));
-
-    //       alert()->success('Assessor has been Approved', 'Job Done')->autoclose(3000);
-    //       return Redirect()->back();
-
-    // }
-
-    // public function assessorReject(Request $request){
-    //     $data=Assessor::findOrFail($request->id);
-    //     $data['note'] = $request->note;
-    //      Mail::to($data->agency->email)->send(new ASRejectMail($data));
-    //      /* Notification For Agency */
-    //      $notification = new Notification;
-    //      $notification->rel_id = $data->aa_id;
-    //      $notification->rel_with = 'agency';
-    //      $notification->title = 'Assessor Rejected';
-    //      $notification->message = "One of your Assessor has been (Spoc Name: <span style='color:blue;'>Rejected</span>) ";
-    //      $notification->save();
-    //      /* End Notification For Agency */
-    //      AssessorLanguage::where('as_id',$request->id)->delete();
-    //      AssessorJobRole::where('as_id',$request->id)->delete();
-         
-    //      $data->delete();
-    //      return response()->json(['status' => 'done'],200);
-    // }
 
 
-    public function assessorAction(Request $request)
-    {
+    // * Assessor Activation Deactvation
+
+        public function assessorStatusAction(Request $request){
+            if ($request->has('data')) {
+    
+                if ($id=AppHelper::instance()->decryptThis($request->data)) {
+                    $data = explode(',',$id);
+                    $assessor = Assessor::find($data[0]);
+    
+                    if ($assessor) {
+                        $dataMail = collect();
+                        $dataMail->tag = 'asactivedeactive'; // * Mailling Tag
+                        $dataMail->aa_name = $assessor->agency->name;
+                        $dataMail->as_id = $assessor->as_id;
+                        $dataMail->status = !$assessor->status;
+                        $dataMail->name = $assessor->name;
+                        $dataMail->email = $assessor->email;
+
+                        if ($assessor->status) {
+                            if (!is_null($request->reason) && $request->reason != '') {
+                                $assessor->status = 0;
+                                $assessor->save();
+                                $reason = new Reason;
+                                $reason->rel_id = $data[0];
+                                $reason->rel_with = 'assessor';
+                                $reason->reason = $request->reason;
+                                $reason->save();
+    
+                                $dataMail->reason = $request->reason; 
+                                
+                                AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Deactivated',"AS (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
+                                $array = array('type' => 'success', 'message' => "Assessor Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
+                            } else {
+                                $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                            }
+                        } else {
+                            $assessor->status = 1;
+                            $assessor->save();
+    
+                            AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Activated',"TC (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
+                            $array = array('type' => 'success', 'message' => "Assessor Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
+                        }
+    
+                        if ($assessor->agency->status) {
+
+                            event(new ASMailEvent($dataMail));
+                            $dataMail->name = $assessor->agency->name;
+                            $dataMail->email = $assessor->agency->email;
+                            event(new AAMailEvent($dataMail));
+
+                        }
+                        return response()->json($array,200);
+                    } else {
+                        return response()->json(array('type' => 'error', 'message' => "We Could not find this Assessor Account"),400);
+                    }
+    
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "Requested Account is not Found"),400);
+                }
+            }        
+        }
+    
+    // * End Assessor Activation Deactvation
+
+
+    // * Assessor Approve Reject
+
+    public function assessorAction(Request $request){
+
         if ($req=AppHelper::instance()->decryptThis($request->id)) {
             $data = explode(',',$req);
             $assessor = Assessor::findOrFail($data[0]);
@@ -315,6 +217,10 @@ class AdminAssessorController extends Controller
         }
     }
 
+    // * End Assessor Approve Reject
+
+
+    
     
     public function fetchJobrole(Request $request){
         $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get(); 

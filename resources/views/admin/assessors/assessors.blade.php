@@ -23,33 +23,37 @@
                                         <tr>
                                             <th>#</th>
                                             <th>AA ID</th>
-                                            <th>Assessor Name</th>
+                                            <th>AS ID</th>
+                                            <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
+                                            <th>Overall Status</th>
                                             <th>View</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            @foreach ($data as $key=>$item)
-                                                
-                                                <tr>
+                                        @foreach ($data as $key=>$item)
+                                            <tr>
                                                 <td>{{$key+1}}</td>
                                                 <td>{{$item->agency->aa_id}}</td>
+                                                <td>{{$item->as_id}}</td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
-                                                <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                                @if($item->status)
+                                                <td style="color:{{($item->status && $item->agency->status)?'green':'red'}}">{{($item->status && $item->agency->status)?'Active':'Inactive'}}</td>
+                                                {{-- <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td> --}}
+                                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.as.assessor.view',Crypt::encrypt($item->id))}}'" >View</button></td>
+                                                <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->as_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                            
+                                                {{-- @if($item->status)
                                                     <td><a class="badge bg-red margin-0" href="javascript:showCancelMessage({{$item->id}})">Deactivate</a></td>
                                                 @else
                                                     <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                                @endif
+                                                @endif --}}
                                             </tr>
-                                          
-                                            @endforeach
-                                           
-                                        </tbody>
+                                        @endforeach
+                                    </tbody>
                                 </table>
                                 </div>
                         </div>
@@ -117,107 +121,66 @@
 @stop
 @section('page-script')
 <script>
-// function showCancelMessage(f) {
-//     swal({
-//         title: "Deactivation!",
-//         text: "Write Reason for Deactivation:",
-//         type: "input",
-//         showCancelButton: true,
-//         closeOnConfirm: false,
-//         animation: "slide-from-top",
-//         showLoaderOnConfirm: true,
-//         inputPlaceholder: "Write reason"
-//     }, function (inputValue) {
-//         if (inputValue === false) return false;
-//         if (inputValue === "") {
-//             swal.showInputError("You need to write something!"); return false
-//         }
-//         var id=f;
-//         var reason=inputValue;
-//         let _token = $("input[name='_token']").val();
-   
-//         $.ajax({
-//         type: "POST",
-//         url: "{{route('admin.as.assessor.deactive')}}",
-//         data: {_token,id,reason},
-//         success: function(data) {
-//            // console.log(data);
-//            swal({
-//         title: "Deactive",
-//         text: "Assessor Record Deactivated",
-//         type:"success",
-        
-//         showConfirmButton: true
-//     },function(isConfirm){
-
-//         if (isConfirm){
-       
-//         window.location="{{route('admin.as.assessors')}}";
-
-//         } 
-//         });
-    
-//         }
-//     });
-        
-//     });
-// }
-
-function showCancelMessage(f) { 
-        var id=f;
-       let _token = $("input[name='_token']").val();
-        swal({
-            title: "Deactive!",
-            text: "Write Reason for Deactive:",
-            content: {
-                element: "input",
-                attributes: {
-                    type: "text",
-                },
+    function callajax(val, dataString){
+        $.ajax({
+            url: "{{ route('admin.as.assessor.status-action') }}",
+            method: "POST",
+            data: dataString,
+            success: function(data){
+                var SuccessResponseText = document.createElement("div");
+                SuccessResponseText.innerHTML = data['message'];
+                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
             },
+            error:function(data){
+                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+            }
+        });
+    }
+
+    function popup(v){
+        var data = v.split(',');
+        var confirmatonText = document.createElement("div");
+        var color=''; var text=''; var displayText='';
+        var _token=$('[name=_token]').val();
+        var assessor=data[2];
+        if (data[1]==1) {
+                color = 'red'; text = 'Deactivate'; 
+                displayText=assessor+'\nProvide Assessor Deactivation Reason ';
+                confirmatonText="input"
+            } else {
+                color = 'green'; text = 'Activate';
+                displayText = "Are you Sure ?";
+                confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:"+color+";'>"+text+"</span> <br> <span style='font-weight:bold; color:blue;'>"+assessor+"</span> Assessor";
+            }
+        
+        swal({
+            text: displayText,
+            content: confirmatonText,
             icon: "info",
             buttons: true,
             buttons: {
-                    cancel: "Cencel",
+                    cancel: "No, Cencel",
                     confirm: {
-                        text: "Confirm",
+                        text: "Confirm Update Status",
                         closeModal: false
                     }
                 },
             closeModal: false,
             closeOnEsc: false,
         }).then(function(val){
-            var dataString = {_token:_token, id:id,reason:val};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('admin.as.assessor.deactive') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML ="Assessor Record <span style='font-weight:bold; color:red'>Deactivated</span>";
-                        swal({title: "Deactive", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                    },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
-            } else if (val!=null) {
-                swal('Attention', 'You need to write something!', 'info');
+            if (val != null) {
+                if (val === '') {
+                    swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
+                } else if (val === true) {
+                    var dataString = {_token, data:data[0], reason:null};
+                    callajax(val,dataString);
+                } else {
+                    var dataString = {_token, data:data[0], reason:val};
+                    callajax(val,dataString);
+                }
             }
         });
-}
-//======================================
-
-
-
-//==============================
-
-
-
+    }
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
@@ -226,5 +189,4 @@ function showCancelMessage(f) {
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 @stop
