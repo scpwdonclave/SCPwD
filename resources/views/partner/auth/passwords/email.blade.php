@@ -7,7 +7,7 @@
       <span class="login100-form-title m-b-10">Training Partner Password Reset</span>      
       
       @if (session('status'))
-      <div class="alert alert-success" role="alert">
+      <div class="alert alert-success text-center" role="alert">
           {{ session('status') }}
       </div>
       @endif

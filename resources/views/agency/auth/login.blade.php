@@ -6,12 +6,11 @@
       @csrf  
       <span class="login100-form-title p-b-10"> <img class="login-logo" src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
       <span class="login100-form-title m-b-10">Assessment Agency Login</span>
-      @if(Session::has('message'))
-        <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+      @if(Session::has('warning'))
+          <div class="alert alert-block alert-danger text-center">
+              {{ nl2br(Session::get('warning')) }}
+          </div>
       @endif
-        @if(Session::has('message'))
-            <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
-        @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
               <input type="text" class="input100" name="aa_id" value="{{ old('aa_id') }}" placeholder="User ID" required autofocus>                                

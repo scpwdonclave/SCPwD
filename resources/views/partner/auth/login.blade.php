@@ -9,6 +9,11 @@
       @if(Session::has('message'))
         <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
       @endif
+      @if(Session::has('warning'))
+          <div class="alert alert-block alert-danger text-center">
+              {{ nl2br(Session::get('warning')) }}
+          </div>
+      @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
               <input type="text" class="input100" name="tp_id" value="{{ old('tp_id') }}" placeholder="User ID" required autofocus>                                

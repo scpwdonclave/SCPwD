@@ -15,6 +15,7 @@ return [
 
     'failed' => 'Wrong Credentials or Your Account is Deactivated.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'inactive' => 'Your Partner Account is Inactive. Contact Training Partner',
+    'partner_inactive' => 'Your Partner Account is Inactive. Contact Training Partner',
+    'agency_inactive' => 'Your Agency Account is Inactive. Contact Assessment Agency',
 
 ];

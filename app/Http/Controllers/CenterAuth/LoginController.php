@@ -67,7 +67,7 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
-            $this->username() => [trans(($request->partner_status)?'auth.failed':'auth.inactive')],
+            $this->username() => [trans(($request->partner_status)?'auth.failed':'auth.partner_inactive')],
             ]);
 
     }

@@ -6,6 +6,11 @@
       @csrf  
       <span class="login100-form-title p-b-10"> <img class="login-logo" src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
       <span class="login100-form-title m-b-10">Admin Login</span>
+      @if(Session::has('warning'))
+          <div class="alert alert-block alert-danger text-center">
+              {{ nl2br(Session::get('warning')) }}
+          </div>
+      @endif
       <div class="wrap-input100 m-b-20">
           <div class="form-group">
               <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>                               

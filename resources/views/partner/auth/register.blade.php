@@ -7,7 +7,7 @@
        <span class="login100-form-title p-b-10"> <img class="login-logo" src="{{ asset('assets/images/scpwd-logo.png') }}" alt="" srcset="" /> </span>
        <span class="login100-form-title m-b-10">Training Partner Registration</span>
          @if(Session::has('message'))
-             <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+             <p class="alert {{ Session::get('alert-class', 'alert-info') }} text-center">{{ Session::get('message') }}</p>
          @endif
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
