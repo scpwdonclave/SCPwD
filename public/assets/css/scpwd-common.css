@@ -28,7 +28,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Hover Button */
-  button[type=button] {
+  button[type=button]  {
+    cursor:pointer;
+  }
+
+  .blk {
     cursor:pointer;
   }
 /* End Hover Button */

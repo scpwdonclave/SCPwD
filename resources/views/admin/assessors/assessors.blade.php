@@ -28,6 +28,7 @@
                                             <th>Mobile</th>
                                             <th>View</th>
                                             <th>Action</th>
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -47,6 +48,7 @@
                                                 @elseif($item->status==0)
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
                                                 @endif
+                                              
                                             </tr>
                                           
                                             @endforeach

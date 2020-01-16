@@ -43,7 +43,7 @@
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
                                             @if (is_null($item->batch->assessorbatch))
-                                            <td>{{Config::get('constants.nullidtext')}}</td>
+                                            <td>N/A</td> 
                                             @else
                                             <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
                                             @endif
