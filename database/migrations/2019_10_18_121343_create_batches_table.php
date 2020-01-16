@@ -27,6 +27,10 @@ class CreateBatchesTable extends Migration
             $table->string('batch_start');
             $table->string('batch_end');
             $table->string('assessment');
+            /* Financial Year and Month */
+            $table->string('f_month')->nullable();
+            $table->string('f_year')->nullable();
+            /*End of Financial Year and Month */
             $table->boolean('status')->default(0);
             $table->boolean('verified')->default(0); 
             $table->boolean('completed')->default(0);

@@ -29,6 +29,7 @@
                                             <th>Overall Status</th>
                                             <th>View</th>
                                             <th>Action</th>
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -41,15 +42,8 @@
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
                                                 <td style="color:{{($item->status && $item->agency->status)?'green':'red'}}">{{($item->status && $item->agency->status)?'Active':'Inactive'}}</td>
-                                                {{-- <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td> --}}
                                                 <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.as.assessor.view',Crypt::encrypt($item->id))}}'" >View</button></td>
                                                 <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->as_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
-                                            
-                                                {{-- @if($item->status)
-                                                    <td><a class="badge bg-red margin-0" href="javascript:showCancelMessage({{$item->id}})">Deactivate</a></td>
-                                                @else
-                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                                @endif --}}
                                             </tr>
                                         @endforeach
                                     </tbody>

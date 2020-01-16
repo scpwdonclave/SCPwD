@@ -50,6 +50,14 @@
             </li>
             @auth('admin')
                 @if (Request::segment(1) === 'admin')
+                <li class="{{ Request::segment(2) === 'mis' ? 'active open' : null }}">
+                    <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>MIS</span></a>
+                    <ul class="ml-menu">
+                        <li class="{{ Request::is('admin/mis/quick_view') ? 'active' : null }}"><a href="{{route('admin.mis.quick_view')}}"> Quick View</a></li>
+                        <li class="{{ Request::is('admin/mis/summary') ? 'active' : null }}"><a href="{{route('admin.mis.summary')}}"> Summary</a></li>
+                        {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
+                    </ul>
+                </li> 
                 <li class="{{ Request::segment(2) === 'training_partners' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Training Partners</span></a>
                     <ul class="ml-menu">

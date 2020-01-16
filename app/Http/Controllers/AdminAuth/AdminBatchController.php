@@ -147,7 +147,12 @@ class AdminBatchController extends Controller
                         }
                         
                         //dd($new_batchid); 
+                        $fmonth=date('F');
+                        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+
                         $data->batch_id=$new_batchid;
+                        $data->f_month=$fmonth;	
+                        $data->f_year=$fyear;	
                         $data->status=1;
                         $data->verified=1;
                         $data->save();

@@ -77,7 +77,7 @@ class AdminAgencyController extends Controller
         $fmonth=date('F');
         $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
 
-        $agency_password = str_random(8);
+        $agency_password = str_random(8); 
 
         $agency = new Agency;
         $agency->aa_id=$new_aaid;

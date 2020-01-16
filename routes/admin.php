@@ -19,6 +19,19 @@ Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@depart
 Route::get('profile', 'AdminAuth\AdminHomeController@profile')->name('profile');
 Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('profile');
 
+/* Admin Mis Section */
+Route::get('mis', function () { return redirect(route('admin.mis.quick_view')); });
+Route::get('mis/quick_view', 'AdminAuth\AdminMisController@mis')->name('mis.quick_view');
+Route::get('mis/summary', 'AdminAuth\AdminMisController@summary')->name('mis.summary');
+Route::get('mis/summary/TP-TC-Wise', 'AdminAuth\AdminMisController@pageTpTcWise')->name('mis.tp-tc_wise_block');
+Route::get('mis/summary/Candidate-Wise', 'AdminAuth\AdminMisController@pageCandidateWise')->name('mis.candidate_wise_block');
+Route::get('mis/summary/Job-Disability-Wise', 'AdminAuth\AdminMisController@pageJobDisabilityWise')->name('mis.job_dsbl_wise_block');
+
+Route::post('mis/summary/TP-TC-Wise', 'AdminAuth\AdminMisController@tpTcWiseSummary')->name('mis.tp-tc_wise_enrolled');
+Route::post('mis/summary/Candidate-Wise', 'AdminAuth\AdminMisController@candidateWiseSummary')->name('mis.candidate_wise_enrolled');
+Route::post('mis/summary/Job-Disability-Wise', 'AdminAuth\AdminMisController@jobDisabilityWiseSummary')->name('mis.job_disability_wise_enrolled');
+
+
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });
 Route::get('training_partners/partners', 'AdminAuth\AdminPartnerController@partners')->name('tp.partners');

@@ -16,7 +16,7 @@ class StateDistrictTableSeeder extends Seeder
 
         \DB::table('state_district')->delete();
         
-        \DB::table('state_district')->insert(array (
+        \DB::table('state_district')->insert(array ( 
             0 => 
             array (
                 'id' => 1,

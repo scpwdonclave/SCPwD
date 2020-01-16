@@ -57,7 +57,7 @@ class AssessorBatchController extends Controller
         if(!$batch->status || !$batch->tpjobrole->status || Carbon::now() < Carbon::parse($batch->assessment) || !is_null($batch->batchassessment)){
             abort(404);
         }
-        return view('assessor.candidate-marks')->with(compact('batch'));
+        return view('assessor.candidate-marks')->with(compact('batch')); 
     }
 
     public function candidateMarksInsert(Request $request){
