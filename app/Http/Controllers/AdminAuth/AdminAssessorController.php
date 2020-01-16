@@ -220,8 +220,37 @@ class AdminAssessorController extends Controller
     // * End Assessor Approve Reject
 
 
-    
-    
+    public function assessorApi(Request $request)
+    {
+        switch ($request->section) {
+            case 'aadhaar':
+                $data = AppHelper::instance()->checkDoc($request->checkredundancy);
+                $message = 'This Aadhaar is already present';
+            break;
+            case 'mobile':
+                $data = AppHelper::instance()->checkContact($request->checkredundancy);
+                $message = 'This Mobile No is already taken';
+            break;
+            case 'email':
+                $data = AppHelper::instance()->checkEmail($request->checkredundancy);
+                $message = 'This Email is already taken';
+            break;
+            default:
+                return abort(401);
+            break;
+
+        }
+        if ($data['status']) {
+            return response()->json(['success' => true]);
+        } else {
+            if ($data['user'] === 'assessor' && $data['userid']== $request->id) {
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false, 'message'=>$message]);
+            }
+        }
+    }
+
     public function fetchJobrole(Request $request){
         $jobroles=DB::table('job_roles')->where('sector_id','=',$request->sector)->get(); 
         return response()->json(['jobroles' => $jobroles],200); 

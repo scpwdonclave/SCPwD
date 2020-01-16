@@ -230,7 +230,7 @@ class AdminAgencyController extends Controller
 
                     $dataMail->aa_id = $agency->aa_id;
                     $dataMail->name = $agency->name;
-                    $dataMail->email = $agency->email;
+                    $dataMail->email = $agency->email; 
 
                     if ($agency->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
@@ -434,14 +434,15 @@ class AdminAgencyController extends Controller
         alert()->success("Batch(es) has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
         return redirect()->back();
     }
-
+    
     public function agencyBatchDelete(Request $request){
         $agencyBatch=AgencyBatch::findOrFail($request->id);
-
+        
         if ($agencyBatch->batch->assessorbatch) {
             return response()->json(['status' => 'fail'],200);
         } else {
             $agencyBatch->delete();
+            AppHelper::instance()->writeNotification($agencyBatch->agency->id,'agency','Batch Removed',"Admin has <span style='color:red;'>removed</span> a batch from your batch list.");
             return response()->json(['status' => 'done'],200);
         }
     }

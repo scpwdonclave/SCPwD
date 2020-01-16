@@ -29,25 +29,20 @@
                         <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                   
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Action</th>
-                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($assessor->assessorBatch as $asbatch)
-                                <tr>
-                                
-                                <td>{{$asbatch->batch->batch_id}}</td>
-                                <td>{{$asbatch->batch->batch_start}}</td>
-                                <td>{{$asbatch->batch->batch_end}}</td>
-                                <td class="text-center"><button class="badge bg-red margin-0" onclick="deleteConfirm({{$asbatch->id}});">Remove</button></td>
-
-                                {{-- <td class="text-{{$asbatch->verified?'success':'danger'}}"><strong>{{$asbatch->verified?'Verified':'Not Verified'}}</strong></td> --}}
-                                </tr>
+                                    <tr>
+                                        <td>{{$asbatch->batch->batch_id}}</td>
+                                        <td>{{$asbatch->batch->batch_start}}</td>
+                                        <td>{{$asbatch->batch->batch_end}}</td>
+                                        <td class="text-center"><button type="button" class="badge bg-red margin-0" onclick="deleteConfirm({{$asbatch->id}});">Remove</button></td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -70,9 +65,7 @@
                                     <select class="form-control show-tick" data-live-search="true" name="job" onchange="fetchBatch(this.value)" data-dropup-auto='false' required>
                                         <option value="">--select--</option>
                                         @foreach ($assessor->assessorJob as $item)
-                                       
-                                        <option value="{{$item->jobRoles->id}}">{{ $item->jobRoles->job_role }}</option>
-                                       
+                                            <option value="{{$item->jobRoles->id}}">{{ $item->jobRoles->job_role }}</option>
                                         @endforeach
                                     </select>
                                   <input type="hidden" name="as_id" value="{{$assessor->id}}">
@@ -82,12 +75,11 @@
                     
                         <div class="row">
                             <div class="col-sm-12">
-                                    <label for="batch">Batch <span style="color:red"> <strong>*</strong></span></label>
-                                    <div class="form-group form-float">
-                                        <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
-                                            
-                                        </select>
-                                    </div>
+                                <label for="batch">Batch <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" data-live-search="true" name="batch[]" id="batch" data-dropup-auto='false' multiple required>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">

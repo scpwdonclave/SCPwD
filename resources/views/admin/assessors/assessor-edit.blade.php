@@ -539,57 +539,53 @@
                 }
 
    /* Check Redundancy */
-        var dup_email_tag = true;
-        var dup_mobile_tag = true;
-        var dup_aadhaar_tag = true;
+   var dup_email_tag = false;
+        var dup_mobile_tag = false;
+        var dup_aadhaar_tag = false;
        
         function checkduplicacy(val){
-            var _token = $('[name=_token]').val();
-            let as_id = $('[name=as_id]').val();
-            let value = $('[name='+val+']').val();
            
-            let dataString = { checkredundancy : value, section: val,as_id:as_id, _token: _token};
-            $.ajax({
-                url: "{{route('admin.as.assessor.api')}}",
-                method: "POST",
-                data: dataString,
-                success: function(data){
-                       // console.log(data);
-                    if (data.success) {
-                        $('#'+val+'_error').html('');
-                        if (val == 'email') {
-                            dup_email_tag = true;
-                        } else  if (val == 'mobile'){
-                            dup_mobile_tag = true;
-                        } else{
-                            dup_aadhaar_tag = true;
-                        }
-                    } else {
-                        if(val=='aadhaar'){
-
-                        $('#'+val+'_error').html('Aadhaar already exists');
-                        }else{
-
-                        $('#'+val+'_error').html(val+' already exists');
-                        }
-                        if (val == 'email') {
-                            dup_email_tag = false;
-                        } else  if (val == 'mobile'){
-                            dup_mobile_tag = false; 
-                        }else{
-                            dup_aadhaar_tag = false; 
-                        } 
-                    }
-                },
-
-                error:function(data){
-                   // console.log(data);
-                    
-                    swal('Oops!','Something Went Wrong','error');
-                    
-                } 
-            });
-        }
+            
+           dup_email_tag = true;
+           dup_mobile_tag = true;
+           dup_aadhaar_tag = true;
+               var _token = $('[name=_token]').val();
+               
+               let value = $('[name='+val+']').val();
+              
+               let dataString = { checkredundancy: value, section: val, _token: _token, id: '{{$assessor->id}}' };
+               $.ajax({
+                   url: "{{route('admin.as.assessor.api')}}",
+                   method: "POST",
+                   data: dataString,
+                   success: function(data){
+                       
+                       if (data.success) {
+                           $('#'+val+'_error').html('');
+                           if (val == 'email') {
+                               dup_email_tag = false;
+                           } else  if (val == 'mobile'){
+                               dup_mobile_tag = false;
+                           } else{
+                               dup_aadhaar_tag = false;
+                           }
+                       } else {
+                           $('#'+val+'_error').html(data.message);
+                           if (val == 'email') {
+                               dup_email_tag = true;
+                           } else  if (val == 'mobile'){
+                               dup_mobile_tag = true;
+                           } else{
+                               dup_aadhaar_tag = true;
+                           }
+                       }
+                   },
+   
+                   error:function(data){
+                       swal('Oops!','Something Went Wrong','error');
+                   } 
+               });
+           }
     /* End Check Redundancy */
 
     function myFunction2(){

@@ -123,7 +123,7 @@ Route::get('assessor/assessor-action/{id}/{reason?}', 'AdminAuth\AdminAssessorCo
 Route::post('assessors/fetch-jobrole', 'AdminAuth\AdminAssessorController@fetchJobrole')->name('aa.fetch-jobrole'); 
 Route::get('assessor/assessor-edit/{id}', 'AdminAuth\AdminAssessorController@assessorEdit')->name('as.edit.assessor');
 Route::post('assessor/assessor-update', 'AdminAuth\AdminAssessorController@assessorUpdate')->name('as.update.assessor');
-Route::post('assessors/assessor-api', 'AssessorApiController@assessorApi')->name('as.assessor.api'); 
+Route::post('assessors/assessor-api', 'AdminAuth\AdminAssessorController@assessorApi')->name('as.assessor.api'); 
 
 /* Assessment */
 Route::get('assessment/all-assessment', 'AdminAuth\AdminAssessmentController@allAssessment')->name('assessment.all-assessment');

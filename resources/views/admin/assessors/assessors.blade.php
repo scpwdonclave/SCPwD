@@ -3,7 +3,6 @@
 @section('parentPageTitle', 'Assessor')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
@@ -61,63 +60,6 @@
                 </div>
             </div>
 </div>
-
-{{-- <div class="container-fluid">
-    <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>All</strong> DeLinked Trainer </h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>TP ID</th>
-                                        <th>Trainer Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile</th>
-                                        <th>View</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                            @php
-                                              $j=1;  
-                                            @endphp
-                                        @foreach ($dlinkData as $key=>$item)
-                                         
-                                            @if (!$item->attached)
-                                                <tr>
-                                                    <td>{{$j}}</td>
-                                                    <td>{{$item->partner->tp_id}}</td>
-                                                    <td>{{$item->name}}</td>
-                                                    <td>{{$item->email}}</td>
-                                                    <td>{{$item->mobile}}</td>
-                                                    <td><a class="badge bg-green margin-0" href="{{route('admin.tc.dlink.trainer.view',['id'=>$item->id])}}" >View</a></td>
-                                                    @if($item->status)
-                                                        <td><button class="badge bg-red margin-0" onclick="dlinkTrainerDeactive({{$item->id}})">Deactivate</button></td>
-                                                    @elseif(!$item->status)
-                                                        <td><a class="badge bg-green margin-0" href="{{route('admin.tr.dlink.trainer.active',['id'=>Crypt::encrypt($item->id)])}}" >Activate</a></td>
-                                                    @endif
-                                                </tr>
-                                            @endif
-                                        @php
-                                            $j++; 
-                                        @endphp
-                                        @endforeach
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div> --}}
 @stop
 @section('page-script')
 <script>

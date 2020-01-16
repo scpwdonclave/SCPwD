@@ -177,14 +177,5 @@ function deleteConfirm(v){
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 
-
-{{-- <script>
-     $("#holiday_date").datepicker({
-        format: 'dd-mm-yyyy',
-        time: false,
-        autoclose:true
-    });
-</script> --}}
 @endsection
