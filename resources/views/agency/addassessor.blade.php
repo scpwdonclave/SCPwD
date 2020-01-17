@@ -30,6 +30,15 @@
                     <a class="btn btn-primary btn-round waves-effect" href="{{route('agency.assessors')}}">My Assessor</a> 
                 </div>
                 <div class="body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form id="form_assessor" method="POST" action="{{route('agency.as.assessor.insert')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

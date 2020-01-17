@@ -92,8 +92,8 @@ class ASFormValidation extends FormRequest
             'edu_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             
             'relevant_sector' => 'required|numeric',
-            'exp_year' => 'required|numeric',
-            'exp_month' => 'required|numeric|max:12',
+            'exp_year' => 'nullable|numeric',
+            'exp_month' => 'nullable|numeric',
             
             'exp_dtl' => 'nullable',
             'industry_dtl' => 'nullable',
