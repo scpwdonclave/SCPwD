@@ -35,7 +35,7 @@ return [
     
     'pdf' => [
         'enabled' => true,
-        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltopdf-amd64' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"',
+        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltopdf' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"',
         'timeout' => false,
         'options' => [],
         'env'     => [],
@@ -43,7 +43,7 @@ return [
     
     'image' => [
         'enabled' => true,
-        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltopdf-amd64' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage"',
+        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltopdf' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage"',
         'timeout' => false,
         'options' => [],
         'env'     => [],
