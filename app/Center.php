@@ -41,7 +41,7 @@ class Center extends Authenticatable implements Auditable
     }
     
     public function center_jobroles(){
-        return $this->hasMany('App\CenterJobrole', 'tc_id');
+        return $this->hasMany('App\CenterJobRole', 'tc_id');
     }
 
     public function center_docs(){
