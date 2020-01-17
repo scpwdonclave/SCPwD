@@ -12,7 +12,7 @@
             <a href="{{route('admin.mis.tp-tc_wise_block')}}">
             <div class="card blk info-box-2 hover-zoom-effect twitter-widget">
                 <div class="icon"><i class="zmdi zmdi-tab zmdi-hc-2x"></i></div>
-                <span style="font-size:20px;">TP-TC Wise</span>
+                <span class="text-muted" style="font-size:20px;">TP-TC Wise</span>
             </div>
         </a>
         </div>
@@ -20,7 +20,7 @@
             <a href="{{route('admin.mis.candidate_wise_block')}}">
             <div class="card blk info-box-2 hover-zoom-effect google-widget">
                 <div class="icon"><i class="zmdi zmdi-receipt"></i></div>
-                <span style="font-size:20px;">Candidate Wise</span>
+                <span class="text-muted" style="font-size:20px;">Candidate Wise</span>
             </div>
         </a>
         </div>
@@ -28,7 +28,7 @@
             <a href="{{route('admin.mis.job_dsbl_wise_block')}}">
             <div class="card blk info-box-2 hover-zoom-effect google-widget">
                 <div class="icon"><i class="zmdi zmdi-assignment-returned"></i></div>
-                <span style="font-size:20px;">Job & Disability Wise</span>
+                <span class="text-muted" style="font-size:20px;">Job & Disability Wise</span>
             </div>
         </a>
         </div>

@@ -10,6 +10,6 @@ class AssessorJobRole extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
  
     public function jobRoles(){
-        return $this->belongsTo('App\jobRole', 'job_role_id');
+        return $this->belongsTo('App\JobRole', 'job_role_id');
     }
 }

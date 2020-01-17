@@ -23,13 +23,13 @@ Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('pr
 Route::get('mis', function () { return redirect(route('admin.mis.quick_view')); });
 Route::get('mis/quick_view', 'AdminAuth\AdminMisController@mis')->name('mis.quick_view');
 Route::get('mis/summary', 'AdminAuth\AdminMisController@summary')->name('mis.summary');
-Route::get('mis/summary/TP-TC-Wise', 'AdminAuth\AdminMisController@pageTpTcWise')->name('mis.tp-tc_wise_block');
-Route::get('mis/summary/Candidate-Wise', 'AdminAuth\AdminMisController@pageCandidateWise')->name('mis.candidate_wise_block');
-Route::get('mis/summary/Job-Disability-Wise', 'AdminAuth\AdminMisController@pageJobDisabilityWise')->name('mis.job_dsbl_wise_block');
+Route::get('mis/summary/tp-tc-Wise', 'AdminAuth\AdminMisController@pageTpTcWise')->name('mis.tp-tc_wise_block');
+Route::get('mis/summary/candidate-wise', 'AdminAuth\AdminMisController@pageCandidateWise')->name('mis.candidate_wise_block');
+Route::get('mis/summary/job-disability-wise', 'AdminAuth\AdminMisController@pageJobDisabilityWise')->name('mis.job_dsbl_wise_block');
 
-Route::post('mis/summary/TP-TC-Wise', 'AdminAuth\AdminMisController@tpTcWiseSummary')->name('mis.tp-tc_wise_enrolled');
-Route::post('mis/summary/Candidate-Wise', 'AdminAuth\AdminMisController@candidateWiseSummary')->name('mis.candidate_wise_enrolled');
-Route::post('mis/summary/Job-Disability-Wise', 'AdminAuth\AdminMisController@jobDisabilityWiseSummary')->name('mis.job_disability_wise_enrolled');
+Route::post('mis/summary/tp-tc-wise', 'AdminAuth\AdminMisController@tpTcWiseSummary')->name('mis.tp-tc_wise_enrolled');
+Route::post('mis/summary/candidate-wise', 'AdminAuth\AdminMisController@candidateWiseSummary')->name('mis.candidate_wise_enrolled');
+Route::post('mis/summary/job-disability-wise', 'AdminAuth\AdminMisController@jobDisabilityWiseSummary')->name('mis.job_disability_wise_enrolled');
 
 
 /* Admin Verify Partner */
