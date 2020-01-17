@@ -3,11 +3,11 @@
 namespace App\Listeners;
 
 use App\Mail\TCMail;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail; 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class TCMailLIstener implements ShouldQueue
+class TCMailListener implements ShouldQueue
 {
     /**
      * Create the event listener.
