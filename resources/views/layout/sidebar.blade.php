@@ -166,7 +166,7 @@
                 <li class="{{ Request::segment(2) === 'batches' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Batches</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('assessor/batches') ? 'active' : null }}"><a href="{{route('assessor.batch')}}"> Assign Batch</a></li>
+                        <li class="{{ Request::is('assessor/batches') ? 'active' : null }}"><a href="{{route('assessor.batch')}}"> Assigned Batch</a></li>
                         <li class="{{ Request::is('assessor/batches/assessment') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">All Assessments</a></li>
                         {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
                     </ul>

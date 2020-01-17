@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('parentPageTitle', 'Assessor')
 @section('content')
@@ -21,7 +20,7 @@
                 </div>
                 <div class="text-center">
                     @if (!is_null($assessor->as_id))
-                    <h6><strong>Assessor ID: {{$assessor->as_id}}</strong></h6>
+                    <h6><strong>Assessor ID: <span style="color:blue">{{$assessor->as_id}}</span></strong></h6>
                     @endif
                 </div>
                 <div class="body">
@@ -32,6 +31,7 @@
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Assessment Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -41,7 +41,8 @@
                                         <td>{{$asbatch->batch->batch_id}}</td>
                                         <td>{{$asbatch->batch->batch_start}}</td>
                                         <td>{{$asbatch->batch->batch_end}}</td>
-                                        <td class="text-center"><button type="button" class="badge bg-red margin-0" onclick="deleteConfirm({{$asbatch->id}});">Remove</button></td>
+                                        <td>{{$asbatch->batch->assessment}}</td>
+                                        <td class="text-center"><button type="button" class="badge bg-red margin-0" onclick="removeBatch({{$asbatch->id}});">Remove</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -97,139 +98,66 @@
 <script>
 
 function fetchBatch(job){
-       
-        let _token = $("input[name='_token']").val();
-        let as_id = $("input[name='as_id']").val();
-            var job=job;
-            $.ajax({
-                    url:"{{route('agency.as.fetch-batch')}}", 
-                    data:{_token,job,as_id},
-                    method:'POST',
-                    success: function(data){
-                       
-                        
-                    $('#batch').empty();
-
-                    $.each (data.batch, function (index) {
-                    var id=data.batch[index].id;
-                    var batch_id=data.batch[index].batch_id;
-                     if(!data.selbatch.includes(id)){
+    let _token = $("input[name='_token']").val();
+    let as_id = '{{$assessor->id}}';
+    $.ajax({
+        url:"{{route('agency.as.fetch-batch')}}", 
+        data:{_token,job,as_id},
+        method:'POST',
+        success: function(data){
+            $('#batch').empty();
+            $.each (data.batch, function (index) {
+                var id=data.batch[index].id;
+                var batch_id=data.batch[index].batch_id;
+                if(!data.selbatch.includes(id)){
                     $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
-
-                        }
-                    });
-                   
-                    $('#batch').selectpicker('refresh');
-
-                        }
-                     });
                 }
-
- 
-//     function deleteConfirm(id){
-//     swal({
-//         title: "Are you sure?",
-//         text: "Your Batch Data will be deleted",
-//         type: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#DD6B55",
-//         confirmButtonText: "Yes, delete it!",
-//         cancelButtonText: "No, cancel!",
-//         closeOnConfirm: false,
-//         closeOnCancel: false
-//     }, function (isConfirm) {
-//         if (isConfirm) {
-//             let _token = $("input[name='_token']").val();
-//             $.ajax({
-//                 type: "POST",
-//                 url: "{{route('agency.as.batch-delete')}}",
-//                 data: {_token,id},
-//                 success: function(data) {
-//                     if(data.status=='done'){
-//                    swal({
-//                         title: "Deleted",
-//                         text: "Batch Record Deleted",
-//                         type:"success",
-//                         showConfirmButton: true
-//                     },function(isConfirm){
-//                         if (isConfirm){
-//                             window.location="{{route('agency.assessors')}}";
-//                         }
-//                     });
-
-//                     }
-//                     else{
-//                         swal({
-//                         title: "Failed",
-//                         text: "This Batch Assessment already Completed",
-//                         type:"error",
-//                         showConfirmButton: true
-//                     },function(isConfirm){
-//                         if (isConfirm){
-//                             window.location="{{route('agency.assessors')}}";
-//                         }
-//                     });
-//                     }
-//                 }
-//             });
-//         } else {
-//              swal("Cancelled", "Your Cancel the process", "error");
-//         }
-//     });
-
-//  }
-
-function deleteConfirm(id){
-    //var data = v.split(',');
-        var confirmatonText = document.createElement("div");
-        //var color=''; var text='';
-        var _token=$('[name=_token]').val();
-        //if (data[1]==1) {color = 'red'; text = 'Deactivate';} else {color = 'green'; text = 'Activate';}
-        //var scheme=data[2];
-        confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Delete</span> This <span style='font-weight:bold; color:blue;'>Batch</span> data";
-        swal({
-            text: "Are you Sure ?",
-            content: confirmatonText,
-            icon: "info",
-            buttons: true,
-            buttons: {
-                    cancel: "No, Cencel",
-                    confirm: {
-                        text: "Confirm Delete Batch",
-                        closeModal: false
-                    }
-                },
-            closeModal: false,
-            closeOnEsc: false,
-        }).then(function(val){
-            var dataString = {_token, id:id};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('agency.as.batch-delete') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        if(data.status=='done'){
-                        SuccessResponseText.innerHTML = "Batch Record <span style='font-weight:bold; color:red;'>Deleted</span> from Assessor";
-                        setTimeout(function () {
-                            swal({title: "Job Done", content: SuccessResponseText, icon: 'success', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                        }, 2000);
-                         }else{
-                        SuccessResponseText.innerHTML = "This Batch Assessment already <span style='font-weight:bold; color:blue;'>Completed </span>";
-                        setTimeout(function () {
-                            swal({title: "Failed", content: SuccessResponseText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                        }, 2000);
-
-                         }
-                    
-                    }
-                });
-            }
-        });
+            });
+            $('#batch').selectpicker('refresh');
+        }
+    });
 }
 
 
+function removeBatch(id){
+    var confirmatonText = document.createElement("div");
+    var _token=$('[name=_token]').val();
+    confirmatonText.innerHTML = "You are about to <span style='font-weight:bold; color:red;'>Remove</span> This Assigned <span style='font-weight:bold; color:blue;'>Batch</span> from this Assessor";
+    swal({
+        text: "Are you Sure ?",
+        content: confirmatonText,
+        icon: "info",
+        buttons: true,
+        buttons: {
+                cancel: "No, Cencel",
+                confirm: {
+                    text: "Confirm Remove Batch",
+                    closeModal: false
+                }
+            },
+        closeModal: false,
+        closeOnEsc: false,
+    }).then(function(val){
+        var dataString = {_token, id:id};
+        var swalResponse = document.createElement("div");
+        if (val) {
+            $.ajax({
+                url: "{{ route('agency.as.batch-remove') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                    if(data.status){
+                        swalResponse.innerHTML = "Batch has been <span style='font-weight:bold; color:blue;'>De-Linked</span> from This Assessor";
+                        swal({title: "Job Done", content: swalResponse, icon: 'success', closeModal: true,timer: 4000, buttons: false}).then(function(){location.reload();});
+                    } else {
+                        swalResponse.innerHTML = "This Batch Assessment already <span style='font-weight:bold; color:blue;'>Completed</span>, cannot Proceed";
+                        swal({title: "Attention", content: swalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    }                    
+                }
+            });
+        }
+    });
+}
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
@@ -243,14 +171,5 @@ function deleteConfirm(id){
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 
-
-{{-- <script>
-     $("#holiday_date").datepicker({
-        format: 'dd-mm-yyyy',
-        time: false,
-        autoclose:true
-    });
-</script> --}}
 @endsection

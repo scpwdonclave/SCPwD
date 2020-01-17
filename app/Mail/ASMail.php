@@ -73,6 +73,22 @@ class ASMail extends Mailable
                     'confirmBtnLink' => route('assessor.login'),
                 ];
                 break;
+            case 'btassignremove':
+                if($this->data->status){
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Assessment Agency assigned you some Batch(es) for Assessment. For More Details on this Kindly login to your Account</p>";
+                    $subject = "Batch Assigned by Agency | SCPwD";
+                } else {
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Assessment Agency has Revoked a Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) from you.<br><p>For any kind of clearification on this Kindly contact your Agency.</p>";
+                    $subject = "Batch Revoked By Agency | SCPwD";
+                }
+                $dataToSend = [
+                    'initial' => 'Important',
+                    'name' => $this->data->name,
+                    'messagedata' => $messagedata,
+                    'confirmBtnText' => 'Login Securely',
+                    'confirmBtnLink' => route('assessor.login'),
+                ];
+                break;
         }
         return $this->view('emails.email')->subject($subject)->with($dataToSend);
     }

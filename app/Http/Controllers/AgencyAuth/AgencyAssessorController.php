@@ -16,6 +16,7 @@ use App\AssessorBatch;
 use App\AssessorJobRole;
 use App\AssessorLanguage;
 use App\Helpers\AppHelper;
+use App\Events\ASMailEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ASFormValidation;
@@ -158,7 +159,7 @@ class AgencyAssessorController extends Controller
         $aaid = $this->guard()->user()->aa_id;
         AppHelper::instance()->writeNotification(NULL,'admin','New Assessor Added',"Agency <br>(ID: <span style='color:blue;'>$aaid</span>) has added an <span style='color:blue;'>Assessor</span>. Pending Approval");
         
-        alert()->success("Assessor data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
+        alert()->success("Assessor data has Been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
         return redirect()->back();
     }
 
@@ -185,7 +186,7 @@ class AgencyAssessorController extends Controller
         }
     }
 
-    public function addassessor_api(Request $request){
+    public function assessorApi(Request $request){
 
         switch ($request->section) {
             case 'aadhaar':
@@ -211,147 +212,8 @@ class AgencyAssessorController extends Controller
             return response()->json(['success' => false, 'message'=>$message]);
         }
 
-
-        // if ($request->has('mobile')) {
-        //     $dataMob = AppHelper::instance()->checkContact($request->mobile);
-        //     if ($dataMob['status']) {
-        //         return response()->json(['success' => true]);
-        //     } else {
-        //         return response()->json(['success' => false, 'message'=>'This Mobile no is already taken']);
-        //     }
-        // }
-        // if ($request->has('email')) {
-        //     $dataEmail = AppHelper::instance()->checkEmail($request->email);
-        //     if ($dataEmail['status']) {
-        //         return response()->json(['success' => true]);
-        //     } else {
-        //         return response()->json(['success' => false, 'message'=>'This Email is already taken']);
-        //     }
-        // }
-        // if ($request->has('aadhaar')) {
-        //     $dataDoc = AppHelper::instance()->checkDoc($request->aadhaar);
-        //     if ($dataDoc['status']) {
-        //         return response()->json(['success' => true]);
-        //     } else {
-        //         return response()->json(['success' => false, 'message'=>'This Aadhaar is already present']);
-        //     }
-        // }
-
     }
 
-    // public function assessorApi(Request $request){
-
-    //     if ($request->section=='mobile') {
-    //         if($request->has('aa_id')){
-    //         $validator = Validator::make($request->all(), [ 
-              
-    //             'checkredundancy' => [
-    //                 'required',
-    //                 'numeric',
-    //                 'unique:trainers,mobile',
-    //                 'unique:partners,spoc_mobile',
-    //                 'unique:centers,mobile',
-    //                 'unique:trainer_statuses,mobile',
-    //                 'unique:agencies,mobile',
-    //                 'unique:assessors,mobile,'.$request->as_id,
-                    
-    //             ],
-    //         ]);
-    //         }else{
-    //             $validator = Validator::make($request->all(), [ 
-              
-    //                 'checkredundancy' => [
-    //                     'required',
-    //                     'numeric',
-    //                     'unique:trainers,mobile',
-    //                     'unique:partners,spoc_mobile',
-    //                     'unique:centers,mobile',
-    //                     'unique:trainer_statuses,mobile',
-    //                     'unique:agencies,mobile',
-    //                     'unique:assessors,mobile',
-                        
-    //                 ],
-    //             ]); 
-    //         }
-
-    //         if ($validator->fails()) {
-    //             return response()->json(['success' => false, 'errors'=>$validator->errors()]);
-    //         } else {
-    //             return response()->json(['success' => true], 200);
-    //         }
-        
-    //     }
-    //     else if ($request->section=='email') {
-    //         if($request->has('aa_id')){
-    //         $validator = Validator::make($request->all(), [ 
-              
-    //             'checkredundancy' => [
-    //                 'required',
-    //                 'unique:trainers,email',
-    //                 'unique:partners,email',
-    //                 'unique:centers,email',
-    //                 'unique:trainer_statuses,email',
-    //                 'unique:agencies,email',
-    //                 'unique:assessors,email,'.$request->aa_id,
-    //             ],
-    //         ]);
-            
-    //         }else{
-    //             $validator = Validator::make($request->all(), [ 
-              
-    //                 'checkredundancy' => [
-    //                     'required',
-    //                     'unique:trainers,email',
-    //                     'unique:partners,email',
-    //                     'unique:centers,email',
-    //                     'unique:trainer_statuses,email',
-    //                     'unique:agencies,email',
-    //                     'unique:assessors,email',
-    //                 ],
-    //             ]);
-    //         }
-
-    //         if ($validator->fails()) {
-    //             return response()->json(['success' => false, 'errors'=>$validator->errors()]);
-    //         } else {
-    //             return response()->json(['success' => true], 200);
-    //         }
-        
-    //     }
-    //     else if ($request->section=='aadhaar') {
-    //         if($request->has('aa_id')){
-    //         $validator = Validator::make($request->all(), [ 
-    //            'checkredundancy' => [
-    //                 'required',
-    //                 'unique:trainers,doc_no',
-    //                 'unique:trainer_statuses,doc_no',
-    //                 'unique:agencies,aadhaar',
-    //                 'unique:assessors,aadhaar,'.$request->aa_id,
-                    
-    //             ],
-    //         ]);
-                
-    //         }else{
-    //             $validator = Validator::make($request->all(), [ 
-    //                 'checkredundancy' => [
-    //                      'required',
-    //                      'unique:trainers,doc_no',
-    //                      'unique:trainer_statuses,doc_no',
-    //                      'unique:agencies,aadhaar',
-    //                      'unique:assessors,aadhaar',
-                         
-    //                  ],
-    //              ]);
-    //         }
-
-    //         if ($validator->fails()) {
-    //             return response()->json(['success' => false, 'errors'=>$validator->errors()]);
-    //         } else {
-    //             return response()->json(['success' => true], 200);
-    //         }
-        
-    //     }
-    // }
 
     public function assessorBatch($id){
         $id=$this->decryptThis($id);
@@ -389,51 +251,44 @@ class AgencyAssessorController extends Controller
             $agencyBatch->as_id=$request->as_id;
             $agencyBatch->bt_id=$batch;
             $agencyBatch->save();
-         }
+        }
 
-          /* Notification For Assessor */
-        
-        $notification = new Notification;
-        $notification->rel_id = $request->as_id;
-        $notification->rel_with = 'assessor';
-        $notification->title = 'New Batch Added';
-        $notification->message = "New Batch added by Agency";
-        $notification->save();
-        /* End Notification For Assessor */
+        $assessor = Assessor::find($request->as_id);
 
-         alert()->success("Batch has been <span style='color:blue;font-weight:bold'>Added</span> with Assessor", 'Job Done')->html()->autoclose(3000);
-         return Redirect()->back();
+        $dataMail = collect();
+        $dataMail->tag = 'btassignremove';
+        $dataMail->status = 1;
+        $dataMail->name = $assessor->name;
+        $dataMail->email = $assessor->email;
+        event(new ASMailEvent($dataMail));
+
+        AppHelper::instance()->writeNotification($request->as_id,'assessor','New Batch(es) Assigned',"Batch(es) are <span style='color:blue;'>assigned</span> to you by your Assessment Agency.");
+
+        alert()->success("Batch(es) are <span style='color:blue;'>Assigned</span> to this Assessor", 'Job Done')->html()->autoclose(4000);
+        return redirect()->back();
 
     }
 
-    public function deleteBatch(Request $request){
+    public function removeBatch(Request $request){
+
         $assessorBatch=AssessorBatch::findOrFail($request->id);
 
-        /* Notification For Assessor */
         $batch_no=$assessorBatch->batch->batch_id;
-        $notification = new Notification;
-        $notification->rel_id = $assessorBatch->as_id;
-        $notification->rel_with = 'assessor';
-        $notification->title = 'Batch cancelled by Agency';
-        $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment cancelled by Agency";
-        $notification->save();
-        /* End Notification For Assessor */
+        $dataMail = collect();
+        $dataMail->tag = 'btassignremove';
+        $dataMail->status = 0;
+        $dataMail->name = $assessorBatch->assessor->name;
+        $dataMail->bt_id = $assessorBatch->batch->batch_id;
+        $dataMail->email = $assessorBatch->assessor->email;
 
-            
-           // return response()->json(['status' => 'done'],200);
-
-
-            // $data=Department::findOrFail($request->id);
-            // $scheme=Scheme::where('dept_id',$request->id)->first();
-             if(!is_null($assessorBatch->batch->batchassessment)){
-                 return response()->json(['status' => 'fail'],200);
-            
-             }else{
-                $assessorBatch->delete(); 
-                 return response()->json(['status' => 'done'],200);
-     
-             }
-
+        if (is_null($assessorBatch->batch->batchassessment)) {
+            $assessorBatch->delete();
+            event(new ASMailEvent($dataMail));
+            AppHelper::instance()->writeNotification($assessorBatch->as_id,'assessor',"Batch Revoked By Agency","A Batch (ID: <span style='color:blue;'>$batch_no</span>) has been revoked by your <span style='color:blue;'>Agency</span>.");
+            return response()->json(["status" => true],200);
+        } else {
+            return response()->json(["status" => false ],200);
+        }
         
     }
 

@@ -10,56 +10,51 @@
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header d-flex justify-content-between">
-                        <h2><strong>All</strong> Batch of Assessor </h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>Batch ID</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Assessment Date</th>
-                                        <th>Status</th>
-                                        <th>Scheme Status</th>
-                                        <th>Marks</th>
-                                        </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($assessorBatch as $key=>$item)
-                                   
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>My</strong> Batches</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Batch ID</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Assessment Date</th>
+                                    <th>Overall Status</th>
+                                    <th>Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($assessorBatch as $key=>$item)                                   
                                     @if(is_null($item->batch->batchassessment))
-                                    <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$item->batch->batch_id}}</td>
-                                    <td>{{$item->batch->batch_start}}</td>
-                                    <td>{{$item->batch->batch_end}}</td>
-                                    <td>{{$item->batch->assessment}}</td>
-                                    <td style="color:{{($item->batch->status)?'green':'red'}}"><strong>{{($item->batch->status)?'Active':'Inactive'}}</strong></td>
-                                    <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}"><strong>{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</strong></td>
-                                    @if (\Carbon\Carbon::now()>\Carbon\Carbon::parse($item->batch->assessment))
-                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>Crypt::encrypt($item->batch->id)])}}" >Enter Marks</a></td>
-                                     @else
-                                      <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                        <tr>
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$item->batch->batch_id}}</td>
+                                            <td>{{$item->batch->batch_start}}</td>
+                                            <td>{{$item->batch->batch_end}}</td>
+                                            <td>{{$item->batch->assessment}}</td>
+                                            @if (\Carbon\Carbon::now()>\Carbon\Carbon::parse($item->batch->assessment))
+                                                <td style="color:green"><strong>Processing Marks</strong></td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>Crypt::encrypt($item->batch->id)])}}" >Enter Marks</a></td>
+                                            @else
+                                                <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}"><strong>{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</strong></td>
+                                                <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                            @endif
+                                        </tr>
                                     @endif
-                                    </tr>
-                                   
-                                 @endif
-                                   @endforeach
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 @stop
 @section('page-script')
