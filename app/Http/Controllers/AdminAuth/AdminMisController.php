@@ -428,7 +428,8 @@ class AdminMisController extends Controller
                 foreach ($dis_batch_ongoing as $bt_ongoing) {
                     foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
                        $dis_bt_can_cnt += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
-                          
+                        
+                    
                     }
                 }
                 //End ongoing Training
@@ -444,19 +445,35 @@ class AdminMisController extends Controller
                 //End Trained
                 // Assessed
                 $dis_batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['assessment','<',Carbon::now()->format('d-m-Y')]])->get();
-                $dis_bt_assd_can=0;
+                $dis_bt_assd_can=$dis_passed_can_cnt=$dis_failed_can_cnt=$dis_absent_can_cnt=0;
                 foreach ($dis_batch_assessed as $bt_assessed) {
                     foreach ($bt_assessed->candidatesmap as $bt_can_map) {
                        $dis_bt_assd_can += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
-                          
+                     //Candidate Passed
+                    $dis_passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate Passed
+                    //Candidate Failed
+                    $dis_failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate failed
+                    //Candidate Absent
+                    $dis_absent_can_cnt += CenterCandidateMap::where([['passed','=',2],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate Absent  
                     }
                 }
                 //End Assessed
-                $dis_can_stack[$expo->e_expository]=[$dis_can_cnt,$dis_bt_can_cnt,$dis_bt_trnd_can];
+                $dis_can_stack[$expo->e_expository]=[
+                                                    $dis_can_cnt,
+                                                    $dis_bt_can_cnt,
+                                                    $dis_bt_trnd_can,
+                                                    $dis_bt_assd_can,
+                                                    $dis_passed_can_cnt,
+                                                    $dis_failed_can_cnt,
+                                                    $dis_absent_can_cnt
+                                                    ];
             }
             //dd($dis_can_stack);
         //END DISABILITY wise Report
-        return view('admin.mis.job-disability-summary')->with(compact('can_stack','scheme','sel_scm','sel_yr'));
+        return view('admin.mis.job-disability-summary')->with(compact('can_stack','dis_can_stack','scheme','sel_scm','sel_yr'));
 
     }
 }

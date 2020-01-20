@@ -146,9 +146,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (isset($can_stack) && !empty($can_stack) )
+                                @if (isset($dis_can_stack) && !empty($dis_can_stack) )
                                     
-                                @foreach ($can_stack as $key=>$item)
+                                @foreach ($dis_can_stack as $key=>$item)
                                     
                                 <tr>
                                     <td>{{$key}}</td>

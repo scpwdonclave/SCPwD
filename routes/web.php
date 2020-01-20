@@ -108,5 +108,6 @@ Route::get('assessor/assessment-files/{id}/{action}/{column}', 'FileController@a
 
 /* QR Data For Assessment */
 Route::get('assessment/assessment-qrdata/{id}', 'QrController@qrData')->name('assessment-qrdata');
+Route::get('test-page', 'TestController@test')->name('test-cont');
 
 

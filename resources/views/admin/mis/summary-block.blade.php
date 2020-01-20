@@ -34,6 +34,7 @@
         </div>
         
     </div>
+    <a class="badge bg-green margin-0" href="{{route('test-cont')}}" >View</a>
     
     
 </div>
