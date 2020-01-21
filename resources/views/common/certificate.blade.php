@@ -32,12 +32,13 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
        
  <div style="height:1000px;width:1500px;position:relative">
 <img src="{{asset('assets/images/certi.png')}}" style="height:1000px;width:1500px;">
- <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{$item->certi_no}}</span></div>
+ <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No:{{$batchAssessment->batch->scheme->logo}} </span><span class="cls_003">{{$item->certi_no}}</span></div>
 <div style="position:absolute;left:138px;top:160px;height:100px;">
    
     
     <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="height:120px;width:300px;">
 </div>
+
 <div style="position:absolute;left:360px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
 <div style="position:absolute;left:510px;top:360px" class="cls_004"><span class="cls_004">Ministry of Social Justice and Empowerment</span></div>
 <div style="position:absolute;left:650px;top:390px" class="cls_005"><span class="cls_005">Certificate</span></div>

@@ -17,7 +17,7 @@ class RedirectIfNotAllowed
      */
     public function handle($request, Closure $next)
     {
-        if (!is_null(Request::segment(1))) {
+        if (!is_null(Request::segment(1)) && in_array(Request::segment(1), ['admin','partner','agency','center','assessor'])) {
             if (Auth::guard(Request::segment(1))->check()) {
                 switch (Request::segment(1)) {
                     case 'admin':
