@@ -43,7 +43,7 @@ return [
     
     'image' => [
         'enabled' => true,
-        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltopdf' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage"',
+        'binary'  => (config('app.env') === 'production') ? '/usr/local/bin/wkhtmltoimage' : '"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage"',
         'timeout' => false,
         'options' => [],
         'env'     => [],
