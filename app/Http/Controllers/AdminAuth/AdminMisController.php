@@ -12,6 +12,7 @@ use App\CenterJobRole;
 use App\Center;
 use App\Batch;
 use App\Scheme;
+use App\Expository;
 use DB;
 
 
@@ -334,10 +335,145 @@ class AdminMisController extends Controller
     }
 
     public function jobDisabilityWiseSummary(Request $request){
-        $job_role=JobRole::all();
 
-        // foreach ($job_role as $key => $value) {
-            
-        // }
+        $scheme=$this->scheme();
+        $scm=Scheme::findOrFail($request->scheme);
+        $sel_scm=$scm->scheme;
+        $sel_yr=$request->financial_year;
+       //JOB ROLE wise Report 
+        $job_role=JobRole::all();
+        $can_stack=array();
+        foreach ($job_role as $job) {
+
+            //Total Enroll
+            $c_count=0;
+            $partner_job=PartnerJobrole::where([['jobrole_id','=',$job->id],['scheme_id','=',$request->scheme]])->get();
+            foreach ($partner_job as  $p_job) {
+                $center_job=CenterJobRole::where('tp_job_id',$p_job->id)->get(); 
+ 
+                foreach ($center_job as  $c_job) {
+                 $center_candidate=CenterCandidateMap::where([['tc_job_id','=',$c_job->id],['f_year','=',$request->financial_year]])->get();
+                 
+                 $c_count += count($center_candidate);
+ 
+                }
+             }
+             //End Total Enroll
+             //Ongoing Batch
+             $batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_start','<=',Carbon::now()->format('d-m-Y')],['batch_end','>=',Carbon::now()->format('d-m-Y')]])->get();
+            $bt_can_cnt=0;
+            foreach ($batch_ongoing as $bt_ongoing) {
+                foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
+                   $bt_can_cnt += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                      
+                }
+            }
+            //End Ongoing Batch
+            //Trained
+            $batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_end','<',Carbon::now()->format('d-m-Y')]])->get();
+            $bt_train_can_cnt=0;
+            foreach ($batch_trained as $bt_trained) {
+                foreach ($bt_trained->candidatesmap as $bt_can_map) {
+                   $bt_train_can_cnt += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                      
+                }
+            }
+            //End Of Trained
+            //Assessed
+            $batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['assessment','<',Carbon::now()->format('d-m-Y')]])->get();
+            $bt_assessed_can_cnt=$passed_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
+            foreach ($batch_assessed as $bt_assessed) {
+                foreach ($bt_assessed->candidatesmap as $bt_can_map) {
+                   $bt_assessed_can_cnt += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                    //Candidate Passed
+                    $passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Passed
+                    //Candidate Failed
+                    $failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate failed
+                    //Candidate Absent
+                    $absent_can_cnt += CenterCandidateMap::where([['passed','=',2],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Absent
+                      
+                }
+            }
+            //End Of Assessed
+           $can_stack[$job->job_role] =[
+                                        $c_count,
+                                        $bt_can_cnt,
+                                        $bt_train_can_cnt,
+                                        $bt_assessed_can_cnt,
+                                        $passed_can_cnt,
+                                        $failed_can_cnt,
+                                        $absent_can_cnt
+                                        ];
+        }
+        //END JOB ROLE wise Report
+        //DISABILITY wise Report
+            $expository=Expository::all();
+            $dis_can_stack=array();
+            foreach ($expository as $expo) {
+                $dis_can_cnt=0;
+                //enroll
+                $dis_candidate=CenterCandidateMap::where([['d_type','=',$expo->id],['f_year','=',$request->financial_year]])->get();
+                foreach ($dis_candidate as  $dis_candidate) {
+                    if($dis_candidate->jobrole->partnerjobrole->where('scheme_id',$request->scheme)){
+                        $dis_can_cnt +=1;
+                    }
+                }
+                //end enroll
+                //ongoing Training
+                $dis_batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['batch_start','<=',Carbon::now()->format('d-m-Y')],['batch_end','>=',Carbon::now()->format('d-m-Y')]])->get();
+                $dis_bt_can_cnt=0;
+                foreach ($dis_batch_ongoing as $bt_ongoing) {
+                    foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
+                       $dis_bt_can_cnt += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                        
+                    
+                    }
+                }
+                //End ongoing Training
+                // Trained
+                $dis_batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['batch_end','<',Carbon::now()->format('d-m-Y')]])->get();
+                $dis_bt_trnd_can=0;
+                foreach ($dis_batch_trained as $bt_trained) {
+                    foreach ($bt_trained->candidatesmap as $bt_can_map) {
+                       $dis_bt_trnd_can += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                          
+                    }
+                }
+                //End Trained
+                // Assessed
+                $dis_batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['assessment','<',Carbon::now()->format('d-m-Y')]])->get();
+                $dis_bt_assd_can=$dis_passed_can_cnt=$dis_failed_can_cnt=$dis_absent_can_cnt=0;
+                foreach ($dis_batch_assessed as $bt_assessed) {
+                    foreach ($bt_assessed->candidatesmap as $bt_can_map) {
+                       $dis_bt_assd_can += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                     //Candidate Passed
+                    $dis_passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate Passed
+                    //Candidate Failed
+                    $dis_failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate failed
+                    //Candidate Absent
+                    $dis_absent_can_cnt += CenterCandidateMap::where([['passed','=',2],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate Absent  
+                    }
+                }
+                //End Assessed
+                $dis_can_stack[$expo->e_expository]=[
+                                                    $dis_can_cnt,
+                                                    $dis_bt_can_cnt,
+                                                    $dis_bt_trnd_can,
+                                                    $dis_bt_assd_can,
+                                                    $dis_passed_can_cnt,
+                                                    $dis_failed_can_cnt,
+                                                    $dis_absent_can_cnt
+                                                    ];
+            }
+            //dd($dis_can_stack);
+        //END DISABILITY wise Report
+        return view('admin.mis.job-disability-summary')->with(compact('can_stack','dis_can_stack','scheme','sel_scm','sel_yr'));
+
     }
 }
