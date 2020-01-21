@@ -9,7 +9,7 @@ use App\CandidateMark;
 class QrController extends Controller
 {
     public function qrData($id){
-        $id=43;
+        
         $candidateMark=CandidateMark::findOrFail($id);
         if($candidateMark->passed && $candidateMark->batchAssessment->supadmin_cert_rel){
 
