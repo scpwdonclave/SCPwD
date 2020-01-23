@@ -8,8 +8,8 @@ span.cls_002{font-family:Times,serif;font-size:16px;color:rgb(0,0,0);font-weight
 div.cls_002{font-family:Times,serif;font-size:16px;color:rgb(0,0,0);font-weight:normal;font-style:normal;text-decoration: none}
 span.cls_003{font-family:Times,serif;font-size:16px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
 div.cls_003{font-family:Times,serif;font-size:16px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
-span.cls_004{font-family:Times,serif;font-size:25px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
-div.cls_004{font-family:Times,serif;font-size:25px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
+span.cls_004{font-family:Times,serif;font-size:24px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
+div.cls_004{font-family:Times,serif;font-size:24px;color:rgb(0,0,0);font-weight:bold;font-style:normal;text-decoration: none}
 span.cls_005{font-family:Times,serif;font-size:60px;color:rgb(255,153,51);font-weight:bold;font-style:normal;text-decoration: none}
 div.cls_005{font-family:Times,serif;font-size:60px;color:rgb(255,153,51);font-weight:bold;font-style:normal;text-decoration: none}
 span.cls_006{font-family:Times,serif;font-size:25px;color:rgb(0,0,0);font-weight:normal;font-style:normal;text-decoration: none}
@@ -38,9 +38,9 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
     <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="width:180px;">
 </div>
 
-<div style="position:absolute;left:360px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
+<div style="position:absolute;left:385px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
 <div style="position:absolute;left:510px;top:360px" class="cls_004"><span class="cls_004">Ministry of Social Justice and Empowerment</span></div>
-<div style="position:absolute;left:650px;top:390px" class="cls_005"><span class="cls_005">Certificate</span></div>
+<div style="position:absolute;left:625px;top:390px" class="cls_005"><span class="cls_005">Certificate</span></div>
 
 <div style="height:250px;width:1000px;position:absolute;left:290px;top:470px;" class="cls_006">
     <span class="cls_006">This is to certify that </span>
