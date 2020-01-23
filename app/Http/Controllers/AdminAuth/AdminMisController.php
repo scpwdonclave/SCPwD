@@ -13,6 +13,8 @@ use App\Center;
 use App\Batch;
 use App\Scheme;
 use App\Expository;
+use App\Agency;
+use App\BatchCenterCandidateMap;
 use DB;
 
 
@@ -474,6 +476,88 @@ class AdminMisController extends Controller
             //dd($dis_can_stack);
         //END DISABILITY wise Report
         return view('admin.mis.job-disability-summary')->with(compact('can_stack','dis_can_stack','scheme','sel_scm','sel_yr'));
+
+    }
+
+    public function pageAgencyWise(){
+        $scheme=$this->scheme();
+        return view('admin.mis.agency-summary')->with(compact('scheme')); 
+    }
+
+    public function agencyWiseSummary(Request $request){
+        $scheme=$this->scheme();
+        $scm=Scheme::findOrFail($request->scheme);
+        $sel_scm=$scm->scheme;
+        $sel_yr=$request->financial_year;
+       $agency= Agency::all();
+       $candidate_stack=array();
+       foreach ($agency  as $agency) {
+        $enroll_candidate=$ongoing_candidate=$trained_candidate=$assessed_candidate=$passed_candidate=$failed_candidate=$absent_candidate=0;
+           foreach ($agency->agencyBatch->where('aa_verified',1) as $agBatch) {
+               //Enroll/Assign
+            $batch=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id]])->get();
+            foreach ($batch as $batch) {
+                foreach ($batch->candidatesmap as $bt_can_map) {
+                   $enroll_candidate += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                
+                }
+            }
+        
+            //End Enroll/Assign
+
+            //Ongoing Batch
+            $batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_start','<=',Carbon::now()->format('d-m-Y')],['batch_end','>=',Carbon::now()->format('d-m-Y')]])->get();
+            foreach ($batch_ongoing as $batch_ongoing) {
+                foreach ($batch_ongoing->candidatesmap as $bt_can_map) {
+                   $ongoing_candidate += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                
+                }
+            }
+            //End Ongoing Batch
+            //Trained Batch
+            $batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_end','<',Carbon::now()->format('d-m-Y')]])->get();
+            foreach ($batch_trained as $batch_trained) {
+                foreach ($batch_trained->candidatesmap as $bt_can_map) {
+                   $trained_candidate += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                
+                }
+            }
+            //End Trained Batch
+
+            // Batch Assessed
+            $batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['assessment','<',Carbon::now()->format('d-m-Y')]])->get();
+            foreach ($batch_assessed as $batch_assessed) {
+                foreach ($batch_assessed->candidatesmap as $bt_can_map) {
+                   $assessed_candidate += CenterCandidateMap::where('id',$bt_can_map->candidate_id)->get()->count();
+                    //Candidate Passed
+                    $passed_candidate += CenterCandidateMap::where([['passed','=',1],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Passed
+                    //Candidate Failed
+                    $failed_candidate += CenterCandidateMap::where([['passed','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate failed
+                    //Candidate Absent
+                    $absent_candidate += CenterCandidateMap::where([['passed','=',2],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Absent  
+                
+                }
+            }
+            //End Batch Assessed
+          
+        }
+
+        $candidate_stack[$agency->agency_name]=[
+                                                $enroll_candidate,
+                                                $ongoing_candidate,
+                                                $trained_candidate,
+                                                $assessed_candidate,
+                                                $passed_candidate,
+                                                $failed_candidate,
+                                                $absent_candidate
+                                                ];
+    }
+    
+    return view('admin.mis.agency-summary')->with(compact('candidate_stack','scheme','sel_scm','sel_yr'));
+
 
     }
 }

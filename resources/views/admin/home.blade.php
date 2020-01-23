@@ -217,44 +217,7 @@
             </div>
         </div>
     </div>
-    <div class="row clearfix social-widget">
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect twitter-widget">
-                <div class="icon"><i class="zmdi zmdi-twitter"></i></div>
-                <div class="content">
-                    <div class="text">Twitt</div>
-                    <div class="number">8K</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect instagram-widget">
-                <div class="icon"><i class="zmdi zmdi-instagram"></i></div>
-                <div class="content">
-                    <div class="text">Followers</div>
-                    <div class="number">231</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect linkedin-widget">
-                <div class="icon"><i class="zmdi zmdi-linkedin"></i></div>
-                <div class="content">
-                    <div class="text">Followers</div>
-                    <div class="number">2510</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect behance-widget">
-                <div class="icon"><i class="zmdi zmdi-behance"></i></div>
-                <div class="content">
-                    <div class="text">Project</div>
-                    <div class="number">121</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @stop
 @section('page-script')

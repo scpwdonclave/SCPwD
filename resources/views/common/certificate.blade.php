@@ -35,7 +35,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 <img src="{{asset('assets/images/certi.png')}}" style="height:1000px;width:1500px;">
  <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{$item->certi_no}}</span></div>
 <div style="position:absolute;left:138px;top:160px;height:100px;">    
-    <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="height:120px;width:300px;">
+    <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="width:180px;">
 </div>
 
 <div style="position:absolute;left:360px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
@@ -97,6 +97,9 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 </div>
 <div style="position:absolute;top:630px;left:1100px">
     {!! QrCode::size(230)->generate(route('assessment-qrdata',['id'=>$item->id])); !!}     
+</div>
+<div style="position:absolute;top:840px;left:1100px">
+    <span class="cls_008" style="font-weight:normal;">Month/Year of Issue - {{Carbon\Carbon::parse($item->updated_at)->format('M/Y')}}</span>    
 </div>
 
 </div>

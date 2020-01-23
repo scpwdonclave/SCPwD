@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Job Disability Wise')
+@section('title', 'Agency Wise')
 @section('parentPageTitle', 'MIS')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -18,10 +18,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Search</strong> Job Role & Disability Wise</h2>                        
+                    <h2><strong>Search</strong> Assessment Agency Wise</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.mis.job_disability_wise_enrolled')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.mis.agency_wise_enrolled')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-6">
@@ -60,7 +60,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Report</strong> Section Job Wise</h2>                        
+                    <h2><strong>Report</strong> Section Assessment Agency Wise</h2>                        
                 </div>
                 <div class="text-center">
                     @if (isset($sel_scm) && isset($sel_yr))
@@ -73,7 +73,7 @@
                         <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Job Role</th>							
+                                    <th>Assessment Agency</th>							
                                     <th>Sum of Enrolled</th>
                                     <th>Sum of Ongoing Training</th>
                                     <th>Sum of Trained</th>					 	
@@ -82,13 +82,13 @@
                                     <th>Sum of Fail</th>
                                     <th>Sum of Absent</th>
                                     <th>Sum of Drop-Out</th>
-                                    <th>Sum of Certified</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (isset($can_stack) && !empty($can_stack) )
+                                @if (isset($candidate_stack) && !empty($candidate_stack) )
                                     
-                                @foreach ($can_stack as $key=>$item)
+                                @foreach ($candidate_stack as $key=>$item)
                                     
                                 <tr>
                                     <td>{{$key}}</td>
@@ -100,7 +100,7 @@
                                     <td>{{$item[5]}}</td>
                                     <td>{{$item[6]}}</td>
                                     <td>U/D</td>
-                                    <td>{{$item[4]}}</td>
+                                    
                                     
                                 </tr>
                                 @endforeach
@@ -115,64 +115,6 @@
 </div>
 
 
-<div class="container-fluid">
-    <div class="row clearfix">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="header">
-                    <h2><strong>Report</strong> Section Disability Wise</h2>                        
-                </div>
-                <div class="text-center">
-                    @if (isset($sel_scm) && isset($sel_yr))
-                    <p><h6><strong>Selected Scheme: <span style="color:blue">{{$sel_scm}}</span></strong></h6></p>
-                    <p><h6><strong>Selected FY: <span style="color:blue">{{$sel_yr}}</span></strong></h6></p>
-                    @endif
-                </div>
-                <div class="body">
-                    <div class="table-responsive">
-                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr>
-                                    <th>Job Role</th>							
-                                    <th>Sum of Enrolled</th>
-                                    <th>Sum of Ongoing Training</th>
-                                    <th>Sum of Trained</th>					 	
-                                    <th>Sum of Assessed</th>
-                                    <th>Sum of Passed</th>
-                                    <th>Sum of Fail</th>
-                                    <th>Sum of Absent</th>
-                                    <th>Sum of Drop-Out</th>
-                                    <th>Sum of Certified</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (isset($dis_can_stack) && !empty($dis_can_stack) )
-                                    
-                                @foreach ($dis_can_stack as $key=>$item)
-                                    
-                                <tr>
-                                    <td>{{$key}}</td>
-                                    <td>{{$item[0]}}</td>
-                                    <td>{{$item[1]}}</td>
-                                    <td>{{$item[2]}}</td>
-                                    <td>{{$item[3]}}</td>
-                                    <td>{{$item[4]}}</td>
-                                    <td>{{$item[5]}}</td>
-                                    <td>{{$item[6]}}</td>
-                                    <td>U/D</td>
-                                    <td>{{$item[4]}}</td>
-                                    
-                                </tr>
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @stop
 @section('page-script')
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
