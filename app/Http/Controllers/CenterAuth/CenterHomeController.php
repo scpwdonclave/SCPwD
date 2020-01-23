@@ -5,7 +5,9 @@ namespace App\Http\Controllers\CenterAuth;
 use DB;
 use Auth;
 use Crypt;
+use App\Reason;
 use App\Candidate;
+use Carbon\Carbon;
 use App\Notification;
 use App\CenterJobRole;
 use App\Helpers\AppHelper;
@@ -14,8 +16,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CDFormValidation;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class CenterHomeController extends Controller
@@ -230,5 +232,46 @@ class CenterHomeController extends Controller
             }
             
         }
+    }
+
+
+    public function dropout_candidate(Request $request)
+    {
+        if ($request->has('data')) {
+
+            if ($id=AppHelper::instance()->decryptThis($request->data)) {
+                $centerCandidate = CenterCandidateMap::find($id);
+                if ($centerCandidate) {
+                    if ($centerCandidate->candidate->status && !$centerCandidate->dropout) {
+                        if (!is_null($request->reason) && $request->reason != '') {
+                            $centerCandidate->dropout = 1;
+                            $centerCandidate->dropout_at = Carbon::now();
+                            $centerCandidate->save();
+                            $reason = new Reason; 
+                            $reason->rel_id = $centerCandidate->id;
+                            $reason->rel_with = 'center';
+                            $reason->reason = $request->reason;
+                            $reason->save();
+                            
+                            $name = $centerCandidate->candidate->name;
+                            $tcid = $centerCandidate->center->tc_id;
+                            AppHelper::instance()->writeNotification($centerCandidate->center->tp_id,'partner','Candidate Dropped Out',"Candidate (<span style='color:blue;'>$name</span>) is Dropped Out by TC <span style='color:red;'>$tcid</span>.");
+                            $array = array('type' => 'success', 'message' => "Candidate <span style='font-weight:bold;color:blue'>$name</span> is now <span style='font-weight:bold;color:red'>De-Linked</span> from your Training Center");
+                        
+                        } else {
+                            $array = array('type' => 'error', 'message' => "Drop Out Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
+                        }
+                    } else {
+                        $array = array('type' => 'error', 'message' => "Something went Wrong, Try Again");
+                    }
+                    return response()->json($array,200);
+                } else {
+                    return response()->json(array('type' => 'error', 'message' => "We Could not find this Candidate"),400);
+                }
+
+            } else {
+                return response()->json(array('type' => 'error', 'message' => "Something went Wrong, Try Again"),400);
+            }
+        } 
     }
 }

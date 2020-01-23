@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCandidateMarksTable extends Migration
+class CreateCandidateReMarkTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateCandidateMarksTable extends Migration
      */
     public function up()
     {
-        Schema::create('candidate_marks', function (Blueprint $table) {
+        Schema::create('candidate_re_marks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('bt_assessment_id');
+            $table->unsignedBigInteger('bt_reassessment_id');
             $table->unsignedBigInteger('candidate_id');
             $table->string('mark')->default(0); 
             $table->string('attendence');
@@ -31,6 +31,6 @@ class CreateCandidateMarksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('candidate_marks');
+        Schema::dropIfExists('candidate_re_marks');
     }
 }

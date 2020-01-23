@@ -34,6 +34,8 @@ class CreateCenterCandidateMapsTable extends Migration
             $table->string('f_year');
             /*End of Financial Year and Month */
             $table->boolean('passed')->nullable()->comment = 'null:not applicable for exm|0:Failed|1:Passed|2:Absent';
+            $table->boolean('dropout')->default(0)->comment = '0: Present, 1: Dropped out';
+            $table->boolean('dropout_at')->nullable();
             $table->timestamps();
         });
     }
