@@ -370,10 +370,22 @@ class AdminCenterController extends Controller
             ->orderBy('ccm.id', 'desc')            
             ->get()->unique('cd_id')->pluck('id')->toArray();
         
+        // $data = [
+        //     'admin'  => $this->guard()->user(),
+        //     'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
+        // ];
+
+        $candidates = Candidate::all();
+        foreach ($candidates as $candidate) {
+            $candidate->centermap;
+            $candidate->count = $candidate->centermap->count();
+        }
+
         $data = [
             'admin'  => $this->guard()->user(),
-            'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
+            'candidates' => $candidates,
         ];
+        // return $candidates;
         return view('common.candidates')->with($data);
     }
 
@@ -561,5 +573,20 @@ class AdminCenterController extends Controller
             }
         }
 
+    }
+
+
+    public function candidateApi(Request $request)
+    {
+        if ($request->has('id')) {
+            $centerCandidates = CenterCandidateMap::where('cd_id', $request->id)->get();
+            foreach ($centerCandidates as $centerCandidate) {
+                $centerCandidate->centerid = $centerCandidate->center->tc_id;
+                $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+            }
+            return response()->json(['success' => true, 'data' => $centerCandidates], 200);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Something went Wrong, Try Again'], 400);
+        }
     }
 }
