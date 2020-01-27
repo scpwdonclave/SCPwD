@@ -86,24 +86,45 @@ class CenterHomeController extends Controller
         // }
 
 
+        // $center = Center::find($this->guard()->user->id);
 
-        $candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
-            ->orderBy('ccm.id', 'desc')            
-            ->where('ccm.tc_id',$center->id)
-            ->get()->unique('cd_id')->pluck('id')->toArray();
+
+        // $candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
+        //     ->orderBy('ccm.id', 'desc')            
+        //     ->where('ccm.tc_id',$center->id)
+        //     ->get()->unique('cd_id')->pluck('id')->toArray();
+
+        $candidates = collect();
+
+        foreach ($center->candidatesmap as $centerCandidate) {
+            $candidates->push($centerCandidate->candidate);
+        }
+
+        // return $candidates;
+
         $data = [
             'center'  => $center,
-            'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
+            // 'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
+            'candidates' => $candidates,
         ];
         return view('common.candidates')->with($data);
     }
 
     public function view_candidate($id){
         if ($id = $this->dycryptThis($id)) {
-            $center_candidate = CenterCandidateMap::where([['cd_id',$id],['tc_id', $this->guard()->user()->id]])->get()->last();
-            $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
+            // $center_candidate = CenterCandidateMap::where([['cd_id',$id],['tc_id', $this->guard()->user()->id]])->get()->last();
+            // $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
             
-            return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
+            // return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
+
+            $center_candidate = CenterCandidateMap::findOrFail($id);
+            $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
+            if ($center_candidate->tc_id == $this->guard()->user()->id) {
+                return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
+            } else {
+                return abort(401);
+            }
+
         }
     }
 
@@ -273,5 +294,39 @@ class CenterHomeController extends Controller
                 return response()->json(array('type' => 'error', 'message' => "Something went Wrong, Try Again"),400);
             }
         } 
+    }
+
+    public function candidateApi(Request $request)
+    {
+        if ($request->has('id')) {
+            $centerCandidates = CenterCandidateMap::where([['cd_id','=', $request->id], ['tc_id','=', $this->guard()->user()->id]])->get();
+            foreach ($centerCandidates as $centerCandidate) {
+
+                $route = route('center.candidate.view',Crypt::encrypt($centerCandidate->id));
+                switch ($centerCandidate->passed) {
+                    case '0':
+                        $state = '<span style="color:red">Failed</span>';
+                        break;
+                    case '1':
+                        $state = '<span style="color:green">Passed</span>';
+                        break;
+                    case '2':
+                        $state = '<span style="color:blue">Absent</span>';
+                        break;                    
+                    default:
+                        $state = 'Not Applicable';
+                    break;
+                }
+
+                $centerCandidate->centerid = $centerCandidate->center->tc_id;
+                $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
+                $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+ 
+            }
+            return response()->json(['success' => true, 'data' => $centerCandidates], 200);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Something went Wrong, Try Again'], 400);
+        }
     }
 }

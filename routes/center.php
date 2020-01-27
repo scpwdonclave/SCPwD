@@ -15,6 +15,8 @@ Route::post('add-candidate', 'CenterAuth\CenterHomeController@submit_candidate')
 Route::post('candidates', 'CenterAuth\CenterHomeController@dropout_candidate')->name('candidate.dropout');
 
 Route::post('add-candidate-api', 'CenterAuth\CenterHomeController@candidate_api')->name('addcandidate.api');
+Route::post('candidates/candidate-api', 'CenterAuth\CenterHomeController@candidateApi')->name('candidate.api'); 
+
 
 /* Batches */
 Route::get('batches', 'CenterAuth\CenterBatchController@batches')->name('batches');

@@ -324,36 +324,115 @@ class PartnerCenterController extends Controller
 
     public function candidates(){
         $partner = $this->guard()->user();
-        $centers = $this->guard()->user()->centers;
-        $candidates = collect();
-        $list = []; // * list[] is centercandiadtemap id's array;
-        foreach ($centers as $center) {
-            $center_candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
-                ->orderBy('ccm.id', 'desc')
-                ->where('ccm.tc_id',$center->id)
-                ->get()->unique('cd_id')->pluck('id')->toArray();
-            $list = array_unique (array_merge ($list, $center_candidates));
-            }
+        // $centers = $this->guard()->user()->centers;
+        // // $candidates = collect();
+        // $list = []; // * list[] is centercandiadtemap id's array;
+        // foreach ($centers as $center) {
+        //     $center_candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
+        //         ->orderBy('ccm.id', 'desc')
+        //         ->where('ccm.tc_id',$center->id)
+        //         ->get()->unique('cd_id')->pluck('id')->toArray();
+        //     $list = array_unique (array_merge ($list, $center_candidates));
+        //     }
 
+
+        // $data = [
+        //     'partner'  => $partner,
+        //     'candidates' => CenterCandidateMap::whereIn('id', $list)->get(),
+        // ];
+        // return view('common.candidates')->with($data);
+
+
+        $candidates = collect();
+
+        foreach ($partner->centers as $center) {
+            foreach ($center->candidatesmap as $centerCandidate) {
+                $candidates->push($centerCandidate->candidate);
+            }
+        }
+
+
+        // return $candidates;
 
         $data = [
             'partner'  => $partner,
-            'candidates' => CenterCandidateMap::whereIn('id', $list)->get(),
+            // 'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
+            'candidates' => $candidates,
         ];
         return view('common.candidates')->with($data);
+
+
     }
 
     public function view_candidate($id){
         if ($id=$this->decryptThis($id)) {
-            $candidate = Candidate::findOrFail($id);
-            if ($candidate->centerlatest->center->partner->id == $this->guard()->user()->id) {
-                $partner = $this->guard()->user();
-                $state_dist = DB::table('state_district')->where('id',$candidate->centerlatest->state_district)->first();
-                $center_candidate = $candidate->centerlatest;
+            // $candidate = Candidate::findOrFail($id);
+            // if ($candidate->centerlatest->center->partner->id == $this->guard()->user()->id) {
+            //     $partner = $this->guard()->user();
+            //     $state_dist = DB::table('state_district')->where('id',$candidate->centerlatest->state_district)->first();
+            //     $center_candidate = $candidate->centerlatest;
+            //     return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
+            // } else {
+            //     return abort(404);
+            // }
+
+            // $center_candidate = CenterCandidateMap::where([['cd_id',$id],['tc_id', $this->guard()->user()->center->id]])->get()->last();
+            // $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
+            
+            // return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
+
+
+            $partner = $this->guard()->user();
+            $center_candidate = CenterCandidateMap::findOrFail($id);
+            $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
+            if ($center_candidate->center->tp_id == $this->guard()->user()->id) {
                 return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
             } else {
-                return abort(404);
+                return abort(401);
             }
+        }
+    }
+
+    public function candidateApi(Request $request)
+    {
+        if ($request->has('id')) {
+            $centerCandidates = CenterCandidateMap::where('cd_id', $request->id)->get();
+            $flag = 0;
+            foreach ($centerCandidates as $centerCandidate) {
+
+                if ($centerCandidate->center->tp_id == $this->guard()->user()->id) {
+                    $flag = 1;
+                    $route = route('partner.tc.candidate.view',Crypt::encrypt($centerCandidate->id));
+                    switch ($centerCandidate->passed) {
+                        case '0':
+                            $state = '<span style="color:red">Failed</span>';
+                            break;
+                        case '1':
+                            $state = '<span style="color:green">Passed</span>';
+                            break;
+                        case '2':
+                            $state = '<span style="color:blue">Absent</span>';
+                            break;                    
+                        default:
+                            $state = 'Not Applicable';
+                        break;
+                    }
+    
+                    $centerCandidate->centerid = $centerCandidate->center->tc_id;
+                    $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                    $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
+                    $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                }
+ 
+            }
+            if ($flag) {
+                return response()->json(['success' => true, 'data' => $centerCandidates], 200);
+            } else {
+                return response()->json(['success' => true, 'data' => collect()], 200);
+            }
+
+        } else {
+            return response()->json(['success' => false, 'message' => 'Something went Wrong, Try Again'], 400);
         }
     }
 }

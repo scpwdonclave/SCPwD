@@ -104,13 +104,12 @@ tr.shown td.details-control {
                                     <th>Contact</th>
                                     <th>Category</th>
                                     <th>Date of Birth</th>
+                                    @if (Request::segment(1)!='partner')
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         </table>
                     </div>
@@ -289,21 +288,21 @@ tr.shown td.details-control {
 {{-- <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script> --}}
 
 <script>
-// var opinions = [{"id":47,"name":"E061140","fileName":null,"disposition":null,"summary":null,"title":"Marr. of Eustice","opinionDate":"2015-12-10"},{"id":48,"name":"C070296M","fileName":null,"disposition":null,"summary":null,"title":"P. v. Nilsson","opinionDate":"2015-12-10"},{"id":50,"name":"S209643","fileName":null,"disposition":null,"summary":null,"title":"P. v. Stevens","opinionDate":"2015-12-10"}];
-
 var opinions = JSON.parse('{!!$candidates!!}');
+// opinions.replace()
+
+    opinions.forEach(v => {
+        console.log(v.action);
+        v.action = v.action.replace(/####/gi, "'");
+        v.action = v.action.replace(/@@@@/gi, '"');
+        console.log(v.action);
+    });
+
 console.log(opinions);
-
-var sections = 
-[{"code":"code of civil procedure 1","sectionNumber":{"position":-1,"sectionNumber":"177.5"},"refCount":2,"section":{"part":"Chapter","partNumber":"4","title":"Incidental Powers and Duties of Judicial Officers","codeRange":{"sNumber":{"position":168,"sectionNumber":"177"},"eNumber":{"position":171,"sectionNumber":"179"}},"depth":3}},
- {"code":"code of civil procedure 2","sectionNumber":{"position":-1,"sectionNumber":"580"},"refCount":16,"section":{"part":"Chapter","partNumber":"1","title":"Judgment in General","codeRange":{"sNumber":{"position":862,"sectionNumber":"577"},"eNumber":{"position":879,"sectionNumber":"582.5"}},"depth":3}}];
-
 function format ( table_id ) {
     return '<table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable" id="opiniondt_'+table_id+'">'+
-    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Button</th></tr></thead></table>';
+    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Status</th><th>Action</th></tr></thead></table>';
   }
-var iTableCounter=1;
-
 
 function renderSubTable(tr, row, centerdata) {
     var oInnerTable;
@@ -325,38 +324,65 @@ function renderSubTable(tr, row, centerdata) {
         columns:[ 
             { data:'partnerid' },
             { data:'centerid' },
-            { data:'address' },
+            { data:'status' },
+            { data:'btn' },
             ]
     });
-    iTableCounter = iTableCounter + 1;
 }
 
 
 $(document).ready(function() {
 	TableHtml = $('#opiniondt').html();
   
-    var table = $('#opiniondt').DataTable( {
-      paging:    true,
-      dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'print'
+    if ('{{Request::segment(1)}}'==='partner') {
+        var table = $('#opiniondt').DataTable( {
+        paging:    true,
+        dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ],
+        searching: true, 
+        info:      true, 
+        rowId: 'id', 
+        data: opinions, 
+        columns:[ 
+            {   className:      'details-control',
+                orderable:      false,
+                data:           null,
+                defaultContent: '' },
+            { data:'name'},
+            { data:'contact'}, 
+            { data:'category'},
+            { data:'dob'},
         ],
-      searching: true, 
-      info:      true, 
-      rowId: 'id', 
-      data: opinions, 
-      columns:[ 
-        {   className:      'details-control',
-            orderable:      false,
-            data:           null,
-            defaultContent: '' },
-        { data:'name'},
-        { data:'contact'}, 
-        { data:'email'},
-        { data:'dob'},
-      ],
-      order: [[1, 'asc']]
-    } );
+        order: [[1, 'asc']]
+        } );
+    } else {
+        var test='aa';
+        var table = $('#opiniondt').DataTable( {
+        paging:    true,
+        dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ],
+        searching: true, 
+        info:      true, 
+        rowId: 'id', 
+        data: opinions, 
+        columns:[ 
+            {   className:      'details-control',
+                orderable:      false,
+                data:           null,
+                defaultContent: '' },
+            { data:'name'},
+            { data:'contact'}, 
+            { data:'category'},
+            { data:'dob'},
+            { data:'action'},
+        ],
+        order: [[1, 'asc']]
+        } );
+    }
     /* Add event listener for opening and closing details
      * Note that the indicator for showing which row is open is not controlled by DataTables,
      * rather it is done here
@@ -364,7 +390,7 @@ $(document).ready(function() {
      $('#opiniondt tbody').on('click', 'td.details-control', function () {
          var tr = $(this).closest('tr');
          var row = table.row( tr );
-        console.log(tr[0].rowIndex);
+        // console.log(tr[0].id);
         
         //  console.log(opinions[tr[0].rowIndex-1].id);
          
@@ -372,27 +398,27 @@ $(document).ready(function() {
              //  This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
-         }
-         else {
+         } else {
             // Open this row
-            let id = opinions[tr[0].rowIndex-1].id;
+            let id = tr[0].id;
+            // console.log('ID: '+tr[0].rowIndex);
+            
             let _token = $('[name=_token]').val();
             $.ajax({
-                url: "{{route('admin.candidate.api')}}",
+                url: "{{route(Request::segment(1).'.candidate.api')}}",
                 method: 'POST',
                 data: { _token, id },
                 success: function (data) {
-                    console.log(data.data);                    
+                    // console.log(data.data);                    
                     renderSubTable(tr, row, data.data)
                 },
                 error: function (data) {
-                    console.log(data);                    
+                    swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
                 }
-            })
-            
+            });
         }
      });
-} );
+});
 
 </script>
 @endsection

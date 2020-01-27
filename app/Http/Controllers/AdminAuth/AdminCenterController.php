@@ -366,33 +366,37 @@ class AdminCenterController extends Controller
 
 
     public function candidates(){
-        $candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
-            ->orderBy('ccm.id', 'desc')            
-            ->get()->unique('cd_id')->pluck('id')->toArray();
-        
-        // $data = [
-        //     'admin'  => $this->guard()->user(),
-        //     'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
-        // ];
 
         $candidates = Candidate::all();
         foreach ($candidates as $candidate) {
             $candidate->centermap;
-            $candidate->count = $candidate->centermap->count();
+
+            if ($candidate->status) {
+                $class = 'badge bg-red margin-0';
+                $text = 'Deactivate';
+            } else {
+                $class = 'badge bg-green margin-0';
+                $text = 'Activate';
+            }
+
+            $a=Crypt::encrypt($candidate->id);
+            $b=$candidate->status;
+            $popup = Crypt::encrypt($candidate->id).','.$candidate->status.','.$candidate->name;
+            $candidate->action = "<button type=button class=####$class#### onclick=@@@@popup(####$popup####)@@@@>$text</button>";
         }
 
+
+    
         $data = [
             'admin'  => $this->guard()->user(),
             'candidates' => $candidates,
         ];
-        // return $candidates;
         return view('common.candidates')->with($data);
     }
 
     public function view_candidate($id){
         if ($id = $this->decryptThis($id)) {
-            $candidate = Candidate::findOrFail($id);
-            $center_candidate= $candidate->centerlatest;
+            $center_candidate = CenterCandidateMap::findOrFail($id);
             $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
             return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
         }
@@ -581,8 +585,28 @@ class AdminCenterController extends Controller
         if ($request->has('id')) {
             $centerCandidates = CenterCandidateMap::where('cd_id', $request->id)->get();
             foreach ($centerCandidates as $centerCandidate) {
+
+                $route = route('admin.tc.candidate.view',Crypt::encrypt($centerCandidate->id));
+                switch ($centerCandidate->passed) {
+                    case '0':
+                        $state = '<span style="color:red">Failed</span>';
+                        break;
+                    case '1':
+                        $state = '<span style="color:green">Passed</span>';
+                        break;
+                    case '2':
+                        $state = '<span style="color:blue">Absent</span>';
+                        break;                    
+                    default:
+                        $state = 'Not Applicable';
+                    break;
+                }
+
                 $centerCandidate->centerid = $centerCandidate->center->tc_id;
                 $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
+                $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+ 
             }
             return response()->json(['success' => true, 'data' => $centerCandidates], 200);
         } else {
