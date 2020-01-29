@@ -44,7 +44,7 @@ class AppHelper
         } else {
             $candidate = Candidate::where('email', $email)->first();
             if ($candidate) {
-                return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
+                return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id, 'docno' => $candidate->doc_no);
             } else {
                 $center = Center::where('email', $email)->first();
                 if ($center) {
@@ -78,7 +78,7 @@ class AppHelper
     public function checkContact($contact){
         $candidate = Candidate::where('contact', $contact)->first();
         if ($candidate) {
-            return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id);
+            return array('status' => false, 'user' => 'candidate', 'userid' => $candidate->id, 'docno' => $candidate->doc_no);
         } else {
             $center = Center::where('mobile', $contact)->first();
             if ($center) {

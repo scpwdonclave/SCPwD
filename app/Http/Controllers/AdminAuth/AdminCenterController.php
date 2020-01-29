@@ -374,13 +374,13 @@ class AdminCenterController extends Controller
             if ($candidate->status) {
                 $class = 'badge bg-red margin-0';
                 $text = 'Deactivate';
+                $status = '<span style=\"color:green\">Active</span>';
             } else {
                 $class = 'badge bg-green margin-0';
                 $text = 'Activate';
+                $status = '<span style=\"color:red\">Deactive</span>';
             }
-
-            $a=Crypt::encrypt($candidate->id);
-            $b=$candidate->status;
+            $candidate->candidate_status = $status;
             $popup = Crypt::encrypt($candidate->id).','.$candidate->status.','.$candidate->name;
             $candidate->action = "<button type=button class=####$class#### onclick=@@@@popup(####$popup####)@@@@>$text</button>";
         }
@@ -604,6 +604,7 @@ class AdminCenterController extends Controller
 
                 $centerCandidate->centerid = $centerCandidate->center->tc_id;
                 $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                $centerCandidate->job = $centerCandidate->jobrole->partnerjobrole->jobrole->job_role;
                 $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
                 $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
  

@@ -97,6 +97,14 @@ class CenterHomeController extends Controller
         $candidates = collect();
 
         foreach ($center->candidatesmap as $centerCandidate) {
+            if ($centerCandidate->candidate->status) {
+                $status = '<span style=\"color:green\">Active</span>';
+            } else {
+                $status = '<span style=\"color:red\">Deactive</span>';
+            }
+
+            $centerCandidate->candidate->candidate_status = $status;
+
             $candidates->push($centerCandidate->candidate);
         }
 
@@ -104,9 +112,9 @@ class CenterHomeController extends Controller
 
         $data = [
             'center'  => $center,
-            // 'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
-            'candidates' => $candidates,
+            'candidates' => $candidates->unique(),
         ];
+
         return view('common.candidates')->with($data);
     }
 
@@ -138,8 +146,12 @@ class CenterHomeController extends Controller
 
     public function submit_candidate(CDFormValidation $request){
 
-        DB::transaction(function() use ($request){ 
-            $candidate = new Candidate;
+        DB::transaction(function() use ($request){
+
+            $candidate = Candidate::where('doc_no', $request->doc_no)->first();
+            if (!$candidate) {
+                $candidate = new Candidate;
+            }
             
             $candidate->name = $request->name;
             $candidate->gender = $request->gender;
@@ -208,14 +220,16 @@ class CenterHomeController extends Controller
                     $candidate = Candidate::find($data['userid']);
                     if ($candidate->status) {
                         foreach ($candidate->centermap as $center) {
-                            if (is_null($center->passed) || !$center->passed) {
-                                return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is already Registered with SCPwD'], 200);
+                            if (!$center->dropout) {
+                                if (is_null($center->passed) || !$center->passed) {
+                                    return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is already Registered with SCPwD'], 200);
+                                }
                             }
                         }
                     } else {
                         return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is Blacklisted, Contact with SCPwD'], 200);
                     }                    
-                    return response()->json(['success' => true,'candidate'=> $center->candidate], 200);
+                    return response()->json(['success' => true,'candidate'=> $candidate], 200);
                 } else {
                     return response()->json(['success' => false, 'message' => 'We have This Doc No Registered with Someone else'], 200);
                 }
@@ -226,23 +240,64 @@ class CenterHomeController extends Controller
             $emaildata = AppHelper::instance()->checkEmail($request->email);
             $contactdata = AppHelper::instance()->checkContact($request->contact);
             
-            if ($emaildata['status'] && $contactdata['status']) {
-                // No Duplicate
-                return response()->json(['success' => true], 200);
-                
-            } elseif ($emaildata['status'] && !$contactdata['status']) {
-                // Duplicate Contact
-                return response()->json(['success' => false, 'message' => 'We have This Contact No Registered with Someone else'], 200);
-                
-            } elseif (!$emaildata['status'] && $contactdata['status']) {
-                // Duplicate Email    
-                return response()->json(['success' => false, 'message' => 'We have This Email Registered with Someone else'], 200);
-                
-            } elseif (!$emaildata['status'] || !$contactdata['status']) {
-                // Duplicate Email & Contact    
-                return response()->json(['success' => false, 'message' => 'We have This Email & Contact No Registered with Someone else'], 200);
-           
+            $array = [];
+            if ($emaildata['status']) {
+                $array['email'] = true;
+            } else {
+                if ($emaildata['user'] == 'candidate') {
+                    if ($emaildata['docno'] == $request->doc_no) {
+                        $array['email'] = true;
+                    } else {
+                        $array['email'] = false;
+                    }
+                } else {
+                    $array['email'] = false;
+                }
             }
+            
+            if ($contactdata['status']) {
+                $array['mobile'] = true;
+            } else {
+                if ($contactdata['user'] == 'candidate') {
+                    if ($contactdata['docno'] == $request->doc_no) {
+                        $array['mobile'] = true;
+                    } else {
+                        $array['mobile'] = false;
+                    }
+                } else {
+                    $array['mobile'] = false;
+                }
+            }
+
+            if ($array['mobile'] && $array['email']) {
+                return response()->json(['success' => true], 200);
+            } elseif ($array['mobile'] && !$array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Email ID is Registered with Someone Else'], 200);
+            } elseif (!$array['mobile'] && $array['email']) {
+                return response()->json(['success' => false, 'message' => 'This Mobile No is Registered with Someone Else'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Email ID & Mobile No is Registered with Someone Else'], 200);
+            }
+
+
+
+            // if ($emaildata['status'] && $contactdata['status']) {
+            //     // No Duplicate
+            //     return response()->json(['success' => true], 200);
+                
+            // } elseif ($emaildata['status'] && !$contactdata['status']) {
+            //     // Duplicate Contact
+            //     return response()->json(['success' => false, 'message' => 'We have This Contact No Registered with Someone else'], 200);
+                
+            // } elseif (!$emaildata['status'] && $contactdata['status']) {
+            //     // Duplicate Email    
+            //     return response()->json(['success' => false, 'message' => 'We have This Email Registered with Someone else'], 200);
+                
+            // } elseif (!$emaildata['status'] || !$contactdata['status']) {
+            //     // Duplicate Email & Contact    
+            //     return response()->json(['success' => false, 'message' => 'We have This Email & Contact No Registered with Someone else'], 200);
+           
+            // }
 
         } elseif ($request->has('jobid')) {
             $centerJob = CenterJobRole::find($request->jobid);
@@ -252,6 +307,14 @@ class CenterHomeController extends Controller
                 return response()->json(['success' => false], 200);
             }
             
+        } elseif ($request->has('job')) {
+            
+            $centerCandidate = CenterCandidateMap::where([['cd_id',$request->id],['tc_job_id',$request->job],['passed',1]])->first();
+            if ($centerCandidate) {
+                return response()->json(['success' => false, 'message' => 'This Candidate already <span style="color:blue;font-weight:bold">Received</span> a <span style="color:blue;font-weight:bold">Ceritificate</span> under this Job Role, Try Another Job Role'], 200);                
+            } else {
+                return response()->json(['success' => true]);
+            }
         }
     }
 
@@ -283,7 +346,7 @@ class CenterHomeController extends Controller
                             $array = array('type' => 'error', 'message' => "Drop Out Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
                         }
                     } else {
-                        $array = array('type' => 'error', 'message' => "Something went Wrong, Try Again");
+                        $array = array('type' => 'error', 'message' => "Something went Wrong, Try Again 1");
                     }
                     return response()->json($array,200);
                 } else {
@@ -318,10 +381,24 @@ class CenterHomeController extends Controller
                     break;
                 }
 
+                $popup = Crypt::encrypt($centerCandidate->id).','.$centerCandidate->candidate->status.','.$centerCandidate->candidate->name;
+
                 $centerCandidate->centerid = $centerCandidate->center->tc_id;
                 $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                $centerCandidate->job = $centerCandidate->jobrole->partnerjobrole->jobrole->job_role;
                 $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
-                $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                if ($centerCandidate->dropout) {
+                    $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                } else {
+                    if ($centerCandidate->batchcandidate) {
+                        if (Carbon::parse($centerCandidate->batchcandidate->batch->batch_end.' 23:59:00') < Carbon::now()) {
+                            $centerCandidate->btn = "<button type='button' class='badge bg-red margin-0' onclick='popup(\"$popup\")'>Dropout</button>&nbsp;&nbsp;&nbsp;<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                        }
+                    } else {
+                        $centerCandidate->btn = "<button type='button' class='badge bg-red margin-0' onclick='popup(\"$popup\")'>Dropout</button>&nbsp;&nbsp;&nbsp;<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                    }
+                }
+                
  
             }
             return response()->json(['success' => true, 'data' => $centerCandidates], 200);

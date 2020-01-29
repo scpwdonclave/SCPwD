@@ -16,6 +16,21 @@
                             <h6>
                                 This Candidate is <span style='color:{{($center_candidate->candidate->status)?"green":"red"}}'>{{($center_candidate->candidate->status)?"Active":"Inactive"}}</span>
                             </h6>
+                            @if ($center_candidate->dropout)
+                                <h6><span style="color:blue">Dropped out</span></h6>
+                            @endif
+                            @switch($center_candidate->passed)
+                            @case('0')
+                                    <h6><span style="color:red">Failed</span></h6>
+                                    @break
+                            @case('1')
+                                    <h6><span style="color:green">Passed</span></h6>
+                                    @break
+                            @case('2')
+                                    <h6><span style="color:red">Absent</span></h6>
+                                    @break
+                            @default
+                            @endswitch
                         </div>
                         <br>
                     <ul class="cbp_tmtimeline">

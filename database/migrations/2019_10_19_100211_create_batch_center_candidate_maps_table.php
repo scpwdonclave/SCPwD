@@ -16,8 +16,7 @@ class CreateBatchCenterCandidateMapsTable extends Migration
         Schema::create('batch_center_candidate_maps', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('bt_id');
-            $table->unsignedBigInteger('candidate_id');
-            $table->unsignedBigInteger('cc_id');
+            $table->unsignedBigInteger('candidate_id')->comment= 'Center Candidate ID';
             $table->timestamps();
         });
     }

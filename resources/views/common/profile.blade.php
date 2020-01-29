@@ -32,6 +32,15 @@
                                     break;
                                 default:
                                     $name = $admin->name;$email = $admin->email;
+                                    if($admin->supadmin){
+                                        $attribute = null;
+                                        $attribute_pass = null;
+                                        $password_text = 'Unchanged';
+                                    } else {
+                                        $attribute = 'readonly';
+                                        $attribute_pass = 'required';
+                                        $password_text = 'Enter New Password';
+                                    }
                                     break;
                             }
                         @endphp
@@ -40,13 +49,13 @@
                             <div class={{(Request::segment(1)==='admin')?"col-sm-5":"col-sm-4"}}>
                                 <label for="name">Name</label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Name" value="{{ $name }}" name="name" {{(Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required'}} >
+                                    <input type="text" class="form-control" placeholder="Name" value="{{ $name }}" name="name" {{(Request::segment(1)==='admin')?$attribute:((Request::segment(1)==='agency')?'readonly':((Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required'))}} >
                                 </div>
                             </div>
                             <div class={{(Request::segment(1)==='admin')?"col-sm-5":"col-sm-4"}}>
                                 <label for="email">Email</label>
                                 <div class="form-group form-float">
-                                    <input type="email" class="form-control" placeholder="Email" value="{{($errors->has('email'))?old('email'):$email}}" name="email" {{(Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required'}} >
+                                    <input type="email" class="form-control" placeholder="Email" value="{{($errors->has('email'))?old('email'):$email}}" name="email" {{(Request::segment(1)==='admin')?$attribute:((Request::segment(1)==='agency')?'readonly':((Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required'))}} >
                                     <span style="color:red">{{($errors->has('email'))?$errors->first('email'):null}}</span>
                                 </div>
                             </div>
@@ -54,12 +63,28 @@
                                 <div class="col-sm-4">
                                     <label for="mobile">Contact</label>
                                     <div class="form-group form-float">
-                                        <input type="text" class="form-control" placeholder="Mobile" value="{{($errors->has('mobile'))?old('mobile'):$mobile}}" name="mobile" {{(Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required'}} >
+                                        <input type="text" class="form-control" placeholder="Mobile" value="{{($errors->has('mobile'))?old('mobile'):$mobile}}" name="mobile" {{(Request::segment(1)==='agency')?'readonly':((Request::segment(1)==='center' || Request::segment(1)==='assessor')?'readonly':'required')}} >
                                         <span style="color:red">{{($errors->has('mobile'))?$errors->first('mobile'):null}}</span>
                                     </div>
                                 </div>
                             @endif
                         </div>
+                        @if (Request::segment(1)==='admin')
+                            @if (!$admin->supadmin)
+                                <br>
+                                    <div class="text-center">
+                                        <h6 style="color:blue">Only Super Admin is authorised to Change your above Info</h6>
+                                    </div>
+                                <br>
+                            @endif
+                        @endif
+                        @if (Request::segment(1)==='agency')
+                            <br>
+                                <div class="text-center">
+                                    <h6 style="color:blue">Only Admins are authorised to Change your above Info</h6>
+                                </div>
+                            <br>
+                        @endif
                         @if (Request::segment(1)==='center' || Request::segment(1)==='assessor')
                             <br>
                                 <div class="text-center">
@@ -73,7 +98,7 @@
                                     <label for="password">Password</label><span class="input-group-addon1" onclick="viewpass()"><i id="password_eye" class="zmdi zmdi-eye-off"></i></span>
                                 </div>
                                 <d-iv class="form-group form-float">
-                                    <input id="password" type="password" class="form-control" placeholder="{{(Request::segment(1)==='center' || Request::segment(1)==='assessor')?'Enter New Password':'Unchnaged'}}" name="password" {{(Request::segment(1)==='center' || Request::segment(1)==='assessor')?'required':null}}>
+                                    <input id="password" type="password" class="form-control" placeholder="{{(Request::segment(1)==='admin')?$password_text:((Request::segment(1)==='agency')?'Enter New Password':((Request::segment(1)==='center' || Request::segment(1)==='assessor')?'Enter New Password':'Unchnaged'))}}" name="password" {{(Request::segment(1)==='admin')?$attribute_pass:((Request::segment(1)==='agency')?'required':((Request::segment(1)==='center' || Request::segment(1)==='assessor')?'required':null))}}>
                                 </div>
                             </div>
                         </div>

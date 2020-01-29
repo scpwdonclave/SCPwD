@@ -28,7 +28,7 @@ class CDFormValidation extends FormRequest
             'doc_no' => [
                 'required',
                 'regex:/^([A-Z]){3}([0-9]){7}|^(\d){12}$/',
-                'unique:candidates,doc_no',
+                'unique:candidates,doc_no,'.$this->id,
                 'unique:trainer_statuses,doc_no',
                 'unique:agencies,aadhaar',
                 'unique:assessors,aadhaar',
@@ -43,7 +43,7 @@ class CDFormValidation extends FormRequest
                 'unique:trainers,email',
                 'unique:partners,email',
                 'unique:centers,email',
-                'unique:candidates,email',
+                'unique:candidates,email,'.$this->id,
                 'unique:trainer_statuses,email',
                 'unique:agencies,email',
                 'unique:assessors,email'
@@ -56,7 +56,7 @@ class CDFormValidation extends FormRequest
                 'unique:trainers,mobile',
                 'unique:partners,spoc_mobile',
                 'unique:centers,mobile',
-                'unique:candidates,contact',
+                'unique:candidates,contact,'.$this->id,
                 'unique:trainer_statuses,mobile',
                 'unique:agencies,mobile',
                 'unique:assessors,mobile',

@@ -23,6 +23,7 @@ use App\CenterCandidateMap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminHomeController extends Controller
 {
@@ -54,33 +55,45 @@ class AdminHomeController extends Controller
 
 
         $admin = $this->guard()->user();
-        if ($admin->name == $request->name && $admin->email == $request->email && is_null($request->password)) {
-            alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
-            return redirect()->back();
+        if($admin->supadmin){
+            if ($admin->name == $request->name && $admin->email == $request->email && is_null($request->password)) {
+                alert()->info("You Have not changed any value", 'Abort')->autoclose(3000);
+                return redirect()->back();
+            } else {
+                $request->validate([
+                    'name' => 'required', 
+                    'password' => 'nullable',
+                    'email' => [
+                        'required',
+                        'email',
+                        'unique:admins,email,'.$this->guard()->user()->id,
+                        'unique:partners,email',
+                        'unique:centers,email',
+                        'unique:trainer_statuses,email',
+                        'unique:agencies,email',
+                        'unique:assessors,email',
+                        'unique:candidates,email',
+                    ],
+                ]);
+                if (!is_null($request->password)) {
+                    $admin->password =  Hash::make($request->password);
+                }
+                $admin->name = $request->name;
+                $admin->email = $request->email;
+                $admin->save();
+                
+                alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('4000');
+                return redirect()->back();
+            }
         } else {
             $request->validate([
-                'name' => 'required', 
-                'password' => 'nullable',
-                'email' => [
-                    'required',
-                    'email',
-                    'unique:admins,email,'.$this->guard()->user()->id,
-                    'unique:partners,email',
-                    'unique:centers,email',
-                    'unique:trainer_statuses,email',
-                    'unique:agencies,email',
-                    'unique:assessors,email',
-                    'unique:candidates,email',
-                ],
+                'password' => 'required',
             ]);
-            if (!is_null($request->password)) {
-                $admin->password =  Hash::make($request->password);
-            }
-            $admin->name = $request->name;
-            $admin->email = $request->email;
+
+            $admin->password =  Hash::make($request->password);
             $admin->save();
             
-            alert()->success("Your <span style='color:blue'>Profile</span> has been <span style='color:blue'>Updated</span>",'Awesome')->html()->autoclose('4000');
+            alert()->success("Your <span style='color:blue'>Password</span> has been <span style='color:blue'>Modified</span>",'Awesome')->html()->autoclose('4000');
             return redirect()->back();
         }
 

@@ -90,7 +90,7 @@ function popupReject(id) {
         icon: "info",
         buttons: true,
         buttons: {
-                cancel: "No, Cencel",
+                cancel: "No, Cancel",
                 confirm: {
                     text: "Confirm Reject",
                     closeModal: false

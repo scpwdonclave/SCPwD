@@ -324,44 +324,30 @@ class PartnerCenterController extends Controller
 
     public function candidates(){
         $partner = $this->guard()->user();
-        // $centers = $this->guard()->user()->centers;
-        // // $candidates = collect();
-        // $list = []; // * list[] is centercandiadtemap id's array;
-        // foreach ($centers as $center) {
-        //     $center_candidates = DB::table('candidates  as cd')->join('center_candidate_maps AS ccm', 'ccm.cd_id', '=', 'cd.id')
-        //         ->orderBy('ccm.id', 'desc')
-        //         ->where('ccm.tc_id',$center->id)
-        //         ->get()->unique('cd_id')->pluck('id')->toArray();
-        //     $list = array_unique (array_merge ($list, $center_candidates));
-        //     }
-
-
-        // $data = [
-        //     'partner'  => $partner,
-        //     'candidates' => CenterCandidateMap::whereIn('id', $list)->get(),
-        // ];
-        // return view('common.candidates')->with($data);
-
 
         $candidates = collect();
 
         foreach ($partner->centers as $center) {
             foreach ($center->candidatesmap as $centerCandidate) {
+                if ($centerCandidate->candidate->status) {
+                    $status = '<span style=\"color:green\">Active</span>';
+                } else {
+                    $status = '<span style=\"color:red\">Deactive</span>';
+                }
+    
+                $centerCandidate->candidate->candidate_status = $status;
+    
                 $candidates->push($centerCandidate->candidate);
             }
         }
 
-
-        // return $candidates;
-
+        // return  $candidates->unique()->values();
         $data = [
             'partner'  => $partner,
-            // 'candidates' => CenterCandidateMap::whereIn('id', $candidates)->get(),
-            'candidates' => $candidates,
+            'candidates' => $candidates->unique()->values(),
         ];
+
         return view('common.candidates')->with($data);
-
-
     }
 
     public function view_candidate($id){
@@ -396,9 +382,10 @@ class PartnerCenterController extends Controller
     public function candidateApi(Request $request)
     {
         if ($request->has('id')) {
-            $centerCandidates = CenterCandidateMap::where('cd_id', $request->id)->get();
+            $center_candidates = CenterCandidateMap::where('cd_id', $request->id)->get();
             $flag = 0;
-            foreach ($centerCandidates as $centerCandidate) {
+            $centerCandidates = collect();
+            foreach ($center_candidates as $centerCandidate) {
 
                 if ($centerCandidate->center->tp_id == $this->guard()->user()->id) {
                     $flag = 1;
@@ -420,8 +407,11 @@ class PartnerCenterController extends Controller
     
                     $centerCandidate->centerid = $centerCandidate->center->tc_id;
                     $centerCandidate->partnerid = $centerCandidate->center->partner->tp_id;
+                    $centerCandidate->job = $centerCandidate->jobrole->partnerjobrole->jobrole->job_role;
                     $centerCandidate->status = ($centerCandidate->dropout)?'<span style="color:blue">Dropped out</span>':$state;
                     $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                    
+                    $centerCandidates->push($centerCandidate);
                 }
  
             }

@@ -416,7 +416,7 @@
                 icon: "info",
                 buttons: true,
                 buttons: {
-                        cancel: "No, Cencel",
+                        cancel: "No, Cancel",
                         confirm: {
                             text: "Confirm Reject",
                             closeModal: false
@@ -458,7 +458,7 @@
                     icon: "info",
                     buttons: true,
                     buttons: {
-                            cancel: "No, Cencel",
+                            cancel: "No, Cancel",
                             confirm: {
                                 text: "Confirm UPDATE",
                                 closeModal: false

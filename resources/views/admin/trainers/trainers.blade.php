@@ -166,7 +166,7 @@
             icon: "info",
             buttons: true,
             buttons: {
-                    cancel: "No, Cencel",
+                    cancel: "No, Cancel",
                     confirm: {
                         text: confirmBtn,
                         closeModal: false

@@ -42,6 +42,7 @@
                 @endif
                 <div class="body">
                     <form id="form_candidate" method="POST" action="{{ route('center.submitcandidate') }}" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="0">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -110,7 +111,8 @@
                                             <div class="col-sm-3">
                                                 <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
+                                                    <select class="form-control selectpicker" data-live-search="true" name="gender" data-dropup-auto='false' required>
+                                                        <option disabled selected value> -- select an option -- </option>
                                                         <option>Male</option>
                                                         <option>Female</option>
                                                         <option>Transgender</option>
@@ -127,6 +129,7 @@
                                                 <label for="m_status">Marital Status <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="m_status" data-dropup-auto='false' required>
+                                                        <option disabled selected value> -- select an option -- </option>
                                                         <option>Married</option>
                                                         <option>Unmarried</option>
                                                         <option>Divorcee</option>
@@ -341,17 +344,22 @@
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
+                            
                             if (!data.success) {
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
                                 swalText.innerHTML = data.message;
                                 swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false});
                             } else {
-                                // if (data.candidate == null) {
-                                    
-                                // } else {
-                                    
-                                // }
+                                if (data.candidate != null) {
+                                    $('[name=name]').val(data.candidate.name);
+                                    $('[name=contact]').val(data.candidate.contact);
+                                    $('[name=email]').val(data.candidate.email);
+                                    $('[name=dob]').val(data.candidate.dob);
+                                    $('[name=gender]').val(data.candidate.gender);
+                                    $('[name=id]').val(data.candidate.id);
+                                    $('.selectpicker').selectpicker('refresh');
+                                }
                                 $('#'+div[0]).collapse('hide');
                                 $('#'+div[0]).on('hidden.bs.collapse', function () {
                                     $('#'+div[1]).collapse('show');
@@ -371,7 +379,8 @@
                     var _token = $('[name=_token]').val();
                     let email = $('[name=email]').val();
                     let contact = $('[name=contact]').val();
-                    var dataValidate = {_token, email, contact};
+                    var doc_no = $('[name=doc_no]').val();
+                    var dataValidate = {_token, email, contact, doc_no};
                     var swalText = document.createElement("div");
 
                     $("#btnTwo").prop("disabled", true);
@@ -383,21 +392,16 @@
                         success: function(data){
                             
                             if (!data.success) {
-                                $("#btnTwo").prop("disabled", false);
-                                $("#btnTwo").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
                                 swalText.innerHTML = data.message;
                                 swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false});
                             } else {
-                                // if (data.candidate == null) {
-                                    
-                                // } else {
-                                    
-                                // }
                                 $('#'+div[0]).collapse('hide');
                                 $('#'+div[0]).on('hidden.bs.collapse', function () {
                                     $('#'+div[1]).collapse('show');
                                 });
                             }
+                            $("#btnTwo").prop("disabled", false);
+                            $("#btnTwo").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
                         },
                         error: function(){
                             swalText.innerHTML = 'Something went Wrong, Please Try Again';
@@ -432,7 +436,33 @@
                         $("#submit_form").prop("disabled", true);
                         $("#last_prev_btn").prop("disabled", true);
                         $("#submit_form").html("Please Wait...");
-                        $(this).unbind().submit();
+                        var id = $('[name=id]').val();
+                        var job = $('[name=job]').val();
+                        var _token = $('[name=_token]').val();
+                        let swalText = document.createElement("div");
+                        var dataString = {_token,id,job}
+                        form = this;
+                        $.ajax({
+                            data:dataString,
+                            method: "POST",
+                            url: "{{ route('center.addcandidate.api') }}",
+                            success: function (data) {
+                                if (data.success) {
+                                    console.log('Submit');
+                                    
+                                    // $(form).unbind().submit();
+                                } else {
+                                    swalText.innerHTML = data.message;
+                                    swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 5000, buttons: false});
+                                    $("#submit_form").prop("disabled", false);
+                                    $("#last_prev_btn").prop("disabled", false);
+                                    $("#submit_form").html("<span class='glyphicon glyphicon-arrow-right'></span> Submit");
+                                }
+                            },
+                            error: function (data) {
+                                swal({title: "Attention", content: 'Something Went Wrong, Please Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                            }
+                        });
                     
                     /* End Disabling Prev & Submit Button and Proceed to Submit */
                 

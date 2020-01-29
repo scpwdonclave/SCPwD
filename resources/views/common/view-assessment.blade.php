@@ -289,7 +289,7 @@
             icon: "info",
             buttons: true,
             buttons: {
-                    cancel: "Cencel",
+                    cancel: "Cancel",
                     confirm: {
                         text: "Confirm",
                         closeModal: false

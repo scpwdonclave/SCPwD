@@ -129,7 +129,7 @@ function removeBatch(id){
         icon: "info",
         buttons: true,
         buttons: {
-                cancel: "No, Cencel",
+                cancel: "No, Cancel",
                 confirm: {
                     text: "Confirm Remove Batch",
                     closeModal: false

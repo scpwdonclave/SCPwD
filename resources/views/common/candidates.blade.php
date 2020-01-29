@@ -104,7 +104,8 @@ tr.shown td.details-control {
                                     <th>Contact</th>
                                     <th>Category</th>
                                     <th>Date of Birth</th>
-                                    @if (Request::segment(1)!='partner')
+                                    <th>Candidate Status</th>
+                                    @if (Request::segment(1)==='admin')
                                         <th>Action</th>
                                     @endif
                                 </tr>
@@ -163,7 +164,7 @@ tr.shown td.details-control {
                             icon: "info",
                             buttons: true,
                             buttons: {
-                                    cancel: "No, Cencel",
+                                    cancel: "No, Cancel",
                                     confirm: {
                                         text: "Confirm Update Status",
                                         closeModal: false
@@ -224,7 +225,7 @@ tr.shown td.details-control {
                             icon: "info",
                             buttons: true,
                             buttons: {
-                                    cancel: "No, Cencel",
+                                    cancel: "No, Cancel",
                                     confirm: {
                                         text: "Proceed",
                                         closeModal: true
@@ -245,7 +246,7 @@ tr.shown td.details-control {
                                             icon: "info",
                                             buttons: true,
                                             buttons: {
-                                                    cancel: "No, Cencel",
+                                                    cancel: "No, Cancel",
                                                     confirm: {
                                                         text: "Confirm Drop Out",
                                                         closeModal: false
@@ -289,19 +290,17 @@ tr.shown td.details-control {
 
 <script>
 var opinions = JSON.parse('{!!$candidates!!}');
-// opinions.replace()
 
     opinions.forEach(v => {
-        console.log(v.action);
-        v.action = v.action.replace(/####/gi, "'");
-        v.action = v.action.replace(/@@@@/gi, '"');
-        console.log(v.action);
+        if (v.action !== undefined) {
+            v.action = v.action.replace(/####/gi, "'");
+            v.action = v.action.replace(/@@@@/gi, '"');
+        }
     });
 
-console.log(opinions);
 function format ( table_id ) {
     return '<table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable" id="opiniondt_'+table_id+'">'+
-    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Status</th><th>Action</th></tr></thead></table>';
+    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Job Role</th><th>Status</th><th>Action</th></tr></thead></table>';
   }
 
 function renderSubTable(tr, row, centerdata) {
@@ -324,6 +323,7 @@ function renderSubTable(tr, row, centerdata) {
         columns:[ 
             { data:'partnerid' },
             { data:'centerid' },
+            { data:'job' },
             { data:'status' },
             { data:'btn' },
             ]
@@ -333,19 +333,9 @@ function renderSubTable(tr, row, centerdata) {
 
 $(document).ready(function() {
 	TableHtml = $('#opiniondt').html();
-  
-    if ('{{Request::segment(1)}}'==='partner') {
-        var table = $('#opiniondt').DataTable( {
-        paging:    true,
-        dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ],
-        searching: true, 
-        info:      true, 
-        rowId: 'id', 
-        data: opinions, 
-        columns:[ 
+
+    if ('{{Request::segment(1)}}'==='admin') {
+        var columns = [ 
             {   className:      'details-control',
                 orderable:      false,
                 data:           null,
@@ -354,35 +344,39 @@ $(document).ready(function() {
             { data:'contact'}, 
             { data:'category'},
             { data:'dob'},
-        ],
-        order: [[1, 'asc']]
-        } );
-    } else {
-        var test='aa';
-        var table = $('#opiniondt').DataTable( {
-        paging:    true,
-        dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'print'
-            ],
-        searching: true, 
-        info:      true, 
-        rowId: 'id', 
-        data: opinions, 
-        columns:[ 
-            {   className:      'details-control',
-                orderable:      false,
-                data:           null,
-                defaultContent: '' },
-            { data:'name'},
-            { data:'contact'}, 
-            { data:'category'},
-            { data:'dob'},
+            { data:'candidate_status'},
             { data:'action'},
-        ],
+        ];
+    } else {
+        var columns = [ 
+            {   className:      'details-control',
+                orderable:      false,
+                data:           null,
+                defaultContent: '' },
+            { data:'name'},
+            { data:'contact'}, 
+            { data:'category'},
+            { data:'dob'},
+            { data:'candidate_status'},
+        ];
+    }
+
+
+    var table = $('#opiniondt').DataTable( {
+        paging:    true,
+        dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'print'
+            ],
+        searching: true, 
+        info:      true, 
+        rowId: 'id', 
+        data: opinions, 
+        columns: columns,
         order: [[1, 'asc']]
         } );
-    }
+
+
     /* Add event listener for opening and closing details
      * Note that the indicator for showing which row is open is not controlled by DataTables,
      * rather it is done here
@@ -409,7 +403,6 @@ $(document).ready(function() {
                 method: 'POST',
                 data: { _token, id },
                 success: function (data) {
-                    // console.log(data.data);                    
                     renderSubTable(tr, row, data.data)
                 },
                 error: function (data) {
