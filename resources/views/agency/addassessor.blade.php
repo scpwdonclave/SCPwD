@@ -38,7 +38,7 @@
                             @endforeach
                         </ul>
                     </div>
-                @endif
+                @endif 
                 <form id="form_assessor" method="POST" action="{{route('agency.as.assessor.insert')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

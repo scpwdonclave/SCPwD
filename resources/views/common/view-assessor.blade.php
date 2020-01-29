@@ -454,9 +454,9 @@
                                         <td>{{is_null($item->batch->batch_id)?Config::get('constants.nullidtext'):$item->batch->batch_id}}</td>
                                         <td>{{$item->batch->partner->tp_id}}</td>
                                         <td>{{$item->batch->center->tc_id}}</td>
-                                        <td>{{$item->batch->batch_start}}</td>
-                                        <td>{{$item->batch->batch_end}}</td>
-                                        <td>{{$item->batch->assessment}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                         @if ($item->batch->verified)
                                         <td style="color:{{($item->batch->status)?'green':'red'}}">{{($item->batch->status)?'Active':'Inactive'}}</td>
                                         @else

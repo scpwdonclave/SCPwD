@@ -101,7 +101,7 @@
                                     <td>{{$item[5]}}</td>
                                     <td>{{$item[6]}}</td>
                                     <td>{{$item[7]}}</td>
-                                    <td>U/D</td>
+                                    <td>{{$item[8]}}</td>
                                     <td>{{$item[5]}}</td>
                                     
                                 </tr>

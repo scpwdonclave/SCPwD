@@ -70,7 +70,7 @@ table.dataTable thead th:first-child {
                                 <div class="col-sm-4">
                                     <label for="batch_end">Batch End Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float batch_end_datepicker">
-                                        <input type="text" id="batch_end" class="form-control" placeholder="Batch End Date" onchange="calculate_assessment()" value="{{ $batchData->batch_end }}" name="batch_end" required >
+                                        <input type="text" id="batch_end" class="form-control" placeholder="Batch End Date" onchange="calculate_assessment()" value="{{\Carbon\Carbon::parse( $batchData->batch_end)->format('d-m-Y') }}" name="batch_end" required >
                                     </div>
                                 </div>
                                 <div class="col-sm-4">

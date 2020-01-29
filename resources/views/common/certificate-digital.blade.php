@@ -140,7 +140,7 @@
             </tr>
             <tr >
               <td style="font-weight:bold;">Batch End Date</td>
-            <td>{{$candidateMark->batchAssessment->batch->batch_end}}</td>
+            <td>{{\Carbon\Carbon::parse($candidateMark->batchAssessment->batch->batch_end)->format('d-m-Y')}}</td>
               
             </tr>
             {{-- <tr >

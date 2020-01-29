@@ -66,13 +66,13 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-weight:bold">End Date</td>
-                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'firebrick'}}">{{$item->batch->batch_end}}</td>
-                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'green'}}">{{$item->end_date}}</td>
+                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'firebrick'}}">{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
+                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'green'}}">{{\Carbon\Carbon::parse($item->end_date)->format('d-m-Y')}}</td>
                                                     </tr>
                                                     <tr>
                                                         <td style="font-weight:bold">Assessment</td>
-                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'firebrick'}}">{{$item->batch->assessment}}</td>
-                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'green'}}">{{$item->assessment}}</td>
+                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'firebrick'}}">{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'green'}}">{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -109,8 +109,8 @@
                                 <div class="info">
                                     <h4>{{$item->batch->batch_id}}</h4>                    
                                     <small><strong>Trainer: </strong>{{$item->new_trainer->trainer_id}}</small> <br>
-                                    <small><strong>End Date: </strong>{{$item->end_date}}</small><br>
-                                    <small><strong>Assessment: </strong>{{$item->assessment}}</small><br>
+                                    <small><strong>End Date: </strong>{{\Carbon\Carbon::parse($item->end_date)->format('d-m-Y')}}</small><br>
+                                    <small><strong>Assessment: </strong>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</small><br>
                                     
                                     <button  class="btn btn-sm" style="align:right;" onclick="location.href='#smallModal{{$item->id}}'" data-toggle="modal" data-target="#smallModal{{$item->id}}" >show</button>    
                                     <button  class="btn btn-success btn-sm" style="align:right;" onclick="location.href='{{route('admin.batch.bu.submit',['id' =>Crypt::encrypt($item->id),'action'=>'accept'])}}'" >Accept</button>    
@@ -139,13 +139,13 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="font-weight:bold">End Date</td>
-                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'firebrick'}}">{{$item->batch->batch_end}}</td>
-                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'green'}}">{{$item->end_date}}</td>
+                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'firebrick'}}">{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
+                                                        <td style="color:{{$item->end_date==$item->batch->batch_end? null: 'green'}}">{{\Carbon\Carbon::parse($item->end_date)->format('d-m-Y')}}</td>
                                                     </tr>
                                                     <tr>
                                                         <td style="font-weight:bold">Assessment</td>
-                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'firebrick'}}">{{$item->batch->assessment}}</td>
-                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'green'}}">{{$item->assessment}}</td>
+                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'firebrick'}}">{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                                        <td style="color:{{$item->assessment==$item->batch->assessment? null: 'green'}}">{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

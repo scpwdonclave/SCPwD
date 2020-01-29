@@ -82,6 +82,7 @@ class AssessorBatchController extends Controller
             $batchAssessment->save();
 
         foreach ($request->candidate_id as $key => $value) {
+            
             $a='remark'.($key+1);
             $candidatemark=new CandidateMark;
             $candidatemark->bt_assessment_id=$batchAssessment->id;	

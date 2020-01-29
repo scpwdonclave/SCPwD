@@ -10,6 +10,8 @@ class Batch extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     //
+    
+
     public function partner(){
         return $this->belongsTo('App\Partner', 'tp_id');
     }

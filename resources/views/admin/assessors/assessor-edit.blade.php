@@ -31,6 +31,15 @@
                     
                 </div>
                 <div class="body">
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif 
                 <form id="form_assessor" method="POST" action="{{route('admin.as.update.assessor')}}" enctype="multipart/form-data" onsubmit="event.preventDefault();return myFunction2();">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -539,16 +548,16 @@
                 }
 
    /* Check Redundancy */
-   var dup_email_tag = false;
-        var dup_mobile_tag = false;
-        var dup_aadhaar_tag = false;
+        var dup_email_tag = true;
+        var dup_mobile_tag = true;
+        var dup_aadhaar_tag = true;
        
         function checkduplicacy(val){
            
             
-           dup_email_tag = true;
-           dup_mobile_tag = true;
-           dup_aadhaar_tag = true;
+           dup_email_tag = false;
+           dup_mobile_tag = false;
+           dup_aadhaar_tag = false;
                var _token = $('[name=_token]').val();
                
                let value = $('[name='+val+']').val();
@@ -590,10 +599,10 @@
 
     function myFunction2(){
          if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
-        //    console.log('my reject');
-        //    console.log(dup_email_tag);
-        //    console.log(dup_mobile_tag);
-        //    console.log(dup_aadhaar_tag);
+           console.log('my reject');
+           console.log(dup_email_tag);
+           console.log(dup_mobile_tag);
+           console.log(dup_aadhaar_tag);
           
             return false;
         }
@@ -608,25 +617,25 @@
 
     /* Validation of Each Sections */
 
-    function validatedata(divs){
-            div = divs.split(',');
-            let tag = true;
-            var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
-            fields.forEach(function (field) {
-            if (!$("[name='"+ field.name +"']").valid()) {
-                tag = false;
-                return false;
-                }
-            });
+    // function validatedata(divs){
+    //         div = divs.split(',');
+    //         let tag = true;
+    //         var fields = document.querySelectorAll('#'+div[0]+' input[required], #'+div[0]+' select[required]');
+    //         fields.forEach(function (field) {
+    //         if (!$("[name='"+ field.name +"']").valid()) {
+    //             tag = false;
+    //             return false;
+    //             }
+    //         });
 
-            if (true) {
+    //         if (true) {
 
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
-                    });
-            }
-        }
+    //                 $('#'+div[0]).collapse('hide');
+    //                 $('#'+div[0]).on('hidden.bs.collapse', function () {
+    //                     $('#'+div[1]).collapse('show');
+    //                 });
+    //         }
+    //     }
 
     /* End Validation of Each Sections */
         
