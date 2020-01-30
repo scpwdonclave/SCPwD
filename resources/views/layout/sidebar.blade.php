@@ -106,7 +106,7 @@
                 <li class="{{ Request::segment(2) === 'assessment' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment-check"></i><span>Assessment</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('admin/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.all-assessment')}}">All Assessments</a></li>
+                        <li class="{{ Request::is('admin/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.all-assessment')}}">Assessments</a></li>
                         <li class="{{ Request::is('admin/assessment/pending-assessment') ? 'active' : null }}"><a href="{{route('admin.assessment.pending-assessment')}}">Pending Approval</a></li>
                     </ul>
                 </li> 
@@ -152,7 +152,7 @@
                 <li class="{{ Request::segment(2) === 'assessment' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Assessment</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('agency/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('agency.assessment.all-assessment')}}">All Assessments</a></li>
+                        <li class="{{ Request::is('agency/assessment/all-assessment') ? 'active' : null }}"><a href="{{route('agency.assessment.all-assessment')}}">Assessments</a></li>
                         <li class="{{ Request::is('agency/assessment/pending-approval') ? 'active' : null }}"><a href="{{route('agency.assessment.pending-approval')}}">Pending Approval</a></li>
                         {{-- <li class="{{ Request::is('assessor/batches/pending-approval') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">Pending Approval</a></li> --}}
                         {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
@@ -167,7 +167,7 @@
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-accounts"></i><span>Batches</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('assessor/batches') ? 'active' : null }}"><a href="{{route('assessor.batch')}}"> Assigned Batch</a></li>
-                        <li class="{{ Request::is('assessor/batches/assessment') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">All Assessments</a></li>
+                        <li class="{{ Request::is('assessor/batches/assessment') ? 'active' : null }}"><a href="{{route('assessor.pending.approval')}}">Assessments</a></li>
                         {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
                     </ul>
                 </li> 

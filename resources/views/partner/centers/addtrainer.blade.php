@@ -164,13 +164,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="sector_exp">Sector Experience in Years*</label>
+                                                    <label for="sector_exp">Sector Experience in Years <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('sector_exp') }}" name="sector_exp" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="teaching_exp">Teaching Experience in Years*</label>
+                                                    <label for="teaching_exp">Teaching Experience in Years <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
                                                     </div>

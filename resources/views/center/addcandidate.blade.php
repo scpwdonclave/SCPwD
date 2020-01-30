@@ -448,9 +448,9 @@
                             url: "{{ route('center.addcandidate.api') }}",
                             success: function (data) {
                                 if (data.success) {
-                                    console.log('Submit');
+                                    // console.log('Submit');
                                     
-                                    // $(form).unbind().submit();
+                                    $(form).unbind().submit();
                                 } else {
                                     swalText.innerHTML = data.message;
                                     swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 5000, buttons: false});

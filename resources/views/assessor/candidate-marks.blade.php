@@ -4,8 +4,6 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 
 @stop
@@ -15,10 +13,10 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header d-flex justify-content-between">
-                        <h2><strong>Add</strong> candidates Mark </h2>
+                        <h2><strong>Add</strong> Candidate Marks </h2>
                     </div>
                     <div class="text-center">
-                    <h6><strong>Batch ID: {{$batch->batch_id}}</strong></h6>
+                    <h6><strong>Batch ID: <span style="color:blue">{{$batch->batch_id}}</span></strong></h6>
                     </div>
                     <div class="body">
                     <form id="form_candidate_mark" method="POST" action="{{route('assessor.as.batch.candidate-mark-insert')}}" enctype="multipart/form-data">
@@ -30,7 +28,7 @@
                                 <thead>
                                         <tr>
                                         <th>#</th>
-                                        <th>candidate Name</th>
+                                        <th>Candidate Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>
                                         <th>Attendence</th>
@@ -100,114 +98,86 @@
 @stop
 @section('page-script')
 <script>
-$(function(){
+    $(function(){
+         /* Start File Type Validation */         
+         
+            var _URL = window.URL || window.webkitURL;
+            $("[type='file']").change(function(e) {
+                var image, file;
+                for (var i = this.files.length - 1; i >= 0; i--) {
+                    if ((file = this.files[i])) {
+                        image = new Image();
+                        var fileType = file["type"];
+                        
+                        if(e.currentTarget.id==='marksheet_doc'){
+                            var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+                            var txt_msg="File has to be in Excel Format";
+                        }else if(e.currentTarget.id==='attendence_doc'){
+                            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+                            var txt_msg='File has to be in jpg, jpeg, png ,pdf or Excel Format';
+                        }
 
-var _URL = window.URL || window.webkitURL;
-    $("[type='file']").change(function(e) {
-
-        var image, file;
-
-    for (var i = this.files.length - 1; i >= 0; i--) {
-
-        if ((file = this.files[i])) {
-
-            size = file.size/1024/1024;
-            size = Math.round(size * 100) / 100
-
-            image = new Image();
-            var fileType = file["type"];
-            if(this.id==='marksheet_doc'){
-            var ValidImageTypes = ["application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-            var txt_msg="File must be in show Excel Format";
-            }else if(this.id==='attendence_doc'){
-            var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf", "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-            var txt_msg='File must be in show jpg, jpeg, png ,pdf,Excel Format';
-                
-            }
-           
-            
-            if ($.inArray(fileType, ValidImageTypes) < 0) {
-                // invalid file type code goes here.
-               
-                
-                $("#"+e.currentTarget.id).val('');
-                swal({
-                title: "File type Error",
-                text: txt_msg,
-                type:"error",
-                timer: 3000,
-                
-            });
-                //$('#'+e.currentTarget.id+'_error').text(txt_msg);
-               
-               
-            } else {
-                $("#" + e.currentTarget.id + "_error").text(''); 
-            }
-
-            image.onload = function() {
-                if (size > 1.5) {
-                    $("#"+e.currentTarget.id).val('');
-                    $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
-                } else {
-                    $("#" + e.currentTarget.id + "_error").text('');
+                        if ($.inArray(fileType, ValidImageTypes) < 0) {
+                            $("#"+e.currentTarget.id).val('');
+                            $("#" + e.currentTarget.id + "_error").text(txt_msg);
+                        } else {
+                            $("#" + e.currentTarget.id + "_error").text('');
+                        }
+                        
+                        image.src = _URL.createObjectURL(file);
+                    }
                 }
-            };
+            });
+         
+         /* End File Type Validation */
+ 
+     });
 
-            image.src = _URL.createObjectURL(file);
-            }
+    function markDisable(val,id) {
+    if(val==='absent'){
+            $('#mark'+id).attr('readonly',true);
+            //$('#mark'+id).val('');
+            $('#mark'+id).val(0);
+            $('#remark'+id).addClass('text-danger').html('Absent');
+            //$('#remark'+id).removeClass().html('');
+            $('[name=remark'+id+']').val(0);
+
+        }else{
+            $('#mark'+id).attr('readonly',false);
+            $('#remark'+id).removeClass().html('');
+
+
         }
-
-    });
-});
-
-</script>
-<script>
-function markDisable(val,id) {
-   if(val==='absent'){
-        $('#mark'+id).attr('readonly',true);
-        //$('#mark'+id).val('');
-        $('#mark'+id).val(0);
-        $('#remark'+id).addClass('text-danger').html('Absent');
-        //$('#remark'+id).removeClass().html('');
-        $('[name=remark'+id+']').val(0);
-
-    }else{
-        $('#mark'+id).attr('readonly',false);
-        $('#remark'+id).removeClass().html('');
-
-
     }
-}
 
-function passFail(m,m_id){
-    var full_mark='{{$batch->jobrole->full_marks}}';
-    var pass_mark='{{$batch->jobrole->pass_marks}}';
-  if (m > Number(full_mark) || m < 0){
-     alert("No numbers above "+full_mark+" and Below 0");
-    $('#mark'+m_id).val('');
-    $('#remark'+m_id).removeClass().html('');
-    $('[name=remark'+m_id+']').val('');
+    function passFail(m,m_id){
+        var full_mark='{{$batch->jobrole->full_marks}}';
+        var pass_mark='{{$batch->jobrole->pass_marks}}';
+    if (m > Number(full_mark) || m < 0){
+        alert("No numbers above "+full_mark+" and Below 0");
+        $('#mark'+m_id).val('');
+        $('#remark'+m_id).removeClass().html('');
+        $('[name=remark'+m_id+']').val('');
 
-    return false;
+        return false;
+        }
+        
+
+    if(m < Number(pass_mark) && m!='' ){
+        $('#remark'+m_id).addClass('text-danger').html('Failed');
+        $('[name=remark'+m_id+']').val(0);
+        
+    }else if(m >= Number(pass_mark)){
+        $('#remark'+m_id).removeClass().html('');
+        $('#remark'+m_id).addClass('text-success').html('Passed');
+        $('[name=remark'+m_id+']').val(1);
+        }else{
+        $('#remark'+m_id).removeClass().html('');
+        $('[name=remark'+m_id+']').val('');
+
+
+        }
     }
-    
-
-  if(m < Number(pass_mark) && m!='' ){
-    $('#remark'+m_id).addClass('text-danger').html('Failed');
-    $('[name=remark'+m_id+']').val(0);
-    
-  }else if(m >= Number(pass_mark)){
-    $('#remark'+m_id).removeClass().html('');
-    $('#remark'+m_id).addClass('text-success').html('Passed');
-    $('[name=remark'+m_id+']').val(1);
-    }else{
-    $('#remark'+m_id).removeClass().html('');
-    $('[name=remark'+m_id+']').val('');
-
-
-    }
-}
 </script>
 
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
@@ -218,7 +188,6 @@ function passFail(m,m_id){
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
 @stop

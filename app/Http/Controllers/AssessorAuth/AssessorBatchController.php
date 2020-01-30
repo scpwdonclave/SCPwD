@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\AssessorAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Storage;
-use App\AssessorBatch;
-use App\CandidateMark;
-use App\Notification;
-use App\Batch;
-use App\BatchAssessment;
-use Carbon\Carbon;
+use DB;
 use Auth;
 use Crypt;
-use DB;
+use App\Batch;
+use Carbon\Carbon;
+use App\Notification;
+use App\AssessorBatch;
+use App\CandidateMark;
+use App\BatchAssessment;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AssessorBatchController extends Controller
 {
@@ -61,17 +62,21 @@ class AssessorBatchController extends Controller
     }
 
     public function candidateMarksInsert(Request $request){
-        //dd($request);
-
-        $batchAssessment= new BatchAssessment;
-        $batchAssessment->bt_id	=$request->bt_id;
-
-        if($request->hasFile('attendence_doc')){
-            $batchAssessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
-             }	
-        if($request->hasFile('marksheet_doc')){
-            $batchAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
-             }
+        // dd($request);
+        $batchassesst = BatchAssessment::where('bt_id', $request->bt_id)->first();
+        if ($batchassesst) {
+            alert()->info("Records have Already been <span style='font-weight:bold;color:blue'>Submitted</span> for Review", 'Attention')->html()->autoclose(4000);
+            return redirect()->route('assessor.batch');
+        } else {
+            $batchAssessment= new BatchAssessment;
+            $batchAssessment->bt_id	=$request->bt_id;
+    
+            if($request->hasFile('attendence_doc')){
+                $batchAssessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
+            }	
+            if($request->hasFile('marksheet_doc')){
+                $batchAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
+            }
 
             $fmonth=date('F');
             $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
@@ -81,38 +86,32 @@ class AssessorBatchController extends Controller
             
             $batchAssessment->save();
 
-        foreach ($request->candidate_id as $key => $value) {
-            $a='remark'.($key+1);
-            $candidatemark=new CandidateMark;
-            $candidatemark->bt_assessment_id=$batchAssessment->id;	
-            $candidatemark->candidate_id=$value;
-            if($request->mark[$key]==null){
-                $candidatemark->mark=0;	 
-                    }else{
-                $candidatemark->mark=$request->mark[$key];	
-                    }	
-            $candidatemark->attendence=$request->attendence[$key];
-            if($request->$a==null){
-                $candidatemark->passed=0;
-
-            }else{
-                $candidatemark->passed=$request->$a;
+            foreach ($request->candidate_id as $key => $value) {
+                $a='remark'.($key+1);
+                $candidatemark=new CandidateMark;
+                $candidatemark->bt_assessment_id=$batchAssessment->id;	
+                $candidatemark->candidate_id=$value;
+                if($request->mark[$key]==null){
+                    $candidatemark->mark=0;	 
+                        }else{
+                    $candidatemark->mark=$request->mark[$key];	
+                        }	
+                $candidatemark->attendence=$request->attendence[$key];
+                if($request->$a==null){
+                    $candidatemark->passed=0;
+    
+                }else{
+                    $candidatemark->passed=$request->$a;
+                }
+                $candidatemark->save();
             }
-            $candidatemark->save();
-        }
 
-        
-        /* Notification For Agency */
-          $batch_no=$batchAssessment->batch->batch_id;
-          $notification = new Notification;
-          $notification->rel_id =  $batchAssessment->batch->agencybatch->aa_id;
-          $notification->rel_with = 'agency';
-          $notification->title = 'Assessment Marks Submit';
-          $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment marks submit by Assessor";
-          $notification->save();
-          /* End Notification For Agency */
-          alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
-        return redirect()->route('assessor.batch');
+            $assessor = $this->guard()->user()->as_id;
+            AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
+
+            alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
+            return redirect()->route('assessor.batch');
+        }
     }
 
     public function candidateMarksUpdate(Request $request){

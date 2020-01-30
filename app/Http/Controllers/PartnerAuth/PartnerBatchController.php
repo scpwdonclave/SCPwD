@@ -236,8 +236,8 @@ class PartnerBatchController extends Controller
                                         $candidateRow[2] = $centerCandidate->candidate->contact;
                                         $candidateRow[3] = $centerCandidate->candidate->category;
                                         $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                        $candidateRow[6] = $centerCandidate->cd_id;
+                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                        $candidateRow[6] = $centerCandidate->id;
                                         array_push($candidateArray, $candidateRow);
                                     }
                                 }
@@ -247,8 +247,8 @@ class PartnerBatchController extends Controller
                                 $candidateRow[2] = $centerCandidate->candidate->contact;
                                 $candidateRow[3] = $centerCandidate->candidate->category;
                                 $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                $candidateRow[6] = $centerCandidate->cd_id;
+                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                $candidateRow[6] = $centerCandidate->id;
                                 array_push($candidateArray, $candidateRow);
                             }
                         }

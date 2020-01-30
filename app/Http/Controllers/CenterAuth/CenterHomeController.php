@@ -392,6 +392,8 @@ class CenterHomeController extends Controller
                 } else {
                     if ($centerCandidate->batchcandidate) {
                         if (Carbon::parse($centerCandidate->batchcandidate->batch->batch_end.' 23:59:00') < Carbon::now()) {
+                            $centerCandidate->btn = "<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
+                        } else {
                             $centerCandidate->btn = "<button type='button' class='badge bg-red margin-0' onclick='popup(\"$popup\")'>Dropout</button>&nbsp;&nbsp;&nbsp;<button type='button' class='badge bg-green margin-0' onclick='location.href=\"$route\"'>View</button>";
                         }
                     } else {

@@ -16,7 +16,6 @@
                         <div class="text-center">
                             <h6>
                                 BATCH ID: <span style='color:blue'>{{$batchAssessment->batch->batch_id}}</span>
-                               
                             </h6>
                         </div>
                         <br>
@@ -36,7 +35,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
-                                                                <th>candidate Name</th>
+                                                                <th>Candidate Name</th>
                                                                 <th>DOB</th>
                                                                 <th>Gender</th>
                                                                 <th>Attendence</th>

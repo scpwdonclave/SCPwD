@@ -139,18 +139,18 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     @if (Request::segment(1)==='agency')
-                                    <th>Category</th>
-                                    <th>Education</th>
-                                    <th>Birth date</th> 
-                                    <th>Aadhaar/Voter</th>
+                                        <th>Category</th>
+                                        <th>Education</th>
+                                        <th>DOB</th> 
+                                        <th>Aadhaar/Voter</th>
                                     @else
-                                    <th>Contact</th>
-                                    <th>Email</th>
-                                    <th>Aadhaar/Voter</th>
+                                        <th>Contact</th>
+                                        <th>Email</th>
+                                        <th>Aadhaar/Voter</th>
                                     @endif
-                                    <th>Overall Status</th>
+                                    <th>Result Status</th>
                                     @if(Request::segment(1) !='agency')
-                                    <th>View</th>
+                                        <th>View</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -170,7 +170,24 @@
                                         <td>{{$item->centercandidate->candidate->email}}</td>
                                         <td>{{$item->centercandidate->candidate->doc_no}}</td>
                                     @endif
-                                        <td style="color:{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'green':'red'}}">{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'Active':'Inactive'}}</td>
+                                    @if ($item->centercandidate->dropout)
+                                        <td style="color:blue">Dropped out</td>
+                                    @else
+                                        @switch($item->passed)
+                                            @case('0')
+                                                <td style="color:red">Failed</td>
+                                                @break
+                                            @case('1')
+                                                <td style="color:green">Passed</td>
+                                                @break
+                                            @case('2')
+                                                <td style="color:red">Absent</td>
+                                                @break
+                                            @default
+                                                <td>NA</td>
+                                        @endswitch
+                                    @endif
+                                        {{-- <td style="color:{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'green':'red'}}">{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'Active':'Inactive'}}</td> --}}
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->centercandidate->candidate->id))}}" >View</a></<td>                                                                                
                                     @elseif(Request::segment(1) !='agency')
