@@ -163,7 +163,7 @@ function markDisable(val,id) {
                 $('#mark'+id).attr('readonly',true);
                 //$('#mark'+id).val('');
                 $('#mark'+id).val(0);
-                $('#remark'+id).addClass('text-danger').html('Absent');
+                $('#remark'+id).addClass('text-success').html('Recorded'); //Absent
                 //$('#remark'+id).removeClass().html('');
                 $('[name=remark'+id+']').val(0);
 
@@ -190,11 +190,11 @@ function passFail(m,m_id){
     
 
   if(m < Number(pass_mark) && m!='' ){
-    $('#remark'+m_id).removeClass().addClass('text-danger').html('Failed');
+    $('#remark'+m_id).removeClass().addClass('text-success').html('Recorded'); //Failed
     $('[name=remark'+m_id+']').val(0);
     
   }else if(m >= Number(pass_mark)){
-    $('#remark'+m_id).removeClass().addClass('text-success').html('Passed');
+    $('#remark'+m_id).removeClass().addClass('text-success').html('Recorded'); //Passed
     $('[name=remark'+m_id+']').val(1);
     }else{
     $('#remark'+m_id).removeClass().html('');
