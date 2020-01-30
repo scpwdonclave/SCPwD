@@ -43,7 +43,7 @@
                                     $i=0;    
                                     @endphp
                                     @foreach ($batch->candidatesmap as $key=>$item)
-                                    @if ($item->centercandidate->dropout===0)
+                                    @if ($item->centercandidate->dropout===0 && $item->centercandidate->candidate->status===1)
                                     @php
                                     $i++;    
                                     @endphp

@@ -79,7 +79,7 @@
                 
             </div>
             <div class="body">
-                <canvas id="line_chart" height="75"></canvas>
+                <canvas id="line_chart" height="85"></canvas>
             </div>
         </div>
     </div>

@@ -156,7 +156,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchData->candidatesmap as $key=>$item)
-                                {{-- candidate --}}
+                            
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$item->centercandidate->candidate->name}}</td>

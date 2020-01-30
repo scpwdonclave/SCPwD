@@ -274,7 +274,7 @@ table.dataTable thead th:first-child {
                         error: function(data){
                             console.log(data);
                             
-                                swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
+                                // swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
                             }
                         });
                 break;

@@ -8,6 +8,7 @@ use Auth;
 use Gate;
 use Crypt;
 use Config;
+use Storage;
 use App\Batch;
 use App\Center;
 use App\Holiday;
@@ -230,14 +231,15 @@ class PartnerBatchController extends Controller
                         if ($centerCandidate->candidate->status && $this->partnerscheme($centerCandidate,'candidate')) {
                             if ($centerCandidate->batchcandidate) {
                                 foreach ($centerCandidate->batchcandidate as $batchcandidate) {
+                                    
                                     if ($batchcandidate->batch->completed) {
                                         $candidateRow[0] = '<input type="checkbox">';
                                         $candidateRow[1] = $centerCandidate->candidate->name;
                                         $candidateRow[2] = $centerCandidate->candidate->contact;
                                         $candidateRow[3] = $centerCandidate->candidate->category;
                                         $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                        $candidateRow[6] = $centerCandidate->cd_id;
+                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                        $candidateRow[6] = $centerCandidate->id;
                                         array_push($candidateArray, $candidateRow);
                                     }
                                 }
@@ -247,8 +249,8 @@ class PartnerBatchController extends Controller
                                 $candidateRow[2] = $centerCandidate->candidate->contact;
                                 $candidateRow[3] = $centerCandidate->candidate->category;
                                 $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->cd_id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                $candidateRow[6] = $centerCandidate->cd_id;
+                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                                $candidateRow[6] = $centerCandidate->id;
                                 array_push($candidateArray, $candidateRow);
                             }
                         }
