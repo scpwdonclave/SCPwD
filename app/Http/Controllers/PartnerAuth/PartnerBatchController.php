@@ -184,7 +184,7 @@ class PartnerBatchController extends Controller
     public function addbatch_api(Request $request){
         if ($request->has('schemeid')) {
             $partner = $this->guard()->user();
-            $partnerJob = PartnerJobrole::where('scheme_id', $request->schemeid)->get();
+            $partnerJob = PartnerJobrole::where([['scheme_id', $request->schemeid],['tp_id',$partner->id],['status',1]])->get();
             foreach ($partnerJob as $job) {
                 $job->jobrole->job_role;
             }
@@ -201,7 +201,11 @@ class PartnerBatchController extends Controller
                 $trainers = $partner->trainers;
                 foreach ($trainers as $trainer) {
                     if ($trainer->status && $this->partnerscheme($trainer,'trainer', $partnerJob)) {
-                        $filteredTrainers->push($trainer);
+                        foreach ($trainer->trainer_jobroles as $trainerJob) {
+                            if ($trainerJob->tp_job_id == (int)$request->jobid) {
+                                $filteredTrainers->push($trainer);
+                            }
+                        }
                     }
                 }
 
@@ -223,36 +227,39 @@ class PartnerBatchController extends Controller
         if ($request->has('centerid')) {
             $partner = $this->guard()->user();
             $center = Center::find($request->centerid);
-                        $candidateArray = [];
+            $candidateArray = [];
             if ($center) {
                 if ($center->partner->id == $partner->id) {
                     $candidateRow = [[]];
                     foreach ($center->candidatesmap as $centerCandidate) {
                         if ($centerCandidate->candidate->status && $this->partnerscheme($centerCandidate,'candidate')) {
-                            if ($centerCandidate->batchcandidate) {
-                                foreach ($centerCandidate->batchcandidate as $batchcandidate) {
-                                    
-                                    if ($batchcandidate->batch->completed) {
-                                        $candidateRow[0] = '<input type="checkbox">';
-                                        $candidateRow[1] = $centerCandidate->candidate->name;
-                                        $candidateRow[2] = $centerCandidate->candidate->contact;
-                                        $candidateRow[3] = $centerCandidate->candidate->category;
-                                        $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                        $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                        $candidateRow[6] = $centerCandidate->id;
-                                        array_push($candidateArray, $candidateRow);
-                                    }
-                                }
-                            } else {
-                                $candidateRow[0] = '<input type="checkbox">';
-                                $candidateRow[1] = $centerCandidate->candidate->name;
-                                $candidateRow[2] = $centerCandidate->candidate->contact;
-                                $candidateRow[3] = $centerCandidate->candidate->category;
-                                $candidateRow[4] = $centerCandidate->disability->e_expository;
-                                $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                                $candidateRow[6] = $centerCandidate->id;
-                                array_push($candidateArray, $candidateRow);
+                            if (!$centerCandidate->dropout) {
+                                
                             }
+                            // if ($centerCandidate->batchcandidate) {
+                            //     foreach ($centerCandidate->batchcandidate as $batchcandidate) {
+                                    
+                            //         if ($batchcandidate->batch->completed) {
+                            //             $candidateRow[0] = '<input type="checkbox">';
+                            //             $candidateRow[1] = $centerCandidate->candidate->name;
+                            //             $candidateRow[2] = $centerCandidate->candidate->contact;
+                            //             $candidateRow[3] = $centerCandidate->candidate->category;
+                            //             $candidateRow[4] = $centerCandidate->disability->e_expository;
+                            //             $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                            //             $candidateRow[6] = $centerCandidate->id;
+                            //             array_push($candidateArray, $candidateRow);
+                            //         }
+                            //     }
+                            // } else {
+                            //     $candidateRow[0] = '<input type="checkbox">';
+                            //     $candidateRow[1] = $centerCandidate->candidate->name;
+                            //     $candidateRow[2] = $centerCandidate->candidate->contact;
+                            //     $candidateRow[3] = $centerCandidate->candidate->category;
+                            //     $candidateRow[4] = $centerCandidate->disability->e_expository;
+                            //     $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
+                            //     $candidateRow[6] = $centerCandidate->id;
+                            //     array_push($candidateArray, $candidateRow);
+                            // }
                         }
                     }
                     return response()->json(['success' => true, 'candidates' => $candidateArray],200);               

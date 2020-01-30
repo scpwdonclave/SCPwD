@@ -111,98 +111,10 @@ class AdminHomeController extends Controller
         $agency_cnt = Agency::all()->count();
         $assessor_cnt = Assessor::all()->count();
        
-   
-    
-    
-      
-
-    //         $chart = [ 
-    //             'partners' => Partner::where('pending_verify',0)->get(),
-    //             'centers' => Center::where('verified',1)->get(),
-    //             'candidates' => CenterCandidateMap::all(),
-            
-    //         ];
-    //     $fyear =( date('m') > 3) ? date('Y') : (date('Y')-1);
-    //     // $fyear1 =( date('m') > 3) ? date('y').'-'.(date('y')+1) : (date('y')-1).'-'.date('y');
-    //     // dd($fyear1);
-    //     $res=$res1=$res2=[];
-       
-        
-    //    foreach ($chart as $key => $query) {
-          
-       
-        
-    //     // $query = DB::table('partners')
-    //     //  ->select(\DB::raw('SUBSTRING(tp_id,3,4) as tp_id'))
-    //     // ->groupBy(DB::raw('MONTH(created_at)'))
-    //     // ->where(DB::raw('SUBSTRING(tp_id,3,4)'), '=', $fyear)
-    //     // ->select('created_at', DB::raw('count(*) as total'),DB::raw('MONTHNAME(created_at) as month'))
-    //     // ->get();
-    //     $apr=$may=$jun=$jul=$aug=$sep=$oct=$nov=$dec=$jan=$feb=$mar=0;
-    //     foreach ($query as $value) {
-    //         if(Carbon::parse($value->created_at)->format('m')>3){
-    //             $fyr=Carbon::parse($value->created_at)->format('Y');
-    //         }else{
-    //             $fyr=(Carbon::parse($value->created_at)->format('Y')-1);
-
-    //         }
-
-    //         if($fyear==$fyr){
-    //             switch (Carbon::parse($value->created_at)->format('m')) {
-    //                 case 4:
-    //                     $apr=$apr+1;
-    //                     break;
-    //                 case 5:
-    //                     $may=$may+1;
-    //                     break;
-    //                 case 6:
-    //                     $jun=$jun+1;
-    //                     break;
-    //                 case 7:
-    //                     $jul=$jul+1;
-    //                     break;
-    //                 case 8:
-    //                     $aug=$aug+1;
-    //                     break;
-    //                 case 9:
-    //                     $sep=$sep+1;
-    //                     break;
-    //                 case 10:
-    //                     $oct=$oct+1;
-    //                     break;
-    //                 case 11:
-    //                     $nov=$nov+1;
-    //                     break;
-    //                 case 12:
-    //                     $dec=$dec+1;
-    //                     break;
-    //                 case 1:
-    //                     $jan=$jan+1;
-    //                     break;
-    //                 case 2:
-    //                     $feb=$feb+1;
-    //                     break;
-    //                 case 3:
-    //                     $mar=$mar+1;
-    //                     break;
-    //                 }  
-    //             }
-    //         }
-    //         if($key=='partners'){
-    //             $res=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
-    //         }else if($key=='centers'){
-    //             $res1=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
-
-    //         }else if($key=='candidates'){
-    //             $res2=[$apr,$may,$jun,$jul,$aug,$sep,$oct,$nov,$dec,$jan,$feb,$mar];
-
-    //         }
-    //     }
 
         // Start New portion Graph
         $finyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
         $fmonth=date('F');
-      // dd($month);
         $res=$res1=$res2=[];
         $mnarr=["April", "May", "June", "July","August","September","October","November","December","January","February","March"];
         foreach ($mnarr as $key => $month) {
