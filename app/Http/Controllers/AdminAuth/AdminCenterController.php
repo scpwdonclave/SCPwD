@@ -89,7 +89,8 @@ class AdminCenterController extends Controller
                         $data=DB::table('centers')
                         ->select(\DB::raw('SUBSTRING(tc_id,3) as tc_id'))
                         ->where("tc_id", "LIKE", "TC%")->get();
-                        $year = date('Y');
+                        $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
                         if (count($data) > 0) {
                             $priceprod = array();
                                 foreach ($data as $key=>$data) {

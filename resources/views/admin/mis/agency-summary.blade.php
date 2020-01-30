@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Candidate Wise')
+@section('title', 'Agency Wise')
 @section('parentPageTitle', 'MIS')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -18,10 +18,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Search</strong> Candidate Wise</h2>                        
+                    <h2><strong>Search</strong> Assessment Agency Wise</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.mis.candidate_wise_enrolled')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.mis.agency_wise_enrolled')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-6">
@@ -60,7 +60,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Report</strong> Section</h2>                        
+                    <h2><strong>Report</strong> Section Assessment Agency Wise</h2>                        
                 </div>
                 <div class="text-center">
                     @if (isset($sel_scm) && isset($sel_yr))
@@ -73,64 +73,35 @@
                         <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                 								 				 								
-
-                                    <th>TP</th>
-                                    <th>TC</th>
-                                    <th>Job Role</th>
-                                    <th>Batch</th>
-                                    <th>Candidate ID</th>					 	
-                                    <th>Candidate Name</th>
-                                    <th>State</th>
-                                    <th>District</th>
-                                    <th>Gender</th>
-                                    <th>Education</th>
-                                    <th>Mobile</th>
-                                    <th>Type of Disability</th>
-                                    <th>Batch Start Date</th>
-                                    <th>Batch End Date</th>
-                                    <th>Result</th>
-                                    <th>Caste Category</th>
-                                    <th>Centre Address</th>
-                                    <th>Sector</th>
-                                    <th>TC State</th>
-                                    <th>TC District</th>
-                                    <th>TC SPOC Email</th>
-                                    <th>TC SPOC Mobile</th>
-                                    <th>TC SPOC Name</th>
+                                    <th>Assessment Agency</th>							
+                                    <th>Sum of Enrolled</th>
+                                    <th>Sum of Ongoing Training</th>
+                                    <th>Sum of Trained</th>					 	
+                                    <th>Sum of Assessed</th>
+                                    <th>Sum of Passed</th>
+                                    <th>Sum of Fail</th>
+                                    <th>Sum of Absent</th>
+                                    <th>Sum of Drop-Out</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (isset($can_stack) && !empty($can_stack) )
+                                @if (isset($candidate_stack) && !empty($candidate_stack) )
                                     
-                                @foreach ($can_stack as $key=>$item)
+                                @foreach ($candidate_stack as $key=>$item)
                                     
                                 <tr>
+                                    <td>{{$key}}</td>
                                     <td>{{$item[0]}}</td>
                                     <td>{{$item[1]}}</td>
                                     <td>{{$item[2]}}</td>
                                     <td>{{$item[3]}}</td>
-                                    <td>{{$item[22]}}</td>
-                                    
                                     <td>{{$item[4]}}</td>
                                     <td>{{$item[5]}}</td>
                                     <td>{{$item[6]}}</td>
                                     <td>{{$item[7]}}</td>
-                                    <td>{{$item[8]}}</td>
-                                    <td>{{$item[9]}}</td>
-                                    <td>{{$item[10]}}</td>
-                                    <td>{{$item[11]}}</td>
-                                    <td>{{$item[12]}}</td>
-                                    <td>{{$item[13]}}</td>
-                                    <td>{{$item[14]}}</td>
-                                    <td>{{$item[15]}}</td>
-                                    <td>{{$item[16]}}</td>
-                                    <td>{{$item[17]}}</td>
-                                    <td>{{$item[18]}}</td>
-                                    <td>{{$item[19]}}</td>
-                                    <td>{{$item[20]}}</td>
-                                    <td>{{$item[21]}}</td>
-                                    {{-- <td>{{$item[22]}}</td> --}}
+                                   
+                                    
                                     
                                 </tr>
                                 @endforeach
@@ -143,6 +114,8 @@
         </div>
     </div>
 </div>
+
+
 @stop
 @section('page-script')
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

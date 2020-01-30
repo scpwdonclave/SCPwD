@@ -37,10 +37,16 @@
                                         </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                    $i=0;    
+                                    @endphp
                                     @foreach ($batch->candidatesmap as $key=>$item)
-                                   
+                                    @if ($item->centercandidate->dropout===0 && $item->centercandidate->candidate->status===1)
+                                    @php
+                                    $i++;    
+                                    @endphp
                                     <tr>
-                                    <td>{{$key+1}}</td>
+                                    <td>{{$i}}</td>
                                     <td>
                                         {{$item->centercandidate->candidate->name}}
                                     <input type="hidden" name="candidate_id[]" value="{{$item->centercandidate->id}}"> 
@@ -49,19 +55,20 @@
                                     <td>{{$item->centercandidate->candidate->dob}}</td>
                                     <td>{{$item->centercandidate->candidate->gender}}</td>
                                     <td>
-                                        <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$key+1}})">
+                                        <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$i}})">
                                             <option value="present" >Present</option>
                                             <option value="absent" >Absent</option>
                                         </select>
                                     </td>
-                                <td style="width:10px;"><input class="text-center" type="number" size='30' style="height:30px;border:none" name="mark[]" id="mark{{$key+1}}" onchange="passFail(this.value,{{$key+1}})" /></td>
+                                <td style="width:10px;"><input class="text-center" type="number" size='30' style="height:30px;border:none" name="mark[]" id="mark{{$i}}" onchange="passFail(this.value,{{$i}})" /></td>
                                    <td>
                                     <strong>
-                                       <p  id="remark{{$key+1}}"></p>
-                                       <input type="hidden" name="remark{{$key+1}}">
+                                       <p  id="remark{{$i}}"></p>
+                                       <input type="hidden" name="remark{{$i}}">
                                     </strong>
                                    </td>
                                    </tr>
+                                    @endif
                                    @endforeach
                                 </tbody>
                             </table>

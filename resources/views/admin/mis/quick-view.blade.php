@@ -9,7 +9,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-account-box zmdi-hc-3x col-green"></i></h6>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-cast zmdi-hc-3x col-blue"></i></h6>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-dns zmdi-hc-3x col-pink"></i></h6>
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-border-color zmdi-hc-3x col-brown"></i></h6>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-check-square zmdi-hc-3x col-amber"></i></h6>
@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-minus-circle zmdi-hc-3x col-red"></i></h6>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-turning-sign zmdi-hc-3x"></i></h6>
@@ -79,12 +79,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-3 col-sm-6">
             <div class="card text-center">
                 <div class="body">
                     <h6 class="m-b-20"><i class="zmdi zmdi-card-off zmdi-hc-3x col-cyan"></i></h6>
                     <span>Drop-Out</span>
-                    <h3 class="m-b-10 number count-to" data-from="0" data-to="78" data-speed="2000" data-fresh-interval="700">78</h3>
+                <h3 class="m-b-10 number count-to" data-from="0" data-to="{{$b_drop_total_candidate}}" data-speed="2000" data-fresh-interval="700">{{$b_drop_total_candidate}}</h3>
                     
                 </div>
             </div>
@@ -174,18 +174,23 @@ function getDistrictChart(type) {
                 }]
             },
             options: {
+                // animation: {
+                //     duration: 0
+                // },
                 responsive: true,
                 legend: false,
                 scales: {
-                    xAxes: [{
-                stacked: true
-            }],
-            yAxes: [{
-                ticks: {
-                
-                stepSize: 1
-            }
-            }]
+              
+            xAxes: [{
+                    stacked: true,
+                    position: "top",
+                    id: "x-axis-0",
+                    ticks: {
+                    stepSize: 1
+                    }
+                }],
+
+          
                 }
             }
         }
@@ -211,12 +216,14 @@ function getParliamentChart(type) {
             options: {
                 responsive: true,
                 scales: {
-               
-                xAxes: [{
+                    xAxes: [{
                     stacked: true,
                     position: "top",
                     id: "x-axis-0",
-                }]
+                    ticks: {
+                    stepSize: 1
+                    }
+                }],
                 },
                 legend: false
                 
@@ -245,19 +252,16 @@ if (type === 'bar') {
             responsive: true,
             legend: false,
             scales: {
+            xAxes: [{
+                stacked: true,
+                position: "top",
+                id: "x-axis-0",
+                ticks: {
+                stepSize: 1
+                }
+            }],
 		yAxes: [{
-            // afterFit: function(scale) {
-            //    scale.width = 80  //<-- set value as you wish 
-            // },
-            //     ticks: {
-            //     callback: function(label, index, labels) {
-            //     if (/\s/.test(label)) {
-            //         return label.split(" ");
-            //     }else{
-            //         return label;
-            //     }              
-            //     }
-            // },
+           
 			categoryPercentage: 0.6,
 			barPercentage: 0.6,
             

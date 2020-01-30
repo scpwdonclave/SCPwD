@@ -8,6 +8,7 @@ use Auth;
 use Gate;
 use Crypt;
 use Config;
+use Storage;
 use App\Batch;
 use App\Center;
 use App\Holiday;
@@ -230,6 +231,7 @@ class PartnerBatchController extends Controller
                         if ($centerCandidate->candidate->status && $this->partnerscheme($centerCandidate,'candidate')) {
                             if ($centerCandidate->batchcandidate) {
                                 foreach ($centerCandidate->batchcandidate as $batchcandidate) {
+                                    
                                     if ($batchcandidate->batch->completed) {
                                         $candidateRow[0] = '<input type="checkbox">';
                                         $candidateRow[1] = $centerCandidate->candidate->name;
@@ -386,9 +388,9 @@ class PartnerBatchController extends Controller
                 $batch->tp_job_id = $job[0];
                 $batch->start_time = $starttime_store;
                 $batch->end_time = $endtime_store;
-                $batch->batch_start = $request->batch_start;
-                $batch->batch_end = $request->batch_end;
-                $batch->assessment = $request->assessment;
+                $batch->batch_start = Carbon::parse($request->batch_start)->format('Y-m-d');
+                $batch->batch_end = Carbon::parse($request->batch_end)->format('Y-m-d');
+                $batch->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
                 $batch->save();
     
                 foreach ($request->id as $value) {
@@ -456,8 +458,8 @@ class PartnerBatchController extends Controller
                             $batchstore->tp_id = $this->guard()->user()->id;
                             $batchstore->new_tr_id = $request->trainer;
                             $batchstore->new_tr_start = $request->trainer_start;
-                            $batchstore->end_date = $request->batch_end;
-                            $batchstore->assessment = $request->assessment;
+                            $batchstore->end_date = Carbon::parse($request->batch_end)->format('Y-m-d');
+                            $batchstore->assessment = Carbon::parse($request->assessment)->format('Y-m-d') ;
                             $batchstore->save();
 
                             AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
@@ -472,8 +474,8 @@ class PartnerBatchController extends Controller
                         $batchstore->tp_id = $this->guard()->user()->id;
                         $batchstore->new_tr_id = $request->trainer;
                         $batchstore->new_tr_start = $request->trainer_start;
-                        $batchstore->end_date = $request->batch_end;
-                        $batchstore->assessment = $request->assessment;
+                        $batchstore->end_date = Carbon::parse($request->batch_end)->format('Y-m-d');
+                        $batchstore->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
                         $batchstore->save();
 
                         AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");

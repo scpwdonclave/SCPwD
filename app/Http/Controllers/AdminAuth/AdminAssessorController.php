@@ -149,7 +149,8 @@ class AdminAssessorController extends Controller
                             $data=DB::table('assessors')
                             ->select(\DB::raw('SUBSTRING(as_id,3) as as_id'))
                             ->where("as_id", "LIKE", "AS%")->get();
-                            $year = date('Y');
+                            $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
                             if (count($data) > 0) {
                     
                                 $priceprod = array();

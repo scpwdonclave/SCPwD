@@ -152,7 +152,8 @@ class AdminTrainerController extends Controller
                             ->orderBy('id', 'desc')->get()->unique('trainer_id');
                             
                             
-                            $year = date('Y');
+                            $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
                             if (count($data) > 0 || count($dataStatus) > 0 ) {
                                 
                                 $priceprod1 = array();

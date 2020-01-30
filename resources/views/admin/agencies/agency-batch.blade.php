@@ -35,8 +35,8 @@
                                 @foreach ($agency->agencyBatch as $agbatch) 
                                     <tr style="height:5px !important">
                                         <td>{{$agbatch->batch->batch_id}}</td>
-                                        <td>{{$agbatch->batch->batch_start}}</td>
-                                        <td>{{$agbatch->batch->batch_end}}</td>
+                                        <td>{{\Carbon\Carbon::parse($agbatch->batch->batch_start)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($agbatch->batch->batch_end)->format('d-m-Y')}}</td>
                                         <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Approved':'Not Approved Yet'}}</strong></td>
                                         <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($agbatch->batch->id))}}'"><i class="zmdi zmdi-eye"></button></td>
                                         <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm('{{$agbatch->batch->batch_id.','.$agbatch->id}}');"><i class="zmdi zmdi-delete"></button></td>

@@ -213,7 +213,8 @@ class AdminPartnerController extends Controller
                 $dataMail = collect();
                 if ($data[1]) {
                     $data=DB::table('partners')->select(DB::raw('SUBSTRING(tp_id,3) as tp_id'))->where("tp_id", "LIKE", "TP%")->get();
-                    $year = date('Y');
+                    $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+                    
                     if (count($data) > 0) {
                         $array = array();
                         foreach ($data as $key=>$data) {

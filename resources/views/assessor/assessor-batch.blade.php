@@ -35,9 +35,9 @@
                                         <tr>
                                             <td>{{$key+1}}</td>
                                             <td>{{$item->batch->batch_id}}</td>
-                                            <td>{{$item->batch->batch_start}}</td>
-                                            <td>{{$item->batch->batch_end}}</td>
-                                            <td>{{$item->batch->assessment}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                             @if (\Carbon\Carbon::now()>\Carbon\Carbon::parse($item->batch->assessment))
                                                 <td style="color:green"><strong>Processing Marks</strong></td>
                                                 <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>Crypt::encrypt($item->batch->id)])}}" >Enter Marks</a></td>

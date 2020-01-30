@@ -39,9 +39,9 @@
                                 @foreach ($assessor->assessorBatch as $asbatch)
                                     <tr>
                                         <td>{{$asbatch->batch->batch_id}}</td>
-                                        <td>{{$asbatch->batch->batch_start}}</td>
-                                        <td>{{$asbatch->batch->batch_end}}</td>
-                                        <td>{{$asbatch->batch->assessment}}</td>
+                                        <td>{{\Carbon\Carbon::parse($asbatch->batch->batch_start)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($asbatch->batch->batch_end)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($asbatch->batch->assessment)->format('d-m-Y')}}</td>
                                         <td class="text-center"><button type="button" class="badge bg-red margin-0" onclick="removeBatch({{$asbatch->id}});">Remove</button></td>
                                     </tr>
                                 @endforeach

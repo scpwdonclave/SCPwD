@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminAuth;
 use DB;
 use Crypt;
 use App\Agency;
+use App\Assessor;
 use App\Center;
 use App\Scheme;
 use App\Sector;
@@ -17,6 +18,7 @@ use App\Department;
 use App\Expository;
 use App\CandidateMark;
 use App\BatchAssessment;
+use App\TrainerStatus;
 use App\JobQualification;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
@@ -102,24 +104,15 @@ class AdminHomeController extends Controller
 
     public function dashboard(){
 
-        $test=[
-            'period'=> '2011',
-            'Project1'=> 0,
-            'Project2'=> 0,
-            'Project3'=> 115
-        
-        
-    ];
-
-    $data = [ 
-        'partners' => Partner::all(),
-        'centers' => Center::all(),
-        'candidates' => Candidate::all(),
+        $partners_cnt =Partner::all()->count();
+        $centers_cnt = Center::all()->count();
+        $trainer_cnt = TrainerStatus::all()->unique('trainer_id')->count();
+        $candidates_cnt = Candidate::all()->count();
+        $agency_cnt = Agency::all()->count();
+        $assessor_cnt = Assessor::all()->count();
        
-    ];
-    $test=json_encode($test);
-    $rr=array();
-    $rr[0]=$test;
+   
+    
     
       
 
@@ -208,6 +201,8 @@ class AdminHomeController extends Controller
 
         // Start New portion Graph
         $finyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+        $fmonth=date('F');
+      // dd($month);
         $res=$res1=$res2=[];
         $mnarr=["April", "May", "June", "July","August","September","October","November","December","January","February","March"];
         foreach ($mnarr as $key => $month) {
@@ -221,7 +216,7 @@ class AdminHomeController extends Controller
         }
         
         //End New Portion Graph
-
+        //State Wise Table
         $states=DB::table('state_district')->groupBy('state')->get();
         $stack = array();
         foreach ($states as $key => $state) {
@@ -241,17 +236,18 @@ class AdminHomeController extends Controller
         
         $stack[$state->state]=[$tp_count,$tc_count,$aa_count,$can_count];
         }
+        //End State Wise Table
 
-        $tc_number=Center::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['status','=',1],['verified','=',1]])->first();
-        $tp_number=Partner::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['status','=',1],['complete_profile','=',1],['pending_verify','=',0]])->first();
+        $tc_number=Center::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['f_month','=',$fmonth],['status','=',1],['verified','=',1]])->first();
+        $tp_number=Partner::select(DB::raw('count(*) as total'))->where([['f_year','=',$finyear],['f_month','=',$fmonth],['status','=',1],['complete_profile','=',1],['pending_verify','=',0]])->first();
         
-        $exams=BatchAssessment::where('f_year','=',$finyear)->get();
+        $exams=BatchAssessment::where([['f_year','=',$finyear],['f_month','=',$fmonth]])->get();
         $can_pass=$can_fail=0;
         foreach ($exams as $exam) {
             foreach ($exam->candidateMarks as  $candidate) {
-                if($candidate->passed){
+                if($candidate->passed===1){
                     $can_pass=$can_pass+1; 
-                }else{
+                }else if($candidate->passed===0){
                     $can_fail=$can_fail+1;  
                 }
             }
@@ -262,7 +258,7 @@ class AdminHomeController extends Controller
         $conclu=[$tc_number->total,$tp_number->total,count($exams),$can_pass,$can_fail];
         
        
-        return view('admin.home')->with($data)->with($rr)->with(compact('res','res1','res2','stack','conclu','mnarr','finyear'));
+        return view('admin.home')->with(compact('res','res1','res2','stack','conclu','mnarr','finyear','fmonth','partners_cnt','centers_cnt','trainer_cnt','candidates_cnt','agency_cnt','assessor_cnt'));
     }
     
     public function job_roles(){

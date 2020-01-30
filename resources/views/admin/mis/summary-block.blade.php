@@ -26,15 +26,23 @@
         </div>
         <div class="col-lg-3 col-md-2 col-6">
             <a href="{{route('admin.mis.job_dsbl_wise_block')}}">
-            <div class="card blk info-box-2 hover-zoom-effect google-widget">
+            <div class="card blk info-box-2 hover-zoom-effect linkedin-widget">
                 <div class="icon"><i class="zmdi zmdi-assignment-returned"></i></div>
                 <span class="text-muted" style="font-size:20px;">Job & Disability Wise</span>
             </div>
         </a>
         </div>
+        <div class="col-lg-3 col-md-2 col-6">
+            <a href="{{route('admin.mis.agency_wise_block')}}">
+            <div class="card blk info-box-2 hover-zoom-effect behance-widget">
+                <div class="icon"><i class="zmdi zmdi-collection-text"></i></div>
+                <span class="text-muted" style="font-size:20px;">Agency Wise</span>
+            </div>
+        </a>
+        </div>
         
     </div>
-    <a class="badge bg-green margin-0" href="{{route('test-cont')}}" >View</a>
+   
     
     
 </div>

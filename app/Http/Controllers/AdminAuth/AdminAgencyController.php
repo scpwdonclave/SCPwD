@@ -59,7 +59,8 @@ class AdminAgencyController extends Controller
         $data=DB::table('agencies')
         ->select(\DB::raw('SUBSTRING(aa_id,3) as aa_id'))
         ->where("aa_id", "LIKE", "AA%")->get();
-        $year = date('Y');
+        $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
         if (count($data) > 0) {
 
             $priceprod = array();

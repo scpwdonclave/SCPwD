@@ -60,9 +60,9 @@
                                         <td>{{$item->center->tc_id}}</td>
                                     @endif
                                 @endif
-                                <td>{{$item->batch_start}}</td>
-                                <td>{{$item->batch_end}}</td>
-                                <td>{{$item->assessment}}</td>
+                                <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
+                                <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
+                                <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
                                 @if ($item->verified)
                                     @if ($item->completed)
                                         <td style="color:green">Completed</td>

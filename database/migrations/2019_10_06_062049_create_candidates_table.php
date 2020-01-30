@@ -17,6 +17,7 @@ class CreateCandidatesTable extends Migration
             $table->bigIncrements('id');
             // $table->unsignedBigInteger('tc_id');
             // $table->unsignedBigInteger('tc_job_id');
+            $table->string('cd_id')->unique();
 
             $table->string('name');
             $table->string('gender');

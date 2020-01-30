@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'TP TC Wise')
+@section('title', 'Job Disability Wise')
 @section('parentPageTitle', 'MIS')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -99,7 +99,7 @@
                                     <td>{{$item[4]}}</td>
                                     <td>{{$item[5]}}</td>
                                     <td>{{$item[6]}}</td>
-                                    <td>U/D</td>
+                                    <td>{{$item[7]}}</td>
                                     <td>{{$item[4]}}</td>
                                     
                                 </tr>
@@ -159,7 +159,7 @@
                                     <td>{{$item[4]}}</td>
                                     <td>{{$item[5]}}</td>
                                     <td>{{$item[6]}}</td>
-                                    <td>U/D</td>
+                                    <td>{{$item[7]}}</td>
                                     <td>{{$item[4]}}</td>
                                     
                                 </tr>

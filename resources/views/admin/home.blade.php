@@ -8,92 +8,62 @@
 @section('content')
 <div class="container-fluid home">
     <div class="row clearfix">
-        <div class="col-lg-3 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="card">
                 <div class="body">
-                    {{-- @foreach ($res as $item)
-
-                        <h1>{{$item}}</h1> 
-                    @endforeach --}}
                     
-                    @php
-                        $partnerCount = $partners->count();
-                        $activePartner = 0; $inactivePartner = 0;
-                        foreach ($partners as $partner) { ($partner->status) ? $activePartner++ : $inactivePartner++ ; }
-                    @endphp
-                    @if ($partnerCount > 0)
-                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$partnerCount}}" data-speed="2000" data-fresh-interval="700">{{$partnerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <strong><p class="text-muted"><span style="color:blue">Total Training Partners</span></p></strong>
-                        <div class="progress">
+                    <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$partners_cnt}}" data-speed="2000" data-fresh-interval="700">{{$partners_cnt}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <strong><p class="text-muted"><span style="color:blue">Total Registered Training Partners</span></p></strong>
+                        {{-- <div class="progress">
                             <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activePartner*100/$partnerCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activePartner*100/$partnerCount}}%;"></div>
-                        </div>
-                        <div class="row d-flex justify-content-around">
+                        </div> --}}
+                        {{-- <div class="row d-flex justify-content-around">
                             <small>Active {{$activePartner*100/$partnerCount}}%</small>
                             <small>Inactive {{$inactivePartner*100/$partnerCount}}%</small>
-                        </div>
-                    @else
-                        <strong><p class="text-muted"><span style="color:blue">No Training Partners Has been Registered yet</span></p></strong>
-                    @endif
+                        </div> --}}
+                  
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="card">
                 <div class="body">
-                    @php
-                        $centerCount = $centers->count();
-                        $activeCenter = 0; $inactiveCenter = 0;
-                        foreach ($centers as $center) { ($center->status) ? $activeCenter++ : $inactiveCenter++ ; }
-                    @endphp
-                    @if ($centerCount>0)
-                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$centerCount}}" data-speed="2000" data-fresh-interval="700">{{$centerCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <strong><p class="text-muted"><span style="color:blue">Total Training Centers</span></p></strong>
-                        <div class="progress">
-                            <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activeCenter*100/$centerCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activeCenter*100/$centerCount}}%;"></div>
-                        </div>
-                        <div class="row d-flex justify-content-around">
-                            <small>Active {{round($activeCenter*100/$centerCount,2)}}%</small>
-                            <small>Inactive {{round($inactiveCenter*100/$centerCount,2)}}%</small>
-                        </div>
-                    @else
-                       <strong><p class="text-muted"><span style="color:blue">No Training Centers Has been Registered yet</span></p></strong>                        
-                    @endif
+                   
+                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$centers_cnt}}" data-speed="2000" data-fresh-interval="700">{{$centers_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                        <strong><p class="text-muted"><span style="color:blue">Total Registered Training Centers</span></p></strong>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="card">
                 <div class="body">
-                    <h3 class="m-b-0 number count-to" data-from="0" data-to="2105" data-speed="2000" data-fresh-interval="700">2105 <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <strong><p class="text-muted"><span style="color:blue">Total Trainers</span></p></strong>
-                    <div class="progress">
-                        <div class="progress-bar l-blue" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width: 68%;"></div>
-                    </div>
-                    <small>Change 23%</small>
+                <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$trainer_cnt}}" data-speed="2000" data-fresh-interval="700">{{$trainer_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Trainers</span></p></strong>
+                    
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-sm-6">
+        <div class="col-lg-4 col-sm-6">
             <div class="card">
                 <div class="body">
-                    @php
-                        $candidateCount = $candidates->count();
-                        $activeCandidate = 0; $inactiveCandidate = 0;
-                        foreach ($candidates as $candidate) { ($candidate->status) ? $activeCandidate++ : $inactiveCandidate++ ; }
-                    @endphp
-                    @if ($candidateCount>0)
-                        <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidateCount}}" data-speed="2000" data-fresh-interval="700">{{$candidateCount}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                        <strong><p class="text-muted"><span style="color:blue">Total Candidates</span></p></strong>
-                        <div class="progress">
-                            <div class="progress-bar l-turquoise" role="progressbar" aria-valuenow="{{$activeCandidate*100/$candidateCount}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$activeCandidate*100/$candidateCount}}%;"></div>
-                        </div>
-                        <div class="row d-flex justify-content-around">
-                            <small>Active {{$activeCandidate*100/$candidateCount}}%</small>
-                            <small>Inactive {{$inactiveCandidate*100/$candidateCount}}%</small>
-                        </div>
-                    @else
-                        <strong><p class="text-muted"><span style="color:blue">No Candidates Has been Registered yet</span></p></strong>
-                    @endif
+                   <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidates_cnt}}" data-speed="2000" data-fresh-interval="700">{{$candidates_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Candidates</span></p></strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+            <div class="card">
+                <div class="body">
+                   <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$agency_cnt}}" data-speed="2000" data-fresh-interval="700">{{$agency_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Agency</span></p></strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6">
+            <div class="card">
+                <div class="body">
+                   <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessor_cnt}}" data-speed="2000" data-fresh-interval="700">{{$assessor_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Assessor</span></p></strong>
                 </div>
             </div>
         </div>
@@ -109,7 +79,7 @@
                 
             </div>
             <div class="body">
-                <canvas id="line_chart" height="75"></canvas>
+                <canvas id="line_chart" height="85"></canvas>
             </div>
         </div>
     </div>
@@ -162,7 +132,7 @@
         <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="header">
-                <h2><strong>Quick Details</strong> FY : {{$finyear}}</h2>
+                <h2><strong>Quick Details</strong> Month : {{$fmonth}} ({{$finyear}})</h2>
                    
                 </div>
                 <div class="body">
@@ -217,44 +187,7 @@
             </div>
         </div>
     </div>
-    <div class="row clearfix social-widget">
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect twitter-widget">
-                <div class="icon"><i class="zmdi zmdi-twitter"></i></div>
-                <div class="content">
-                    <div class="text">Twitt</div>
-                    <div class="number">8K</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect instagram-widget">
-                <div class="icon"><i class="zmdi zmdi-instagram"></i></div>
-                <div class="content">
-                    <div class="text">Followers</div>
-                    <div class="number">231</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect linkedin-widget">
-                <div class="icon"><i class="zmdi zmdi-linkedin"></i></div>
-                <div class="content">
-                    <div class="text">Followers</div>
-                    <div class="number">2510</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card info-box-2 hover-zoom-effect behance-widget">
-                <div class="icon"><i class="zmdi zmdi-behance"></i></div>
-                <div class="content">
-                    <div class="text">Project</div>
-                    <div class="number">121</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @stop
 @section('page-script')

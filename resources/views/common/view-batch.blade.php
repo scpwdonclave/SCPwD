@@ -74,17 +74,17 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <small class="text-muted">Batch Start Date</small>
-                                        <p>{{$batchData->batch_start}}</p>
+                                        <p>{{\Carbon\Carbon::parse($batchData->batch_start)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-3">
                                         <small class="text-muted">Batch End Date</small>
-                                        <p>{{$batchData->batch_end}}</p>
+                                        <p>{{\Carbon\Carbon::parse($batchData->batch_end)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-3">
                                         <small class="text-muted">Assessment Date</small>
-                                        <p>{{$batchData->assessment}}</p>
+                                        <p>{{\Carbon\Carbon::parse($batchData->assessment)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                 
@@ -156,7 +156,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchData->candidatesmap as $key=>$item)
-                                {{-- candidate --}}
+                            
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$item->centercandidate->candidate->name}}</td>
