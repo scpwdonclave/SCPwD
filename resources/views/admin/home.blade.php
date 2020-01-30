@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="body">
                    <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$agency_cnt}}" data-speed="2000" data-fresh-interval="700">{{$agency_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <strong><p class="text-muted"><span style="color:blue">Total Registered Agency</span></p></strong>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Agencies</span></p></strong>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
             <div class="card">
                 <div class="body">
                    <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessor_cnt}}" data-speed="2000" data-fresh-interval="700">{{$assessor_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
-                    <strong><p class="text-muted"><span style="color:blue">Total Registered Assessor</span></p></strong>
+                    <strong><p class="text-muted"><span style="color:blue">Total Registered Assessors</span></p></strong>
                 </div>
             </div>
         </div>
