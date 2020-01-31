@@ -8,6 +8,7 @@ use Crypt;
 use App\Batch;
 use App\Reason;
 use App\Trainer;
+use Carbon\Carbon;
 use App\Notification;
 use App\TrainerStatus;
 use App\TrainerJobRole;
@@ -83,7 +84,7 @@ class AdminTrainerController extends Controller
             $stat = ($trainer->status)?'Re-Activated':'Deactivated';
             AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer '.$stat,"Your Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
             foreach ($trainer->batches as $batch) {
-                if ($batch->status && $batch->verified && !$batch->completed) {
+                if ($batch->status && $batch->verified && (Carbon::parse($batch->batch_end.' 23:59') > Carbon::now())) {
                     AppHelper::instance()->writeNotification($batch->center->id,'center','Trainer '.$stat,"Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
                 }
             }

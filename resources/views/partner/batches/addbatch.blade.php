@@ -123,7 +123,7 @@ table.dataTable thead th:first-child {
                                 </div>
                             </div>
 
-                            <table id="batchtable" data-page-length="30" class="batchtable table table-bordered table-striped table-hover display select">
+                            <table id="batchtable" data-page-length="30" class="batchtable nobtn table table-bordered table-striped table-hover display select">
                                 <thead>
                                     <tr>
                                         <th><input name="select_all" value="1" type="checkbox"></th>
@@ -137,7 +137,7 @@ table.dataTable thead th:first-child {
                             </table>
 
                             <div class="row d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary waves-effect">Submit</button>
+                                <button name="btnSubmit" type="submit" class="btn btn-primary waves-effect"><span class="glyphicon glyphicon-cloud-upload"></span> Submit</button>
                             </div>
                         </form>
     
@@ -254,10 +254,11 @@ table.dataTable thead th:first-child {
                 break;
             case 'table':
                     var centerid = $('#center :selected').val();
+                    var sid = $("#scheme :selected").val();
                     $.ajax({
                         url: "{{ route('partner.addbatch.api') }}",
                         method: "POST",
-                        data: { _token, centerid },
+                        data: { _token, centerid, sid },
                         success: function(data){
                             var datatable = $('.batchtable').DataTable();
                             datatable.clear().draw();
@@ -271,10 +272,8 @@ table.dataTable thead th:first-child {
 
                             datatable.columns.adjust().draw();
                             },
-                        error: function(data){
-                            console.log(data);
-                            
-                                // swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
+                        error: function(data){                            
+                                swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
                             }
                         });
                 break;
@@ -458,6 +457,8 @@ $('#form_addbatch').on('submit', function(e){
     // Prevent actual form submission
     e.preventDefault();
     if ($('#form_addbatch').valid()) {
+        $("#btnSubmit").prop("disabled", true);
+        $("#btnSubmit").html("Please Wait...");
        // Iterate over all selected checkboxes
         $.each(rows_selected, function(index, rowId){
             
@@ -489,17 +490,20 @@ $('#form_addbatch').on('submit', function(e){
                 data: {_token,trainer,starttime,hour},
                 success: function (data) {
                     if (data.success) {
-                        $('#form_addbatch').unbind().submit();
+                        console.log('submited');
+
+                        
+                        // $('#form_addbatch').unbind().submit();
                         // Remove added elements
-                        $('input[name^="id"]', form).remove();
+                        // $('input[name^="id"]', form).remove();
                     } else {
+                        $("#btnSubmit").prop("disabled", false);
+                        $("#btnSubmit").html('<span class="glyphicon glyphicon-cloud-upload"></span> Submit');
                         swal('Attention','The Selected Trainer is Pre-Occupied on This Time, Please Switch to another Trainer or Change Batch Time', 'info');
                     }
                 },
                 error: function (data) {
-                    setTimeout(function () {
-                        swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                    }, 2000);
+                    swal({title: "Oops!", content: 'Something went Wrong, Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                 }
             });
 

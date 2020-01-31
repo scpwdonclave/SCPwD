@@ -39,7 +39,7 @@
                                     <td>{{$item->batch->partner->tp_id}}</td>
                                     <td>{{$item->batch->center->tc_id}}</td>
                                     <td>{{$item->batch->assessment}}</td>
-                                    @if ($item->batch->completed)
+                                    @if (\Carbon\Carbon::parse($item->batch->batch_end.' 23:59') < \Carbon\Carbon::now())
                                         <td style="color:green">Waiting for Results</td>
                                     @else
                                         <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>

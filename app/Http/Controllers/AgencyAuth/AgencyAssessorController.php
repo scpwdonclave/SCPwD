@@ -9,6 +9,7 @@ use App\Batch;
 use Validator;
 use App\Sector;
 use App\Assessor;
+use Carbon\Carbon;
 use App\AgencyBatch;
 use App\AgencySector;
 use App\Notification;
@@ -238,7 +239,7 @@ class AgencyAssessorController extends Controller
         $batch=array();
         foreach ($agencyBatch as $batches) {
             $batchind= $batches->batch;
-            if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified && !$batchind->completed && $this->partnerstatus($batchind))
+            if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified && (Carbon::parse($batchind->batch_end.' 23:59') > Carbon::now()) && $this->partnerstatus($batchind))
                 array_push($batch,$batchind); 
             }
         

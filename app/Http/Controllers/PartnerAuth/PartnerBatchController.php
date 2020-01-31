@@ -230,36 +230,43 @@ class PartnerBatchController extends Controller
             $candidateArray = [];
             if ($center) {
                 if ($center->partner->id == $partner->id) {
+                    // * Making Sure that this center belongs to current partner
+                    
                     $candidateRow = [[]];
                     foreach ($center->candidatesmap as $centerCandidate) {
+                        // * looping through all the centercandidate of that center 
+                        
                         if ($centerCandidate->candidate->status && $this->partnerscheme($centerCandidate,'candidate')) {
+                            // * checked candidate is active and the scheme is also active
+
                             if (!$centerCandidate->dropout) {
-                                
-                            }
-                            // if ($centerCandidate->batchcandidate) {
-                            //     foreach ($centerCandidate->batchcandidate as $batchcandidate) {
+                                // * all dropped out candidates are excluded 
+
+                                if ($centerCandidate->jobrole->partnerjobrole->scheme->id == $request->sid) {
+                                    // * Making Sure Candidates are coming from same Scheme
                                     
-                            //         if ($batchcandidate->batch->completed) {
-                            //             $candidateRow[0] = '<input type="checkbox">';
-                            //             $candidateRow[1] = $centerCandidate->candidate->name;
-                            //             $candidateRow[2] = $centerCandidate->candidate->contact;
-                            //             $candidateRow[3] = $centerCandidate->candidate->category;
-                            //             $candidateRow[4] = $centerCandidate->disability->e_expository;
-                            //             $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                            //             $candidateRow[6] = $centerCandidate->id;
-                            //             array_push($candidateArray, $candidateRow);
-                            //         }
-                            //     }
-                            // } else {
-                            //     $candidateRow[0] = '<input type="checkbox">';
-                            //     $candidateRow[1] = $centerCandidate->candidate->name;
-                            //     $candidateRow[2] = $centerCandidate->candidate->contact;
-                            //     $candidateRow[3] = $centerCandidate->candidate->category;
-                            //     $candidateRow[4] = $centerCandidate->disability->e_expository;
-                            //     $candidateRow[5] = '<button type="button" onclick="viewcandidate('.$centerCandidate->id.')" class="btn btn-primary btn-round waves-effect">View</button>';
-                            //     $candidateRow[6] = $centerCandidate->id;
-                            //     array_push($candidateArray, $candidateRow);
-                            // }
+                                    if (is_null($centerCandidate->passed)) {
+                                        // * candidates either in a batch [with no results] or not in a batch
+                                        
+                                        if (!($centerCandidate->batchcandidate)) {
+                                            // * candidates not in a batch
+
+                                            $id = Crypt::encrypt($centerCandidate->id);
+                                            $candidateRow[0] = '<input type="checkbox">';
+                                            $candidateRow[1] = $centerCandidate->candidate->name;
+                                            $candidateRow[2] = $centerCandidate->candidate->contact;
+                                            $candidateRow[3] = $centerCandidate->candidate->category;
+                                            $candidateRow[4] = $centerCandidate->disability->e_expository;
+                                            $candidateRow[5] = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
+                                            $candidateRow[6] = $centerCandidate->id;
+                                            array_push($candidateArray, $candidateRow);         
+                                        }
+
+                                    }
+
+                                }
+
+                            }
                         }
                     }
                     return response()->json(['success' => true, 'candidates' => $candidateArray],200);               

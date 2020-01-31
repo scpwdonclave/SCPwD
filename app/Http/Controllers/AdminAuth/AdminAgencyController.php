@@ -10,6 +10,7 @@ use App\Agency;
 use App\Reason;
 use App\Sector;
 use App\JobRole;
+use Carbon\Carbon;
 use App\AgencyBatch;
 use App\AgencySector;
 use App\AssessorBatch;
@@ -414,9 +415,9 @@ class AdminAgencyController extends Controller
         }
         $batch=array();
         foreach ($jobroles as  $job) {
-            foreach ($job->batches as  $job2) {
-                if($job2->status && $job2->verified && !$job2->completed && $this->partnerstatus($job2)){
-                    array_push($batch,$job2); 
+            foreach ($job->batches as $batch) {
+                if($batch->status && $batch->verified && (Carbon::parse($batch->batch_end.' 23:59') > Carbon::now()) && $this->partnerstatus($batch)){
+                    array_push($batch,$batch); 
                 }
             }
         }

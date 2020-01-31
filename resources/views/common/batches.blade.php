@@ -64,7 +64,7 @@
                                 <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
                                 <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
                                 @if ($item->verified)
-                                    @if ($item->completed)
+                                    @if (\Carbon\Carbon::parse($item->batch_end.' 23:59') < \Carbon\Carbon::now())
                                         <td style="color:green">Completed</td>
                                     @else
                                         <td style="color:{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'green':'red'}}">{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'Active':'Inactive'}}</td>
