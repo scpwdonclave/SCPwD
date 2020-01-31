@@ -39,7 +39,7 @@
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
                                             <td>{{is_null($item->batch->assessorbatch)?'Not Assigned Yet':$item->batch->assessorbatch->assessor->as_id}}</td>
-                                            <td>{{$item->batch->assessment}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                             @if ($item->batch->completed)
                                                 <td style="color:green">Waiting for Results</td>
                                             @else

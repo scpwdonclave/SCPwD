@@ -153,10 +153,22 @@ class FileController extends Controller
     public function assessmentFiles( $id, $action,$column){
         // dd($action);
 
-        if (Auth::guard('admin')->check() || Auth::guard('agency')->check()) {
+        if (Auth::guard('admin')->check() || Auth::guard('agency')->check() || Auth::guard('assessor')->check()) {
             if (Auth::guard('agency')->check()) {
                 $batch_assessment = BatchAssessment::findOrFail($id);
                 if ($batch_assessment->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisAssessment($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisAssessment($id,$column);
+                    }
+                }
+            }
+            if (Auth::guard('assessor')->check()) {
+                $batch_assessment = BatchAssessment::findOrFail($id);
+                if ($batch_assessment->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
                     return abort(401);
                 } else {
                     if ($action === 'view') {

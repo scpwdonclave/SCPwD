@@ -105,7 +105,7 @@ class AssessorBatchController extends Controller
                 }
                 $candidatemark->save();
             }
-
+            $batch_no=$batchAssessment->batch->batch_id;
             $assessor = $this->guard()->user()->as_id;
             AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
 

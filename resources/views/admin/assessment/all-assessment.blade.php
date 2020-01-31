@@ -47,7 +47,7 @@
                                     <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
                                     {{-- <td>{{$item->batch->batch_start}}</td>
                                     <td>{{$item->batch->batch_end}}</td> --}}
-                                    <td>{{$item->batch->assessment}}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
 
                                     @if ($item->batch->batchassessment->aa_verified==0)
                                     <td class="text-muted"><strong>Pending</strong></td>
