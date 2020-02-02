@@ -112,22 +112,30 @@ table.dataTable thead th:first-child {
                         </li>
                     </ul>
                     <br>
-                    @if (Request::segment(1)==='admin' && !$reassessment->verified)
-                        <form id="reassess_form" action="{{route('admin.reassessment.requests.submit')}}" method="post">
-                            @csrf
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-sm-4">
-                                    <label for="assessment"><strong>Re-Assessment Date <span style="color:red"> *</strong></span></label>
-                                    <div class="form-group form-float">
-                                        <input type="text" class="form-control reassess_date" placeholder="New Assessment Date" value="{{ old('assessment') }}" name="assessment" required>
+                    @if (Request::segment(1)==='admin')
+                        @if ($reassessment->verified)
+                        <div class="row d-flex justify-content-center">
+                            <h6>Re-Assessment Date: <span style='color:blue'>{{$reassessment->assessment}}</span></h6>
+                        </div>
+                        @else
+                            <form id="reassess_form" action="{{route('admin.reassessment.requests.submit')}}" method="post">
+                                @csrf
+                                <input type="hidden" name="reassid" value="{{$reassessment->bt_id}}">
+                                <input type="hidden" name="action" value="1">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-sm-4">
+                                        <label for="assessment"><strong>Re-Assessment Date <span style="color:red"> *</strong></span></label>
+                                        <div class="form-group form-float">
+                                            <input type="text" class="form-control reassess_date" placeholder="New Assessment Date" value="{{ old('assessment') }}" name="assessment" required>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row d-flex justify-content-center">
-                                <button type="submit" class="btn btn-success">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
-                            </div>
-                        </form>
+                                <div class="row d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                    <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                </div>
+                            </form>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -140,21 +148,9 @@ table.dataTable thead th:first-child {
 {{-- @auth('admin') --}}
     <script>
 
-        function showPromptMessage(f,t = 0) {
-            var id={{$reassessment->id}};
-            let _token = $("input[name='_token']").val();
-                
-                 if(t==0){
-                if(f=='agency'){
-                    var urlLink="{{route('agency.assessment.reject')}}";
-                }else if(f=='admin'){
-                    var urlLink="{{route('admin.assessment.reject')}}";
-                }
-
-                }else{
-                    var urlLink="{{route('admin.assessment.release.reject')}}";
-
-                }
+        function showPromptMessage() {
+            var id='{{$reassessment->id}}';
+            let _token = $("[name='_token']").val();
         
          swal({
             title: "Reason of Rejection",
@@ -170,42 +166,20 @@ table.dataTable thead th:first-child {
             buttons: {
                     cancel: "Cancel",
                     confirm: {
-                        text: "Confirm",
+                        text: "Confirm Reject",
                         closeModal: false
                     }
                 },
-            closeModal: false,
-            closeOnEsc: false,
+            closeModal: true,
+            closeOnEsc: true,
         }).then(function(val){
             
             var dataString = {_token:_token, id:id,note:val};
             if (val) {
-                $.ajax({
-                    url: urlLink,
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML ="Assessment Submit for <span style='font-weight:bold; color:red'>Recheck</span>";
-                       
-                        swal({title: "Rejected", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false})
-                        .then(function(){
-                            if(f=='agency'){
-                            location="{{route('agency.assessment.pending-assessment')}}";
-                            }else if(f=='admin'){
-                            location="{{route('admin.assessment.all-assessment')}}";
-
-                            }
-                           // location="{{route('admin.tc.pending-trainers')}}";
-                            });
-                    },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
+                $('[name=action]').val('0');
+                var form = $('#reassess_form');
+                form.append("<input type='hidden' name='reason' value='"+val+"'>");
+                $(form).unbind().submit();
             } else if (val!=null) {
                 swal('Attention', 'You need to write something!', 'info');
             }
@@ -232,7 +206,7 @@ table.dataTable thead th:first-child {
         autoclose: true,
         format: 'dd-mm-yyyy',
         startDate: new Date(),
-        daysOfWeekDisabled: [0],
+        // daysOfWeekDisabled: [0],
     });
 
 </script>

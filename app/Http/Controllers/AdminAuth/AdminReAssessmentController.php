@@ -59,7 +59,33 @@ class AdminReAssessmentController extends Controller
 
     public function submitRequestReAssessment(Request $request)
     {
-        dd($request);
+        $request->validate([
+            'reassid' => 'required',
+            'action' => 'required',
+            'assessment' => 'nullable',
+        ]);
+
+        $reassessment = Reassessment::findOrFail($request->reassid);
+        if (!$reassessment->verified) {
+        
+            $reassessment->assessment=($request->action)?$request->assessment:null;            
+            $reassessment->verified=1;            
+            $reassessment->save();
+            $batchid = $reassessment->batch->batch_id;
+            if ($request->action) {
+                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
+                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
+                alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
+            } else {
+                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.");
+                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.");
+                alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Rejected </span>", 'Job Done')->html()->autoclose(3000);
+            }
+            
+        }
+
+        return redirect()->back();
+
     }
     
 }
