@@ -49,20 +49,25 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <small class="text-muted">Subject line</small>
                                                 <p>{{$complain->subject}}</p>
                                             <hr>
                                         </div>
                                     
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                                 <small class="text-muted">Issue Type</small>
                                                 <p>{{$complain->issue}}</p>
                                                 <hr>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                                 <small class="text-muted">Complain Date</small>
                                                 <p>{{\Carbon\Carbon::parse($complain->created_at)->format('d-m-Y')}}</p>
+                                                <hr>
+                                        </div>
+                                        <div class="col-sm-3">
+                                                <small class="text-muted">Complain Time</small>
+                                                <p>{{\Carbon\Carbon::parse($complain->created_at)->format('g:i A')}}</p>
                                                 <hr>
                                         </div>
                                     </div>

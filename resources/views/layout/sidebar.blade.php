@@ -103,13 +103,13 @@
                         
                     </ul>
                 </li>
-                <li class="{{ Request::segment(2) === 'support' ? 'active open' : null }}">
+                {{-- <li class="{{ Request::segment(2) === 'support' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Support</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/support/pending-request') ? 'active' : null }}"><a href="{{route('admin.support.pending-request')}}">Pending Request</a></li>
                         <li class="{{ Request::is('admin/support/closed-request') ? 'active' : null }}"><a href="{{route('admin.support.closed-request')}}">Closed Request</a></li>
                     </ul>
-                </li>
+                </li> --}}
                 @endif
             @endauth
                     
@@ -186,6 +186,15 @@
                         <li class="{{ Request::is(Request::segment(1).'/reassessment/pending-reassessment') ? 'active' : null }}"><a href="{{route(Request::segment(1).'.reassessment.pending-reassessment')}}">Pending Approval</a></li>
                     </ul>
                 </li>
+            @endif
+            @if (Request::segment(1) === 'admin')
+            <li class="{{ Request::segment(2) === 'support' ? 'active open' : null }}">
+                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Support</span></a>
+                <ul class="ml-menu">
+                    <li class="{{ Request::is('admin/support/pending-request') ? 'active' : null }}"><a href="{{route('admin.support.pending-request')}}">Pending Request</a></li>
+                    <li class="{{ Request::is('admin/support/closed-request') ? 'active' : null }}"><a href="{{route('admin.support.closed-request')}}">Closed Request</a></li>
+                </ul>
+            </li>
             @endif
             
             @if (Request::segment(1)==='agency' || Request::segment(1)==='assessor' || Request::segment(1)==='center' || Request::segment(1)==='partner')
