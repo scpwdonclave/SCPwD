@@ -37,7 +37,7 @@
                                             <td>{{$batch->batch->partner->tp_id}}</td>
                                             <td>{{$batch->batch->center->tc_id}}</td>
                                             <td>{!!is_null($batch->batch->assessorbatch)?'<span style="color:blue">Not Assigned Yet</span>':$batch->batch->assessorbatch->assessor->as_id!!}</td>
-                                            <td>{{$batch->batch->assessment}}</td>
+                                            <td>{{\Carbon\Carbon::parse($batch->batch->assessment)->format('d-m-Y')}}</td>
                                             @if (\Carbon\Carbon::parse($batch->batch->assessment.' 00:00') > \Carbon\Carbon::now())
                                                 <td style="color:blue">Not Started Yet</td>
                                             @else
@@ -47,7 +47,7 @@
                                                     <td style="color:blue">On Going</td>
                                                 @endif
                                             @endif
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($item->batch->id))}}">View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($batch->batch->id))}}">View</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
