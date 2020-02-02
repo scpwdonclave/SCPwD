@@ -38,13 +38,13 @@
                                     <td>{{$item->batch->batch_id}}</td>
                                     <td>{{$item->batch->partner->tp_id}}</td>
                                     <td>{{$item->batch->center->tc_id}}</td>
-                                    <td>{{$item->batch->assessment}}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                     @if ($item->batch->completed)
                                         <td style="color:green">Waiting for Results</td>
                                     @else
                                         <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
                                     @endif
-                                    <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->batch->id))}}">View</a></td>
+                                    <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($item->batch->id))}}">View</a></td>
                                     <td>
                                         <button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('agency.aa.batch.action',[Crypt::encrypt($item->id),'accept'])}}'">Accept</button>
                                         <button type="button" class="badge bg-red margin-0" onclick="popupReject('{{Crypt::encrypt($item->id)}}');">Reject</button>

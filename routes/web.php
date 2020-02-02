@@ -105,6 +105,12 @@ Route::get('center/files/{action}/{id}/{filename}', 'CenterAuth\FileController@c
 Route::get('candidate/files/{action}/{id}/{file}', 'FileController@candidateFiles')->where('action', 'view|download')->where('file', 'doc|cert')->name('center.files.candidate-file');
 Route::get('assessor/files/{id}/{action}/{column}', 'FileController@assessorFiles')->where('action', 'view|download')->name('agency.files.assessor-file');
 Route::get('assessor/assessment-files/{id}/{action}/{column}', 'FileController@assessmentFiles')->where('action', 'view|download')->name('agency.files.assessment-file');
+Route::get('admin/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('admin.support.complain-file');
+Route::get('partner/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('partner.support.complain-file');
+Route::get('center/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('center.support.complain-file');
+Route::get('agency/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('agency.support.complain-file');
+Route::get('assessor/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('assessor.support.complain-file');
+
 
 /* QR Data For Assessment */
 Route::get('assessment/assessment-qrdata/{id}', 'QrController@qrData')->name('assessment-qrdata');

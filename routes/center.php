@@ -21,3 +21,9 @@ Route::post('candidates/candidate-api', 'CenterAuth\CenterHomeController@candida
 /* Batches */
 Route::get('batches', 'CenterAuth\CenterBatchController@batches')->name('batches');
 Route::get('batches/batch-view/{id}', 'CenterAuth\CenterBatchController@viewBatch')->name('bt.batch.view');
+
+Route::get('support/complain', 'CenterAuth\CenterSupportController@registerComplain')->name('support.complain'); 
+Route::post('support/complain-register', 'CenterAuth\CenterSupportController@insertRegisterComplain')->name('support.register-complain'); 
+Route::get('support/my-complain', 'CenterAuth\CenterSupportController@myComplain')->name('support.my-complain');
+Route::get('support/view-complain/{id}', 'CenterAuth\CenterSupportController@viewComplain')->name('support.complain-view');
+

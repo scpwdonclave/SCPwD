@@ -21,6 +21,8 @@ Route::post('assessors/assessor-batch-remove', 'AgencyAuth\AgencyAssessorControl
 Route::post('assessors/assessor-api', 'AgencyAuth\AgencyAssessorController@assessorApi')->name('as.assessor.api'); 
 
 Route::get('batches', 'AgencyAuth\AgencyAssessmentController@myBatch')->name('batch'); 
+Route::get('batches/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('bt.batch.view-dtl'); 
+
 Route::get('batches/pending', 'AgencyAuth\AgencyAssessmentController@myPendingBatch')->name('pending-batch');
 Route::get('batches/pending/{id}/{action}/{reason?}', 'AgencyAuth\AgencyAssessmentController@batchAction')->where('action', 'accept|reject')->name('aa.batch.action');
 // Route::get('batches/pending/{id}', 'AgencyAuth\AgencyAssessmentController@pendingBatchApproved')->name('aa.accept.batch'); 
@@ -30,5 +32,13 @@ Route::get('assessment/all-assessment', 'AgencyAuth\AgencyAssessmentController@a
 Route::get('assessment/assessment-view/{id}', 'AgencyAuth\AgencyAssessmentController@assessmentView')->name('assessment.view'); 
 Route::get('assessment/assessment-verify/{id}', 'AgencyAuth\AgencyAssessmentController@assessmentAccept')->name('assessment.verify'); 
 Route::post('assessment/assessment-reject', 'AgencyAuth\AgencyAssessmentController@assessmentReject')->name('assessment.reject'); 
+
+
+Route::get('support/complain', 'AgencyAuth\AgencySupportController@registerComplain')->name('support.complain'); 
+Route::post('support/complain-register', 'AgencyAuth\AgencySupportController@insertRegisterComplain')->name('support.register-complain'); 
+Route::get('support/my-complain', 'AgencyAuth\AgencySupportController@myComplain')->name('support.my-complain'); 
+Route::get('support/view-complain/{id}', 'AgencyAuth\AgencySupportController@viewComplain')->name('support.complain-view');
+
+
 
 

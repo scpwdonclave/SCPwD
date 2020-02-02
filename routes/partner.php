@@ -42,3 +42,11 @@ Route::get('batches/batch-certificate/{id}', 'PartnerAuth\PartnerBatchController
 Route::get('batches/batch-edit', function () { return redirect(route('partner.batches')); });
 Route::post('batches/batch-edit', 'PartnerAuth\PartnerBatchController@submitEditBatch')->name('bt.batch.submitedit');
 Route::get('batches/batch-edit/{id}', 'PartnerAuth\PartnerBatchController@editBatch')->name('bt.batch.edit');
+
+
+Route::get('support/complain', 'PartnerAuth\PartnerSupportController@registerComplain')->name('support.complain'); 
+Route::post('support/complain-register', 'PartnerAuth\PartnerSupportController@insertRegisterComplain')->name('support.register-complain'); 
+Route::get('support/my-complain', 'PartnerAuth\PartnerSupportController@myComplain')->name('support.my-complain'); 
+Route::get('support/view-complain/{id}', 'PartnerAuth\PartnerSupportController@viewComplain')->name('support.complain-view');
+
+//support.complain-view

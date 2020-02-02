@@ -14,3 +14,8 @@ Route::post('batches/candidate-marks-insert', 'AssessorAuth\AssessorBatchControl
 Route::post('batches/candidate-marks-update', 'AssessorAuth\AssessorBatchController@candidateMarksUpdate')->name('as.batch.candidate-mark-update'); 
 Route::get('batches/assessment-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessment')->name('assessment.view'); 
 Route::get('batches/assessment-edit/{id}', 'AssessorAuth\AssessorBatchController@editAssessment')->name('assessment.edit'); 
+
+Route::get('support/complain', 'AssessorAuth\AssessorSupportController@registerComplain')->name('support.complain'); 
+Route::post('support/complain-register', 'AssessorAuth\AssessorSupportController@insertRegisterComplain')->name('support.register-complain'); 
+Route::get('support/my-complain', 'AssessorAuth\AssessorSupportController@myComplain')->name('support.my-complain'); 
+Route::get('support/view-complain/{id}', 'AssessorAuth\AssessorSupportController@viewComplain')->name('support.complain-view');

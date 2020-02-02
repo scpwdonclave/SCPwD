@@ -150,3 +150,9 @@ Route::post('assessment/assessment-reject', 'AdminAuth\AdminAssessmentController
 Route::get('assessment/assessment-certi-release/{id}', 'AdminAuth\AdminAssessmentController@certificateRelease')->name('assessment.certificate.release');
 Route::post('assessment/assessment-release-reject', 'AdminAuth\AdminAssessmentController@assessmentReleaseReject')->name('assessment.release.reject');
 Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAssessmentController@certificatePrint')->name('assessment.certificate.print');
+
+//Support
+Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
+Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');
+Route::get('support/view-complain/{id}', 'AdminAuth\AdminSupportController@viewComplain')->name('support.complain-view');
+Route::post('support/stage-define', 'AdminAuth\AdminSupportController@stageDefine')->name('support.stage-define');

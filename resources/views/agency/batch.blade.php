@@ -32,7 +32,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($agencyBatch as $key=>$item) 
+                                        @foreach ($agencyBatch as $key=>$item)  
                                         <tr>
                                             <td>{{$key+1}}</td>
                                             <td>{{$item->batch->batch_id}}</td>
@@ -45,7 +45,7 @@
                                             @else
                                                 <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
                                             @endif
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->batch->id))}}">View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($item->batch->id))}}">View</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
