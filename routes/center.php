@@ -23,3 +23,9 @@ Route::get('batches', 'CenterAuth\CenterBatchController@batches')->name('batches
 Route::get('batches/batch-view/{id}', 'CenterAuth\CenterBatchController@viewBatch')->name('bt.batch.view');
 Route::get('batches/reassessment/{id}', 'CenterAuth\CenterBatchController@reassessBatch')->name('bt.batch.reassess');
 Route::post('batches/reassessment', 'CenterAuth\CenterBatchController@reassessBatchSubmit')->name('bt.batch.reassess.submit');
+
+Route::get('support/complain', 'CenterAuth\CenterSupportController@registerComplain')->name('support.complain'); 
+Route::post('support/complain-register', 'CenterAuth\CenterSupportController@insertRegisterComplain')->name('support.register-complain'); 
+Route::get('support/my-complain', 'CenterAuth\CenterSupportController@myComplain')->name('support.my-complain');
+Route::get('support/view-complain/{id}', 'CenterAuth\CenterSupportController@viewComplain')->name('support.complain-view');
+

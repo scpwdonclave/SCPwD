@@ -163,3 +163,8 @@ Route::get('reassessment/reassessment-view/{id}', 'AdminAuth\AdminReAssessmentCo
 Route::get('reassessment/reassessment-verify/{id}', 'AdminAuth\AdminReAssessmentController@reassessmentAccept')->name('reassessment.verify'); 
 Route::post('reassessment/reassessment-reject', 'AdminAuth\AdminReAssessmentController@reassessmentReject')->name('reassessment.reject'); 
 // End For ReAssessment
+//Support
+Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
+Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');
+Route::get('support/view-complain/{id}', 'AdminAuth\AdminSupportController@viewComplain')->name('support.complain-view');
+Route::post('support/stage-define', 'AdminAuth\AdminSupportController@stageDefine')->name('support.stage-define');

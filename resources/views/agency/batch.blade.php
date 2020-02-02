@@ -47,7 +47,7 @@
                                                     <td style="color:blue">On Going</td>
                                                 @endif
                                             @endif
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($batch->batch->id))}}">View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($item->batch->id))}}">View</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>

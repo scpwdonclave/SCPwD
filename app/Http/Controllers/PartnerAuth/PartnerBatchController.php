@@ -513,6 +513,18 @@ class PartnerBatchController extends Controller
     public function printCertificate($id){
         $id=$this->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
+        $trigger=0;
+        foreach ($batchAssessment->candidateMarks as  $value) {
+            if($value->passed===1){
+                $trigger=1;
+            }
+        }
+
+        if($trigger===0){
+
+            alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
+            return Redirect()->back();
+        }
         if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
             $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
             return $pdf->stream($batchAssessment->id.'.pdf');

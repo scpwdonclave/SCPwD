@@ -145,7 +145,7 @@
             $('#mark'+id).attr('readonly',true);
             //$('#mark'+id).val('');
             $('#mark'+id).val(0);
-            $('#remark'+id).addClass('text-danger').html('Absent');
+            $('#remark'+id).addClass('text-success').html('Recorded'); //Absent
             //$('#remark'+id).removeClass().html('');
             $('[name=remark'+id+']').val(0);
 
@@ -171,12 +171,12 @@
         
 
     if(m < Number(pass_mark) && m!='' ){
-        $('#remark'+m_id).addClass('text-danger').html('Failed');
+        $('#remark'+m_id).addClass('text-success').html('Recorded'); //failed
         $('[name=remark'+m_id+']').val(0);
         
     }else if(m >= Number(pass_mark)){
         $('#remark'+m_id).removeClass().html('');
-        $('#remark'+m_id).addClass('text-success').html('Passed');
+        $('#remark'+m_id).addClass('text-success').html('Recorded'); //passed
         $('[name=remark'+m_id+']').val(1);
         }else{
         $('#remark'+m_id).removeClass().html('');

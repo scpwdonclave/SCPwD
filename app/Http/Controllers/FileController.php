@@ -7,6 +7,8 @@ use Exception;
 use App\Assessor;
 use App\Candidate;
 use App\BatchAssessment;
+use App\ComplainFile;
+use App\Complain;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -47,6 +49,15 @@ class FileController extends Controller
             return abort(404);
         }
     }
+    protected function downloadThisSupport($id,$column){
+       
+        $fileurl = ComplainFile::where('id', $id)->select($column)->firstOrFail();
+        try {
+            return Storage::disk('myDisk')->download("{$fileurl->$column}");
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
 
     protected function viewThis($id, $file){
         $column = ($file === 'doc')?'doc_file':'d_cert';
@@ -69,6 +80,15 @@ class FileController extends Controller
     protected function viewThisAssessment($id,$column){
         //$column = ($file === 'doc')?'doc_file':'d_cert';
         $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
+        try {
+            return Storage::disk('myDisk')->response("{$fileurl->$column}");
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
+    protected function viewThisSupport($id,$column){
+        //$column = ($file === 'doc')?'doc_file':'d_cert';
+        $fileurl = ComplainFile::where('id', $id)->select($column)->firstOrFail();
         try {
             return Storage::disk('myDisk')->response("{$fileurl->$column}");
         } catch (Exception $e) {
@@ -153,10 +173,22 @@ class FileController extends Controller
     public function assessmentFiles( $id, $action,$column){
         // dd($action);
 
-        if (Auth::guard('admin')->check() || Auth::guard('agency')->check()) {
+        if (Auth::guard('admin')->check() || Auth::guard('agency')->check() || Auth::guard('assessor')->check()) {
             if (Auth::guard('agency')->check()) {
                 $batch_assessment = BatchAssessment::findOrFail($id);
                 if ($batch_assessment->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisAssessment($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisAssessment($id,$column);
+                    }
+                }
+            }
+            if (Auth::guard('assessor')->check()) {
+                $batch_assessment = BatchAssessment::findOrFail($id);
+                if ($batch_assessment->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
                     return abort(401);
                 } else {
                     if ($action === 'view') {
@@ -175,6 +207,76 @@ class FileController extends Controller
                     return $this->downloadThisAssessment($id,$column);
                 }
             }
+        } else {
+            return abort(401);
+        }
+
+    }
+
+    public function supportFiles($id, $action,$column){
+
+        if (Auth::guard('admin')->check() || Auth::guard('agency')->check() || Auth::guard('assessor')->check() || Auth::guard('partner')->check() || Auth::guard('center')->check()) {
+           
+            if (Auth::guard('admin')->check()) {
+                if ($action === 'view') {
+                    return $this->viewThisSupport($id,$column);
+                } elseif ($action === 'download') {
+                    return $this->downloadThisSupport($id,$column);
+                }
+            }
+
+            if (Auth::guard('partner')->check()) {
+                $complain_file = ComplainFile::findOrFail($id);
+                if (($complain_file->complain->rel_id != Auth::guard('partner')->user()->id) || ($complain_file->complain->rel_with !='partner')) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisSupport($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisSupport($id,$column);
+                    }
+                }
+            }
+
+            if (Auth::guard('center')->check()) {
+                $complain_file = ComplainFile::findOrFail($id);
+                if (($complain_file->complain->rel_id != Auth::guard('center')->user()->id) || ($complain_file->complain->rel_with !='center')) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisSupport($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisSupport($id,$column);
+                    }
+                }
+            }
+
+            if (Auth::guard('agency')->check()) {
+                $complain_file = ComplainFile::findOrFail($id);
+                if (($complain_file->complain->rel_id != Auth::guard('agency')->user()->id) || ($complain_file->complain->rel_with !='agency')) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisSupport($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisSupport($id,$column);
+                    }
+                }
+            }
+
+            if (Auth::guard('assessor')->check()) {
+                $complain_file = ComplainFile::findOrFail($id);
+                if (($complain_file->complain->rel_id != Auth::guard('assessor')->user()->id) || ($complain_file->complain->rel_with !='assessor')) {
+                    return abort(401);
+                } else {
+                    if ($action === 'view') {
+                        return $this->viewThisSupport($id,$column);
+                    } elseif ($action === 'download') {
+                        return $this->downloadThisSupport($id,$column);
+                    }
+                }
+            }
+
         } else {
             return abort(401);
         }
