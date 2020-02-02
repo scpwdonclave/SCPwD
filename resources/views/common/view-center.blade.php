@@ -368,25 +368,59 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Candidate Name</th>
                                         <th>Contact</th>
                                         <th>Category</th>
                                         <th>Date of Birth</th>
-                                        <th>Overall Status</th>
+                                        <th>Training Status</th>
+                                        <th>Assessment Status</th>
                                         <th>View</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($centerData->candidatesmap as $key => $centercandidatemap)
+                                    @foreach ($candidates as $key => $centercandidatemap)
                                     <tr>
-                                        <td>{{$key+1}}</td>
                                         <td>{{$centercandidatemap->candidate->name}}</td>
                                         <td>{{$centercandidatemap->candidate->contact}}</td>
                                         <td>{{$centercandidatemap->candidate->category}}</td>
                                         <td>{{$centercandidatemap->candidate->dob}}</td>
-                                        <td style="color:{{($centercandidatemap->jobrole->partnerjobrole->status && $centercandidatemap->center->partner->status && $centercandidatemap->center->status && $centercandidatemap->candidate->status)?'green':'red'}}">{{($centercandidatemap->jobrole->partnerjobrole->status && $centercandidatemap->center->partner->status && $centercandidatemap->center->status && $centercandidatemap->candidate->status)?'Active':'Inactive'}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($centercandidatemap->candidate->id))}}" >View</a></td>
+                                        @if ($centercandidatemap->dropout)
+                                            <td style="color:blue">Dropped out</td>
+                                        @else
+                                            @if ($centercandidatemap->batchcandidate)
+                                                @if (\Carbon\Carbon::parse($centercandidatemap->batchcandidate->batch->batch_start.' 00:00') > \Carbon\Carbon::now())
+                                                    <td style="color:blue">Not Started Yet</td>
+                                                @else
+                                                    @if (\Carbon\Carbon::parse($centercandidatemap->batchcandidate->batch->batch_end.' 23:59') < \Carbon\Carbon::now())
+                                                        <td style="color:green">Completed</td>
+                                                    @else
+                                                        <td style="color:blue">On Going</td>
+                                                    @endif
+                                                @endif
+                                            @else
+                                                <td>Not Applicable</td>
+                                            @endif
+                                        @endif
+                                        
+                                        @if ($centercandidatemap->candidate->status)
+                                            @switch($centercandidatemap->passed)
+                                                @case('0')
+                                                    <td style="color:red">Failed</td>
+                                                    @break
+                                                @case('1')
+                                                    <td style="color:green">Passed</td>
+                                                    @break
+                                                @case('2')
+                                                    <td style="color:red">Absent</td>
+                                                    @break
+                                                @default
+                                                    <td>Not Applicable</td>
+                                            @endswitch
+                                        @else
+                                            <td style="color:red">Deactive</td>
+                                        @endif
+
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view', Crypt::encrypt($centercandidatemap->id))}}" >View</a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

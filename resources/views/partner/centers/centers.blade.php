@@ -4,7 +4,6 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
@@ -33,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($centers as $center)
+                                @foreach ($partner->centers as $center)
                                     
                                 <tr>
                                 <td><i class="zmdi zmdi-circle text-{{$center->status?'success':'danger'}}"></td>

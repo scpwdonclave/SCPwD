@@ -26,7 +26,7 @@ class AgencyAssessmentController extends Controller
         return Auth::guard('agency');
     }
 
-    public function pendingAssessmentApproval(){
+    public function pendingAssessment(){
         $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
 
         return view('agency.assessment-approval')->with(compact('agencyBatch'));
@@ -39,7 +39,7 @@ class AgencyAssessmentController extends Controller
         return view('agency.all-assessment')->with(compact('agencyBatch'));
     }
 
-    public function assessmentView($id){
+    public function viewAssessment($id){
         $id= AppHelper::instance()->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
         return view('common.view-assessment')->with(compact('batchAssessment'));
@@ -92,8 +92,9 @@ class AgencyAssessmentController extends Controller
     }
 
     public function myBatch(){
-        $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',1]])->get();
-        return view('agency.batch')->with(compact('agencyBatch'));
+        $agency = $this->guard()->user();
+        // $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',1]])->get();
+        return view('agency.batch')->with(compact('agency'));
 
 
     }

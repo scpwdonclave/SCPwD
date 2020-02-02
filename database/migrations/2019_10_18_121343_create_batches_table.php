@@ -32,8 +32,7 @@ class CreateBatchesTable extends Migration
             $table->string('f_year')->nullable();
             /*End of Financial Year and Month */
             $table->boolean('status')->default(0);
-            $table->boolean('verified')->default(0); 
-            $table->boolean('completed')->default(0);
+            $table->boolean('verified')->default(0);
             $table->timestamps();
         });
     }

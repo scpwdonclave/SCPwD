@@ -199,66 +199,6 @@
 @section('page-script')
 {{-- @auth('admin') --}}
     <script>
-        // function showPromptMessage(f,t = 0) {
-        //     swal({
-        //         title: "Reason of Rejection",
-        //         text: "Please Describe the Reason",
-        //         type: "input",
-        //         showCancelButton: true,
-        //         closeOnConfirm: false,
-        //         animation: "slide-from-top",
-        //         showLoaderOnConfirm: true,
-        //         inputPlaceholder: "Reason"
-        //     }, function (inputValue) {
-        //         if (inputValue === false) return false;
-        //         if (inputValue === "") {
-        //             swal.showInputError("You need to write something!"); return false
-        //         }
-        //         var id='{{$batchAssessment->id}}';
-        //         var note=inputValue;
-        //         let _token = $("input[name='_token']").val();
-        //         if(t==0){
-        //         if(f=='agency'){
-        //             var urlLink="{{route('agency.assessment.reject')}}";
-        //         }else if(f=='admin'){
-        //             var urlLink="{{route('admin.assessment.reject')}}";
-        //         }
-
-        //         }else{
-        //             var urlLink="{{route('admin.assessment.release.reject')}}";
-
-        //         }
-        //         $.ajax({
-        //         type: "POST",
-        //         url: urlLink,
-        //         data: {_token,id,note},
-        //         success: function(data) {
-        //             // console.log(data);
-        //             swal({
-        //         title: "Rejected",
-        //         text: "Assessment Submit for Recheck",
-        //         type:"success",
-        //         //timer: 2000,
-        //         showConfirmButton: true
-        //     },function(isConfirm){
-        
-        //         if (isConfirm){
-        //         if(f=='agency'){
-
-        //         window.location="{{route('agency.assessment.pending-approval')}}";
-        //         }else if(f=='admin'){
-        //         window.location="{{route('admin.assessment.all-assessment')}}";
-
-        //         }
-        
-        //         } 
-        //         });
-            
-        //         }
-        //     });
-                
-        //     });
-        // }
 
         function showPromptMessage(f,t = 0) {
             var id={{$batchAssessment->id}};
@@ -311,7 +251,7 @@
                         swal({title: "Rejected", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false})
                         .then(function(){
                             if(f=='agency'){
-                            location="{{route('agency.assessment.pending-approval')}}";
+                            location="{{route('agency.assessment.pending-assessment')}}";
                             }else if(f=='admin'){
                             location="{{route('admin.assessment.all-assessment')}}";
 

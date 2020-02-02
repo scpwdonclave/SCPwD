@@ -67,7 +67,8 @@ class AdminCenterController extends Controller
             ->join('parliament AS p','c.parliament','=','p.id')
             ->where('c.id',$id)->first();
             $tc_target=CenterJobRole::where('tc_id',$id)->get();
-            return view('common.view-center')->with(compact('centerData','state_district', 'tc_target'));
+            $candidates = CenterCandidateMap::where('tc_id',$id)->orderBy('id', 'desc')->get()->unique('cd_id');
+            return view('common.view-center')->with(compact('centerData','state_district', 'tc_target','candidates'));
         }
         
     }

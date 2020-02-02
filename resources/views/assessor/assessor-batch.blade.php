@@ -20,30 +20,33 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Batch ID</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
-                                    <th>Overall Status</th>
+                                    <th>Assessment Status</th>
                                     <th>Marks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($assessorBatch as $key=>$item)                                   
-                                    @if(is_null($item->batch->batchassessment))
+                                    @if(is_null($item->batch->batchassessment) && $item->batch->status)                                        
                                         <tr>
-                                            <td>{{$key+1}}</td>
                                             <td>{{$item->batch->batch_id}}</td>
                                             <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
                                             <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
                                             <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
-                                            @if (\Carbon\Carbon::now()>\Carbon\Carbon::parse($item->batch->assessment))
-                                                <td style="color:green"><strong>Processing Marks</strong></td>
-                                                <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',['id'=>Crypt::encrypt($item->batch->id)])}}" >Enter Marks</a></td>
-                                            @else
-                                                <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}"><strong>{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</strong></td>
+                                            @if (\Carbon\Carbon::parse($item->batch->assessment.' 00:00') > \Carbon\Carbon::now())
+                                                <td style="color:blue">Not Started Yet</td>
                                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                            @else
+                                                @if (\Carbon\Carbon::parse($item->batch->assessment.' 23:59') < \Carbon\Carbon::now())
+                                                    <td style="color:green">Completed</td>
+                                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
+                                                @else
+                                                    <td style="color:blue">On Going</td>
+                                                    <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                                @endif
                                             @endif
                                         </tr>
                                     @endif

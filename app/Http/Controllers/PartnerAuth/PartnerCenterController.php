@@ -44,16 +44,15 @@ class PartnerCenterController extends Controller
     public function centers(){
 
         $partner = $this->guard()->user();
-        $centers = Center::where('tp_id', $partner->id)->get();
-
-        return view('partner.centers.centers')->with(compact('centers','partner'));
+        return view('partner.centers.centers')->with(compact('partner'));
     }
 
     public function viewcenter($id){
         if ($id=$this->decryptThis($id)) {
             $data = [
                 'partner' => $this->guard()->user(),
-                'centerData' => Center::where('tp_id',$this->guard()->user()->id)->findOrFail($id),
+                'centerData' => Center::findOrFail($id),
+                'candidates' => CenterCandidateMap::where('tc_id',$id)->orderBy('id', 'desc')->get()->unique('cd_id'),
                 'tc_target' => CenterJobRole::where('tc_id',$id)->get(),
                 'state_district' => DB::table('centers AS c')
                     ->join('state_district AS s','c.state_district','=','s.id')

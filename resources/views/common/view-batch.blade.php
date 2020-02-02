@@ -98,22 +98,21 @@
                             @if (!$batchData->verified)
                                 <button class="btn btn-success" onclick="location.href='{{route('admin.batch.action',['id' => Crypt::encrypt($batchData->id),'action'=>'accept' ])}}';this.disabled = true;">Accept</button>
                                 <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($batchData->id)}}');">Reject</button>
-                            {{-- @else
-                                @if (!Auth::guard('admin')->user()->supadmin)
-                                    <button class="btn btn-danger" onclick="location.href='{{route('admin.bt.batch.verify',['batch_id' => Crypt::encrypt($batchData->id) ])}}';this.disabled = true;">Request for DELETE</button>                                
-                                @endif --}}
                             @endif
-                        @else
-                            @if (Request::segment(1) ==='partner')
-                                @if ($batchData->verified)
-                                    <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
-                                    @if (!is_null($batchData->batchassessment) && $batchData->batchassessment->supadmin_cert_rel)
+                        @endif
+                        @if (Request::segment(1) ==='partner')
+                            @if ($batchData->verified)
+                                <button class="btn btn-primary" onclick="location.href='{{route('partner.bt.batch.edit',['batch_id' => Crypt::encrypt($batchData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                @if (!is_null($batchData->batchassessment) && $batchData->batchassessment->supadmin_cert_rel)
                                     <button class="btn btn-primary" onclick="location.href='{{route('partner.assessment.certificate.print',['id' => Crypt::encrypt($batchData->batchassessment->id) ])}}';this.disabled = true;"><i class="zmdi zmdi-print"></i>  &nbsp;&nbsp;Print Certificate</button>
-                                    @endif 
-
-                                @else
-                                    <h6>Only Verified Batches are Editable</h6>
                                 @endif
+                            @else
+                                <h6>Only Verified Batches are Editable</h6>
+                            @endif
+                        @endif
+                        @if (Request::segment(1) ==='center')
+                            @if ($button)
+                                <button class="btn btn-primary" onclick="location.href='{{route('center.bt.batch.reassess',Crypt::encrypt($batchData->id))}}'"><i class="zmdi zmdi-rotate-left"></i> &nbsp;&nbsp;Request for a Reassessment</button>
                             @endif
                         @endif
                     </div>
@@ -136,8 +135,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
+                                    <th>Candidate Name</th>
                                     @if (Request::segment(1)==='agency')
                                         <th>Category</th>
                                         <th>Education</th>
@@ -148,7 +146,7 @@
                                         <th>Email</th>
                                         <th>Aadhaar/Voter</th>
                                     @endif
-                                    <th>Result Status</th>
+                                    <th>Final Result</th>
                                     @if(Request::segment(1) !='agency')
                                         <th>View</th>
                                     @endif
@@ -158,7 +156,6 @@
                                 @foreach ($batchData->candidatesmap as $key=>$item)
                             
                                 <tr>
-                                    <td>{{$key+1}}</td>
                                     <td>{{$item->centercandidate->candidate->name}}</td>
                                     @if (Request::segment(1)==='agency')
                                         <td>{{$item->centercandidate->candidate->category}}</td>
@@ -173,7 +170,7 @@
                                     @if ($item->centercandidate->dropout)
                                         <td style="color:blue">Dropped out</td>
                                     @else
-                                        @switch($item->passed)
+                                        @switch($item->centercandidate->passed)
                                             @case('0')
                                                 <td style="color:red">Failed</td>
                                                 @break
@@ -184,7 +181,7 @@
                                                 <td style="color:red">Absent</td>
                                                 @break
                                             @default
-                                                <td>NA</td>
+                                                <td>Not Applicable</td>
                                         @endswitch
                                     @endif
                                         {{-- <td style="color:{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'green':'red'}}">{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'Active':'Inactive'}}</td> --}}

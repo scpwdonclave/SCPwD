@@ -21,31 +21,33 @@
                                 <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Batch ID</th>
                                             <th>Partner ID</th>
                                             <th>Center ID</th>
                                             <th>Assessor</th>
                                             <th>Assessment Date</th>
-                                            <th>Overall Status</th>
+                                            <th>Assessment Status</th>
                                             <th>View</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($agencyBatch as $key=>$item) 
+                                        @foreach ($agency->agencyBatch as $batch) 
                                         <tr>
-                                            <td>{{$key+1}}</td>
-                                            <td>{{$item->batch->batch_id}}</td>
-                                            <td>{{$item->batch->partner->tp_id}}</td>
-                                            <td>{{$item->batch->center->tc_id}}</td>
-                                            <td>{{is_null($item->batch->assessorbatch)?'Not Assigned Yet':$item->batch->assessorbatch->assessor->as_id}}</td>
-                                            <td>{{$item->batch->assessment}}</td>
-                                            @if (\Carbon\Carbon::parse($item->batch->batch_end.' 23:59') < \Carbon\Carbon::now())
-                                                <td style="color:green">Waiting for Results</td>
+                                            <td>{{$batch->batch->batch_id}}</td>
+                                            <td>{{$batch->batch->partner->tp_id}}</td>
+                                            <td>{{$batch->batch->center->tc_id}}</td>
+                                            <td>{!!is_null($batch->batch->assessorbatch)?'<span style="color:blue">Not Assigned Yet</span>':$batch->batch->assessorbatch->assessor->as_id!!}</td>
+                                            <td>{{$batch->batch->assessment}}</td>
+                                            @if (\Carbon\Carbon::parse($batch->batch->assessment.' 00:00') > \Carbon\Carbon::now())
+                                                <td style="color:blue">Not Started Yet</td>
                                             @else
-                                                <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
+                                                @if (\Carbon\Carbon::parse($batch->batch->assessment.' 23:59') < \Carbon\Carbon::now())
+                                                    <td style="color:green">Completed</td>
+                                                @else
+                                                    <td style="color:blue">On Going</td>
+                                                @endif
                                             @endif
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->batch->id))}}">View</a></td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($batch->batch->id))}}">View</a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>

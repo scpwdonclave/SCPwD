@@ -148,26 +148,28 @@ class CenterHomeController extends Controller
 
         DB::transaction(function() use ($request){ 
 
+            $candidate = Candidate::where('doc_no', $request->doc_no)->first();
+            if (!$candidate) {
+                $data=DB::table('candidates')
+                ->select(\DB::raw('SUBSTRING(cd_id,3) as cd_id'))
+                ->where("cd_id", "LIKE", "CD%")->get();
+                $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
 
-            $data=DB::table('candidates')
-            ->select(\DB::raw('SUBSTRING(cd_id,3) as cd_id'))
-            ->where("cd_id", "LIKE", "CD%")->get();
-            $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
-
-            if (count($data) > 0) {
-                $priceprod = array();
-                    foreach ($data as $key=>$data) {
-                        $priceprod[$key]=$data->cd_id;
-                    }
-                    $lastid= max($priceprod);
-                
-                    $new_cdid = (substr($lastid, 0, 4)== $year) ? 'CD'.($lastid + 1) : 'CD'.$year.'000001' ;
-            } else {
-                $new_cdid = 'CD'.$year.'000001';
+                if (count($data) > 0) {
+                    $priceprod = array();
+                        foreach ($data as $key=>$data) {
+                            $priceprod[$key]=$data->cd_id;
+                        }
+                        $lastid= max($priceprod);
+                    
+                        $new_cdid = (substr($lastid, 0, 4)== $year) ? 'CD'.($lastid + 1) : 'CD'.$year.'000001' ;
+                } else {
+                    $new_cdid = 'CD'.$year.'000001';
+                }
+                $candidate = new Candidate;
+                $candidate->cd_id = $new_cdid;
             }
-            $candidate = new Candidate;
-            
-            $candidate->cd_id = $new_cdid;
+               
             $candidate->name = $request->name;
             $candidate->gender = $request->gender;
             $candidate->contact = $request->contact;

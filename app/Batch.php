@@ -39,6 +39,9 @@ class Batch extends Model implements Auditable
     public function batchreassessments(){
         return $this->hasMany('App\BatchReAssessment', 'bt_id');
     } 
+    public function batchreassessmentlatest(){
+        return $this->hasOne('App\BatchReAssessment', 'bt_id')->latest();
+    } 
     public function agencybatch(){
         return $this->hasOne('App\AgencyBatch', 'bt_id');
     } 

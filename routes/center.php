@@ -21,3 +21,5 @@ Route::post('candidates/candidate-api', 'CenterAuth\CenterHomeController@candida
 /* Batches */
 Route::get('batches', 'CenterAuth\CenterBatchController@batches')->name('batches');
 Route::get('batches/batch-view/{id}', 'CenterAuth\CenterBatchController@viewBatch')->name('bt.batch.view');
+Route::get('batches/reassessment/{id}', 'CenterAuth\CenterBatchController@reassessBatch')->name('bt.batch.reassess');
+Route::post('batches/reassessment', 'CenterAuth\CenterBatchController@reassessBatchSubmit')->name('bt.batch.reassess.submit');

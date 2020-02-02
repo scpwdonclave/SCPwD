@@ -30,72 +30,6 @@ tr.shown td.details-control {
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        {{-- <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    @if (Request::segment(1) === 'admin')
-                                        <th>TP</th>
-                                    @endif
-                                    @if (Request::segment(1) !== 'center')
-                                        <th>TC</th>
-                                    @endif
-                                    <th>Candidate Name</th>
-                                    <th>Contact</th>
-                                    <th>Category</th>
-                                    <th>Date of Birth</th>
-                                    <th>Overall Status</th>
-                                    <th>Result</th>
-                                    @if (Request::segment(1) === 'admin' ||Request::segment(1) === 'center')
-                                        <th>Action</th>
-                                    @endif
-                                    <th>View</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($candidates as $key => $candidate)
-                                    
-                                <tr>
-                                <td>{{$key+1}}</td>
-                                @if (Request::segment(1) === 'admin')
-                                    <td>{{$candidate->center->partner->tp_id}}</td>
-                                @endif
-                                @if (Request::segment(1) !== 'center')
-                                    <td>{{$candidate->center->tc_id}}</td>
-                                @endif
-                                <td>{{$candidate->candidate->name}}</td>
-                                <td>{{$candidate->candidate->contact}}</td>
-                                <td>{{$candidate->candidate->category}}</td>
-                                <td>{{$candidate->candidate->dob}}</td>
-                                @if ($candidate->dropout)
-                                    <td style="color:blue;">Dropped out</td>
-                                @else
-                                    <td style="color:{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->candidate->status)?'green':'red'}}">{{($candidate->jobrole->partnerjobrole->status && $candidate->center->partner->status && $candidate->center->status && $candidate->candidate->status)?'Active':'Inactive'}}</td>
-                                @endif
-                               
-                               @if (is_null($candidate->passed))
-                                   <td>N/A</td>
-                               @elseif ($candidate->passed)
-                                   <td class="text-success">Passed</td>
-                               @elseif ($candidate->passed)
-                                   <td class="text-danger">Failed</td>
-                               @endif
-                                
-                                @if (Request::segment(1)==='admin')
-                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($candidate->candidate->id).','.$candidate->candidate->status.','.$candidate->candidate->name}}')" class="badge bg-{{($candidate->candidate->status)?'red':'green'}} margin-0">{{($candidate->candidate->status)?'Deactivate':'Activate'}}</button></td>
-                                @else
-                                    @if (Request::segment(1)==='center')
-                                        <td><button type="button" class="badge bg-{{($candidate->dropout)?'grey':(($candidate->candidate->status)?'red':'grey')}} margin-0" {{($candidate->dropout)?'disabled':null}} onclick="popup('{{Crypt::encrypt($candidate->id).','.$candidate->candidate->status.','.$candidate->candidate->name}}')" >Dropout</button>
-                                    @endif
-                                @endif
-                                <td>
-                                    <button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).(Request::segment(1) === 'center' ? null : '.tc').'.candidate.view',Crypt::encrypt($candidate->candidate->id))}}'" >View</button>
-                                </td>
-                                </tr>
-                                @endforeach
-                               
-                            </tbody>
-                        </table> --}}
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable" id="opiniondt">
                             <thead>
                                 <tr>
@@ -110,8 +44,6 @@ tr.shown td.details-control {
                                     @endif
                                 </tr>
                             </thead>
-                            <tr>
-                            </tr>
                         </table>
                     </div>
                 </div>
@@ -289,12 +221,11 @@ tr.shown td.details-control {
 {{-- <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script> --}}
 
 <script>
-var opinions = JSON.parse('{!!$candidates!!}');
-
-    opinions.forEach(v => {
-        if (v.action !== undefined) {
-            v.action = v.action.replace(/####/gi, "'");
-            v.action = v.action.replace(/@@@@/gi, '"');
+var candidates = JSON.parse('{!!$candidates!!}');
+    candidates.forEach(candidate => {
+        if (candidate.action !== undefined) {
+            candidate.action = candidate.action.replace(/####/gi, "'");
+            candidate.action = candidate.action.replace(/@@@@/gi, '"');
         }
     });
 
@@ -371,7 +302,7 @@ $(document).ready(function() {
         searching: true, 
         info:      true, 
         rowId: 'id', 
-        data: opinions, 
+        data: candidates, 
         columns: columns,
         order: [[1, 'asc']]
         } );
@@ -384,19 +315,11 @@ $(document).ready(function() {
      $('#opiniondt tbody').on('click', 'td.details-control', function () {
          var tr = $(this).closest('tr');
          var row = table.row( tr );
-        // console.log(tr[0].id);
-        
-        //  console.log(opinions[tr[0].rowIndex-1].id);
-         
          if ( row.child.isShown() ) {
-             //  This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
          } else {
-            // Open this row
-            let id = tr[0].id;
-            // console.log('ID: '+tr[0].rowIndex);
-            
+            let id = tr[0].id;            
             let _token = $('[name=_token]').val();
             $.ajax({
                 url: "{{route(Request::segment(1).'.candidate.api')}}",

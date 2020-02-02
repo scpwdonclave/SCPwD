@@ -28,7 +28,6 @@
                             <thead>
                                
                                 <tr>
-                                    <th>#</th>
                                     <th>Batch ID</th>
                                     @if (Request::segment(1)==='admin')
                                         <th>Partner ID</th>
@@ -41,44 +40,51 @@
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
-                                    <th>Overall Status</th>
+                                    <th>Training Status</th>
                                     <th>Certificate</th>
                                     <th>View</th>
                                 </tr>
                                
                             </thead> 
                             <tbody>
-                                @foreach ($data as $key=>$item)
-                                <tr>
-                                <td>{{$key+1}}</td>
-                                <td>{{is_null($item->batch_id)?Config::get('constants.nullidtext'):$item->batch_id}}</td>
-                                @if (Request::segment(1)==='admin')
-                                    <td>{{$item->partner->tp_id}}</td>
-                                    <td>{{$item->center->tc_id}}</td>
-                                @else
-                                    @if (Request::segment(1)==='partner')
-                                        <td>{{$item->center->tc_id}}</td>
-                                    @endif
-                                @endif
-                                <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
-                                @if ($item->verified)
-                                    @if (\Carbon\Carbon::parse($item->batch_end.' 23:59') < \Carbon\Carbon::now())
-                                        <td style="color:green">Completed</td>
-                                    @else
-                                        <td style="color:{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'green':'red'}}">{{($item->status && $item->center->status && $item->partner->status && $item->trainer->status && $item->tpjobrole->status)?'Active':'Inactive'}}</td>
-                                    @endif
-                                @else
-                                    <td style="color:red">Not Verified</td>
-                                @endif
-                                @if (!is_null($item->batchassessment) && $item->batchassessment->supadmin_cert_rel)
-                                <td style="color:green">Released</td>   
-                                @else
-                                <td style="color:red">Not Released</td>   
-                                @endif
-                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                </tr>
+                                @foreach ($data as $item)
+                                    <tr>
+                                        <td>{{is_null($item->batch_id)?Config::get('constants.nullidtext'):$item->batch_id}}</td>
+                                        @if (Request::segment(1)==='admin')
+                                            <td>{{$item->partner->tp_id}}</td>
+                                            <td>{{$item->center->tc_id}}</td>
+                                        @else
+                                            @if (Request::segment(1)==='partner')
+                                                <td>{{$item->center->tc_id}}</td>
+                                            @endif
+                                        @endif
+                                        <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
+                                        @if ($item->verified)
+                                            @if ($item->status)
+                                                @if (\Carbon\Carbon::parse($item->batch_start.' 00:00') > \Carbon\Carbon::now())
+                                                    <td style="color:blue">Not Started Yet</td>
+                                                @else
+                                                    @if (\Carbon\Carbon::parse($item->batch_end.' 23:59') < \Carbon\Carbon::now())
+                                                        <td style="color:green">Completed</td>
+                                                    @else
+                                                        <td style="color:blue">On Going</td>
+                                                    @endif
+                                                @endif
+                                            @else
+                                                <td style="color:red">Cancelled</td>
+                                            @endif
+                                        @else
+                                            <td style="color:red">Not Verified Yet</td>
+                                        @endif
+                                        @if (!is_null($item->batchassessment) && $item->batchassessment->supadmin_cert_rel)
+                                            <td style="color:green">Released</td>   
+                                        @else
+                                            <td style="color:red">Not Released</td>   
+                                        @endif
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->id))}}">View</a></td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
