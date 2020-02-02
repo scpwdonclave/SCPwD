@@ -18,6 +18,7 @@ class CreateReassessmentCandidatesTable extends Migration
             $table->unsignedBigInteger('ras_id');
             $table->unsignedBigInteger('ccd_id');
             $table->boolean('appear');
+            $table->boolean('assessment_status')->comment='0: Failed, 1: Absent';
             $table->timestamps();
         });
     }

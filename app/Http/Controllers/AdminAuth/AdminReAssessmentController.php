@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AdminAuth;
 
 use App\Reassessment;
+use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -45,6 +46,18 @@ class AdminReAssessmentController extends Controller
         return view('admin.reassessment.requests')->with(compact('reassessments'));
     }
     public function viewRequestReAssessment(Request $request)
+    {
+
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {            
+            $reassessment = Reassessment::findOrFail($id);
+            return view('admin.reassessment.view-requests')->with(compact('reassessment'));
+        } else {
+            return abort(404);
+        }
+        
+    }
+
+    public function submitRequestReAssessment(Request $request)
     {
         dd($request);
     }

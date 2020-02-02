@@ -164,6 +164,7 @@ class CenterBatchController extends Controller
                                 $reassessmentCandidate->ras_id = $reassessment->id;                            
                                 $reassessmentCandidate->ccd_id = $batchcandidate->centercandidate->id;                           
                                 $reassessmentCandidate->appear = (in_array($batchcandidate->centercandidate->id, $reassess_candidates))?1:0;
+                                $reassessmentCandidate->assessment_status = ($batchcandidate->centercandidate->passed=='0')?0:1;
                                 $reassessmentCandidate->save();                         
                             
                             }

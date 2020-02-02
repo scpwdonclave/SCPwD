@@ -11,7 +11,7 @@ class Reassessment extends Model implements Auditable
     
     public function candidates()
     {
-        return $this->hasMany('App\ReassessmentCandidate', 'ccd_id');
+        return $this->hasMany('App\ReassessmentCandidate', 'ras_id');
     }
 
     public function batch()

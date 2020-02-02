@@ -11,6 +11,10 @@ class ReassessmentCandidate extends Model implements Auditable
     
     public function reassessment()
     {
-        return $this->belongsTo('App\Reassessment', 'ccd_id');
+        return $this->belongsTo('App\Reassessment', 'ras_id');
+    }
+    public function centercandidate()
+    {
+        return $this->belongsTo('App\CenterCandidateMap', 'ccd_id');
     }
 }

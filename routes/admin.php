@@ -156,6 +156,7 @@ Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAsses
 // For ReAssessment
 Route::get('reassessment/reassessment-requests', 'AdminAuth\AdminReAssessmentController@requestsReAssessment')->name('reassessment.requests'); 
 Route::get('reassessment/reassessment-requests/{id}', 'AdminAuth\AdminReAssessmentController@viewRequestReAssessment')->name('reassessment.requests.view'); 
+Route::post('reassessment/reassessment-requests', 'AdminAuth\AdminReAssessmentController@submitRequestReAssessment')->name('reassessment.requests.submit'); 
 Route::get('reassessment/all-reassessment', 'AdminAuth\AdminReAssessmentController@allReAssessment')->name('reassessment.all-reassessment'); 
 Route::get('reassessment/pending-reassessment', 'AdminAuth\AdminReAssessmentController@pendingReAssessment')->name('reassessment.pending-reassessment'); 
 Route::get('reassessment/reassessment-view/{id}', 'AdminAuth\AdminReAssessmentController@viewReAssessment')->name('reassessment.view'); 
