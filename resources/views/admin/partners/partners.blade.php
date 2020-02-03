@@ -83,19 +83,19 @@
         //     }
         // });
 
-        // $.ajax({
-        //     url: "{{ route('admin.tp.partner.status-action') }}",
-        //     method: "POST",
-        //     data: dataString,
-        //     success: function(data){
-        //         var SuccessResponseText = document.createElement("div");
-        //         SuccessResponseText.innerHTML = data['message'];
-        //         swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-        //     },
-        //     error:function(data){
-        //         swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
-        //     }
-        // });
+        $.ajax({
+            url: "{{ route('admin.tp.partner.status-action') }}",
+            method: "POST",
+            data: dataString,
+            success: function(data){
+                var SuccessResponseText = document.createElement("div");
+                SuccessResponseText.innerHTML = data['message'];
+                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+            },
+            error:function(data){
+                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+            }
+        });
     }
 
     function popup(v){
