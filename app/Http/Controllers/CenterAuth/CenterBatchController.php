@@ -155,7 +155,7 @@ class CenterBatchController extends Controller
                     $reassessment = new Reassessment;
                     $reassessment->bt_id = $id;
                     $reassessment->aa_id = $batch->agencybatch->aa_id;
-                    $reassessment->as_id = $batch->assessorbatch->as_id;
+                    // $reassessment->as_id = $batch->assessorbatch->as_id;
                     $reassessment->save();
                     
                     foreach ($batch->candidatesmap as $batchcandidate) {
