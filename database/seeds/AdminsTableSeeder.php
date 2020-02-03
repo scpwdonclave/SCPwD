@@ -43,7 +43,7 @@ class AdminsTableSeeder extends Seeder
             ),
             2 => 
             array (
-                'id' => 2,
+                'id' => 3,
                 'name' => 'Sayan Saha',
                 'email' => 'sayan@gmail.com',
                 'password' => '$2y$10$0qBeLAhWQ.WLYN98MPIV9eiqtEBUtzZ6Rm.wa9uAGLc9YW0ARTHEK',
