@@ -120,22 +120,32 @@
                 icon: "info",
                 buttons: true,
                 buttons: {
-                        cancel: "Just Deactive",
+                        cancel: "No, Cancel",
                         confirm: {
+                            text: "Just Deactive",
+                            closeModal: false,
+                            value: "catch",
+                        },
+                        defeat: {
                             text: "Blacklist",
                             closeModal: false
-                        }
+                        },
                     },
                 closeModal: false,
                 closeOnEsc: false,
             }).then(function (v) {
-                
-                
-                if (v===null) {
-                    proceed(val,dataString,status,0);
-                } else {
-                    proceed(val,dataString,status,1);
+                switch (v) {
+                    case "defeat":
+                        proceed(val,dataString,status,1);
+                        break;
+
+                    case "catch":
+                        proceed(val,dataString,status,0);
+                        break;
+
+                    default:
                 }
+                
             });   
         } else {
             proceed(val,dataString,status,null);
