@@ -260,7 +260,7 @@ class AdminTrainerController extends Controller
                             $array = $this->updateTrainerStatus($trainer,'trainer',$request,$id);
                         } else {
                             // * Delinking Process of a Trainer
-                            $batch=Batch::where([['tr_id','=',$id],['completed','=',0]])->first();
+                            $batch=Batch::where('tr_id','=',$id)->first();
                             if($batch){
                                 // * Requested Trainer Linked with a Batch that is not yet Completed so Aborting
                                 

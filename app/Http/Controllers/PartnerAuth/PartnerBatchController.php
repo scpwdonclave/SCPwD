@@ -72,7 +72,7 @@ class PartnerBatchController extends Controller
     }
 
     protected function trainer_availability($trainer_id, $starttime, $endtime){
-        $trainer_batches = Batch::where([['completed', 0],['tr_id', $trainer_id]])->get();
+        $trainer_batches = Batch::where('tr_id', $trainer_id)->get();
         if ($trainer_batches) {
             foreach ($trainer_batches as $trainer_batch) {
                 $start = Carbon::parse($trainer_batch->start_time); 
@@ -140,7 +140,7 @@ class PartnerBatchController extends Controller
 
     public function editBatch($id){
         if ($id=$this->decryptThis($id)) {
-            $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['verified', 1],['completed', 0]])->first();
+            $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['verified', 1]])->first();
             if ($batchData) {
     
                 $partnerJob = $batchData->tpjobrole;
