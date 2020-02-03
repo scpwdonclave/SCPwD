@@ -7,9 +7,11 @@ use Mail;
 use Crypt;
 use App\Center;
 use App\Reason;
+use App\Batch;
 use App\Scheme;
 use App\Sector;
 use App\Partner;
+use App\TrainerStatus;
 use Carbon\Carbon;
 use App\Mail\TPMail;
 use App\Notification;
@@ -75,6 +77,38 @@ class AdminPartnerController extends Controller
 
                     if ($partner->status) {
                         if (!is_null($request->reason) && $request->reason != '') {
+                            if ($request->blacklist) {
+                                foreach ($partner->centers as $center) {
+                                    foreach ($center->candidatesmap as $centercandidate) {
+                                        if (!$centercandidate->dropout) {
+                                            $centercandidate->dropout = 1;
+                                            $centercandidate->save();
+                                        }
+                                    }
+                                }
+
+                                foreach ($partner->trainers as $trainer) {
+                                    
+                                    foreach ($trainer->batches as $batch) {
+                                        if (Carbon::parse($batch->batch_end.' 23:59')>Carbon::now()) {
+                                            $batch->active = 0;
+                                            $batch->save();
+                                        }
+                                    }
+                                    $trainerStatus=TrainerStatus::where('prv_id',$trainer->id)->orderBy('created_at', 'desc')->first();
+                                    if ($trainerStatus) {
+                                        $trainerStatus->attached=0;        
+                                        $trainerStatus->dlink_reason='TP Blacklisted';
+                                        $trainerStatus->save();
+                                    }
+                                    $trainer->delete();
+
+                                }
+
+
+
+                            }
+                            
                             $partner->status = 0;
                             $partner->save();
                             $reason = new Reason;

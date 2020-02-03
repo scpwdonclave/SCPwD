@@ -58,44 +58,88 @@
 @section('page-script')
 
 <script>
-    function callajax(val, dataString){
 
-        // var SwalText = document.createElement("div");
-        // SwalText.innerHTML = 'Will you <span style="color:blue">'+candidate+'</span> will be <span style="color:red;">Droped Out</span> from your <span style="color:blue">Center</span> and also from <span style="color:blue">Current Batch</span> as well (Only if the Candidate is Currently <span style="color:blue">Linked</span> with any Batch)';
-        // swal({
-        //     title: 'Confirmation!',
-        //     content: SwalText,
-        //     icon: "info",
-        //     buttons: true,
-        //     buttons: {
-        //             cancel: "No, Cancel",
-        //             confirm: {
-        //                 text: "Confirm Drop Out",
-        //                 closeModal: false
-        //             }
-        //         },
-        //     closeModal: false,
-        //     closeOnEsc: false,
-        // }).then(function (v) {
-        //     if (v) {
-        //         var dataString = {_token, data:data[0], reason:val};
-        //         callajax(val,dataString);
-        //     }
-        // });
+    function proceed(val, dataString, status, confirm){
+        if (status=='1') {
+            if (confirm=='1') {
+                dataString.blacklist = 1;
+                $.ajax({
+                    url: "{{ route('admin.tp.partner.status-action') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML = data['message'];
+                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    },
+                    error:function(data){
+                        swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+                    }
+                });
+            } else {
+                dataString.blacklist = 0;
+                $.ajax({
+                    url: "{{ route('admin.tp.partner.status-action') }}",
+                    method: "POST",
+                    data: dataString,
+                    success: function(data){
+                        var SuccessResponseText = document.createElement("div");
+                        SuccessResponseText.innerHTML = data['message'];
+                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    },
+                    error:function(data){
+                        swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+                    }
+                });
+            }    
+        } else {
+            $.ajax({
+                url: "{{ route('admin.tp.partner.status-action') }}",
+                method: "POST",
+                data: dataString,
+                success: function(data){
+                    var SuccessResponseText = document.createElement("div");
+                    SuccessResponseText.innerHTML = data['message'];
+                    swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                },
+                error:function(data){
+                    swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+                }
+            });
+        }
+    }
 
-        $.ajax({
-            url: "{{ route('admin.tp.partner.status-action') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                var SuccessResponseText = document.createElement("div");
-                SuccessResponseText.innerHTML = data['message'];
-                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-            },
-            error:function(data){
-                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
-            }
-        });
+    function callajax(val, dataString, status){
+
+        if (status == '1') {
+            var SwalText = document.createElement("div");
+            SwalText.innerHTML = 'Kindly choose to <span style="color:blue">Deactive</span> or <span style="color:red;">Blacklist</span> this TP';
+            swal({
+                title: 'Confirmation!',
+                content: SwalText,
+                icon: "info",
+                buttons: true,
+                buttons: {
+                        cancel: "Just Deactive",
+                        confirm: {
+                            text: "Blacklist",
+                            closeModal: false
+                        }
+                    },
+                closeModal: false,
+                closeOnEsc: false,
+            }).then(function (v) {
+                
+                
+                if (v===null) {
+                    proceed(val,dataString,status,0);
+                } else {
+                    proceed(val,dataString,status,1);
+                }
+            });   
+        } else {
+            proceed(val,dataString,status,null);
+        }
     }
 
     function popup(v){
@@ -126,18 +170,18 @@
                         closeModal: false
                     }
                 },
-            closeModal: false,
-            closeOnEsc: false,
+            closeModal: true,
+            closeOnEsc: true,
         }).then(function(val){
             if (val != null) {
                 if (val === '') {
                     swal('Attention', 'Please Describe the Reason of Deactivation before Proceed', 'info');
                 } else if (val === true) {
                     var dataString = {_token, data:data[0], reason:null};
-                    callajax(val,dataString);
+                    callajax(val,dataString,0);
                 } else {
                     var dataString = {_token, data:data[0], reason:val};
-                    callajax(val,dataString);
+                    callajax(val,dataString,1);
                 }
             }
         });
