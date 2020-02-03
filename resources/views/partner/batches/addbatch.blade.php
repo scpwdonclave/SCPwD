@@ -490,12 +490,12 @@ $('#form_addbatch').on('submit', function(e){
                 data: {_token,trainer,starttime,hour},
                 success: function (data) {
                     if (data.success) {
-                        console.log('submited');
+                        // console.log('submited');
 
                         
-                        // $('#form_addbatch').unbind().submit();
+                        $('#form_addbatch').unbind().submit();
                         // Remove added elements
-                        // $('input[name^="id"]', form).remove();
+                        $('input[name^="id"]', form).remove();
                     } else {
                         $("#btnSubmit").prop("disabled", false);
                         $("#btnSubmit").html('<span class="glyphicon glyphicon-cloud-upload"></span> Submit');
@@ -503,7 +503,8 @@ $('#form_addbatch').on('submit', function(e){
                     }
                 },
                 error: function (data) {
-                    swal({title: "Oops!", content: 'Something went Wrong, Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    console.log(data);
+                    // swal({title: "Oops!", content: 'Something went Wrong, Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                 }
             });
 

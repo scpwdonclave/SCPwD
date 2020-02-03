@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AgencyAuth;
 
 use Auth;
 use App\Reassessment;
+use App\BatchReAssessment;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,7 +23,8 @@ class AgencyReAssessmentController extends Controller
 
     public function allReAssessment()
     {
-        return 'Coming Soon';
+        $agencyBatch=Reassessment::where('aa_id',$this->guard()->user()->id)->get();
+        return view('agency.reassessment.all-reassessment')->with(compact('agencyBatch'));
     }
 
     public function pendingReAssessment()
@@ -31,7 +33,10 @@ class AgencyReAssessmentController extends Controller
     }
     public function viewReAssessment(Request $request)
     {
-        return 'Coming Soon';
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $batchReAssessment=BatchReAssessment::findOrFail($id);
+            return view('common.view-reassessment')->with(compact('batchReAssessment'));
+        }
     }
     public function reassessmentAccept(Request $request)
     {
@@ -44,7 +49,7 @@ class AgencyReAssessmentController extends Controller
 
     public function reassessmentBatches()
     {
-        $reassessments = Reassessment::where('aa_id',$this->guard()->user()->id);
+        $reassessments = Reassessment::where('aa_id',$this->guard()->user()->id)->get();
         return view('agency.reassessment.batches')->with(compact('reassessments'));
     }
     

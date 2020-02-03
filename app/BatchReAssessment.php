@@ -10,7 +10,7 @@ class BatchReAssessment extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     public function candidateMarks(){
-        return $this->hasMany('App\CandidateReMark', 'bt_re_assessment_id');
+        return $this->hasMany('App\CandidateReMark', 'bt_reassessment_id');
     }
     public function batch(){
         return $this->belongsTo('App\Batch', 'bt_id');

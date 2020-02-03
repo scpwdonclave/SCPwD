@@ -23,7 +23,7 @@
                                             <th>Batch ID</th>
                                             <th>Assessor</th>
                                             <th>Assessment Date</th>
-                                            <th>Assessment Status</th>
+                                            <th>Re-Assessment Status</th>
                                             <th>View</th>
                                         </tr>
                                     </thead>

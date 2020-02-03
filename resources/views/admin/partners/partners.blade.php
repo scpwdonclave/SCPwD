@@ -59,19 +59,43 @@
 
 <script>
     function callajax(val, dataString){
-        $.ajax({
-            url: "{{ route('admin.tp.partner.status-action') }}",
-            method: "POST",
-            data: dataString,
-            success: function(data){
-                var SuccessResponseText = document.createElement("div");
-                SuccessResponseText.innerHTML = data['message'];
-                swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-            },
-            error:function(data){
-                swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
-            }
-        });
+
+        // var SwalText = document.createElement("div");
+        // SwalText.innerHTML = 'Will you <span style="color:blue">'+candidate+'</span> will be <span style="color:red;">Droped Out</span> from your <span style="color:blue">Center</span> and also from <span style="color:blue">Current Batch</span> as well (Only if the Candidate is Currently <span style="color:blue">Linked</span> with any Batch)';
+        // swal({
+        //     title: 'Confirmation!',
+        //     content: SwalText,
+        //     icon: "info",
+        //     buttons: true,
+        //     buttons: {
+        //             cancel: "No, Cancel",
+        //             confirm: {
+        //                 text: "Confirm Drop Out",
+        //                 closeModal: false
+        //             }
+        //         },
+        //     closeModal: false,
+        //     closeOnEsc: false,
+        // }).then(function (v) {
+        //     if (v) {
+        //         var dataString = {_token, data:data[0], reason:val};
+        //         callajax(val,dataString);
+        //     }
+        // });
+
+        // $.ajax({
+        //     url: "{{ route('admin.tp.partner.status-action') }}",
+        //     method: "POST",
+        //     data: dataString,
+        //     success: function(data){
+        //         var SuccessResponseText = document.createElement("div");
+        //         SuccessResponseText.innerHTML = data['message'];
+        //         swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+        //     },
+        //     error:function(data){
+        //         swal("Sorry", "Something Went Wrong, Please Try Again", "error").then(function(){location.reload();});
+        //     }
+        // });
     }
 
     function popup(v){
