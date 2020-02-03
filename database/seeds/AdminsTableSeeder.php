@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Carbon\Carbon;
 class AdminsTableSeeder extends Seeder
 {
 
@@ -26,8 +26,8 @@ class AdminsTableSeeder extends Seeder
                 'supadmin' => 1,
                 'status' => 1,
                 'remember_token' => NULL,
-                'created_at' => '2019-12-16 09:13:37',
-                'updated_at' => '2019-12-16 13:36:48',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ),
             1 => 
             array (
@@ -38,8 +38,20 @@ class AdminsTableSeeder extends Seeder
                 'supadmin' => 0,
                 'status' => 1,
                 'remember_token' => NULL,
-                'created_at' => '2019-12-16 09:13:37',
-                'updated_at' => '2019-12-16 13:36:48',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ),
+            2 => 
+            array (
+                'id' => 2,
+                'name' => 'Sayan Saha',
+                'email' => 'sayan@gmail.com',
+                'password' => '$2y$10$0qBeLAhWQ.WLYN98MPIV9eiqtEBUtzZ6Rm.wa9uAGLc9YW0ARTHEK',
+                'supadmin' => 0,
+                'status' => 1,
+                'remember_token' => NULL,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ),
         ));
         
