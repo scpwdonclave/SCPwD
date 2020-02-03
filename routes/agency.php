@@ -41,6 +41,10 @@ Route::get('reassessment/all-reassessment', 'AgencyAuth\AgencyReAssessmentContro
 Route::get('reassessment/reassessment-view/{id}', 'AgencyAuth\AgencyReAssessmentController@viewReAssessment')->name('reassessment.view'); 
 Route::get('reassessment/reassessment-verify/{id}', 'AgencyAuth\AgencyReAssessmentController@reassessmentAccept')->name('reassessment.verify'); 
 Route::post('reassessment/reassessment-reject', 'AgencyAuth\AgencyReAssessmentController@reassessmentReject')->name('reassessment.reject'); 
+
+Route::get('reassessment/batches', 'AgencyAuth\AgencyReAssessmentController@reassessmentBatches')->name('reassessment.batches'); 
+Route::post('reassessment/batches', 'AgencyAuth\AgencyReAssessmentController@submitReassessmentBatch')->name('reassessment.batch.submit'); 
+Route::get('reassessment/batches/{id}', 'AgencyAuth\AgencyReAssessmentController@viewReassessmentBatch')->name('reassessment.batch.view'); 
 // End For ReAssessment
 
 

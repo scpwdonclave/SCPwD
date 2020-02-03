@@ -13,7 +13,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>My</strong> Batches</h2>
+                    <h2><strong>My</strong> Upcoming Batches for Assessments</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -29,7 +29,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($assessorBatch as $key=>$item)                                   
+                                @foreach ($assessorBatch as $item)                                   
                                     @if(is_null($item->batch->batchassessment) && $item->batch->status)                                        
                                         <tr>
                                             <td>{{$item->batch->batch_id}}</td>
@@ -43,6 +43,47 @@
                                                 @if (\Carbon\Carbon::parse($item->batch->assessment.' 23:59') < \Carbon\Carbon::now())
                                                     <td style="color:green">Completed</td>
                                                     <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
+                                                @else
+                                                    <td style="color:blue">On Going</td>
+                                                    <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                                @endif
+                                            @endif
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>My</strong> Upcoming Batches for Re-Assessments</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Batch ID</th>
+                                    <th>Assessment Date</th>
+                                    <th>Assessment Status</th>
+                                    <th>Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($assessorReBatch as $reassBatch)                                   
+                                    @if(is_null($reassBatch->batchreassessment) && $reassBatch->batch->status)                                        
+                                        <tr>
+                                            <td>{{$reassBatch->batch->batch_id}}</td>
+                                            <td>{{\Carbon\Carbon::parse($reassBatch->assessment)->format('d-m-Y')}}</td>
+                                            @if (\Carbon\Carbon::parse($reassBatch->assessment.' 00:00') > \Carbon\Carbon::now())
+                                                <td style="color:blue">Not Started Yet</td>
+                                                <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                            @else
+                                                @if (\Carbon\Carbon::parse($reassBatch->assessment.' 23:59') < \Carbon\Carbon::now())
+                                                    <td style="color:green">Completed</td>
+                                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-re-mark',Crypt::encrypt($reassBatch->id))}}" >Enter Marks</a></td>
                                                 @else
                                                     <td style="color:blue">On Going</td>
                                                     <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  

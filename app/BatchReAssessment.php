@@ -15,4 +15,8 @@ class BatchReAssessment extends Model implements Auditable
     public function batch(){
         return $this->belongsTo('App\Batch', 'bt_id');
     }
+
+    public function reassessment(){
+        return $this->belongsTo('App\Reassessment', 'bt_reassid');
+    }
 }

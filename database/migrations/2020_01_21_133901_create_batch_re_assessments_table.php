@@ -15,7 +15,7 @@ class CreateBatchReAssessmentsTable extends Migration
     {
         Schema::create('batch_re_assessments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('bt_assessment_id');
+            $table->unsignedBigInteger('bt_reassid');
             $table->unsignedBigInteger('bt_id');
             $table->string('attendence_sheet');
             $table->string('mark_sheet');

@@ -8,12 +8,19 @@ Route::get('profile', 'AssessorAuth\AssessorHomeController@profile')->name('prof
 Route::post('profile', 'AssessorAuth\AssessorHomeController@profile_update')->name('profile'); 
 
 Route::get('batches', 'AssessorAuth\AssessorBatchController@batches')->name('batch'); 
-Route::get('batches/assessment', 'AssessorAuth\AssessorBatchController@pendingApproval')->name('pending.approval'); 
+Route::get('batches/assessments', 'AssessorAuth\AssessorBatchController@pendingApproval')->name('pending.approval'); 
 Route::get('batches/candidate-marks/{id}', 'AssessorAuth\AssessorBatchController@candidateMarks')->name('as.batch.candidate-mark'); 
 Route::post('batches/candidate-marks-insert', 'AssessorAuth\AssessorBatchController@candidateMarksInsert')->name('as.batch.candidate-mark-insert'); 
 Route::post('batches/candidate-marks-update', 'AssessorAuth\AssessorBatchController@candidateMarksUpdate')->name('as.batch.candidate-mark-update'); 
 Route::get('batches/assessment-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessment')->name('assessment.view'); 
 Route::get('batches/assessment-edit/{id}', 'AssessorAuth\AssessorBatchController@editAssessment')->name('assessment.edit'); 
+
+Route::get('batches/reassessments', 'AssessorAuth\AssessorBatchController@reAssessments')->name('re-assessments'); 
+Route::get('batches/candidate-re-marks/{id}', 'AssessorAuth\AssessorBatchController@candidateReMarks')->name('as.batch.candidate-re-mark'); 
+Route::post('batches/candidate-re-marks-insert', 'AssessorAuth\AssessorBatchController@candidateReMarksInsert')->name('as.batch.candidate-re-mark-insert'); 
+Route::post('batches/candidate-re-marks-update', 'AssessorAuth\AssessorBatchController@candidateReMarksUpdate')->name('as.batch.candidate-re-mark-update'); 
+// Route::get('batches/assessment-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessment')->name('assessment.view'); 
+// Route::get('batches/assessment-edit/{id}', 'AssessorAuth\AssessorBatchController@editAssessment')->name('assessment.edit'); 
 
 Route::get('support/complain', 'AssessorAuth\AssessorSupportController@registerComplain')->name('support.complain'); 
 Route::post('support/complain-register', 'AssessorAuth\AssessorSupportController@insertRegisterComplain')->name('support.register-complain'); 

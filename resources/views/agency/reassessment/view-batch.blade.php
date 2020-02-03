@@ -4,6 +4,7 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 <style>
@@ -73,8 +74,8 @@ table.dataTable thead th:first-child {
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
-                                        <small class="text-muted">Initial Assessment Date</small>
-                                        <p>{{$reassessment->batch->assessment}}</p>
+                                        <small class="text-muted">Assessment Date</small>
+                                        <p>{{$reassessment->assessment}}</p>
                                         <hr>
                                     </div>
                                 </div>
@@ -91,8 +92,7 @@ table.dataTable thead th:first-child {
                                                 <th>Candidate Name</th>
                                                 <th>DOB</th>
                                                 <th>Gender</th>
-                                                <th>Assessment Status</th>
-                                                <th>Appear in Re-Assessment</th>
+                                                <th>Last Assessment Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -102,7 +102,6 @@ table.dataTable thead th:first-child {
                                                     <td>{{$candidate->centercandidate->candidate->dob}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->gender}}</td>
                                                     <td style="color:{{($candidate->assessment_status)?'blue':'red'}}">{{($candidate->assessment_status)?'Absent':'Failed'}}</td>
-                                                    <td style="color:{{($candidate->appear)?'blue':'red'}}">{{($candidate->appear)?'Will Appear in Re-Assessment':'Won\'t Appear in Re-Assessment'}}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -112,29 +111,33 @@ table.dataTable thead th:first-child {
                         </li>
                     </ul>
                     <br>
-                    @if (Request::segment(1)==='admin')
+                    @if (Request::segment(1)==='agency')
                         @if ($reassessment->verified)
-                        <div class="row d-flex justify-content-center">
-                            <h6>Re-Assessment Date: <span style='color:blue'>{{$reassessment->assessment}}</span></h6>
-                        </div>
-                        @else
-                            <form id="reassess_form" action="{{route('admin.reassessment.requests.submit')}}" method="post">
-                                @csrf
-                                <input type="hidden" name="reassid" value="{{$reassessment->bt_id}}">
-                                <input type="hidden" name="action" value="1">
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-sm-4">
-                                        <label for="assessment"><strong>Re-Assessment Date <span style="color:red"> *</strong></span></label>
-                                        <div class="form-group form-float">
-                                            <input type="text" class="form-control reassess_date" placeholder="New Assessment Date" value="{{ old('assessment') }}" name="assessment" required>
+                            @if (is_null($reassessment->as_id))
+                                <form id="reassess_form" action="{{route('agency.reassessment.batch.submit')}}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="reassid" value="{{$reassessment->id}}">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-sm-4">
+                                            <label for="assessment"><strong>Choose Assessor <span style="color:red"> *</strong></span></label>
+                                            <div class="form-group form-float">
+                                                <select class="form-control show-tick" data-live-search="true" name="assessor" data-dropup-auto='false' required>
+                                                    @foreach ($assessors as $assessor)
+                                                        <option value="{{$assessor->id}}">{{ $assessor->as_id .' ('.$assessor->name.')' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="row d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-success">Add Assessor</button>
+                                    </div>
+                                </form>
+                            @else
                                 <div class="row d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-success">Accept</button>
-                                    <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                    <h6>Assessor : <span style="color:blue">{{ $reassessment->assessor->as_id .' ('.$reassessment->assessor->name.')' }}</span></h6>
                                 </div>
-                            </form>
+                            @endif
                         @endif
                     @endif
                 </div>
@@ -145,48 +148,7 @@ table.dataTable thead th:first-child {
 
 @stop
 @section('page-script')
-{{-- @auth('admin') --}}
-    <script>
 
-        function showPromptMessage() {
-            var id='{{$reassessment->id}}';
-            let _token = $("[name='_token']").val();
-        
-         swal({
-            title: "Reason of Rejection",
-            text: "Please Describe the Reason",
-            content: {
-                element: "input",
-                attributes: {
-                    type: "text",
-                },
-            },
-            icon: "info",
-            buttons: true,
-            buttons: {
-                    cancel: "Cancel",
-                    confirm: {
-                        text: "Confirm Reject",
-                        closeModal: false
-                    }
-                },
-            closeModal: true,
-            closeOnEsc: true,
-        }).then(function(val){
-            
-            var dataString = {_token:_token, id:id,note:val};
-            if (val) {
-                $('[name=action]').val('0');
-                var form = $('#reassess_form');
-                form.append("<input type='hidden' name='reason' value='"+val+"'>");
-                $(form).unbind().submit();
-            } else if (val!=null) {
-                swal('Attention', 'You need to write something!', 'info');
-            }
-        });
-}
-    </script>
-{{-- @endauth --}}
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
