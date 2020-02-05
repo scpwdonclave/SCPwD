@@ -28,7 +28,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($reassessments as $reassessment)
-                                    @if (!$reassessment->verified)
+                                    @if (is_null($reassessment->verified))
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
                                             <td>{{$reassessment->batch->partner->tp_id}}</td>
@@ -51,7 +51,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>All</strong> Approved Re-Assessments </h2>
+                    <h2><strong>All</strong> Approved/Rejected Re-Assessments </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -61,18 +61,20 @@
                                     <th>Batch ID</th>
                                     <th>TP ID</th>
                                     <th>TC ID</th>
+                                    <th>Status</th>
                                     <th>Assessment</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($reassessments as $reassessment)
-                                    @if ($reassessment->verified)
+                                    @if (!is_null($reassessment->verified))
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
                                             <td>{{$reassessment->batch->partner->tp_id}}</td>
                                             <td>{{$reassessment->batch->center->tc_id}}</td>
-                                            <td>{{$reassessment->assessment}}</td>
+                                            <td style="color:{{($reassessment->verified)?'green':'red'}}">{{($reassessment->verified)?'Approved':'Rejected'}}</td>
+                                            <td>{{($reassessment->verified)?$reassessment->assessment:'Not Applicable'}}</td>
                                             <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.reassessment.requests.view',Crypt::encrypt($reassessment->id))}}'">View</button></td>
                                         </tr>
                                     @endif

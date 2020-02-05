@@ -63,18 +63,18 @@ table.dataTable thead th:first-child {
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Batch Start Date</small>
-                                        <p>{{$reassessment->batch->batch_start}}</p>
+                                        <p>{{Carbon\Carbon::parse($reassessment->batch->batch_start)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                                 
                                     <div class="col-sm-4">
                                         <small class="text-muted">Batch End Date</small>
-                                        <p>{{$reassessment->batch->batch_end}}</p>
+                                        <p>{{Carbon\Carbon::parse($reassessment->batch->batch_end)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-4">
                                         <small class="text-muted">Initial Assessment Date</small>
-                                        <p>{{$reassessment->batch->assessment}}</p>
+                                        <p>{{Carbon\Carbon::parse($reassessment->batch->assessment)->format('d-m-Y')}}</p>
                                         <hr>
                                     </div>
                                 </div>
@@ -113,11 +113,7 @@ table.dataTable thead th:first-child {
                     </ul>
                     <br>
                     @if (Request::segment(1)==='admin')
-                        @if ($reassessment->verified)
-                        <div class="row d-flex justify-content-center">
-                            <h6>Re-Assessment Date: <span style='color:blue'>{{$reassessment->assessment}}</span></h6>
-                        </div>
-                        @else
+                        @if (is_null($reassessment->verified))
                             <form id="reassess_form" action="{{route('admin.reassessment.requests.submit')}}" method="post">
                                 @csrf
                                 <input type="hidden" name="reassid" value="{{$reassessment->bt_id}}">
@@ -135,6 +131,16 @@ table.dataTable thead th:first-child {
                                     <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
                                 </div>
                             </form>
+                        @else
+                            @if ($reassessment->verified)
+                                <div class="row d-flex justify-content-center">
+                                    <h6>Re-Assessment Date: <span style='color:blue'>{{Carbon\Carbon::parse($reassessment->assessment)->format('d-m-Y')}}</span></h6>
+                                </div>
+                            @else
+                                <div class="row d-flex justify-content-center">
+                                    <h6>Re-Assessment Request has been <span style="color:red">Rejected</span></h6>
+                                </div>
+                            @endif
                         @endif
                     @endif
                 </div>

@@ -235,7 +235,7 @@ $('#form_reassessment').on('submit', function(e){
 
 
         var SwalText = document.createElement("div");
-        SwalText.innerHTML = '<span style="color:blue">Un-Marked</span> Candidates will never get a Chance for <span style="color:red">Re-Assessment</span> Under This Batch.';
+        SwalText.innerHTML = 'Once Submitted, <span style="color:blue">Un-Marked</span> Candidates will never get a Chance for <span style="color:red">Re-Assessment</span> Under This Batch.';
         swal({
             title: 'Confirmation!',
             content: SwalText,

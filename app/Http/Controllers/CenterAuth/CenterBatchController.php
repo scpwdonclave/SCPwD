@@ -33,6 +33,59 @@ class CenterBatchController extends Controller
         }
     }
 
+    protected function batchHasFailedorAbsentCandidate($batchData){
+        $reassess_button = true;
+        if ($batchData->status) {
+            
+            // * Batch is not Cancelled
+            if ($batchData->batchreassessments->count() == 0) {
+
+                // * Batch has not given any Re-Assessments
+                if ($batchData->batchassessment) {
+
+                    // * Batch has given an Exam
+                    if ($batchData->batchassessment->supadmin_cert_rel) {
+
+                        // * Batch certificate is Released
+                        foreach ($batchData->candidatesmap as $centercandidate) {
+                            if ($centercandidate->centercandidate->candidate->status && !$centercandidate->centercandidate->dropout) {
+                                if ($centercandidate->centercandidate->passed == '0' || $centercandidate->centercandidate->passed == '2') {
+                                    $reassess_button = true;
+                                }
+                            }
+                        }
+
+                    } else {
+                        $reassess_button = false;
+                    }
+                } else {
+                    $reassess_button = false;
+                }
+            } else {
+                if ($batchData->batchreassessmentlatest->bt_reassid == $batchData->reassessmentlatest->id) {
+                    if ($batchData->batchreassessmentlatest->supadmin_cert_rel) {
+
+                        // * Batch certificate is Released
+                        foreach ($batchData->candidatesmap as $centercandidate) {
+                            if ($centercandidate->centercandidate->candidate->status && !$centercandidate->centercandidate->dropout) {
+                                if ($centercandidate->centercandidate->passed == '0' || $centercandidate->centercandidate->passed == '2') {
+                                    $reassess_button = true;
+                                }
+                            }
+                        }
+
+                    } else {
+                        $reassess_button = false;
+                    }
+                } else {
+                    $reassess_button = false;
+                }
+            }
+
+        }
+        return $reassess_button;
+    }
+
     public function batches(){
         $data = [
             'data' => Batch::where('tc_id',$this->guard()->user()->id)->get()
@@ -43,29 +96,20 @@ class CenterBatchController extends Controller
     public function viewBatch($id){
         if ($id=$this->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
-            $button = false;
-            if ($batchData->batchreassessments->count()) {
-            } else {
-                if ($batchData->batchassessment) {
-                    if ($batchData->batchassessment->supadmin_cert_rel) {
-                        foreach ($batchData->candidatesmap as $centercandidate) {
-                            if ($centercandidate->centercandidate->candidate->status && !$centercandidate->centercandidate->dropout) {
-                                if ($centercandidate->centercandidate->passed === 0 || $centercandidate->centercandidate->passed === 2) {
-                                    $button = true;
-                                }
-                            }
-                        }
-                    } else {
-                        $button = false;
-                    }
-                } else {
-                    $button = false;
-                }
-            }
 
-            if ($batchData->center->id==$this->guard()->user()->id) {
-                return view('common.view-batch')->with(compact('batchData','button'));
+            // * Making Sure This Batch Belongs to The Current Center
+            if ($this->guard()->user()->id == $batchData->tc_id) {
+            
+                // * $reassess_button will Ensures Batch has Failed or Absent Candidates during Assessment or ReAssessments
+                $reassess_button = $this->batchHasFailedorAbsentCandidate($batchData);
+    
+                if ($batchData->center->id==$this->guard()->user()->id) {
+                    return view('common.view-batch')->with(compact('batchData','reassess_button'));
+                }
+            } else {
+                return abort(403, 'You Have No Permission to View This');
             }
+            
         }
     }
 
@@ -77,28 +121,11 @@ class CenterBatchController extends Controller
             
             $batch = Batch::findOrFail($batchid);
             
-            if (Carbon::parse($batch->assessment.' 23:59') < Carbon::now()) {
-                if ($batch->status) {
-                
-                    if ($batch->batchreassessmentlatest) {
-                        if ($batch->batchreassessment->count() == '2') {
-                            alert()->info("You Have Requested <span style='color:red;font-weight:bold'>Maximum</span> No of Re-Assessment for This Batch.", 'Attention')->html()->autoclose(4000);
-                            return redirect()->back();
-                        } else {
-                            foreach ($batch->candidatesmap as $batchCandidate) {
-                                if ($batchCandidate->centercandidate->passed == '0' || $batchCandidate->centercandidate->passed == '2') {
-                                    $id = Crypt::encrypt($batchCandidate->centercandidate->id);
-                                    $batchCandidate->centercandidate->check = '<input type="checkbox">';
-                                    $batchCandidate->centercandidate->candidate->name;
-                                    $batchCandidate->centercandidate->candidate->contact;
-                                    $batchCandidate->centercandidate->candidate->category;
-                                    $batchCandidate->centercandidate->disability->e_expository;
-                                    $batchCandidate->centercandidate->passed;
-                                    $batchCandidate->centercandidate->view = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
-                                    $candidateArray->push($batchCandidate->centercandidate);
-                                }
-                            }
-                        }
+            if ($this->batchHasFailedorAbsentCandidate($batch) && $this->guard()->user()->id == $batch->tc_id) {
+                if ($batch->batchreassessmentlatest) {
+                    if ($batch->batchreassessment->count() == '2') {
+                        alert()->info("You Have Requested <span style='color:red;font-weight:bold'>Maximum</span> No of Re-Assessment for This Batch.", 'Attention')->html()->autoclose(4000);
+                        return redirect()->back();
                     } else {
                         foreach ($batch->candidatesmap as $batchCandidate) {
                             if ($batchCandidate->centercandidate->passed == '0' || $batchCandidate->centercandidate->passed == '2') {
@@ -110,21 +137,29 @@ class CenterBatchController extends Controller
                                 $batchCandidate->centercandidate->disability->e_expository;
                                 $batchCandidate->centercandidate->passed;
                                 $batchCandidate->centercandidate->view = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
-                                $batchCandidate->centercandidate->data = $id;
                                 $candidateArray->push($batchCandidate->centercandidate);
                             }
                         }
                     }
-    
                 } else {
-                    alert()->info("This Batch is Marked As <span style='color:red;font-weight:bold'>Cancelled</span>. You can not Proceed Further", 'Attention')->html()->autoclose(4000);
-                    return redirect()->back();
-                }
+                    foreach ($batch->candidatesmap as $batchCandidate) {
+                        if ($batchCandidate->centercandidate->passed == '0' || $batchCandidate->centercandidate->passed == '2') {
+                            $id = Crypt::encrypt($batchCandidate->centercandidate->id);
+                            $batchCandidate->centercandidate->check = '<input type="checkbox">';
+                            $batchCandidate->centercandidate->candidate->name;
+                            $batchCandidate->centercandidate->candidate->contact;
+                            $batchCandidate->centercandidate->candidate->category;
+                            $batchCandidate->centercandidate->disability->e_expository;
+                            $batchCandidate->centercandidate->passed;
+                            $batchCandidate->centercandidate->view = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
+                            $batchCandidate->centercandidate->data = $id;
+                            $candidateArray->push($batchCandidate->centercandidate);
+                        }
+                    }
+                }                
             } else {
-                alert()->info("This Batch Training is not <span style='color:blue;font-weight:bold'>Completed</span> Yet.", 'Attention')->html()->autoclose(3000);
-                return redirect()->back();
+                return abort(403, 'You Have No Permission to View This');
             }
-            
             
             return view('center.reassessment')->with(compact('candidateArray','batch'));
             
@@ -145,16 +180,18 @@ class CenterBatchController extends Controller
                     }
                 }
 
-                $reassessment = Reassessment::where([['bt_id', $id],['verified',0]])->first();
+                $reassessment = Reassessment::where([['bt_id', $id],['verified',NULL]])->first();
                 if ($reassessment) {
     
-                    alert()->error("A Re-Assessment Request for This Batch is Already <span style='color:blue'>in Process</span>, kindly Wait for <span style='color:blue'>Confirmation</span> from Admin side", 'Attention')->html()->autoclose(6000);
+                    alert()->error("A Re-Assessment Request for This Batch is Already <span style='color:blue'>in Process</span>, kindly Wait for <span style='color:blue'>Confirmation</span> from SCPwD", 'Attention')->html()->autoclose(6000);
     
                 } else {
                 
                     $reassessment = new Reassessment;
                     $reassessment->bt_id = $id;
                     $reassessment->aa_id = $batch->agencybatch->aa_id;
+                    $reassessment->tp_id = $this->guard()->user()->tp_id;
+                    $reassessment->tc_id = $this->guard()->user()->id;
                     // $reassessment->as_id = $batch->assessorbatch->as_id;
                     $reassessment->save();
                     
@@ -186,5 +223,25 @@ class CenterBatchController extends Controller
 
         return $candidateDB;
         // $reeassessment = new 
+    }
+
+
+    public function reassessments()
+    {
+        $user = $this->guard()->user();
+        return view('common.reassessments')->with(compact('user'));
+    }
+
+    public function viewReAssessment(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $reassessment = Reassessment::findOrFail($id);
+            if ($this->guard()->user()->id == $reassessment->tc_id) {
+                return view('common.view-reassessment')->with(compact('reassessment'));
+            } else {
+                return abort(403,'You are not authorized to view This');
+            }
+            
+        }
     }
 }

@@ -66,10 +66,10 @@ class AdminReAssessmentController extends Controller
         ]);
 
         $reassessment = Reassessment::findOrFail($request->reassid);
-        if (!$reassessment->verified) {
+        if (is_null($reassessment->verified)) {
         
             $reassessment->assessment=($request->action)?$request->assessment:null;            
-            $reassessment->verified=1;            
+            $reassessment->verified=($request->action)?1:0;            
             $reassessment->save();
             $batchid = $reassessment->batch->batch_id;
             if ($request->action) {

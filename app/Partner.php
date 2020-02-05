@@ -54,4 +54,8 @@ class Partner extends Authenticatable implements Auditable
     public function batches(){
         return $this->hasMany('App\Batch', 'tp_id');
     }
+
+    public function reassessments(){
+        return $this->hasMany('App\Reassessment', 'tp_id');
+    }
 }

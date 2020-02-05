@@ -19,13 +19,12 @@
                         <div class="text-center">
                             <h6>
                                 Batch ID: <span style='color:blue'>{{$batchData->batch_id}}</span> <br> <br>
-                                <span style='color:{{($batchData->status)?"green":"red"}}'>{{($batchData->status)?"Active":"Inactive"}}</span>
+                                <span style='color:{{($batchData->status)?"green":"red"}}'>{{($batchData->status)?"Active":"Cencelled"}}</span>
                             </h6>
                         </div>
                         <br>
                     @endif
                     <ul class="cbp_tmtimeline">
-                        
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Batch Details</span></time>
                             <div class="cbp_tmicon bg-green"> <i class="zmdi zmdi-account"></i></div>
@@ -111,7 +110,7 @@
                             @endif
                         @endif
                         @if (Request::segment(1) ==='center')
-                            @if ($button)
+                            @if ($reassess_button)
                                 <button class="btn btn-primary" onclick="location.href='{{route('center.bt.batch.reassess',Crypt::encrypt($batchData->id))}}'"><i class="zmdi zmdi-rotate-left"></i> &nbsp;&nbsp;Request for a Reassessment</button>
                             @endif
                         @endif

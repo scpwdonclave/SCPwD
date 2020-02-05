@@ -159,6 +159,7 @@
 
             @if (Request::segment(1) != 'admin' && Request::segment(1) != 'agency' && Request::segment(1) != 'assessor')
                 <li class="{{ Request::segment(2)==='batches' ? 'active open' : (Request::is('partner/add-batch') ? 'active open' : null ) }}"><a href="{{route(Request::segment(1).'.batches')}}"><i class="zmdi zmdi-accounts-alt"></i><span>Batches</span></a></li>
+                <li class="{{ Request::segment(2)==='reassessments' ? 'active open' : null }}"><a href="{{route(Request::segment(1).'.reassessments')}}"><i class="zmdi zmdi-rotate-left"></i><span>Re-Assessments</span></a></li>
             @endif
 
             @if (Request::segment(1) === 'admin' || Request::segment(1) === 'agency')

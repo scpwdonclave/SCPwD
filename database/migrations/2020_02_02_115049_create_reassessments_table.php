@@ -18,7 +18,9 @@ class CreateReassessmentsTable extends Migration
             $table->unsignedBigInteger('bt_id');
             $table->unsignedBigInteger('aa_id')->nullable();
             $table->unsignedBigInteger('as_id')->nullable();
-            $table->boolean('verified')->default(0);
+            $table->unsignedBigInteger('tp_id');
+            $table->unsignedBigInteger('tc_id');
+            $table->boolean('verified')->nullable();
             $table->string('assessment')->nullable();
             $table->timestamps();
         });

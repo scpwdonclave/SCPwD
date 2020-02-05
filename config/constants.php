@@ -1,5 +1,6 @@
 <?php
 return [
+    'dateformat' => 'd-m-Y',
     'qualifications' => [
         '0' => 'Un Educated',
         '1' => '5th to 8th',

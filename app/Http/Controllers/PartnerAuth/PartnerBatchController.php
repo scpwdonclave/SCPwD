@@ -533,4 +533,10 @@ class PartnerBatchController extends Controller
         }
     }
 
+    public function reassessments()
+    {
+        $user = $partner = $this->guard()->user();
+        return view('common.reassessments')->with(compact('user','partner'));
+    }
+
 }
