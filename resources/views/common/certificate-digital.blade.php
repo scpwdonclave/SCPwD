@@ -30,7 +30,7 @@
             }
             </style>
     </head>
-  <title>{{$candidateMark->certi_no}}</title>
+  <title>{{$candidateMark->centerCandidate->certi_no}}</title>
     <body>
             <div style="position:relative;margin-left:30%">
                     <img src="{{asset('assets/images/scpwd-logo.png')}}" alt="SCPwD" style="height:120px;width:300px;">
@@ -155,7 +155,7 @@
             </tr>
             <tr>
                 <td style="font-weight:bold;">Certificate No.</td>
-                <td>{{$candidateMark->certi_no}}</td>
+                <td>{{$candidateMark->centerCandidate->certi_no}}</td>
                 
               </tr>
           </table>

@@ -236,7 +236,7 @@ class AdminMisController extends Controller
              //Assessed
              $assessed_batch=Batch::where([['f_year','=',$request->financial_year],['tc_id','=',$center->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
             
-             $assessed_can_cnt=$passed_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
+             $assessed_can_cnt=$passed_can_cnt=$certified_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
              foreach ($assessed_batch as $bt_assessed) {
                  
                  foreach ($bt_assessed->candidatesmap as $bt_can_map) {
@@ -244,6 +244,9 @@ class AdminMisController extends Controller
                     //Candidate Passed
                     $passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
                     //End Candidate Passed
+                    //Candidate Certified
+                    $certified_can_cnt += CenterCandidateMap::where([['passed','=',1],['certi_no','!=',null],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Certified
                     //Candidate Failed
                     $failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
                     //End Candidate failed
@@ -264,7 +267,8 @@ class AdminMisController extends Controller
                                         $passed_can_cnt,
                                         $failed_can_cnt,
                                         $absent_can_cnt,
-                                        $tp_tc_wise_drop_candidate
+                                        $tp_tc_wise_drop_candidate,
+                                        $certified_can_cnt
                                         ];
 
                             }
@@ -404,13 +408,16 @@ class AdminMisController extends Controller
             //End Of Trained
             //Assessed
             $batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
-            $bt_assessed_can_cnt=$passed_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
+            $bt_assessed_can_cnt=$passed_can_cnt=$certified_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
             foreach ($batch_assessed as $bt_assessed) {
                 foreach ($bt_assessed->candidatesmap as $bt_can_map) {
                    $bt_assessed_can_cnt += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['dropout','=',0]])->get()->count();
                     //Candidate Passed
                     $passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
                     //End Candidate Passed
+                    //Candidate Certified
+                    $certified_can_cnt += CenterCandidateMap::where([['passed','=',1],['certi_no','!=',null],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
+                    //End Candidate Certified
                     //Candidate Failed
                     $failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['dropout','=',0],['id','=',$bt_can_map->candidate_id]])->get()->count();
                     //End Candidate failed
@@ -429,7 +436,8 @@ class AdminMisController extends Controller
                                         $passed_can_cnt,
                                         $failed_can_cnt,
                                         $absent_can_cnt,
-                                        $c_drop_count
+                                        $c_drop_count,
+                                        $certified_can_cnt
                                         ];
         }
         //END JOB ROLE wise Report
@@ -477,13 +485,16 @@ class AdminMisController extends Controller
                 //End Trained
                 // Assessed
                 $dis_batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
-                $dis_bt_assd_can=$dis_passed_can_cnt=$dis_failed_can_cnt=$dis_absent_can_cnt=0;
+                $dis_bt_assd_can=$dis_passed_can_cnt=$dis_certified_can_cnt=$dis_failed_can_cnt=$dis_absent_can_cnt=0;
                 foreach ($dis_batch_assessed as $bt_assessed) {
                     foreach ($bt_assessed->candidatesmap as $bt_can_map) {
                        $dis_bt_assd_can += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['dropout','=',0],['d_type','=',$expo->id]])->get()->count();
                      //Candidate Passed
                     $dis_passed_can_cnt += CenterCandidateMap::where([['passed','=',1],['dropout','=',0],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
                     //End Candidate Passed
+                     //Candidate Certified
+                    $dis_certified_can_cnt += CenterCandidateMap::where([['passed','=',1],['certi_no','!=',null],['dropout','=',0],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
+                    //End Candidate Certified
                     //Candidate Failed
                     $dis_failed_can_cnt += CenterCandidateMap::where([['passed','=',0],['dropout','=',0],['id','=',$bt_can_map->candidate_id],['d_type','=',$expo->id]])->get()->count();
                     //End Candidate failed
@@ -501,7 +512,8 @@ class AdminMisController extends Controller
                                                     $dis_passed_can_cnt,
                                                     $dis_failed_can_cnt,
                                                     $dis_absent_can_cnt,
-                                                    $dis_drop_can_cnt
+                                                    $dis_drop_can_cnt,
+                                                    $dis_certified_can_cnt
                                                     ];
             }
             //dd($dis_can_stack);

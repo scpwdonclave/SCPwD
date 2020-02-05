@@ -29,11 +29,11 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 <body >
       
         @foreach ($batchAssessment->candidateMarks as $item)
-        @if($item->passed)   
+        @if($item->passed)    
        
  <div style="height:1000px;width:1500px;position:relative">
 <img src="{{asset('assets/images/certi.png')}}" style="height:1000px;width:1500px;">
- <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{$item->certi_no}}</span></div>
+ <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{$item->centerCandidate->certi_no}}</span></div>
 <div style="position:absolute;left:138px;top:160px;height:100px;">    
     <img src="{{asset('storage/'.$batchAssessment->batch->scheme->logo)}}" style="width:180px;">
 </div>
