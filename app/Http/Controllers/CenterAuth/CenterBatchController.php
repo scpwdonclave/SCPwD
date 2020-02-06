@@ -237,7 +237,13 @@ class CenterBatchController extends Controller
         if ($id=AppHelper::instance()->decryptThis($request->id)) {
             $reassessment = Reassessment::findOrFail($id);
             if ($this->guard()->user()->id == $reassessment->tc_id) {
-                return view('common.view-reassessment')->with(compact('reassessment'));
+                $assessment_button=false;
+                foreach ($reassessment->candidates as $candidate) {
+                    if ($candidate->assessment_status) {
+                        $assessment_button = true;
+                    }
+                }
+                return view('common.view-reassessment')->with(compact('reassessment','assessment_button'));
             } else {
                 return abort(403,'You are not authorized to view This');
             }

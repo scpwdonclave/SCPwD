@@ -15,6 +15,7 @@ use App\Holiday;
 use Carbon\Carbon;
 use App\BatchUpdate;
 use App\Notification;
+use App\Reassessment;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
 use App\BatchAssessment;
@@ -498,10 +499,6 @@ class PartnerBatchController extends Controller
                         return redirect()->back();
                     }
 
-
-                    /* Codes for Notification */
-                    /* End Codes for Notification */
-
                 }
                 
             } else {
@@ -537,6 +534,26 @@ class PartnerBatchController extends Controller
     {
         $user = $partner = $this->guard()->user();
         return view('common.reassessments')->with(compact('user','partner'));
+    }
+
+    public function viewReAssessment(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $reassessment = Reassessment::findOrFail($id);
+            $partner = $this->guard()->user();
+            if ($this->guard()->user()->id == $reassessment->tp_id) {
+                $assessment_button=false;
+                foreach ($reassessment->candidates as $candidate) {
+                    if ($candidate->assessment_status) {
+                        $assessment_button = true;
+                    }
+                }
+                return view('common.view-reassessment')->with(compact('reassessment','assessment_button','partner'));
+            } else {
+                return abort(403,'You are not authorized to view This');
+            }
+            
+        }
     }
 
 }

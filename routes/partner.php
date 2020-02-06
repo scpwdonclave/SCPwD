@@ -44,6 +44,7 @@ Route::post('batches/batch-edit', 'PartnerAuth\PartnerBatchController@submitEdit
 Route::get('batches/batch-edit/{id}', 'PartnerAuth\PartnerBatchController@editBatch')->name('bt.batch.edit');
 
 Route::get('/reassessments', 'PartnerAuth\PartnerBatchController@reassessments')->name('reassessments');
+Route::get('/reassessments/{id}', 'PartnerAuth\PartnerBatchController@viewReAssessment')->name('reassessment.view');
 
 
 Route::get('support/complain', 'PartnerAuth\PartnerSupportController@registerComplain')->name('support.complain'); 

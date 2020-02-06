@@ -39,9 +39,13 @@ table.dataTable thead th:first-child {
                         </h6>
                         @if (!is_null($reassessment->verified))
                             @if ($reassessment->verified)
-                                <div class="row d-flex justify-content-center">
-                                    <h6>Re-Assessment on <span style="color:blue;">{{Carbon\Carbon::parse($reassessment->assessment)->format('d-m-Y')}}</span></h6>
-                                </div>
+                                @if ($assessment_button)
+                                    <div class="row d-flex justify-content-center">
+                                        <h6>Re-Assessment on <span style="color:blue;">{{Carbon\Carbon::parse($reassessment->assessment)->format('d-m-Y')}}</span></h6>
+                                    </div>
+                                @else
+                                    <h6>Re-Assessment Request has been <span style="color:blue">Confirmed</span><h6>
+                                @endif
                             @else
                                 <div class="row d-flex justify-content-center">
                                     <h6>Re-Assessment Request has been <span style="color:red">Rejected</span><h6>
@@ -99,6 +103,9 @@ table.dataTable thead th:first-child {
                                                 <th>DOB</th>
                                                 <th>Gender</th>
                                                 <th>Last Assessment Status</th>
+                                                @if (Request::segment(1)==='admin')
+                                                    <th>Appear in Re-Assessment</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -108,6 +115,9 @@ table.dataTable thead th:first-child {
                                                     <td>{{$candidate->centercandidate->candidate->dob}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->gender}}</td>
                                                     <td style="color:{{($candidate->assessment_status)?'blue':'red'}}">{{($candidate->assessment_status)?'Absent':'Failed'}}</td>
+                                                    @if (Request::segment(1)==='admin')
+                                                        <td style="color:{{($candidate->appear)?'blue':'red'}}">{{($candidate->appear)?'Will Appear in Re-Assessment':'Won\'t Appear in Re-Assessment'}}</td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -146,6 +156,31 @@ table.dataTable thead th:first-child {
                             @endif
                         @endif
                     @endif
+
+
+                    @if (Request::segment(1)==='admin')
+                        @if (is_null($reassessment->verified))
+                            <form id="reassess_form" action="{{route('admin.reassessment.action')}}" method="post">
+                                @csrf
+                                <input type="hidden" name="reassid" value="{{$reassessment->id}}">
+                                <input type="hidden" name="action" value="1">
+                                @if ($assessment_button)
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-sm-4">
+                                            <label for="assessment"><strong>Re-Assessment Date <span style="color:red"> *</strong></span></label>
+                                            <div class="form-group form-float">
+                                                <input type="text" class="form-control reassess_date" placeholder="New Assessment Date" value="{{ old('assessment') }}" name="assessment" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                <div class="row d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                    <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                </div>
+                            </form>
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>
@@ -178,6 +213,43 @@ table.dataTable thead th:first-child {
             // daysOfWeekDisabled: [0],
         });
 
+        function showPromptMessage() {
+            var id='{{$reassessment->id}}';
+            let _token = $("[name='_token']").val();
+        
+            swal({
+            title: "Reason of Rejection",
+            text: "Please Describe the Reason",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
+                },
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "Cancel",
+                    confirm: {
+                        text: "Confirm Reject",
+                        closeModal: false
+                    }
+                },
+            closeModal: true,
+            closeOnEsc: true,
+        }).then(function(val){
+            
+            var dataString = {_token:_token, id:id,note:val};
+            if (val) {
+                $('[name=action]').val('0');
+                var form = $('#reassess_form');
+                form.append("<input type='hidden' name='reason' value='"+val+"'>");
+                $(form).unbind().submit();
+            } else if (val!=null) {
+                swal('Attention', 'You need to write something!', 'info');
+            }
+        });
+    }
     </script>
 @endauth
 @stop

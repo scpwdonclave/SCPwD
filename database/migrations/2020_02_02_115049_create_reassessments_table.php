@@ -20,7 +20,7 @@ class CreateReassessmentsTable extends Migration
             $table->unsignedBigInteger('as_id')->nullable();
             $table->unsignedBigInteger('tp_id');
             $table->unsignedBigInteger('tc_id');
-            $table->boolean('verified')->nullable();
+            $table->boolean('verified')->nullable()->comment="null: Not Verified, 1: Verified, 0: Rejected";
             $table->string('assessment')->nullable();
             $table->timestamps();
         });
