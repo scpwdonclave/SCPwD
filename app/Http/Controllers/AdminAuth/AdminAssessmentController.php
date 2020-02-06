@@ -78,6 +78,19 @@ class AdminAssessmentController extends Controller
             }else{
                 $batchAssessment->sup_admin_verified=1;
 
+                //=====================
+                foreach ($batchAssessment->candidateMarks as $key => $value) {
+
+                        $eachcand= $value->centerCandidate;
+                    if($value->attendence==='present'){
+                     $eachcand->passed=$value->passed;
+                     }else{
+                        $eachcand->passed=2;
+
+                     }
+                    $eachcand->save();
+                }
+
                  /* Notification For Admin */
                  $batch_no=$batchAssessment->batch->batch_id;
                  $notification = new Notification;
@@ -161,7 +174,7 @@ class AdminAssessmentController extends Controller
            
             foreach ($batchAssessment->candidateMarks as $keys=>$value) {
                 if($value->passed){
-                $data=DB::table('candidate_marks')
+                $data=DB::table('center_candidate_maps')
                 ->select(\DB::raw("SUBSTRING(certi_no,$cert_length,LENGTH(certi_no)-6) as certi_no"),\DB::raw("SUBSTRING(certi_no,-2) as certi_yr"))
                 ->where("certi_no", "LIKE", $cert_format."%")->get();
                
@@ -204,19 +217,12 @@ class AdminAssessmentController extends Controller
                     }
                 }
 
-                $value->certi_no=$new_certi_id;
-                $value->save();
+                $value->centerCandidate->certi_no=$new_certi_id;
+                $value->centerCandidate->save();
                
                 }
 
-                $eachcand= $value->centerCandidate;
-                if($value->attendence==='present'){
-                $eachcand->passed=$value->passed;
-                }else{
-                    $eachcand->passed=2;
-
-                }
-                $eachcand->save();
+               
             }
             //$batchAssessment->candidateMarks
             $batchAssessment->supadmin_cert_rel=1;
