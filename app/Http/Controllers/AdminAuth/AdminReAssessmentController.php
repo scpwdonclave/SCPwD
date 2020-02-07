@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
+use App\AgencyBatch;
+use App\AgencySector;
 use App\Reassessment;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
@@ -36,11 +38,23 @@ class AdminReAssessmentController extends Controller
             $assessment_button = false;
             $reassessment = Reassessment::findOrFail($id);
             foreach ($reassessment->candidates as $candidate) {
-                if ($candidate->assessment_status) {
+                if ($candidate->appear) {
                     $assessment_button = true;
                 }
             }
-            return view('common.view-reassessment')->with(compact('reassessment','assessment_button'));
+
+            $agencysectors = AgencySector::where('sector',$reassessment->batch->jobrole->sector_id)->get();
+
+            $agencies = collect();
+
+            foreach ($agencysectors as $agencysector) {
+                $agencybatch = AgencyBatch::where([['aa_id',$agencysector->aa_id],['bt_id', $reassessment->bt_id]])->first();
+                if (!$agencybatch) {
+                     $agencies->push($agencysector->agency);
+                }
+            }
+
+            return view('common.view-reassessment')->with(compact('reassessment','assessment_button','agencies'));
         } else {
             return abort(404);
         }
@@ -52,36 +66,50 @@ class AdminReAssessmentController extends Controller
     
     public function actionReAssessment(Request $request)
     {
+        // dd($request->action);
         $request->validate([
             'reassid' => 'required',
             'action' => 'required',
-            'assessment' => 'nullable',
+            'assessment' => ($request->action == '1')?'required':'nullable',
+            'agency' => ($request->action == '1')?'required':'nullable',
         ]);
 
         $reassessment = Reassessment::findOrFail($request->reassid);
         if (is_null($reassessment->verified) && $reassessment->batch->status) {
             
-            if ($request->action) {
-                foreach ($reassessment->candidates as $candidate) {
-                    if (!$candidate->assessment_status) {
-                        $centerCandidate = CenterCandidateMap::find($candidate->ccd_id);
-                        $centerCandidate->reassessed=0;
-                        $centerCandidate->save();
-                    }
-                }
-                $reassessment->assessment=$request->assessment;            
-                $reassessment->verified=1;
-            } else {
-                $reassessment->verified=0;
+            switch ($request->action) {
+                case '1':
+                        $reassessment->assessment=$request->assessment;            
+                        AgencyBatch::create([
+                            'aa_id' => $request->agency,
+                            'bt_id' => $reassessment->bt_id,
+                            'aa_verified' => 0,
+                        ]);
+                
+                case '2':
+                        foreach ($reassessment->candidates as $candidate) {
+                            if (!$candidate->assessment_status) {
+                                $centerCandidate = CenterCandidateMap::find($candidate->ccd_id);
+                                $centerCandidate->reassessed=0;
+                                $centerCandidate->save();
+                            }
+                        }
+                        $reassessment->verified=1;
+                    break;
+                default:
+                    $reassessment->verified=0;
+                    break;
             }
 
             $reassessment->save();
             
             $batchid = $reassessment->batch->batch_id;
             if ($request->action) {
+                if ($request->action == '1') {
+                    AppHelper::instance()->writeNotification($reassessment->batch->agencybatch->aa_id,'agency','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
+                }
                 AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
                 AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
-                AppHelper::instance()->writeNotification($reassessment->batch->agencybatch->aa_id,'agency','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
                 alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
             } else {
                 AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.");

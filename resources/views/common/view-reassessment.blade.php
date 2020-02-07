@@ -103,9 +103,7 @@ table.dataTable thead th:first-child {
                                                 <th>DOB</th>
                                                 <th>Gender</th>
                                                 <th>Last Assessment Status</th>
-                                                @if (Request::segment(1)==='admin')
-                                                    <th>Appear in Re-Assessment</th>
-                                                @endif
+                                                <th>Appear in Re-Assessment</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -115,9 +113,7 @@ table.dataTable thead th:first-child {
                                                     <td>{{$candidate->centercandidate->candidate->dob}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->gender}}</td>
                                                     <td style="color:{{($candidate->assessment_status)?'blue':'red'}}">{{($candidate->assessment_status)?'Absent':'Failed'}}</td>
-                                                    @if (Request::segment(1)==='admin')
-                                                        <td style="color:{{($candidate->appear)?'blue':'red'}}">{{($candidate->appear)?'Will Appear in Re-Assessment':'Won\'t Appear in Re-Assessment'}}</td>
-                                                    @endif
+                                                    <td style="color:{{($candidate->appear)?'blue':'red'}}">{{($candidate->appear)?'Will Appear in Re-Assessment':'Won\'t Appear in Re-Assessment'}}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -163,9 +159,21 @@ table.dataTable thead th:first-child {
                             <form id="reassess_form" action="{{route('admin.reassessment.action')}}" method="post">
                                 @csrf
                                 <input type="hidden" name="reassid" value="{{$reassessment->id}}">
-                                <input type="hidden" name="action" value="1">
+                                <input type="hidden" name="action" value="{{($assessment_button)?'1':'2'}}">
                                 @if ($assessment_button)
                                     <div class="row d-flex justify-content-center">
+                                        <div class="col-sm-4">
+                                            <label for="agency"><strong>Choose Assessment Agency <span style="color:red"> *</strong></span></label>
+                                            <div class="form-group form-float">
+                                                <select id="agency" class="form-control show-tick" data-live-search="true" name="agency" data-dropup-auto='false' required>
+                                                    @foreach ($agencies as $agency)
+                                                        @if ($agency->status)
+                                                            <option value="{{$agency->id}}">{{$agency->name.' ('.$agency->aa_id.')'}}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-4">
                                             <label for="assessment"><strong>Re-Assessment Date <span style="color:red"> *</strong></span></label>
                                             <div class="form-group form-float">
@@ -174,6 +182,17 @@ table.dataTable thead th:first-child {
                                         </div>
                                     </div>
                                 @endif
+                                <div class="container">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                </div>
                                 <div class="row d-flex justify-content-center">
                                     <button type="submit" class="btn btn-success">Accept</button>
                                     <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>

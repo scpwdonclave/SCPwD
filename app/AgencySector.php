@@ -12,4 +12,9 @@ class AgencySector extends Model implements Auditable
     public function sectors(){
         return $this->belongsTo('App\Sector', 'sector');
     }
+    
+    public function agency()
+    {
+        return $this->belongsTo('App\Agency', 'aa_id');
+    }
 }

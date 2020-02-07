@@ -544,7 +544,7 @@ class PartnerBatchController extends Controller
             if ($this->guard()->user()->id == $reassessment->tp_id) {
                 $assessment_button=false;
                 foreach ($reassessment->candidates as $candidate) {
-                    if ($candidate->assessment_status) {
+                    if ($candidate->appear) {
                         $assessment_button = true;
                     }
                 }
