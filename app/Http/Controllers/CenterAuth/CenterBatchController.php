@@ -7,6 +7,7 @@ use Crypt;
 use App\Batch;
 use Carbon\Carbon;
 use App\Reassessment;
+use App\BatchReAssessment;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\ReassessmentCandidate;
@@ -34,7 +35,7 @@ class CenterBatchController extends Controller
     }
 
     protected function batchHasFailedorAbsentCandidate($batchData){
-        $reassess_button = true;
+        $reassess_button = false;
         if ($batchData->status) {
             
             // * Batch is not Cancelled
@@ -62,6 +63,8 @@ class CenterBatchController extends Controller
                     $reassess_button = false;
                 }
             } else {
+
+                // * Batch has given Re-Assessment
                 if ($batchData->batchreassessmentlatest->bt_reassid == $batchData->reassessmentlatest->id) {
                     if ($batchData->batchreassessmentlatest->supadmin_cert_rel) {
 
@@ -92,16 +95,28 @@ class CenterBatchController extends Controller
         ];
         return view('common.batches')->with($data);
     }
-
+    
     public function viewBatch($id){
         if ($id=$this->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
-
+            
             // * Making Sure This Batch Belongs to The Current Center
             if ($this->guard()->user()->id == $batchData->tc_id) {
-            
+                
                 // * $reassess_button will Ensures Batch has Failed or Absent Candidates during Assessment or ReAssessments
                 $reassess_button = $this->batchHasFailedorAbsentCandidate($batchData);
+                // $reass_completed = false;
+
+                // if ($batchData->batchreassessmentlatest) {
+                //     if ($batchData->batchreassessmentlatest->sup_admin_verified) {
+                //         $reass_completed = true;
+                //     } else {
+                //         $reass_completed = false;
+                //     }
+                // } else {
+                //     $reass_completed = false;
+                // }
+                
     
                 if ($batchData->center->id==$this->guard()->user()->id) {
                     return view('common.view-batch')->with(compact('batchData','reassess_button'));
@@ -189,7 +204,6 @@ class CenterBatchController extends Controller
                 
                     $reassessment = new Reassessment;
                     $reassessment->bt_id = $id;
-                    $reassessment->aa_id = $batch->agencybatch->aa_id;
                     $reassessment->tp_id = $this->guard()->user()->tp_id;
                     $reassessment->tc_id = $this->guard()->user()->id;
                     // $reassessment->as_id = $batch->assessorbatch->as_id;
@@ -248,6 +262,22 @@ class CenterBatchController extends Controller
                 return abort(403,'You are not authorized to view This');
             }
             
+        }
+    }
+
+    public function viewReAssessmentMarks(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $batchReAssessment = BatchReAssessment::findOrFail($id);
+            if ($batchReAssessment->sup_admin_verified=='1') {
+                if ($batchReAssessment->reassessment->tc_id == $this->guard()->user()->id) {
+                    return view('common.view-reassessment-marks')->with(compact('batchReAssessment'));
+                } else {
+                    return abort(403, 'You are not Authorized for This Action');   
+                }
+            } else {
+                return redirect()->back();
+            }
         }
     }
 }

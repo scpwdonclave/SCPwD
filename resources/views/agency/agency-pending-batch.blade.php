@@ -13,57 +13,85 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>My</strong> Pending Batch</h2>
+                    <h2><strong>My</strong> Pending Batches for Assessment</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Batch ID</th>
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
                                     <th>Assessment Date</th>
-                                    <th>Overall Status</th>
                                     <th>View</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($agencyBatch as $key=>$item) 
+                                @foreach ($agencyBatch as $item) 
                                     
-                                <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$item->batch->batch_id}}</td>
-                                    <td>{{$item->batch->partner->tp_id}}</td>
-                                    <td>{{$item->batch->center->tc_id}}</td>
-                                    <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
-                                    @if (\Carbon\Carbon::parse($item->batch->batch_end.' 23:59') < \Carbon\Carbon::now())
-                                        <td style="color:green">Waiting for Results</td>
-                                    @else
-                                        <td style="color:{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->status && $item->batch->center->status && $item->batch->partner->status && $item->batch->trainer->status && $item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
+                                    @if (is_null($item->reass_id))
+                                        <tr>
+                                            <td>{{$item->batch->batch_id}}</td>
+                                            <td>{{$item->batch->partner->tp_id}}</td>
+                                            <td>{{$item->batch->center->tc_id}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',Crypt::encrypt($item->batch->id.',1'))}}">View</a></td>
+                                            <td>
+                                                <button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('agency.aa.batch.action',[Crypt::encrypt($item->id),'accept'])}}'">Accept</button>
+                                                <button type="button" class="badge bg-red margin-0" onclick="popupReject('{{Crypt::encrypt($item->id)}}');">Reject</button>
+                                            </td>
+                                        </tr>
                                     @endif
-                                    <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view-dtl',Crypt::encrypt($item->batch->id))}}">View</a></td>
-                                    <td>
-                                        <button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('agency.aa.batch.action',[Crypt::encrypt($item->id),'accept'])}}'">Accept</button>
-                                        <button type="button" class="badge bg-red margin-0" onclick="popupReject('{{Crypt::encrypt($item->id)}}');">Reject</button>
-                                    </td>
-                                </tr>
                                 
                                 @endforeach
-                                
                             </tbody>
                         </table>
                     </div>
-                    <div class="text-muted">
-                        <h6>NOTE:</h6>
-                        <i class="zmdi zmdi-circle text-danger"></i>
-                        This Instance is Currently in <span style='color:red'>Inactive State</span>
-                        <i class="zmdi zmdi-circle text-success"></i>
-                        This Instance is Currently in <span style='color:green'>Active State</span>
-
-
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>My</strong> Pending Batches for Re-Assessment</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Batch ID</th>
+                                    <th>Partner ID</th>
+                                    <th>Center ID</th>
+                                    <th>Assessment Date</th>
+                                    <th>View</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($agencyBatch as $item) 
+                                    
+                                    @if (!is_null($item->reass_id))
+                                        <tr>
+                                            <td>{{$item->batch->batch_id}}</td>
+                                            <td>{{$item->batch->partner->tp_id}}</td>
+                                            <td>{{$item->batch->center->tc_id}}</td>
+                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',Crypt::encrypt($item->batch->id.',0'))}}">View</a></td>
+                                            <td>
+                                                <button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('agency.aa.batch.action',[Crypt::encrypt($item->id),'accept'])}}'">Accept</button>
+                                                <button type="button" class="badge bg-red margin-0" onclick="popupReject('{{Crypt::encrypt($item->id)}}');">Reject</button>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

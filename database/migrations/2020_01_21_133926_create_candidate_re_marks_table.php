@@ -15,6 +15,7 @@ class CreateCandidateReMarksTable extends Migration
     {
         Schema::create('candidate_re_marks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('reass_candidate_id');
             $table->unsignedBigInteger('bt_reassessment_id');
             $table->unsignedBigInteger('candidate_id');
             $table->string('mark')->default(0); 

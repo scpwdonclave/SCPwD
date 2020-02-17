@@ -52,7 +52,7 @@ class TCFormValidation extends FormRequest
             ],
 
             /* Address of the Organization */
-            'center_name' => 'nullable',
+            'center_name' => 'required',
             'center_address' => 'required',
             'landmark' => 'required',
             'addr_proof' => 'required',

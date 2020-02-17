@@ -4,9 +4,11 @@ namespace App\Http\Controllers\AgencyAuth;
 
 use Auth;
 use Crypt;
+use App\Batch;
 use App\Reason;
 use App\AgencyBatch;
 use App\Notification;
+use App\Reassessment;
 use App\BatchAssessment;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
@@ -33,17 +35,20 @@ class AgencyAssessmentController extends Controller
         
     }
 
-    public function allAssessment(){
-        $agencyBatch=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
-
-        return view('agency.all-assessment')->with(compact('agencyBatch'));
+    public function assessments(){ 
+        $agencyBatches=AgencyBatch::where('aa_id',$this->guard()->user()->id)->get();
+        return view('agency.assessment-status')->with(compact('agencyBatches'));
     }
 
     public function viewAssessment($id){
         $id= AppHelper::instance()->decryptThis($id);
         $batchAssessment=BatchAssessment::findOrFail($id);
-        return view('common.view-assessment')->with(compact('batchAssessment'));
-
+        if ($this->guard()->user()->id == $batchAssessment->batch->agencyBatch->aa_id) {
+            return view('common.view-assessment')->with(compact('batchAssessment'));
+        } else {
+            return abort(403,'You are Not Authorized for This Action');
+        }
+        
     }
 
     public function assessmentAccept($id){
@@ -93,7 +98,6 @@ class AgencyAssessmentController extends Controller
 
     public function myBatch(){
         $agency = $this->guard()->user();
-        // $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',1]])->get();
         return view('agency.batch')->with(compact('agency'));
 
 
@@ -101,7 +105,7 @@ class AgencyAssessmentController extends Controller
     public function myPendingBatch(){
         $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',0]])->get();
         return view('agency.agency-pending-batch')->with(compact('agencyBatch'));
-        }
+    }
 
     public function batchAction(Request $request)
     {
@@ -113,8 +117,12 @@ class AgencyAssessmentController extends Controller
             } else {
                 $batchID = $agencyBatch->batch->batch_id;
                 $agencyID = $agencyBatch->agency->aa_id;
+                
                 if ($request->action == 'accept') {
                         
+                    if (!is_null($agencyBatch->reass_id)) {
+                        $agencyBatch->reassessment()->update(['aa_id'=>$this->guard()->user()->id]);
+                    }
                     $agencyBatch->aa_verified=1;
                     $agencyBatch->save();
                     AppHelper::instance()->writeNotification(NULL,'admin','Batch Approved by Agency',"Agency (ID: <span style='color:blue;'>$agencyID</span>) Approved Batch (ID: <span style='color:blue;'>$batchID</span>).");
@@ -135,6 +143,59 @@ class AgencyAssessmentController extends Controller
                 }
                 return redirect()->route('agency.batch');
             }
+        }
+    }
+
+    public function viewAssessmentBatch(Request $request)
+    {
+        if ($data=AppHelper::instance()->decryptThis($request->id)) {
+
+            // * $data will consist of Batch/ReAssessment id and second parameter pointing the tables [1 for Assessment, 2 for ReAssessment]
+            $id = explode(',',$data);
+            $center_candidates = collect();
+
+            if ($id[1]) {
+                $assessment_tag = 'Assessment';
+                $batchData=Batch::findOrFail($id[0]);
+                $assessment_date = $batchData->assessment;
+                
+                foreach ($batchData->candidatesmap as $candidate) {
+                    if ($batchData->batchassessment) {
+                        if ($candidate->centercandidate->candidateMark->attendence==='present') {
+                            $candidate->centercandidate->quilified = $candidate->centercandidate->candidateMark->passed;
+                        } else {
+                            $candidate->centercandidate->quilified = 2;
+                        }
+                    } else {
+                        $candidate->centercandidate->quilified = null;
+                    }
+                    $center_candidates->push($candidate->centercandidate);
+                }
+            } else {
+                
+                $assessment_tag = 'Re-Assessment';
+                $reassessment=Reassessment::findOrFail($id[0]);
+                $assessment_date = $reassessment->assessment;
+                $batchData = $reassessment->batch;
+                foreach ($reassessment->candidates as $candidate) {
+                    if ($candidate->appear) {
+
+                        if ($reassessment->batchreassessment) {
+                            if ($candidate->candidateMark->attendence==='present') {
+                                $candidate->centercandidate->quilified = $candidate->candidateMark->passed;
+                            } else {
+                                $candidate->centercandidate->quilified = 2;
+                            }
+                        } else {
+                            $candidate->centercandidate->quilified = null;
+                        }
+                        $center_candidates->push($candidate->centercandidate);
+                    }
+                }
+                
+            }
+            
+            return view('common.view-batch-assessment')->with(compact('assessment_tag','batchid','center_candidates','assessment_date','batchData'));
         }
     }
     

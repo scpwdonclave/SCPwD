@@ -78,9 +78,9 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label for="center_name">Name of the Training Center</label>
+                                                <label for="center_name">Name of the Training Center <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Training Center Name" value="{{ old('center_name') }}" name="center_name">
+                                                    <input type="text" class="form-control" placeholder="Training Center Name" value="{{ old('center_name') }}" name="center_name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">

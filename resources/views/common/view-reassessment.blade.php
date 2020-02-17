@@ -156,7 +156,7 @@ table.dataTable thead th:first-child {
 
                     @if (Request::segment(1)==='admin')
                         @if (is_null($reassessment->verified))
-                            <form id="reassess_form" action="{{route('admin.reassessment.action')}}" method="post">
+                            <form id="reassess_form" action="{{route('admin.reassessment.accept-reject')}}" method="post">
                                 @csrf
                                 <input type="hidden" name="reassid" value="{{$reassessment->id}}">
                                 <input type="hidden" name="action" value="{{($assessment_button)?'1':'2'}}">

@@ -148,16 +148,21 @@ Route::get('assessment/assessment-view/{id}', 'AdminAuth\AdminAssessmentControll
 Route::get('assessment/assessment-verify/{id}', 'AdminAuth\AdminAssessmentController@assessmentAccept')->name('assessment.verify');
 Route::post('assessment/assessment-reject', 'AdminAuth\AdminAssessmentController@assessmentReject')->name('assessment.reject');
 
-Route::get('assessment/assessment-certi-release/{id}', 'AdminAuth\AdminAssessmentController@certificateRelease')->name('assessment.certificate.release');
+Route::get('assessment/assessment-certi-release/{id}', 'AdminAuth\AdminAssessmentController@certificateRelease')->name('certificate.release');
 Route::post('assessment/assessment-release-reject', 'AdminAuth\AdminAssessmentController@assessmentReleaseReject')->name('assessment.release.reject');
 Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAssessmentController@certificatePrint')->name('assessment.certificate.print');
 
-// For ReAssessment
-Route::get('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@allReAssessment')->name('reassessment.all-reassessment'); 
-Route::get('reassessment/pending-reassessment', 'AdminAuth\AdminReAssessmentController@pendingReAssessment')->name('reassessment.pending-reassessment'); 
 
+// For ReAssessment
+Route::get('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@reassessments')->name('reassessment.reassessments');
 Route::get('reassessment/reassessments/{id}', 'AdminAuth\AdminReAssessmentController@viewReAssessment')->name('reassessment.view');
-Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@actionReAssessment')->name('reassessment.action');
+Route::get('reassessment/reassessment-status', 'AdminAuth\AdminReAssessmentController@reassessmentStatus')->name('reassessment.reassessment-status'); 
+Route::get('reassessment/reassessment-status/{id}', 'AdminAuth\AdminReAssessmentController@reassessmentStatusView')->name('reassessment.reassessment-status.view'); 
+Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@AcceptRejectReAssessment')->name('reassessment.accept-reject');
+Route::get('reassessment/reassessments/{id}/{action}/{reason?}', 'AdminAuth\AdminReAssessmentController@reassessmentMarksAcceptReject')->where('action', 'accept|reject')->name('reassessment.marks.approve-reject');
+Route::get('reassessment/reassessments/certificate/{id}/{action}/{reason?}', 'AdminAuth\AdminReAssessmentController@reassessmentCertificateAcceptReject')->where('action', 'accept|reject')->name('reassessment.certificate.approve-reject');
+
+
 
 Route::get('reassessment/reassessment-verify/{id}', 'AdminAuth\AdminReAssessmentController@reassessmentAccept')->name('reassessment.verify'); 
 Route::post('reassessment/reassessment-reject', 'AdminAuth\AdminReAssessmentController@reassessmentReject')->name('reassessment.reject'); 

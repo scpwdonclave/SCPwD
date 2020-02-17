@@ -64,4 +64,8 @@ class Assessor extends Authenticatable implements Auditable
     public function assessorBatch(){
         return $this->hasMany('App\AssessorBatch', 'as_id');
     }
+
+    public function reassessments(){
+        return $this->hasMany('App\Reassessment', 'as_id');
+    }
 }

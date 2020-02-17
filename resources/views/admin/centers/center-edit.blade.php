@@ -76,7 +76,7 @@
                                             <div class="col-sm-4">
                                                 <label for="center_name">Name of the Training Center</label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Training Center Name" value="{{$center->center_name }}" name="center_name">
+                                                    <input type="text" class="form-control" placeholder="Training Center Name" value="{{$center->center_name }}" name="center_name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">

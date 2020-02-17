@@ -5,6 +5,9 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 {{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
+
+<link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
 <div class="container-fluid">
@@ -422,61 +425,43 @@
 
 <div class="container-fluid">
     <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header">
-                        <h2><strong>Assessor</strong> Assign Batch</h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>Batch ID</th>
-                                        <th>Partner ID</th>
-                                        <th>Center ID</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Assessment Date</th>
-                                        <th>Status</th>
-                                        <th>Scheme Status</th>
-                                        <th>View</th>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        @foreach ($assessorData->assessorBatch as $key=>$item) 
-                                        @if ($item->verified)   
-                                        <tr>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>Assessor</strong> Assign Batch</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Batch ID</th>
+                                    <th>Partner ID</th>
+                                    <th>Center ID</th>
+                                    <th>(Re)Assessment Date</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($assessorData->assessorBatch as $key=>$item) 
+                                    <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{is_null($item->batch->batch_id)?Config::get('constants.nullidtext'):$item->batch->batch_id}}</td>
                                         <td>{{$item->batch->partner->tp_id}}</td>
                                         <td>{{$item->batch->center->tc_id}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
-                                        @if ($item->batch->verified)
-                                        <td style="color:{{($item->batch->status)?'green':'red'}}">{{($item->batch->status)?'Active':'Inactive'}}</td>
-                                        @else
-                                            <td style="color:red">Not Verified</td>
-                                        @endif
-                                            <td style="color:{{($item->batch->tpjobrole->status)?'green':'red'}}">{{($item->batch->tpjobrole->status)?'Active':'Inactive'}}</td>
-                                       
-                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
-                                                                                                           
-                                        </tr>
-                                        @endif
-                                        @endforeach
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
+                                        <td>Working on it</td>
+                                        {{-- <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td> --}}
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 
 

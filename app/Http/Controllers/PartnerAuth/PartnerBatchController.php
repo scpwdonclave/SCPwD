@@ -19,6 +19,7 @@ use App\Reassessment;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
 use App\BatchAssessment;
+use App\BatchReAssessment;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\BatchCenterCandidateMap;
@@ -508,25 +509,32 @@ class PartnerBatchController extends Controller
         
     }
     public function printCertificate($id){
-        $id=$this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        $trigger=0;
-        foreach ($batchAssessment->candidateMarks as  $value) {
-            if($value->passed===1){
-                $trigger=1;
+        
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $batchAssessment=BatchAssessment::findOrFail($id);
+            
+            if ($this->guard()->user()->id == $batchAssessment->batch->tp_id) {
+                $trigger=0;
+                foreach ($batchAssessment->candidateMarks as  $value) {
+                    if($value->passed===1){
+                        $trigger=1;
+                    }
+                }
+        
+                if(!$trigger){
+                    alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
+                    return redirect()->back();
+                }
+                if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
+                    $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
+                    return $pdf->stream($batchAssessment->id.'.pdf');
+                }else{
+                    abort(404);
+                }
+            } else {
+                return abort(403, 'You are Not Authorized for This Action');
             }
-        }
 
-        if($trigger===0){
-
-            alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
-            return Redirect()->back();
-        }
-        if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
-            $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
-            return $pdf->stream($batchAssessment->id.'.pdf');
-        }else{
-            abort(404);
         }
     }
 
@@ -551,6 +559,24 @@ class PartnerBatchController extends Controller
                 return view('common.view-reassessment')->with(compact('reassessment','assessment_button','partner'));
             } else {
                 return abort(403,'You are not authorized to view This');
+            }
+            
+        }
+    }
+
+    public function viewReAssessmentMarks(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $batchReAssessment = BatchReAssessment::findOrFail($id);
+            if ($batchReAssessment->sup_admin_verified=='1') {
+                $partner = $this->guard()->user();
+                if ($batchReAssessment->reassessment->tp_id == $this->guard()->user()->id) {
+                    return view('common.view-reassessment-marks')->with(compact('batchReAssessment','partner'));
+                } else {
+                    return abort(403, 'You are not Authorized for This Action');   
+                }
+            } else {
+                return redirect()->back();
             }
             
         }

@@ -154,11 +154,11 @@
                             @if (Request::segment(1)==='admin')
                                 @if (!Auth::guard('admin')->user()->supadmin)
                                     @if ($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) ) )
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.verify',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Accept</button>
-                                    <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.verify',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
                                     @endif
                                     @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Request Certificate</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Request Certificate</button>
                                     {{-- <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject Release</button> --}}
  
                                     @endif
@@ -169,7 +169,7 @@
                                     @endif
 
                                     @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Release Certificate</button>
+                                    <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Release Certificate</button>
                                     <button class="btn btn-danger" onclick="showPromptMessage('admin',1);">Reject Release</button>
  
                                     @endif

@@ -20,25 +20,32 @@ Route::get('assessors/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@vie
 Route::post('assessors/assessor-batch-remove', 'AgencyAuth\AgencyAssessorController@removeBatch')->name('as.batch-remove'); 
 Route::post('assessors/assessor-api', 'AgencyAuth\AgencyAssessorController@assessorApi')->name('as.assessor.api'); 
 
-Route::get('batches', 'AgencyAuth\AgencyAssessmentController@myBatch')->name('batch'); 
-Route::get('batches/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('bt.batch.view-dtl'); 
-
+Route::get('batches', function () { return redirect(route('agency.batch')); }); 
+Route::get('batches/approved', 'AgencyAuth\AgencyAssessmentController@myBatch')->name('batch'); 
+Route::get('batches/view-batch/{id}', 'AgencyAuth\AgencyAssessmentController@viewAssessmentBatch')->name('batch.view'); 
+// Route::get('batches/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('bt.batch.view-dtl'); 
 Route::get('batches/pending', 'AgencyAuth\AgencyAssessmentController@myPendingBatch')->name('pending-batch');
-Route::get('batches/pending/{id}/{action}/{reason?}', 'AgencyAuth\AgencyAssessmentController@batchAction')->where('action', 'accept|reject')->name('aa.batch.action');
+
+Route::get('pending-batches/{id}/{action}/{reason?}', 'AgencyAuth\AgencyAssessmentController@batchAction')->where('action', 'accept|reject')->name('aa.batch.action');
 // Route::get('batches/pending/{id}', 'AgencyAuth\AgencyAssessmentController@pendingBatchApproved')->name('aa.accept.batch'); 
 // Route::post('batches/pending-reject', 'AgencyAuth\AgencyAssessmentController@pendingBatchReject')->name('aa.reject.batch'); 
 // For Assessment
 Route::get('assessment/pending-assessment', 'AgencyAuth\AgencyAssessmentController@pendingAssessment')->name('assessment.pending-assessment'); 
-Route::get('assessment/all-assessment', 'AgencyAuth\AgencyAssessmentController@allAssessment')->name('assessment.all-assessment'); 
-Route::get('assessment/assessment-view/{id}', 'AgencyAuth\AgencyAssessmentController@viewAssessment')->name('assessment.view'); 
+Route::get('assessments', 'AgencyAuth\AgencyAssessmentController@assessments')->name('assessments'); 
+Route::get('assessments/{id}', 'AgencyAuth\AgencyAssessmentController@viewAssessment')->name('assessment.view'); 
 Route::get('assessment/assessment-verify/{id}', 'AgencyAuth\AgencyAssessmentController@assessmentAccept')->name('assessment.verify'); 
 Route::post('assessment/assessment-reject', 'AgencyAuth\AgencyAssessmentController@assessmentReject')->name('assessment.reject');
 // End For Assessment
 
 // For ReAssessment
 Route::get('reassessment/pending-reassessment', 'AgencyAuth\AgencyReAssessmentController@pendingReAssessment')->name('reassessment.pending-reassessment'); 
-Route::get('reassessment/all-reassessment', 'AgencyAuth\AgencyReAssessmentController@allReAssessment')->name('reassessment.all-reassessment'); 
-Route::get('reassessment/reassessment-view/{id}', 'AgencyAuth\AgencyReAssessmentController@viewReAssessment')->name('reassessment.view'); 
+Route::get('reassessments', 'AgencyAuth\AgencyReAssessmentController@allReAssessment')->name('reassessments'); 
+Route::get('reassessments/{id}', 'AgencyAuth\AgencyReAssessmentController@viewReAssessment')->name('reassessment.view'); 
+
+Route::get('reassessments/{id}/{action}/{reason?}', 'AgencyAuth\AgencyReAssessmentController@reassessmentMarksAcceptReject')->where('action', 'accept|reject')->name('reassessment.marks.approve-reject');
+
+
+
 Route::get('reassessment/reassessment-verify/{id}', 'AgencyAuth\AgencyReAssessmentController@reassessmentAccept')->name('reassessment.verify'); 
 Route::post('reassessment/reassessment-reject', 'AgencyAuth\AgencyReAssessmentController@reassessmentReject')->name('reassessment.reject'); 
 

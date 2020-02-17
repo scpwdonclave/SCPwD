@@ -26,6 +26,7 @@ Route::post('batches/reassessment', 'CenterAuth\CenterBatchController@reassessBa
 
 Route::get('/reassessments', 'CenterAuth\CenterBatchController@reassessments')->name('reassessments');
 Route::get('/reassessments/{id}', 'CenterAuth\CenterBatchController@viewReAssessment')->name('reassessment.view');
+Route::get('/reassessments/marks/{id}', 'CenterAuth\CenterBatchController@viewReAssessmentMarks')->name('reassessment.marks.view');
 
 Route::get('support/complain', 'CenterAuth\CenterSupportController@registerComplain')->name('support.complain'); 
 Route::post('support/complain-register', 'CenterAuth\CenterSupportController@insertRegisterComplain')->name('support.register-complain'); 

@@ -36,19 +36,20 @@
                                         <th>Remarks</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($reassessment->batch->candidatesmap as $item)
+                                <tbody> 
+                                    @foreach ($reassessment->candidates as $reass_candidate)
                                         @php
                                             $i=0;
                                         @endphp
-                                        @if ($item->centercandidate->dropout===0 && $item->centercandidate->candidate->status===1)
+                                        @if ($reass_candidate->appear && $reass_candidate->centercandidate->dropout===0 && $reass_candidate->centercandidate->candidate->status===1)
                                             <tr>
                                                 <td>
-                                                    {{$item->centercandidate->candidate->name}}
-                                                    <input type="hidden" name="candidate_id[]" value="{{$item->centercandidate->id}}"> 
+                                                    {{$reass_candidate->centercandidate->candidate->name}}
+                                                    <input type="hidden" name="candidate_id[]" value="{{$reass_candidate->centercandidate->id}}"> 
+                                                    <input type="hidden" name="reass_candidate_id[]" value="{{$reass_candidate->id}}"> 
                                                 </td>
-                                                <td>{{$item->centercandidate->candidate->dob}}</td>
-                                                <td>{{$item->centercandidate->candidate->gender}}</td>
+                                                <td>{{$reass_candidate->centercandidate->candidate->dob}}</td>
+                                                <td>{{$reass_candidate->centercandidate->candidate->gender}}</td>
                                                 <td>
                                                     <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$i}})">
                                                         <option value="present" >Present</option>

@@ -15,7 +15,8 @@ Route::post('batches/candidate-marks-update', 'AssessorAuth\AssessorBatchControl
 Route::get('batches/assessment-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessment')->name('assessment.view'); 
 Route::get('batches/assessment-edit/{id}', 'AssessorAuth\AssessorBatchController@editAssessment')->name('assessment.edit'); 
 
-Route::get('batches/reassessments', 'AssessorAuth\AssessorBatchController@reAssessments')->name('re-assessments'); 
+Route::get('batches/reassessments', 'AssessorAuth\AssessorBatchController@reAssessments')->name('reassessments'); 
+Route::get('batches/reassessments/{id}', 'AssessorAuth\AssessorBatchController@viewReAssessment')->name('reassessment.view'); 
 Route::get('batches/candidate-re-marks/{id}', 'AssessorAuth\AssessorBatchController@candidateReMarks')->name('as.batch.candidate-re-mark'); 
 Route::post('batches/candidate-re-marks-insert', 'AssessorAuth\AssessorBatchController@candidateReMarksInsert')->name('as.batch.candidate-re-mark-insert'); 
 Route::post('batches/candidate-re-marks-update', 'AssessorAuth\AssessorBatchController@candidateReMarksUpdate')->name('as.batch.candidate-re-mark-update'); 

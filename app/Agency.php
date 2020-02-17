@@ -49,4 +49,8 @@ class Agency extends Authenticatable implements Auditable
     public function agencyBatch(){
         return $this->hasMany('App\AgencyBatch', 'aa_id');
     }
+
+    public function reassessments(){
+        return $this->hasMany('App\Reassessment', 'aa_id');
+    }
 }

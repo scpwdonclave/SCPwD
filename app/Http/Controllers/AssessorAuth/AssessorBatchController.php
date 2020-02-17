@@ -93,11 +93,8 @@ class AssessorBatchController extends Controller
                 $batchAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
             }
 
-            $fmonth=date('F');
-            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-            $batchAssessment->f_month=$fmonth;
-            $batchAssessment->f_year=$fyear;
+            $batchAssessment->f_month=date('F');
+            $batchAssessment->f_year=( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
             
             $batchAssessment->save();
 
@@ -108,13 +105,12 @@ class AssessorBatchController extends Controller
                 $candidatemark->candidate_id=$value;
                 if($request->mark[$key]==null){
                     $candidatemark->mark=0;	 
-                        }else{
+                }else{
                     $candidatemark->mark=$request->mark[$key];	
-                        }	
+                }	
                 $candidatemark->attendence=$request->attendence[$key];
                 if($request->$a==null){
-                    $candidatemark->passed=0;
-    
+                    $candidatemark->passed=0;    
                 }else{
                     $candidatemark->passed=$request->$a;
                 }
@@ -122,7 +118,6 @@ class AssessorBatchController extends Controller
             }
             $batch_no=$batchAssessment->batch->batch_id;
             $assessor = $this->guard()->user()->as_id;
-            $batch_no = $batchAssessment->batch->batch_id;
             AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
 
             alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
@@ -192,11 +187,15 @@ class AssessorBatchController extends Controller
 
     }
 
-    public function viewAssessment($id){
-        $id= $this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-       
-        return view('common.view-assessment')->with(compact('batchAssessment'));
+    public function viewAssessment(Request $request){
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $batchAssessment=BatchAssessment::findOrFail($id);
+            if ($this->guard()->user()->id == $batchAssessment->batch->assessorBatch->as_id) {
+                return view('common.view-assessment')->with(compact('batchAssessment'));
+            } else {
+                return abort(403, 'You are Not Authorized for this Action');
+            }
+        }
     }
 
     public function editAssessment($id){
@@ -214,6 +213,7 @@ class AssessorBatchController extends Controller
 
     public function candidateReMarksInsert(Request $request)
     {
+        
         $batchreassesst = BatchReAssessment::where('bt_reassid', $request->reassid)->first();
         if ($batchreassesst) {
             alert()->info("Records have Already been <span style='font-weight:bold;color:blue'>Submitted</span> for Review", 'Attention')->html()->autoclose(4000);
@@ -230,18 +230,16 @@ class AssessorBatchController extends Controller
                 $batchReAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
             }
 
-            $fmonth=date('F');
-            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-            $batchReAssessment->f_month=$fmonth;
-            $batchReAssessment->f_year=$fyear;
+            $batchReAssessment->f_month=date('F');
+            $batchReAssessment->f_year=( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
             
             $batchReAssessment->save();
 
             foreach ($request->candidate_id as $key => $value) {
-                $a='remark'.($key+1);
+                $a='remark'.$key;
                 $candidateremark=new CandidateReMark;
-                $candidateremark->bt_reassessment_id=$batchReAssessment->id;	
+                $candidateremark->reass_candidate_id=$batchReAssessment->id;	
+                $candidateremark->bt_reassessment_id=$request->reass_candidate_id[$key];	
                 $candidateremark->candidate_id=$value;
                 if($request->mark[$key]==null){
                     $candidateremark->mark=0;	 
@@ -257,10 +255,10 @@ class AssessorBatchController extends Controller
                 }
                 $candidateremark->save();
             }
-            $batch_no=$batchReAssessment->batch->batch_id;
+            $batch_no=$batchReAssessment->reassessment->batch->batch_id;
             $assessor = $this->guard()->user()->as_id;
-            $batch_no = $batchReAssessment->batch->batch_id;
-            AppHelper::instance()->writeNotification($batchReAssessment->batch->agencybatch->aa_id,'agency','Re-Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
+            $batch_no = $batchReAssessment->reassessment->batch->batch_id;
+            AppHelper::instance()->writeNotification($batchReAssessment->reassessment->aa_id,'agency','Re-Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
 
             alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
             return redirect()->route('assessor.batch');
@@ -270,14 +268,26 @@ class AssessorBatchController extends Controller
     public function reAssessments()
     {
         $allreassessments = Reassessment::where('as_id', $this->guard()->user()->id)->get();
-        $reassessment = collect();
+        $reassessments = collect();
         foreach ($allreassessments as $reass) {
             if($reass->batchreassessment){
-                $reassessment->push($reass);
+                $reassessments->push($reass);
             }
         }
-        return view('assessor.reassessments')->with(compact('reassessment'));
+        return view('assessor.reassessment-status')->with(compact('reassessments'));
 
+    }
+
+    public function viewReAssessment(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $batchReAssessment = BatchReAssessment::findOrFail($id);
+            if ($this->guard()->user()->id == $batchReAssessment->reassessment->as_id) {
+                return view('common.view-reassessment-marks')->with(compact('batchReAssessment'));
+            } else {
+                return abort(403, 'You are not Authorized for This Action');
+            }
+        }
     }
 
 }

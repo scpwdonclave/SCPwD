@@ -8,6 +8,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Reassessment extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+
+    protected $fillable = ['aa_id'];
     
     public function candidates()
     {
@@ -27,6 +29,16 @@ class Reassessment extends Model implements Auditable
     public function assessor()
     {
         return $this->belongsTo('App\Assessor', 'as_id');
+    }
+    
+    public function partner()
+    {
+        return $this->belongsTo('App\Partner', 'tp_id');
+    }
+
+    public function center()
+    {
+        return $this->belongsTo('App\Center', 'tc_id');
     }
 
     public function batchreassessment()

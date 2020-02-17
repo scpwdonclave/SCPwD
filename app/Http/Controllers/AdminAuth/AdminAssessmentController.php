@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\AgencyBatch;
-use App\BatchAssessment;
-use App\Notification;
+use DB;
+use PDF;
 use Auth;
 use Crypt;
 use Image;
-use PDF;
-use DB;
+use App\AgencyBatch;
+use App\Notification;
+use App\BatchAssessment;
+use App\BatchReAssessment;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminAssessmentController extends Controller
 {   
@@ -147,125 +149,185 @@ class AdminAssessmentController extends Controller
     }
 
     public function certificateRelease($id){
-        $id= $this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        if(($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2))) || ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)){
-        if(!$this->guard()->user()->supadmin){
-            $batchAssessment->admin_cert_rel=1;
-            $batchAssessment->supadmin_cert_rel=0;
-            $batchAssessment->reject_note=null;
-            $text="<p>Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Request For Released</span> Wait for Super Admin <span style='color:red;font-weight:bold;'>Approval</span>.</p>";
+
+        return 'Working On It';
+
+        if ($data=AppHelper::instance()->decryptThis($id)) {
             
-            /* Notification For Super Admin */
-            $batch_no=$batchAssessment->batch->batch_id;
-            $notification = new Notification;
-            $notification->rel_id =$this->supadmin()->id;
-            $notification->rel_with = 'admin';
-            $notification->title = 'Certificate Release Request';
-            $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) please release certificate";
-            $notification->save();
-            /* End Notification For Super Admin */
-        
-        }else{
-           
-            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-            $cert_format=$batchAssessment->batch->scheme->cert_format;
-            $cert_length=strlen($batchAssessment->batch->scheme->cert_format)+1;
-           
-            foreach ($batchAssessment->candidateMarks as $keys=>$value) {
-                if($value->passed){
-                $data=DB::table('center_candidate_maps')
-                ->select(\DB::raw("SUBSTRING(certi_no,$cert_length,LENGTH(certi_no)-6) as certi_no"),\DB::raw("SUBSTRING(certi_no,-2) as certi_yr"))
-                ->where("certi_no", "LIKE", $cert_format."%")->get();
-               
+            $id = explode(',',$data);
+            
+            if ($id[1]) {
+                // Request for BatchAssessment Model (Assessment)
+                $batchAssessment=BatchAssessment::findOrFail($id[0]);
+                if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2))) {
+                    if ($thsi->guard()->user()->supadmin) {
+                        // Request from Super Admin
+                        $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+                        $cert_format=$batchAssessment->batch->scheme->cert_format;
+                        $cert_length=strlen($batchAssessment->batch->scheme->cert_format)+1;
+
+
+                        foreach ($batchAssessment->candidateMarks as $candidateMark) {
+                            if($candidateMark->passed){
+                                $data=DB::table('center_candidate_maps')
+                                ->select(\DB::raw("SUBSTRING(certi_no,$cert_length,LENGTH(certi_no)-6) as certi_no"),\DB::raw("SUBSTRING(certi_no,-2) as certi_yr"))
+                                ->where("certi_no", "LIKE", $cert_format."%")->get();
+                            
+                                
+                                if (count($data) > 0) {
+                        
+                                    $priceprod = array();
+                                    $priceprod2 = array();
+                                        foreach ($data as $key=>$data) {
+                                            $priceprod[$key]=$data->certi_no;
+                                            if($batchAssessment->batch->scheme->fin_yr){
                 
-                if (count($data) > 0) {
-        
-                    $priceprod = array();
-                    $priceprod2 = array();
-                        foreach ($data as $key=>$data) {
-                            $priceprod[$key]=$data->certi_no;
-                            if($batchAssessment->batch->scheme->fin_yr){
-
-                                $priceprod2[$key]=$data->certi_yr;
+                                                $priceprod2[$key]=$data->certi_yr;
+                                            }
+                                        }
+                                        $lastid= max($priceprod);
+                                        if($batchAssessment->batch->scheme->fin_yr){
+                                        $lastyr= max($priceprod2);
+                                    
+                                        if($lastyr == substr($fyear,-2))
+                                        { 
+                                            $new_certi_id =$cert_format.((int)$lastid +1).'/'.$fyear;
+                                            } else{ 
+                                            $new_certi_id = $cert_format.'1'.'/'.$fyear ;
+                                            }
+                
+                                        }else{
+                
+                                            $new_certi_id =$cert_format.((int)$lastid +1);
+                
+                                        }
+                                
+                                } else {
+                                    if($batchAssessment->batch->scheme->fin_yr){
+                
+                                    $new_certi_id = $cert_format.'1'.'/'.$fyear;
+                                    }else{
+                                    $new_certi_id = $cert_format.'1';
+                
+                                    }
+                                }
+                
+                                $candidateMark->centerCandidate->certi_no=$new_certi_id;
+                                $candidateMark->centerCandidate->save();
+                        
                             }
+            
+                        
                         }
-                        $lastid= max($priceprod);
-                        if($batchAssessment->batch->scheme->fin_yr){
-                        $lastyr= max($priceprod2);
-                       
-                         if($lastyr == substr($fyear,-2))
-                         { 
-                             $new_certi_id =$cert_format.((int)$lastid +1).'/'.$fyear;
-                            } else{ 
-                            $new_certi_id = $cert_format.'1'.'/'.$fyear ;
-                            }
-
-                        }else{
-
-                            $new_certi_id =$cert_format.((int)$lastid +1);
-
-                        }
-                   
-                } else {
-                    if($batchAssessment->batch->scheme->fin_yr){
-
-                    $new_certi_id = $cert_format.'1'.'/'.$fyear;
-                    }else{
-                    $new_certi_id = $cert_format.'1';
-
+                        
+                    } else {
+                        // Request from Admin
+                        
                     }
+                    
                 }
-
-                $value->centerCandidate->certi_no=$new_certi_id;
-                $value->centerCandidate->save();
-               
+                
+            } else {
+                $batchReAssessment=BatchReAssessment::findOrFail($id[0]);
+                
+                if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && (($batchReAssessment->admin_cert_rel==0 && $batchReAssessment->supadmin_cert_rel==0) ||($batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==2))) {
+                    return 'Re Assessment valid';
+                    
                 }
-
-               
+                // Request for BatchReAssessment Model (ReAssessment)
             }
-            //$batchAssessment->candidateMarks
-            $batchAssessment->supadmin_cert_rel=1;
-            $batchAssessment->reject_note=null;
-            $text="Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.";
+            
+            return 'Working On It';
+            
 
-             /* Notification For Admin */
-             $batch_no=$batchAssessment->batch->batch_id;
-             $notification = new Notification;
-             $notification->rel_with = 'admin';
-             $notification->title = 'Certificate Released';
-             $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>";
-             $notification->save();
-             /* End Notification For Admin */
 
-             /* Notification For Agency */
-             $batch_no=$batchAssessment->batch->batch_id;
-             $notification = new Notification;
-             $notification->rel_id = $batchAssessment->batch->agencybatch->aa_id;
-             $notification->rel_with = 'agency';
-             $notification->title = 'Certificate Released';
-             $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>";
-             $notification->save();
-             /* End Notification For Agency */
+            if(($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2))) || ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)){
+                if(!$this->guard()->user()->supadmin){
+                    $batchAssessment->admin_cert_rel=1;
+                    $batchAssessment->supadmin_cert_rel=0;
+                    $batchAssessment->reject_note=null;
+                    $text="<p>Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Request For Released</span> Wait for Super Admin <span style='color:red;font-weight:bold;'>Approval</span>.</p>";
 
-             /* Notification For Assessor */
-             $batch_no=$batchAssessment->batch->batch_id;
-             $notification = new Notification;
-             $notification->rel_id = $batchAssessment->batch->assessorbatch->as_id;
-             $notification->rel_with = 'assessor';
-             $notification->title = 'Certificate Released';
-             $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>";
-             $notification->save();
-             /* End Notification For Assessor */
-
+                    $batch_no=$batchAssessment->batch->batch_id;
+                    AppHelper::instance()->writeNotification($this->supadmin()->id,'admin','Requested for Certificate',"Batch (ID: <span style='color:blue;'>$batch_no</span>) please release certificate.");            
+                }else{
+                
+                    $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+                    $cert_format=$batchAssessment->batch->scheme->cert_format;
+                    $cert_length=strlen($batchAssessment->batch->scheme->cert_format)+1;
+                
+                    foreach ($batchAssessment->candidateMarks as $keys=>$value) {
+                        if($value->passed){
+                        $data=DB::table('center_candidate_maps')
+                        ->select(\DB::raw("SUBSTRING(certi_no,$cert_length,LENGTH(certi_no)-6) as certi_no"),\DB::raw("SUBSTRING(certi_no,-2) as certi_yr"))
+                        ->where("certi_no", "LIKE", $cert_format."%")->get();
+                    
+                        
+                        if (count($data) > 0) {
+                
+                            $priceprod = array();
+                            $priceprod2 = array();
+                                foreach ($data as $key=>$data) {
+                                    $priceprod[$key]=$data->certi_no;
+                                    if($batchAssessment->batch->scheme->fin_yr){
+        
+                                        $priceprod2[$key]=$data->certi_yr;
+                                    }
+                                }
+                                $lastid= max($priceprod);
+                                if($batchAssessment->batch->scheme->fin_yr){
+                                $lastyr= max($priceprod2);
+                            
+                                if($lastyr == substr($fyear,-2))
+                                { 
+                                    $new_certi_id =$cert_format.((int)$lastid +1).'/'.$fyear;
+                                    } else{ 
+                                    $new_certi_id = $cert_format.'1'.'/'.$fyear ;
+                                    }
+        
+                                }else{
+        
+                                    $new_certi_id =$cert_format.((int)$lastid +1);
+        
+                                }
+                        
+                        } else {
+                            if($batchAssessment->batch->scheme->fin_yr){
+        
+                            $new_certi_id = $cert_format.'1'.'/'.$fyear;
+                            }else{
+                            $new_certi_id = $cert_format.'1';
+        
+                            }
+                        }
+        
+                        $value->centerCandidate->certi_no=$new_certi_id;
+                        $value->centerCandidate->save();
+                    
+                        }
+        
+                    
+                    }
+                    //$batchAssessment->candidateMarks
+                    $batchAssessment->supadmin_cert_rel=1;
+                    $batchAssessment->reject_note=null;
+                    $text="Assessment Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.";
+                    
+                    $batch_no=$batchAssessment->batch->batch_id;
+                    AppHelper::instance()->writeNotification(NULL,'admin','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.");
+                    AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.");
+                    AppHelper::instance()->writeNotification($batchAssessment->batch->assessorbatch->as_id,'assessor','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.");
+        
+                }
+                $batchAssessment->save();
+        
+                alert()->success($text, 'Job Done')->html()->autoclose(3000);
+                return Redirect()->back();
+            }else{
+                abort(404);
+            }
         }
-        $batchAssessment->save();
 
-        alert()->success($text, 'Job Done')->html()->autoclose(3000);
-        return Redirect()->back();
-        }else{
-            abort(404);
-        }
     }
 
     public function assessmentReleaseReject(Request $request){

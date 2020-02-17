@@ -39,51 +39,51 @@
                                 <tbody>
                                     @foreach ($agencyBatch as $key=>$item) 
                                    
-                                    @if(!is_null($item->batch->batchassessment))
-                                    <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$item->batch->batch_id}}</td>
-                                    <td>{{$item->agency->aa_id}}</td>
-                                    <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
-                                    {{-- <td>{{$item->batch->batch_start}}</td>
-                                    <td>{{$item->batch->batch_end}}</td> --}}
-                                    <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                    @if(!is_null($item->batch->batchassessment) && is_null($item->reass_id))
+                                        <tr>
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$item->batch->batch_id}}</td>
+                                            <td>{{$item->agency->aa_id}}</td>
+                                            <td>{{$item->batch->assessorbatch->assessor->as_id}}</td>
+                                            {{-- <td>{{$item->batch->batch_start}}</td>
+                                            <td>{{$item->batch->batch_end}}</td> --}}
+                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
 
-                                    @if ($item->batch->batchassessment->aa_verified==0)
-                                    <td class="text-muted"><strong>Pending</strong></td>
-                                    @elseif ($item->batch->batchassessment->aa_verified==1)
-                                    <td class="text-success"><strong>Approved</strong></td>
-                                    @else
-                                    <td class="text-danger"><strong>Rejected</strong></td>
-                                    @endif
+                                            @if ($item->batch->batchassessment->aa_verified==0)
+                                            <td class="text-muted"><strong>Pending</strong></td>
+                                            @elseif ($item->batch->batchassessment->aa_verified==1)
+                                            <td class="text-success"><strong>Approved</strong></td>
+                                            @else
+                                            <td class="text-danger"><strong>Rejected</strong></td>
+                                            @endif
 
-                                    @if ($item->batch->batchassessment->admin_verified==0)
-                                    <td class="text-muted"><strong>Pending</strong></td>
-                                    @elseif ($item->batch->batchassessment->admin_verified==1)
-                                    <td class="text-success"><strong>Approved</strong></td>
-                                    @else
-                                    <td class="text-danger"><strong>Rejected</strong></td>
-                                    @endif
+                                            @if ($item->batch->batchassessment->admin_verified==0)
+                                            <td class="text-muted"><strong>Pending</strong></td>
+                                            @elseif ($item->batch->batchassessment->admin_verified==1)
+                                            <td class="text-success"><strong>Approved</strong></td>
+                                            @else
+                                            <td class="text-danger"><strong>Rejected</strong></td>
+                                            @endif
 
-                                    @if ($item->batch->batchassessment->sup_admin_verified==0)
-                                    <td class="text-muted"><strong>Pending</strong></td>
-                                    @elseif ($item->batch->batchassessment->sup_admin_verified==1)
-                                    <td class="text-success"><strong>Approved</strong></td>
-                                    @else
-                                    <td class="text-danger"><strong>Rejected</strong></td>
-                                    @endif
+                                            @if ($item->batch->batchassessment->sup_admin_verified==0)
+                                            <td class="text-muted"><strong>Pending</strong></td>
+                                            @elseif ($item->batch->batchassessment->sup_admin_verified==1)
+                                            <td class="text-success"><strong>Approved</strong></td>
+                                            @else
+                                            <td class="text-danger"><strong>Rejected</strong></td>
+                                            @endif
 
-                                    @if ($item->batch->batchassessment->admin_cert_rel==1 && $item->batch->batchassessment->supadmin_cert_rel==1)
-                                    <td class="text-success"><strong>Released</strong></td>
-                                    @else
-                                    <td class="text-danger"><strong>Not Released</strong></td>
+                                            @if ($item->batch->batchassessment->admin_cert_rel==1 && $item->batch->batchassessment->supadmin_cert_rel==1)
+                                            <td class="text-success"><strong>Released</strong></td>
+                                            @else
+                                            <td class="text-danger"><strong>Not Released</strong></td>
 
-                                    @endif
+                                            @endif
 
-                                    <td><a class="badge bg-green margin-0" href="{{route('admin.assessment.view',['id'=>Crypt::encrypt($item->batch->batchassessment->id)])}}" >View</a></td>
-                                    </tr>
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.assessment.view',['id'=>Crypt::encrypt($item->batch->batchassessment->id)])}}" >View</a></td>
+                                        </tr>
                                    
-                                 @endif
+                                    @endif
                                    @endforeach
                                        
                                     </tbody>

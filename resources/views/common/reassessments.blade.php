@@ -87,18 +87,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @can('partner-has-jobrole', Auth::shouldUse('partner'))
-                            <div class="text-muted">
-                                {!!Config::get('constants.note')!!}
-                            </div>
-                        @endcan
-                        <div class="text-center">
-                            @if (Request::segment(1)==='partner')
-                                @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
-                                    <h6>You Can Add New Batches Once Admin Assign you Job Roles</h6>
-                                @endcannot
-                            @endif
-                        </div>
                     </div>
                 </div>
             </div>
@@ -127,6 +115,9 @@
                                     <th>Verified by SCPwD</th>
                                     <th>Re-Assessment Status</th>
                                     <th>View</th>
+                                    @if (Request::segment(1)!='admin')
+                                        <th>Result</th>
+                                    @endif
                                 </tr>
                                
                             </thead>
@@ -186,23 +177,22 @@
                                                 <td>Not Applicable</td>   
                                             @endif
                                             <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.reassessment.view',Crypt::encrypt($reassessment->id))}}">View</a></td>
+                                            @if (Request::segment(1)!='admin')
+                                                @if ($reassessment->batchreassessment)
+                                                    @if ($reassessment->batchreassessment->sup_admin_verified=='1')
+                                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.reassessment.marks.view',Crypt::encrypt($reassessment->batchreassessment->id))}}">View</a></td>
+                                                    @else
+                                                        <td><a class="badge bg-grey margin-0" href='javascript:void(0);' onclick="return false;">View</a></td>
+                                                    @endif
+                                                @else
+                                                    <td>NA</td>
+                                                @endif
+                                            @endif
                                         </tr>
                                     @endif
                                 @endforeach
                             </tbody>
                         </table>
-                        @can('partner-has-jobrole', Auth::shouldUse('partner'))
-                            <div class="text-muted">
-                                {!!Config::get('constants.note')!!}
-                            </div>
-                        @endcan
-                        <div class="text-center">
-                            @if (Request::segment(1)==='partner')
-                                @cannot('partner-has-jobrole', Auth::shouldUse('partner'))
-                                    <h6>You Can Add New Batches Once Admin Assign you Job Roles</h6>
-                                @endcannot
-                            @endif
-                        </div>
                     </div>
                 </div>
             </div>
