@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\PartnerAuth;
 
-use Illuminate\Contracts\Encryption\DecryptException;
-use App\Http\Requests\TPFormValidation;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Gate;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
+use Auth;
+use Alert;
+use Crypt;
+use App\Holiday;
+use App\Partner;
+use App\Placement;
+use Carbon\Carbon;
+use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
-use App\Notification;
-use Carbon\Carbon;
+use App\Helpers\AppHelper;
 use Carbon\CarbonInterval;
-use App\Partner;
-use App\Holiday;
-use Crypt;
-use Alert;
-use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\TPFormValidation;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PartnerHomeController extends Controller
 {
@@ -251,6 +253,27 @@ class PartnerHomeController extends Controller
                 return response()->json(['success' => false], 200);
             } else {
                 return response()->json(['success' => true], 200);
+            }
+        }
+    }
+
+
+    public function placements()
+    {
+        $placements = Placement::where('tp_id', $this->guard()->user()->id)->get();
+        $partner = $this->guard()->user();
+        return view('common.placements')->with(compact('placements','partner'));
+    }
+
+    public function viewPlacement(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $placement = Placement::findOrFail($id);
+            if ($placement->tp_id == $this->guard()->user()->id) {
+                $partner = $this->guard()->user();
+                return view('common.view-placement')->with(compact('placement','partner'));
+            } else {
+                return abort(403,'You are Not Authorized for this Action');
             }
         }
     }

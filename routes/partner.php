@@ -48,6 +48,11 @@ Route::get('/reassessments/{id}', 'PartnerAuth\PartnerBatchController@viewReAsse
 Route::get('/reassessments/marks/{id}', 'PartnerAuth\PartnerBatchController@viewReAssessmentMarks')->name('reassessment.marks.view');
 
 
+// For Placements
+Route::get('placements', 'PartnerAuth\PartnerHomeController@placements')->name('placements');
+Route::get('placements/view/{id}', 'PartnerAuth\PartnerHomeController@viewPlacement')->name('placement.view');
+Route::get('placements/files/{id}/{file}', 'PartnerAuth\FileController@placementFile')->name('placement.file');
+
 Route::get('support/complain', 'PartnerAuth\PartnerSupportController@registerComplain')->name('support.complain'); 
 Route::post('support/complain-register', 'PartnerAuth\PartnerSupportController@insertRegisterComplain')->name('support.register-complain'); 
 Route::get('support/my-complain', 'PartnerAuth\PartnerSupportController@myComplain')->name('support.my-complain'); 

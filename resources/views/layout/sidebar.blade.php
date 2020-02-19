@@ -198,6 +198,10 @@
             
             @endif
 
+            @if (Request::segment(1) === 'admin' || Request::segment(1) === 'partner' || Request::segment(1) === 'center')
+                <li class="{{ Request::segment(2)==='placements' ? 'active open' : null }}"><a href="{{route(Request::segment(1).'.placements')}}"><i class="zmdi zmdi-male-female"></i><span>Placements</span></a></li>
+            @endif
+
             @if (Request::segment(1) === 'admin')
             <li class="{{ Request::segment(2) === 'support' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Support</span></a>

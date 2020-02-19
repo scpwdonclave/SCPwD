@@ -162,6 +162,10 @@ Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController
 Route::get('reassessment/reassessments/{id}/{action}/{reason?}', 'AdminAuth\AdminReAssessmentController@reassessmentMarksAcceptReject')->where('action', 'accept|reject')->name('reassessment.marks.approve-reject');
 Route::get('reassessment/reassessments/certificate/{id}/{action}/{reason?}', 'AdminAuth\AdminReAssessmentController@reassessmentCertificateAcceptReject')->where('action', 'accept|reject')->name('reassessment.certificate.approve-reject');
 
+// For Placements
+Route::get('placements', 'AdminAuth\AdminHomeController@placements')->name('placements');
+Route::get('placements/view/{id}', 'AdminAuth\AdminHomeController@viewPlacement')->name('placement.view');
+Route::get('placements/files/{id}/{file}', 'AdminAuth\FileController@placementFile')->name('placement.file');
 
 
 Route::get('reassessment/reassessment-verify/{id}', 'AdminAuth\AdminReAssessmentController@reassessmentAccept')->name('reassessment.verify'); 

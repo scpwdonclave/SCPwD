@@ -7,6 +7,7 @@ use Auth;
 use Crypt;
 use App\Reason;
 use App\Candidate;
+use App\Placement;
 use Carbon\Carbon;
 use App\Notification;
 use App\CenterJobRole;
@@ -424,5 +425,65 @@ class CenterHomeController extends Controller
         } else {
             return response()->json(['success' => false, 'message' => 'Something went Wrong, Try Again'], 400);
         }
+    }
+
+
+    public function placements()
+    {
+        $placements = Placement::where('tc_id', $this->guard()->user()->id)->get();
+        return view('common.placements')->with(compact('placements'));
+    }
+
+    public function viewPlacement(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $placement = Placement::findOrFail($id);
+            if ($placement->tc_id == $this->guard()->user()->id) {
+                return view('common.view-placement')->with(compact('placement'));
+            } else {
+                return abort(403,'You are Not Authorized for this Action');
+            }
+        }
+    }
+
+    public function addPlacement()
+    {
+        $center_candidates = CenterCandidateMap::where([['tc_id',$this->guard()->user()->id],['passed',1]])->get();
+
+        return view('center.addplacement')->with(compact('center_candidates'));
+    }
+
+    public function submitPlacement(Request $request)
+    {
+        $request->validate([
+            'candidate'=>'required|numeric',
+            'placed_in'=>'required',
+            'placed_on'=>'required',
+            'offer_letter'=>'required|file',
+            'appointment_letter'=>'nullable|file',
+            'payslip'=>'nullable|array|min:3|max:3',
+            'payslip.*' => 'distinct|file|mimes:jpeg,jpg,png,pdf'
+        ]);
+
+        $placement = new Placement;
+        $placement->tp_id = $this->guard()->user()->tp_id;
+        $placement->tc_id = $this->guard()->user()->id;
+        $placement->ccd_id = $request->candidate;
+        $placement->placed_in = $request->placed_in;
+        $placement->placed_on = $request->placed_on;
+        $placement->offer_letter = Storage::disk('myDisk')->put('/placement', $request->offer_letter);
+        if ($request->has('appointment_letter')) {
+            $placement->appointment_letter = Storage::disk('myDisk')->put('/placement', $request->appointment_letter);
+        }
+
+        if ($request->has('payslip')) {
+            $placement->payslip1 = Storage::disk('myDisk')->put('/placement', $request->payslip[0]);
+            $placement->payslip2 = Storage::disk('myDisk')->put('/placement', $request->payslip[1]);
+            $placement->payslip3 = Storage::disk('myDisk')->put('/placement', $request->payslip[2]);
+        }
+        $placement->save();
+        
+        alert()->success("A New Placement Record has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->html()->autoclose(4000);
+        return redirect()->back();
     }
 }

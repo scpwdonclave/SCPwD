@@ -5,20 +5,21 @@ namespace App\Http\Controllers\AdminAuth;
 use DB;
 use Crypt;
 use App\Agency;
-use App\Assessor;
 use App\Center;
 use App\Scheme;
 use App\Sector;
 use App\Holiday;
 use App\JobRole;
 use App\Partner;
+use App\Assessor;
 use App\Candidate;
+use App\Placement;
 use Carbon\Carbon;
 use App\Department;
 use App\Expository;
 use App\CandidateMark;
-use App\BatchAssessment;
 use App\TrainerStatus;
+use App\BatchAssessment;
 use App\JobQualification;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
@@ -318,6 +319,21 @@ class AdminHomeController extends Controller
             $data->delete();
             return response()->json(['status' => 'done'],200);
 
+        }
+    }
+
+    public function placements()
+    {
+        $placements = Placement::all();
+        return view('common.placements')->with(compact('placements'));
+    }
+
+    public function viewPlacement(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $placement = Placement::findOrFail($id);
+            // return $placement->centercandidate->candidate->cd_id;
+            return view('common.view-placement')->with(compact('placement'));
         }
     }
 }
