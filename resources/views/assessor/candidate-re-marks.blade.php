@@ -37,12 +37,15 @@
                                     </tr>
                                 </thead>
                                 <tbody> 
-                                    @foreach ($reassessment->candidates as $reass_candidate)
                                         @php
                                             $i=0;
                                         @endphp
+                                    @foreach ($reassessment->candidates as $reass_candidate)
                                         @if ($reass_candidate->appear && $reass_candidate->centercandidate->dropout===0 && $reass_candidate->centercandidate->candidate->status===1)
-                                            <tr>
+                                        @php
+                                        $i++;    
+                                        @endphp    
+                                        <tr>
                                                 <td>
                                                     {{$reass_candidate->centercandidate->candidate->name}}
                                                     <input type="hidden" name="candidate_id[]" value="{{$reass_candidate->centercandidate->id}}"> 

@@ -86,7 +86,7 @@ class AssessorBatchController extends Controller
             $batchAssessment->bt_id	=$request->bt_id;
     
             if($request->hasFile('attendence_doc')){
-                $request->batch->getClientOriginalExtension();
+               
                 $batchAssessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
             }	
             if($request->hasFile('marksheet_doc')){
@@ -103,13 +103,13 @@ class AssessorBatchController extends Controller
                 $candidatemark=new CandidateMark;
                 $candidatemark->bt_assessment_id=$batchAssessment->id;	
                 $candidatemark->candidate_id=$value;
-                if($request->mark[$key]==null){
+                if($request->mark[$key]===null){
                     $candidatemark->mark=0;	 
                 }else{
                     $candidatemark->mark=$request->mark[$key];	
                 }	
                 $candidatemark->attendence=$request->attendence[$key];
-                if($request->$a==null){
+                if($request->$a===null){
                     $candidatemark->passed=0;    
                 }else{
                     $candidatemark->passed=$request->$a;
@@ -139,14 +139,14 @@ class AssessorBatchController extends Controller
 
              foreach ($batchAssessment->candidateMarks as $key => $candidatemark) {
                 $a='remark'.($key+1);
-                if($request->mark[$key]==null){
+                if($request->mark[$key]===null){
                     $candidatemark->mark=0;	
                         }else{
                     $candidatemark->mark=$request->mark[$key];	
                         }
                	//$candidatemark->mark=$request->mark[$key];	
                 $candidatemark->attendence=$request->attendence[$key];
-                if($request->$a==null){
+                if($request->$a===null){
                     $candidatemark->passed=0;
     
                 }else{
@@ -213,7 +213,7 @@ class AssessorBatchController extends Controller
 
     public function candidateReMarksInsert(Request $request)
     {
-        
+       
         $batchreassesst = BatchReAssessment::where('bt_reassid', $request->reassid)->first();
         if ($batchreassesst) {
             alert()->info("Records have Already been <span style='font-weight:bold;color:blue'>Submitted</span> for Review", 'Attention')->html()->autoclose(4000);
@@ -236,7 +236,7 @@ class AssessorBatchController extends Controller
             $batchReAssessment->save();
 
             foreach ($request->candidate_id as $key => $value) {
-                $a='remark'.$key;
+                $a='remark'.($key+1);
                 $candidateremark=new CandidateReMark;
                 $candidateremark->reass_candidate_id=$request->reass_candidate_id[$key];
                 $candidateremark->bt_reassessment_id=$batchReAssessment->id;
@@ -247,7 +247,7 @@ class AssessorBatchController extends Controller
                     $candidateremark->mark=$request->mark[$key];	
                         }	
                 $candidateremark->attendence=$request->attendence[$key];
-                if($request->$a==null){
+                if($request->$a===null){
                     $candidateremark->passed=0;
     
                 }else{
