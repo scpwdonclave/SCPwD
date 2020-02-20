@@ -138,8 +138,8 @@ class CenterBatchController extends Controller
             
             if ($this->batchHasFailedorAbsentCandidate($batch) && $this->guard()->user()->id == $batch->tc_id) {
                 if ($batch->batchreassessmentlatest) {
-                    if ($batch->batchreassessment->count() == '2') {
-                        alert()->info("You Have Requested <span style='color:red;font-weight:bold'>Maximum</span> No of Re-Assessment for This Batch.", 'Attention')->html()->autoclose(4000);
+                    if ($batch->batchreassessments->count() == '2') {
+                        alert()->info("You Have Reached <span style='color:red;font-weight:bold'>Maximum</span> No of Re-Assessment a Batch can <span style='color:blue;font-weight:bold'>Request</span> for.", 'Attention')->html()->autoclose(5000);
                         return redirect()->back();
                     } else {
                         foreach ($batch->candidatesmap as $batchCandidate) {
@@ -152,6 +152,7 @@ class CenterBatchController extends Controller
                                 $batchCandidate->centercandidate->disability->e_expository;
                                 $batchCandidate->centercandidate->passed;
                                 $batchCandidate->centercandidate->view = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
+                                $batchCandidate->centercandidate->data = $id;
                                 $candidateArray->push($batchCandidate->centercandidate);
                             }
                         }

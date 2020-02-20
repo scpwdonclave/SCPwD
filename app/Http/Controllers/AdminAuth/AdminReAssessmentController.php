@@ -82,7 +82,8 @@ class AdminReAssessmentController extends Controller
     
     public function AcceptRejectReAssessment(Request $request)
     {
-        // dd($request->action);
+        // * $request->action => [1: There's atleast a single Candidate will give Exam, 2: No Candidates are giving Exam]
+
         $request->validate([
             'reassid' => 'required',
             'action' => 'required',
@@ -102,6 +103,9 @@ class AdminReAssessmentController extends Controller
                             'aa_verified' => 0,
                             'reass_id' => $reassessment->id,
                         ]);
+
+                        $reassessment->verified=0;
+                    break;
                 
                 case '2':
                         foreach ($reassessment->candidates as $candidate) {
@@ -111,10 +115,10 @@ class AdminReAssessmentController extends Controller
                                 $centerCandidate->save();
                             }
                         }
+                        
                         $reassessment->verified=1;
                     break;
                 default:
-                    $reassessment->verified=0;
                     break;
             }
 
@@ -142,77 +146,6 @@ class AdminReAssessmentController extends Controller
     }
 
     // * End Function to Approve or Reject Centers ReAssessment Requets
-    
 
-
-
-    public function reassessmentAccept(Request $request)
-    {
-        return 'Coming Soon';
-    }
-    public function reassessmentReject(Request $request)
-    {
-        return 'Coming Soon';
-    }
-
-    public function reassessmentMarksAcceptReject(Request $request)
-    {
-
-        if ($id=AppHelper::instance()->decryptThis($request->id)) {
-            $batchreassessment = BatchReAssessment::findOrFail($id);
-            if (($batchreassessment->admin_verified==0 || ($batchreassessment->admin_verified==2 && $batchreassessment->recheck==1)) || ($batchreassessment->sup_admin_verified==0 || ($batchreassessment->sup_admin_verified==2 && $batchreassessment->recheck==1))) {
-                $batch_no=$batchreassessment->batch->batch_id;
-                switch ($request->action) {
-                    case 'accept':
-                            if ($this->guard()->user()->supadmin) {
-                                $batchreassessment->sup_admin_verified=1;
-
-                                foreach ($batchreassessment->candidateMarks as $candidate_mark) {
-                                    $each_candidate= $candidate_mark->centerCandidate;
-                                    if($candidate_mark->attendence==='present'){
-                                        $each_candidate->passed=$candidate_mark->passed;
-                                    }else{
-                                        $each_candidate->passed=2;
-                                    }
-                                    $each_candidate->save();
-                                }
-                                
-                                AppHelper::instance()->writeNotification(NULL,'admin','Request for Certificate',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment Approved by Super Admin,Please request for certificate release");
-                                
-                            } else {
-
-                                $batchreassessment->admin_verified=1;
-                                AppHelper::instance()->writeNotification(NULL,'admin','Assessment Approved by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment Approved by Admin");
-                            }
-                            $batchreassessment->recheck=0;
-                            $batchreassessment->reject_note=null;
-                            $batchreassessment->save();
-                            alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
-                        break;
-                    case 'reject':
-                            if ($this->guard()->user()->supadmin) {
-                                $batchreassessment->sup_admin_verified=2;
-                                AppHelper::instance()->writeNotification($batchAssessment->batch->assessorbatch->as_id,'assessor','Re-Assessment Rejected by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment Rejected by Super Admin");
-                            } else {
-                                $batchreassessment->admin_verified=2;
-                                AppHelper::instance()->writeNotification($batchAssessment->batch->assessorbatch->as_id,'assessor','Re-Assessment Rejected by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment Rejected by Admin");
-                            }
-                            $batchreassessment->reject_note=$request->reason;
-                            $batchreassessment->save();
-                        break;
-                    
-                    default:
-                        break;
-                }
-            }
-            return redirect()->back();
-        }
-    }
-
-
-    public function reassessmentCertificateAcceptReject(Request $request)
-    {
-        dd($request);
-    }
     
 }

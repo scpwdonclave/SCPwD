@@ -4,7 +4,6 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('content')
 <div class="container-fluid">
@@ -26,72 +25,57 @@
                     </div>
                     @endif
                     <ul class="cbp_tmtimeline">
-                            <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Assessment Details </span></time> 
-                                    <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-collection-text"></i></div>
-                                    <div class="cbp_tmlabel">
-                                            <div class="table-responsive">
-                                                    <table class="table m-b-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Candidate Name</th>
-                                                                <th>DOB</th>
-                                                                <th>Gender</th>
-                                                                <th>Attendence</th>
-                                                                <th>Mark</th>
-                                                                <th>Remarks</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @php
-                                                                $i=0;
-                                                            @endphp
-                                                            @foreach ($batchAssessment->candidateMarks as $item) 
-                                                            <tr>
-                                                               @php
-                                                                    $i++;
-                                                                @endphp
-                                                                <td>{{$i}}</td>
-                                                                <td>{{$item->centerCandidate->candidate->name}}</td>
-                                                                <td>{{$item->centerCandidate->candidate->dob}}</td>
-                                                                <td>{{$item->centerCandidate->candidate->gender}}</td>
-                                                                <td>{{$item->attendence}}</td>
-                                                                <td>{{$item->mark}}</td>
-                                                                @if ($item->attendence==='present' && $item->passed)
-                                                                 <td class="text-success"><strong>Passed</strong></td> 
-                                                                @elseif ($item->attendence==='present' && !$item->passed)  
-                                                                 <td class="text-danger"><strong>Failed</strong></td> 
-                                                                @elseif ($item->attendence==='absent' && !$item->passed)  
-                                                                 <td class="text-danger"><strong>Absent</strong></td> 
-                                                                 
-                                                                @endif
-
-                                                                {{-- <td class="text-{{($item->passed)?'success':'danger'}}"><strong>{{($item->passed)?'Passed':'Failed'}}</strong></td> --}}
-
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                        </div>
-                                </li>
+                        <li>
+                            <time class="cbp_tmtime"><span>Assessment Details </span></time> 
+                            <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-collection-text"></i></div>
+                            <div class="cbp_tmlabel">
+                                <div class="table-responsive">
+                                    <table class="table m-b-0">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Candidate Name</th>
+                                                <th>DOB</th>
+                                                <th>Gender</th>
+                                                <th>Attendence</th>
+                                                <th>Mark</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $i=0;
+                                            @endphp
+                                            @foreach ($batchAssessment->candidateMarks as $item) 
+                                                <tr>
+                                                    @php
+                                                        $i++;
+                                                    @endphp
+                                                    <td>{{$i}}</td>
+                                                    <td>{{$item->centerCandidate->candidate->name}}</td>
+                                                    <td>{{$item->centerCandidate->candidate->dob}}</td>
+                                                    <td>{{$item->centerCandidate->candidate->gender}}</td>
+                                                    <td>{{$item->attendence}}</td>
+                                                    <td>{{$item->mark}}</td>
+                                                    @if ($item->attendence==='present' && $item->passed)
+                                                        <td class="text-success"><strong>Passed</strong></td> 
+                                                    @elseif ($item->attendence==='present' && !$item->passed)  
+                                                        <td class="text-danger"><strong>Failed</strong></td> 
+                                                    @elseif ($item->attendence==='absent' && !$item->passed)  
+                                                        <td class="text-danger"><strong>Absent</strong></td> 
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
                         <li>
                             <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Document Details</span></time>
                             <div class="cbp_tmicon bg-red"> <i class="zmdi zmdi-xbox"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
-                                    {{-- <div class="col-sm-4">
-                                        <small class="text-muted">Education Attaind</small>
-                                        <p>{{$batchAssessment->education}}</p>
-                                        <hr>
-                                    </div>
-                                
-                                    <div class="col-sm-4">
-                                        <small class="text-muted">Details of Education</small>
-                                        <p>{{$batchAssessment->edu_details}}</p>
-                                        <hr>
-                                    </div> --}}
                                     <div class="col-sm-6">
                                         <small class="text-muted">Attendence Document</small>
                                         @if (!is_null($batchAssessment->attendence_sheet))
@@ -121,102 +105,63 @@
                             </div>
                         </li>
                     </ul>
-                    @auth('assessor')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='assessor')
-                               
+
+                    <div class="text-center">
+                        @switch(Request::segment(1))
+                            @case('assessor')
                                     @if ($batchAssessment->aa_verified==2 || $batchAssessment->admin_verified==2 || $batchAssessment->sup_admin_verified==2)
-                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
-                                        {{-- <button class="btn btn-danger" onclick="showPromptMessage();">Reject</button> --}}
-                                    {{-- @elseif ( $batchAssessment->verified==1)
-                                        <button class="btn" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($batchAssessment->id) ])}}'">Edit</button>                          --}}
+                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',Crypt::encrypt($batchAssessment->id))}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                                     @endif
-                                
-                            @endif
-                        </div>
-                    @endauth
-                    @auth('agency')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='agency')
-                               
+                                @break
+                            @case('agency')
                                     @if ($batchAssessment->aa_verified==0 || ($batchAssessment->aa_verified==2 && $batchAssessment->recheck==1))
-                                        <button class="btn btn-success" onclick="location.href='{{route('agency.assessment.verify',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('agency.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
                                         <button class="btn btn-danger" onclick="showPromptMessage('agency');">Reject</button>
-                                    {{-- @elseif ( $batchAssessment->verified==1)
-                                        <button class="btn" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($batchAssessment->id) ])}}'">Edit</button>                          --}}
                                     @endif
-                                
-                            @endif
-                        </div>
-                    @endauth
-                    @auth('admin')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
-                                @if (!Auth::guard('admin')->user()->supadmin)
-                                    @if ($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) ) )
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.verify',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
-                                    @endif
-                                    @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Request Certificate</button>
-                                    {{-- <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject Release</button> --}}
- 
-                                    @endif
-                                @elseif(Auth::guard('admin')->user()->supadmin)
-                                    @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && ($batchAssessment->sup_admin_verified==0 || ($batchAssessment->sup_admin_verified==2 && $batchAssessment->recheck==1) ) )
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.verify',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Accept</button>
-                                    <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                @break
+                            @case('admin')
+                                    @if (Auth::guard('admin')->user()->supadmin)
+
+                                        @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && ($batchAssessment->sup_admin_verified==0 || ($batchAssessment->sup_admin_verified==2 && $batchAssessment->recheck==1) ) )
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                        @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Release Certificate</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('certificate');">Reject Release</button>
+                                        @endif
+    
+                                    @else
+
+                                        @if ($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) ) )
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                        @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
+                                        @endif
+
                                     @endif
 
-                                    @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Release Certificate</button>
-                                    <button class="btn btn-danger" onclick="showPromptMessage('admin',1);">Reject Release</button>
- 
+                                    @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1)
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
                                     @endif
-                                @endif
-
-                                @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
-                                    
-                                @endif
-
-                            @endif
-                        </div>
-                    @endauth
+                                @break
+                            @default
+                        @endswitch
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-{{-- =================== --}} 
-
-
-
-
-{{-- =================== --}}
 @stop
 @section('page-script')
-{{-- @auth('admin') --}}
-    <script>
+@if (Request::segment(1) === 'admin' || Request::segment(1) === 'agency')
+<script>
+    function showPromptMessage(tag) {
+        var id="{{Crypt::encrypt($batchAssessment->id.',1')}}";
 
-        function showPromptMessage(f,t = 0) {
-            var id={{$batchAssessment->id}};
-            let _token = $("input[name='_token']").val();
-                
-                 if(t==0){
-                if(f=='agency'){
-                    var urlLink="{{route('agency.assessment.reject')}}";
-                }else if(f=='admin'){
-                    var urlLink="{{route('admin.assessment.reject')}}";
-                }
-
-                }else{
-                    var urlLink="{{route('admin.assessment.release.reject')}}";
-
-                }
-        
-         swal({
+        swal({
             title: "Reason of Rejection",
             text: "Please Describe the Reason",
             content: {
@@ -231,50 +176,40 @@
                     cancel: "Cancel",
                     confirm: {
                         text: "Confirm",
-                        closeModal: false
+                        closeModal: true
                     }
                 },
-            closeModal: false,
+            closeModal: true,
             closeOnEsc: false,
         }).then(function(val){
             
-            var dataString = {_token:_token, id:id,note:val};
-            if (val) {
-                $.ajax({
-                    url: urlLink,
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML ="Assessment Submit for <span style='font-weight:bold; color:red'>Recheck</span>";
-                       
-                        swal({title: "Rejected", content: SuccessResponseText, icon:"success", closeModal: true,timer: 3000, buttons: false})
-                        .then(function(){
-                            if(f=='agency'){
-                            location="{{route('agency.assessment.pending-assessment')}}";
-                            }else if(f=='admin'){
-                            location="{{route('admin.assessment.all-assessment')}}";
+            if (val != '') {
+                var url = '';
+                switch (tag) {
+                    case 'agency':
+                        url = "{{ route('agency.assessment.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    case 'admin':
+                        url = "{{ route('admin.assessment.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    case 'certificate':
+                        url = "{{ route('admin.certificate.release.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    default:
+                        break;
+                }
 
-                            }
-                           // location="{{route('admin.tc.pending-trainers')}}";
-                            });
-                    },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
+                url = url.replace(':id', id);
+                url = url.replace(':reason', val);
+                location.href = url;
+                
             } else if (val!=null) {
                 swal('Attention', 'You need to write something!', 'info');
             }
         });
-}
-    </script>
-{{-- @endauth --}}
-
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
+    }
+</script>
+@endif
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

@@ -4,7 +4,6 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/> --}}
 @stop
 @section('content')
 <div class="container-fluid">
@@ -107,55 +106,48 @@
                             </li>
                         @endif
                     </ul>
-                    @auth('assessor')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='assessor')
-                                @if ($batchReAssessment->aa_verified==2 || $batchReAssessment->admin_verified==2 || $batchReAssessment->sup_admin_verified==2)
-                                    <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',['id' => Crypt::encrypt($batchReAssessment->id) ])}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
-                                @endif
-                            @endif
-                        </div>
-                    @endauth
-                    @auth('agency')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='agency')
+                    <div class="text-center">
+                        @switch(Request::segment(1))
+                            @case('assessor')
+                                    @if ($batchReAssessment->aa_verified==2 || $batchReAssessment->admin_verified==2 || $batchReAssessment->sup_admin_verified==2)
+                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',Crypt::encrypt($batchReAssessment->id))}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                    @endif
+                                @break
+                            @case('agency')
                                     @if ($batchReAssessment->aa_verified==0 || ($batchReAssessment->aa_verified==2 && $batchReAssessment->recheck==1))
-                                        <button class="btn btn-success" onclick="location.href='{{route('agency.reassessment.marks.approve-reject',[Crypt::encrypt($batchReAssessment->id),'accept'])}}';this.disabled = true;">Accept</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('agency.assessment.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'accept'])}}';this.disabled = true;">Accept</button>
                                         <button class="btn btn-danger" onclick="showPromptMessage('agency');">Reject</button>
                                     @endif
-                                
-                            @endif
-                        </div>
-                    @endauth
-                    @auth('admin')
-                        <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
-                                @if (!Auth::guard('admin')->user()->supadmin)
-                                    @if ($batchReAssessment->aa_verified==1 && ($batchReAssessment->admin_verified==0 || ($batchReAssessment->admin_verified==2 && $batchReAssessment->recheck==1) ) )
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.reassessment.marks.approve-reject',[Crypt::encrypt($batchReAssessment->id), 'accept' ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
-                                    @endif
-                                    @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && (($batchReAssessment->admin_cert_rel==0 && $batchReAssessment->supadmin_cert_rel==0) ||($batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==2)))
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release',[Crypt::encrypt($batchReAssessment->id.',0')])}}';this.disabled = true;">Request Certificate</button>
-                                    @endif
-                                @elseif(Auth::guard('admin')->user()->supadmin)
-                                    @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && ($batchReAssessment->sup_admin_verified==0 || ($batchReAssessment->sup_admin_verified==2 && $batchReAssessment->recheck==1) ) )
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.reassessment.marks.approve-reject',[Crypt::encrypt($batchReAssessment->id), 'accept' ])}}';this.disabled = true;">Accept</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                @break
+                            @case('admin')
+                                    @if (Auth::guard('admin')->user()->supadmin)
+
+                                        @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && ($batchReAssessment->sup_admin_verified==0 || ($batchReAssessment->sup_admin_verified==2 && $batchReAssessment->recheck==1) ) )
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'accept'])}}';this.disabled = true;">Accept</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                        @elseif($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==0)
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'accept'])}}';this.disabled = true;">Release Certificate</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('certificate');">Reject Release</button>
+                                        @endif
+    
+                                    @else
+
+                                        @if ($batchReAssessment->aa_verified==1 && ($batchReAssessment->admin_verified==0 || ($batchReAssessment->admin_verified==2 && $batchReAssessment->recheck==1) ) )
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'accept'])}}';this.disabled = true;">Accept</button>
+                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                        @elseif($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && (($batchReAssessment->admin_cert_rel==0 && $batchReAssessment->supadmin_cert_rel==0) ||($batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==2)))
+                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
+                                        @endif
+
                                     @endif
 
-                                    @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==0)
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.reassessment.certificate.approve-reject',[Crypt::encrypt($batchReAssessment->id), 'accept' ])}}';this.disabled = true;">Release Certificate</button>
-                                        <button class="btn btn-danger" onclick="showPromptMessage('admin',1);">Reject Release</button>
+                                    @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==1)
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchReAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
                                     @endif
-                                @endif
-                              
-                                @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==1)
-                                    <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchReAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
-                                @endif
-                            @endif
-                        </div>
-                    @endauth
+                                @break
+                            @default
+                        @endswitch
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,58 +156,59 @@
 
 @stop
 @section('page-script')
-@if (Request::segment(1)=='agency' || Request::segment(1)=='admin') 
-    <script>
+@if (Request::segment(1) === 'admin' || Request::segment(1) === 'agency')
+<script>
+    function showPromptMessage(tag) {
+        var id="{{Crypt::encrypt($batchReAssessment->id.',0')}}";
 
-        function showPromptMessage(user,tag = 0) {
-            var id='{{Crypt::encrypt($batchReAssessment->id)}}';
-            let _token = $("[name=_token]").val();
-            swal({
-                title: "Reason of Rejection",
-                text: "Please Describe the Reason",
-                content: {
-                    element: "input",
-                    attributes: {
-                        type: "text",
-                    },
+        swal({
+            title: "Reason of Rejection",
+            text: "Please Describe the Reason",
+            content: {
+                element: "input",
+                attributes: {
+                    type: "text",
                 },
-                icon: "info",
-                buttons: true,
-                buttons: {
-                        cancel: "No, Cancel",
-                        confirm: {
-                            text: "Confirm Reject",
-                            closeModal: true
-                        }
-                    },
-                closeModal: true,
-                closeOnEsc: true,
-            }).then(function(val){
-                if (val==='') {
-                    let swalText = document.createElement("div");
-                    swalText.innerHTML = 'Please Describe The Reason First'; 
-                    swal({title: "Oops!", content: swalText, icon: "info", closeModal: true,timer: 3000, buttons: false});
-                } else if(val !== null) {
-
-                    if (user === 'agency') {
-                        var url = "{{ route('agency.reassessment.marks.approve-reject',[':id','reject',':reason']) }}";
-                    } else {
-                        if (tag === 1) {
-                            
-                            // var url = "{{ route('agency.reassessment.marks.approve-reject',[':id','reject']) }}";
-                        } else {
-                            var url = "{{ route('admin.reassessment.marks.approve-reject',[':id','reject',':reason']) }}";
-                        }
+            },
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "Cancel",
+                    confirm: {
+                        text: "Confirm",
+                        closeModal: true
                     }
-                    url = url.replace(':id', id);
-                    url = url.replace(':reason', val);
-                    console.log(url);
-                    location.href = url;
+                },
+            closeModal: true,
+            closeOnEsc: false,
+        }).then(function(val){
+            
+            if (val != '') {
+                var url = '';
+                switch (tag) {
+                    case 'agency':
+                        url = "{{ route('agency.assessment.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    case 'admin':
+                        url = "{{ route('admin.assessment.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    case 'certificate':
+                        url = "{{ route('admin.certificate.release.approve.reject',[':id','reject',':reason']) }}";
+                        break;
+                    default:
+                        break;
                 }
-            });
-        }
 
-    </script>
+                url = url.replace(':id', id);
+                url = url.replace(':reason', val);
+                location.href = url;
+                
+            } else if (val!=null) {
+                swal('Attention', 'You need to write something!', 'info');
+            }
+        });
+    }
+</script>
 @endif
 
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>

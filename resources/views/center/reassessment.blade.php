@@ -52,17 +52,16 @@ table.dataTable thead th:first-child {
                                 </thead>
                                 <tbody>
                                     @foreach ($candidateArray as $candidate)
-                                    <tr>
-                                        <td>{!!$candidate->check!!}</td>
-                                        <td>{{$candidate->candidate->name}}</td>
-                                        <td>{{$candidate->candidate->contact}}</td>
-                                        <td>{{$candidate->candidate->category}}</td>
-                                        <td>{{$candidate->disability->e_expository}}</td>
-                                        <td style="color:red">{{($candidate->passed=='0')?'Failed':'Absent'}}</td>
-                                        <td>{!!$candidate->view!!}</td>
-                                        <td style="display:none">{{$candidate->data}}</td>
-                                    </tr>
-                                  
+                                        <tr>
+                                            <td>{!!$candidate->check!!}</td>
+                                            <td>{{$candidate->candidate->name}}</td>
+                                            <td>{{$candidate->candidate->contact}}</td>
+                                            <td>{{$candidate->candidate->category}}</td>
+                                            <td>{{$candidate->disability->e_expository}}</td>
+                                            <td style="color:red">{{($candidate->passed=='0')?'Failed':'Absent'}}</td>
+                                            <td>{!!$candidate->view!!}</td>
+                                            <td style="display:none;">{{$candidate->data}}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -215,7 +214,6 @@ $('#form_reassessment').on('submit', function(e){
         $("#btnSubmit").html("Please Wait...");
        // Iterate over all selected checkboxes
         $.each(rows_selected, function(index, rowId){
-            
             // Create a hidden element 
             $(form).append(
                 $('<input>')
@@ -224,15 +222,6 @@ $('#form_reassessment').on('submit', function(e){
                     .val(rowId)
             );
         });
-
-
-        var count = $('input[name^="id"]', form).length;
-
-        var starttime = $('#batch_time').val();
-        var hour = $('#batch_hour').val();
-        var trainer = $('select#trainer option:selected').val();
-        var _token= $('[name=_token]').val();
-
 
         var SwalText = document.createElement("div");
         SwalText.innerHTML = 'Once Submitted, <span style="color:blue">Un-Marked</span> Candidates will never get a Chance for <span style="color:red">Re-Assessment</span> Under This Batch.';

@@ -28,10 +28,6 @@ class AgencyReAssessmentController extends Controller
         return view('agency.reassessment.reassessment-status')->with(compact('reassessments'));
     }
 
-    public function pendingReAssessment()
-    {
-        return 'Coming Soon';
-    }
     public function viewReAssessment(Request $request)
     {
         if ($id=AppHelper::instance()->decryptThis($request->id)) {
@@ -39,14 +35,7 @@ class AgencyReAssessmentController extends Controller
             return view('common.view-reassessment-marks')->with(compact('batchReAssessment'));
         }
     }
-    public function reassessmentAccept(Request $request)
-    {
-        return 'Coming Soon';
-    }
-    public function reassessmentReject(Request $request)
-    {
-        return 'Coming Soon';
-    }
+
 
     public function reassessmentBatches()
     {
@@ -86,44 +75,4 @@ class AgencyReAssessmentController extends Controller
         
     }
 
-
-    public function reassessmentMarksAcceptReject(Request $request)
-    {
-
-        if ($id=AppHelper::instance()->decryptThis($request->id)) {
-            $batchreassessment = BatchReAssessment::findOrFail($id);
-            if ($batchreassessment->reassessment->aa_id == $this->guard()->user()->id && ($batchreassessment->aa_verified==0 || ($batchreassessment->aa_verified==2 && $batchreassessment->recheck==1))) {
-                switch ($request->action) {
-                    case 'accept':
-                            $batchreassessment->aa_verified=1;
-                            $batchreassessment->recheck=0;
-                            $batchreassessment->reject_note=null;
-                            $batchreassessment->save();
-                            $batch_no=$batchreassessment->batch->batch_id;
-
-                            AppHelper::instance()->writeNotification(NULL,'admin','Re-Assessment Approved by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment <span style='color:blue'>Approved</span> by Agency");
-
-                            alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(4000);
-                        break;
-                    case 'reject':
-                            $batchreassessment->aa_verified=2;
-                            $batchreassessment->reject_note=$request->reason;
-                            $batchreassessment->save();
-
-                            $batch_no=$batchreassessment->batch->batch_id;
-                            AppHelper::instance()->writeNotification($batchreassessment->reassessment->as_id,'assessor','Re-Assessment Rejected by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Re-Assessment <span style='color:red'>Rejected</span> by Agency");
-
-                            alert()->success("Re-Assessment has been <span style='color:red;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(4000);
-                        break;
-                    
-                    default:
-                        break;
-                }
-                return redirect()->back();
-
-            } else {
-                return abort(403,'You are not Authorized for this Action');
-            }
-        }            
-    }
 }
