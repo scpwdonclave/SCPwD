@@ -23,7 +23,7 @@
                             <table id="example" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" onchange="checkAll(this)" /></th>
+                                        <th><input type="checkbox" class="checks" onchange="checkAll(this)" /></th>
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
                                         <th>Assessment status</th>
@@ -37,7 +37,7 @@
                                     <tr>
                                         @if ($aa_batch->reass_id===null)
                                         
-                                        <td><input type="checkbox" name="chkbox[]" value="{{$aa_batch->id}}"></td>
+                                        <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$aa_batch->id}}"></td>
                                         <td>{{$aa_batch->batch->batch_id}}</td>
                                         <td>{{$aa_batch->batch->jobrole->job_role}}</td>
                                         <td>Assessment</td>
@@ -45,7 +45,7 @@
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.bt-candidate',['id'=>Crypt::encrypt($aa_batch->bt_id)])}}" >View Candidate</a></td>
 
                                         @else
-                                        <td><input type="checkbox" name="chkbox[]" value="{{$aa_batch->id}}"></td>
+                                        <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$aa_batch->id}}"></td>
                                         <td>{{$aa_batch->reassessment->batch->batch_id}}</td>
                                         <td>{{$aa_batch->reassessment->batch->jobrole->job_role}}</td>
                                         <td>Re-Assessment</td>
@@ -61,7 +61,7 @@
                             </div>
                             @if($aa_batch->count()>0)
                             <div class="text-center" >
-                                <button class="btn btn-round btn-primary" type="submit"> Submit Pay Order</button>
+                                <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Pay Order</button>
                             </div>
                             @endif
                         </form>
@@ -96,6 +96,12 @@
  }
 
 
+</script>
+<script>
+    $('#save-btn').attr("disabled",true);
+    $('.checks').click(function(){
+    $('#save-btn').attr("disabled",!$(this).is(":checked"));   
+})
 </script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

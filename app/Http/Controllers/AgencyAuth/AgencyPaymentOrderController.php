@@ -39,7 +39,7 @@ class AgencyPaymentOrderController extends Controller
         ->whereNotIn('id',$data)->get();
         
         foreach ($agencyBatch as $key => $value) {
-           if($value->batch->where('assessment','<',Carbon::now()->format('Y-m-d'))){
+           if($value->batch->assessment < Carbon::now()->format('Y-m-d')){
                $center->push($value->batch->center);
            }
         }
@@ -65,19 +65,23 @@ class AgencyPaymentOrderController extends Controller
         foreach ($agencyBatch as $key => $value) {
             if($value->reass_id===null){
 
-                if($value->batch->where('assessment','<',Carbon::now()->format('Y-m-d'))  && $value->batch->tc_id===$id){
+                if(($value->batch->assessment < Carbon::now()->format('Y-m-d'))  && $value->batch->tc_id===$id){
                    
                     $aa_batch->push($value);
     
                 }
             }else if($value->reass_id != null){
-                if($value->reassessment->where('assessment','<',Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id===$id){
+                if(($value->reassessment->assessment < Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id===$id){
                    
                     $aa_batch->push($value);
     
                 }
             } 
             
+         }
+
+         if (count($aa_batch)<1) {
+             return abort(404);
          }
 
          //dd($aa_batch);
@@ -97,7 +101,7 @@ class AgencyPaymentOrderController extends Controller
 
             $payment_order=new PaymentOrderAgencyBatchMap;
             if($value->reass_id===null){
-                if($value->batch->where('assessment','<',Carbon::now()->format('Y-m-d'))  && ($value->batch->tc_id == $request->center_id)){
+                if($value->batch->assessment < Carbon::now()->format('Y-m-d')  && ($value->batch->tc_id == $request->center_id)){
                    
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
@@ -106,7 +110,7 @@ class AgencyPaymentOrderController extends Controller
                 }
             }else if($value->reass_id != null){
 
-                if($value->reassessment->where('assessment','<',Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id == $request->center_id){
+                if(($value->reassessment->assessment < Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id == $request->center_id){
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
                     $payment_order->save();
@@ -142,13 +146,13 @@ class AgencyPaymentOrderController extends Controller
         foreach ($agencyBatch as $key => $value) {
             if($value->reass_id===null){
 
-                if($value->batch->where('assessment','<',Carbon::now()->format('Y-m-d'))){
+                if($value->batch->assessment < Carbon::now()->format('Y-m-d')){
                    
                     $aa_batch->push($value);
     
                 }
             }else if($value->reass_id != null){
-                if($value->reassessment->where('assessment','<',Carbon::now()->format('Y-m-d')) ){
+                if($value->reassessment->assessment < Carbon::now()->format('Y-m-d') ){
                    
                     $aa_batch->push($value);
     
@@ -162,6 +166,10 @@ class AgencyPaymentOrderController extends Controller
     }
 
     public function submitPayOrderBatch(Request $request){
+        if(is_null($request->chkbox)){
+            alert()->error("Please Check minimum One <span style='color:blue'>Batch</span>", 'Error!')->html()->autoclose(5000);     
+        return redirect()->back(); 
+        }
         $p_order=new PaymentOrder;
         $p_order->aa_id=$this->guard()->user()->id;
         $p_order->po_date=Carbon::now()->format('Y-m-d');
