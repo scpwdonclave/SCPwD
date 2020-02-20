@@ -47,10 +47,9 @@ class AssessorBatchController extends Controller
         return view('assessor.assessor-batch')->with(compact('assessorBatch','assessorReBatch'));
     }
 
-    public function pendingApproval(){
-        $assessorBatch=AssessorBatch::where('as_id','=',$this->guard()->user()->id)->get();
-        return view('assessor.assessor-batch-pending-approval')->with(compact('assessorBatch'));
-        
+    public function assessmentStatus(){
+        $assessorBatch=AssessorBatch::where([['as_id',$this->guard()->user()->id],['reass_id',NULL]])->get();
+        return view('assessor.assessment-status')->with(compact('assessorBatch'));
     }
 
     public function candidateMarks($id){
@@ -239,8 +238,8 @@ class AssessorBatchController extends Controller
             foreach ($request->candidate_id as $key => $value) {
                 $a='remark'.$key;
                 $candidateremark=new CandidateReMark;
-                $candidateremark->reass_candidate_id=$batchReAssessment->id;	
-                $candidateremark->bt_reassessment_id=$request->reass_candidate_id[$key];	
+                $candidateremark->reass_candidate_id=$request->reass_candidate_id[$key];
+                $candidateremark->bt_reassessment_id=$batchReAssessment->id;
                 $candidateremark->candidate_id=$value;
                 if($request->mark[$key]==null){
                     $candidateremark->mark=0;	 

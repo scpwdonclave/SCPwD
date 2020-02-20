@@ -8,7 +8,7 @@ Route::get('profile', 'AssessorAuth\AssessorHomeController@profile')->name('prof
 Route::post('profile', 'AssessorAuth\AssessorHomeController@profile_update')->name('profile'); 
 
 Route::get('batches', 'AssessorAuth\AssessorBatchController@batches')->name('batch'); 
-Route::get('batches/assessments', 'AssessorAuth\AssessorBatchController@pendingApproval')->name('pending.approval'); 
+Route::get('batches/assessments', 'AssessorAuth\AssessorBatchController@assessmentStatus')->name('pending.approval'); 
 Route::get('batches/candidate-marks/{id}', 'AssessorAuth\AssessorBatchController@candidateMarks')->name('as.batch.candidate-mark'); 
 Route::post('batches/candidate-marks-insert', 'AssessorAuth\AssessorBatchController@candidateMarksInsert')->name('as.batch.candidate-mark-insert'); 
 Route::post('batches/candidate-marks-update', 'AssessorAuth\AssessorBatchController@candidateMarksUpdate')->name('as.batch.candidate-mark-update'); 

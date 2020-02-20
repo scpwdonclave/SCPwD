@@ -253,16 +253,17 @@ class AgencyAssessorController extends Controller
         foreach ($request->batch as $batch) {
            
             $ex_bt=explode(',', $batch);
-            //dd($ex_bt[1]);
-            $agencyBatch=new AssessorBatch;
-            $agencyBatch->as_id=$request->as_id;
-            $agencyBatch->bt_id=$ex_bt[0];
+            $assessorBatch=new AssessorBatch;
+            $assessorBatch->as_id=$request->as_id;
+            $assessorBatch->bt_id=$ex_bt[0];
             if($ex_bt[1] != 'null'){
 
-                // $agencyBatch->reass_id=null;
-                $agencyBatch->reass_id=$ex_bt[1];
+                $assessorBatch->reass_id=$ex_bt[1];
+                $assessorBatch->reassessment->as_id =  $request->as_id;
+                $assessorBatch->reassessment->save();
+
             }
-            $agencyBatch->save();
+            $assessorBatch->save();
         }
 
         $assessor = Assessor::find($request->as_id);

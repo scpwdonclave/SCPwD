@@ -1,4 +1,5 @@
 @extends('layout.master')
+@section('parentPageTitle', 'Assessor')
 @section('title', 'Batches')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -9,7 +10,6 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 @stop
-@section('parentPageTitle', 'Assessor')
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
