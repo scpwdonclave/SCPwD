@@ -28,6 +28,15 @@ Route::get('/reassessments', 'CenterAuth\CenterBatchController@reassessments')->
 Route::get('/reassessments/{id}', 'CenterAuth\CenterBatchController@viewReAssessment')->name('reassessment.view');
 Route::get('/reassessments/marks/{id}', 'CenterAuth\CenterBatchController@viewReAssessmentMarks')->name('reassessment.marks.view');
 
+
+// For Placements
+Route::get('placements', 'CenterAuth\CenterHomeController@placements')->name('placements');
+Route::get('placements/view/{id}', 'CenterAuth\CenterHomeController@viewPlacement')->name('placement.view');
+Route::get('placements/files/{id}/{file}', 'CenterAuth\FileController@placementFile')->name('placement.file');
+Route::get('placements/add-placement', 'CenterAuth\CenterHomeController@addPlacement')->name('placement.add');
+Route::post('placements/add-placement', 'CenterAuth\CenterHomeController@submitPlacement')->name('placement.submit');
+
+
 Route::get('support/complain', 'CenterAuth\CenterSupportController@registerComplain')->name('support.complain'); 
 Route::post('support/complain-register', 'CenterAuth\CenterSupportController@insertRegisterComplain')->name('support.register-complain'); 
 Route::get('support/my-complain', 'CenterAuth\CenterSupportController@myComplain')->name('support.my-complain');

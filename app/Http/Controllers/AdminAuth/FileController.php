@@ -25,4 +25,18 @@ class FileController extends Controller
             return abort(404);
         }
     }
+
+
+    public function placementFile($id, $file)
+    {
+        if ($file === 'zip') {
+            return 'Woking on It';
+        } else {
+            try {
+                return Storage::disk('myDisk')->download("placement/{$file}");
+            } catch (Exception $e) {
+                return abort(404);
+            }
+        }
+    }
 }

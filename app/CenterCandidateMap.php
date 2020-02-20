@@ -37,4 +37,9 @@ class CenterCandidateMap extends Model implements Auditable
     {
         return $this->hasMany('App\CandidateReMark','candidate_id');
     }
+
+    public function placement()
+    {
+        return $this->hasOne('App\Placement','ccd_id');
+    }
 }

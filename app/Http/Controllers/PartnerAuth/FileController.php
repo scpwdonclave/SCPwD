@@ -4,11 +4,16 @@ namespace App\Http\Controllers\PartnerAuth;
 
 use Auth;
 use Exception;
+use ZipArchive;
 use App\Trainer;
+use App\Placement;
+use ZipStream\ZipStream;
+use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
@@ -37,6 +42,23 @@ class FileController extends Controller
             return Storage::disk('myDisk')->download("trainers/{$file}");
         } catch (Exception $e) {
             return abort(404);
+        }
+    }
+
+    protected function downloadThisPlacement($file, $id){
+        if ($file === 'zip') {
+            // $placement = Placement::find($id);
+            // $download1 = Storage::disk('myDisk')->download("{$placement->payslip1}");
+            // $download2 = Storage::disk('myDisk')->download("{$placement->payslip2}");
+            // $download3 = Storage::disk('myDisk')->download("{$placement->payslip3}");
+            return 'Woking on It';
+
+        } else {
+            try {
+                return Storage::disk('myDisk')->download("placement/{$file}");
+            } catch (Exception $e) {
+                return abort(404);
+            }
         }
     }
     
@@ -98,5 +120,19 @@ class FileController extends Controller
                 return $this->downloadThisTrainer($file);
             }
         }
+    }
+
+    public function placementFile($id, $file)
+    {
+        if (Auth::guard('partner')->check()) {
+            if ($id=AppHelper::instance()->decryptThis($id)) {
+                $placement = Placement::findOrFail($id);
+                if ($placement->tp_id == Auth::guard('partner')->user()->id) {
+                    return $this->downloadThisPlacement($file, $id);
+                }
+            }
+        }
+    
+        return abort(403, 'You are not Authorized for this Action');
     }
 }

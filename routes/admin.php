@@ -155,6 +155,11 @@ Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController
 
 // End For ReAssessment
 
+// For Placements
+Route::get('placements', 'AdminAuth\AdminHomeController@placements')->name('placements');
+Route::get('placements/view/{id}', 'AdminAuth\AdminHomeController@viewPlacement')->name('placement.view');
+Route::get('placements/files/{id}/{file}', 'AdminAuth\FileController@placementFile')->name('placement.file');
+
 //Payment Order
 Route::get('paymentorder/pending-request', 'AdminAuth\AdminPaymentOrderController@pendingPayOrderRequest')->name('paymentorder.pending-request');
 Route::get('paymentorder/view-pending-payorder/{id}', 'AdminAuth\AdminPaymentOrderController@viewPayOrder')->name('aa.payorder');
