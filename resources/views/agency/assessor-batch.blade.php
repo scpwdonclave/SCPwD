@@ -105,12 +105,15 @@ function fetchBatch(job){
         data:{_token,job,as_id},
         method:'POST',
         success: function(data){
+            console.log(data);
+            
             $('#batch').empty();
             $.each (data.batch, function (index) {
                 var id=data.batch[index].id;
                 var batch_id=data.batch[index].batch_id;
-                if(!data.selbatch.includes(id)){
-                    $('#batch').append('<option value="'+id+'">'+batch_id+'</option>');
+                var reass_id=data.aa_batch[index].reass_id;
+                 if(!data.selbatch.includes(id) || reass_id !=null){
+                    $('#batch').append('<option value="'+id+','+reass_id+'">'+batch_id+'</option>');
                 }
             });
             $('#batch').selectpicker('refresh');

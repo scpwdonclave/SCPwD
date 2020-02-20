@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAgencyBatchesTable extends Migration
+class CreatePaymentOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateAgencyBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('agency_batches', function (Blueprint $table) {
+        Schema::create('payment_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('aa_id');
-            $table->unsignedBigInteger('bt_id');
-            $table->boolean('aa_verified')->default(0);
-            $table->unsignedBigInteger('reass_id')->nullable();
-
+            $table->string('payment_order_id')->nullable();
+            $table->string('po_date');
+            $table->string('verification_date')->nullable();
+            $table->string('Payment_date')->nullable();
+            $table->integer('verified')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateAgencyBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agency_batches');
+        Schema::dropIfExists('payment_orders');
     }
 }

@@ -13,6 +13,6 @@ class CandidateReMark extends Model implements Auditable
         return $this->belongsTo('App\CenterCandidateMap', 'candidate_id');
     }
     public function batchReAssessment(){
-        return $this->belongsTo('App\BatchReAssessment', 'bt_re_assessment_id');
+        return $this->belongsTo('App\BatchReAssessment', 'bt_reassessment_id');
     }
 }

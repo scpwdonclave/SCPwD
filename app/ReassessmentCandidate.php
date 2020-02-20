@@ -17,4 +17,8 @@ class ReassessmentCandidate extends Model implements Auditable
     {
         return $this->belongsTo('App\CenterCandidateMap', 'ccd_id');
     }
+    public function candidateMark()
+    {
+        return $this->hasOne('App\CandidateReMark', 'reass_candidate_id');
+    }
 }

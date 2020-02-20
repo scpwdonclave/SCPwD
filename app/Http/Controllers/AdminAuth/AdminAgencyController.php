@@ -416,7 +416,7 @@ class AdminAgencyController extends Controller
         $batch=array();
         foreach ($jobroles as  $job) {
             foreach ($job->batches as $batch1) {
-                if($batch1->status && $batch1->verified && (Carbon::parse($batch1->batch_end.' 23:59') > Carbon::now()) && $this->partnerstatus($batch1)){
+                if($batch1->status && $batch1->verified  && $this->partnerstatus($batch1)){ //&& (Carbon::parse($batch1->batch_end.' 23:59') > Carbon::now())--remove
                     array_push($batch,$batch1); 
                 }
             }

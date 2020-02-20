@@ -47,12 +47,23 @@ Route::post('reassessment/batches', 'AgencyAuth\AgencyReAssessmentController@sub
 Route::get('reassessment/batches/{id}', 'AgencyAuth\AgencyReAssessmentController@viewReassessmentBatch')->name('reassessment.batch.view'); 
 // End For ReAssessment
 
+//payment Order
+Route::get('payment-order/tc-wise', 'AgencyAuth\AgencyPaymentOrderController@tcWiseOrder')->name('payment-order.tc-wise'); 
+Route::get('payment-order/tc-wise/{id}', 'AgencyAuth\AgencyPaymentOrderController@viewTcWiseOrder')->name('tc.payorder'); 
+Route::post('payment-order/submit-payorder', 'AgencyAuth\AgencyPaymentOrderController@submitPayOrder')->name('payorder.tc-wise'); 
+Route::get('payment-order/batch/candidates/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('batch.bt-candidate'); 
+Route::get('payment-order/batch/reassessment-candidates/{id}', 'AgencyAuth\AgencyPaymentOrderController@viewBatchReassessment')->name('batch.reass-bt-candidate'); 
+Route::get('payment-order/batch-wise', 'AgencyAuth\AgencyPaymentOrderController@batchWiseOrder')->name('payment-order.batch-wise'); 
+Route::post('payment-order/submit-batch-payorder', 'AgencyAuth\AgencyPaymentOrderController@submitPayOrderBatch')->name('payorder.batch-wise'); 
 
+//End payment order
+
+//Support
 Route::get('support/complain', 'AgencyAuth\AgencySupportController@registerComplain')->name('support.complain'); 
 Route::post('support/complain-register', 'AgencyAuth\AgencySupportController@insertRegisterComplain')->name('support.register-complain'); 
 Route::get('support/my-complain', 'AgencyAuth\AgencySupportController@myComplain')->name('support.my-complain'); 
 Route::get('support/view-complain/{id}', 'AgencyAuth\AgencySupportController@viewComplain')->name('support.complain-view');
-
+//End Support
 
 
 
