@@ -177,6 +177,18 @@ class AdminAssessmentController extends Controller
                         $assessment->reject_note=null;
                         $assessment->save();
 
+                        foreach ($assessment->candidateMarks as $key => $value) {
+
+                            $eachcand= $value->centerCandidate;
+                            if($value->attendence==='present'){
+                                $eachcand->passed=$value->passed;
+                            }else{
+                                $eachcand->passed=2;
+        
+                            }
+                            $eachcand->save();
+                        }
+
                         AppHelper::instance()->writeNotification(NULL,'admin',$tag.' Approved by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Super Admin");
                         alert()->success("$tag has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
                     }
@@ -320,6 +332,7 @@ class AdminAssessmentController extends Controller
                         }
                         $assessment->supadmin_cert_rel=1;
                         $assessment->reject_note=null;
+
                         $text="$tag Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.";
                         
                         AppHelper::instance()->writeNotification(NULL,'admin','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.");
