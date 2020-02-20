@@ -154,6 +154,12 @@ Route::get('reassessment/reassessment-status/{id}', 'AdminAuth\AdminReAssessment
 Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@AcceptRejectReAssessment')->name('reassessment.accept-reject');
 
 // End For ReAssessment
+
+//Payment Order
+Route::get('paymentorder/pending-request', 'AdminAuth\AdminPaymentOrderController@pendingPayOrderRequest')->name('paymentorder.pending-request');
+Route::get('paymentorder/view-pending-payorder/{id}', 'AdminAuth\AdminPaymentOrderController@viewPayOrder')->name('aa.payorder');
+
+//End Payment Order
 //Support
 Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
 Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');

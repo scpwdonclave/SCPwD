@@ -237,20 +237,31 @@ class AgencyAssessorController extends Controller
         }
 
         $batch=array();
+        $aa_batch=array();
         foreach ($agencyBatch as $batches) {
             $batchind= $batches->batch;
-            if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified && (Carbon::parse($batchind->batch_end.' 23:59') > Carbon::now()) && $this->partnerstatus($batchind))
+            if($batchind->jobrole_id==$request->job && $batchind->status && $batchind->verified  && $this->partnerstatus($batchind)){ //&& (Carbon::parse($batchind->batch_end.' 23:59') > Carbon::now())--remove
                 array_push($batch,$batchind); 
+                array_push($aa_batch,$batches); 
+                }
             }
         
-        return response()->json(['batch' => $batch,'selbatch'=>$selBatch],200);
+        return response()->json(['batch' => $batch,'aa_batch'=>$aa_batch,'selbatch'=>$selBatch],200);
     }
 
     public function assessorBatchInsert(Request $request){
         foreach ($request->batch as $batch) {
+           
+            $ex_bt=explode(',', $batch);
+            //dd($ex_bt[1]);
             $agencyBatch=new AssessorBatch;
             $agencyBatch->as_id=$request->as_id;
-            $agencyBatch->bt_id=$batch;
+            $agencyBatch->bt_id=$ex_bt[0];
+            if($ex_bt[1] != 'null'){
+
+                // $agencyBatch->reass_id=null;
+                $agencyBatch->reass_id=$ex_bt[1];
+            }
             $agencyBatch->save();
         }
 

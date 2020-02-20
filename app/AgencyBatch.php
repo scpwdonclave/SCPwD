@@ -17,7 +17,6 @@ class AgencyBatch extends Model implements Auditable
     public function agency(){
         return $this->belongsTo('App\Agency', 'aa_id');
     }
-
     public function reassessment(){
         return $this->belongsTo('App\Reassessment', 'reass_id');
     }

@@ -199,11 +199,27 @@
             @endif
 
             @if (Request::segment(1) === 'admin')
+            <li class="{{ Request::segment(2) === 'paymentorder' ? 'active open' : null }}">
+                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Payment Order</span></a>
+                <ul class="ml-menu">
+                    <li class="{{ Request::is('admin/paymentorder/pending-request') ? 'active' : null }}"><a href="{{route('admin.paymentorder.pending-request')}}">Pending Request</a></li>
+                    <li class="{{ Request::is('admin/paymentorder/closed-request') ? 'active' : null }}"><a href="{{route('admin.paymentorder.pending-request')}}">Closed Request</a></li>
+                </ul>
+            </li>
             <li class="{{ Request::segment(2) === 'support' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Support</span></a>
                 <ul class="ml-menu">
                     <li class="{{ Request::is('admin/support/pending-request') ? 'active' : null }}"><a href="{{route('admin.support.pending-request')}}">Pending Request</a></li>
                     <li class="{{ Request::is('admin/support/closed-request') ? 'active' : null }}"><a href="{{route('admin.support.closed-request')}}">Closed Request</a></li>
+                </ul>
+            </li>
+            @endif
+            @if (Request::segment(1) === 'agency')
+            <li class="{{ Request::segment(2) === 'payment-order' ? 'active open' : null }}">
+                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-twitch"></i><span>Payment Order</span></a>
+                <ul class="ml-menu">
+                    <li class="{{ Request::is('admin/payment-order/tc-wise') ? 'active' : null }}"><a href="{{route('agency.payment-order.tc-wise')}}">TC Wise</a></li>
+                    <li class="{{ Request::is('admin/payment-order/batch-wise') ? 'active' : null }}"><a href="{{route('agency.payment-order.batch-wise')}}">Batch Wise</a></li>
                 </ul>
             </li>
             @endif

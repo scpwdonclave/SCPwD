@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssessorBatchesTable extends Migration
+class CreatePaymentOrderAgencyBatchMapsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateAssessorBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('assessor_batches', function (Blueprint $table) {
+        Schema::create('payment_order_agency_batch_maps', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('as_id');
-            $table->unsignedBigInteger('bt_id');
-            $table->unsignedBigInteger('reass_id')->nullable();
-            
+            $table->unsignedBigInteger('po_id');
+            $table->unsignedBigInteger('aa_batch_id');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateAssessorBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assessor_batches');
+        Schema::dropIfExists('payment_order_agency_batch_maps');
     }
 }

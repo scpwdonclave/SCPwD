@@ -41,10 +41,25 @@ class FileController extends Controller
         }
     }
     protected function downloadThisAssessment($id,$column){
+
        
         $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
+       
+
+        $headers = array(
+            'Content-Type' => 'text/csv',
+        );
+        $ext = pathinfo($fileurl->$column, PATHINFO_EXTENSION);
+        $or_f_name=$filename = pathinfo($fileurl->$column, PATHINFO_FILENAME);
+       
         try {
-            return Storage::disk('myDisk')->download("{$fileurl->$column}");
+            if($ext==='txt'){
+            return Storage::disk('myDisk')->download($fileurl->$column,$or_f_name.'.csv' , $headers);
+
+            }else{
+
+                return Storage::disk('myDisk')->download("{$fileurl->$column}");
+            }
         } catch (Exception $e) {
             return abort(404);
         }
