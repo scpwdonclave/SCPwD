@@ -11,15 +11,13 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="body">
-                    @if (!is_null($batchAssessment->batch->batch_id))
-                        <div class="text-center">
-                            <h6>
-                                BATCH ID: <span style='color:blue'>{{$batchAssessment->batch->batch_id}}</span>
-                            </h6>
-                        </div>
-                        <br>
-                    @endif
-                    @if (!is_null($batchAssessment->reject_note))
+                    <div class="text-center">
+                        <h6>
+                            BATCH ID: <span style='color:blue'>{{$batchAssessment->batch->batch_id}}</span>
+                        </h6>
+                    </div>
+                    <br>
+                    @if (!is_null($batchAssessment->reject_note) && (Request::segment(1)==='admin' || Request::segment(1)==='agency' || Request::segment(1)==='assessor'))
                     <div class="alert alert-danger">
                         <i class="zmdi zmdi-email"></i>  &nbsp;<strong>{{$batchAssessment->reject_note}}</strong>
                     </div>

@@ -33,17 +33,19 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchreassessments as $batchreassessment) 
-                                    @if (!$batchreassessment->superadmin_cert_rel)
-                                        <td>{{$batchreassessment->batch->batch_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->assessment}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->aa_verified=='1')?'success':(($batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($batchreassessment->aa_verified=='1')?'Approved':(($batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->admin_verified=='1')?'success':(($batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->admin_verified=='1')?'Approved':(($batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel)?'Released':'Not Released'}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
-                                    @endif
+                                    <tr>
+                                        @if (!$batchreassessment->superadmin_cert_rel)
+                                            <td>{{$batchreassessment->batch->batch_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->assessment}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->aa_verified=='1')?'success':(($batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($batchreassessment->aa_verified=='1')?'Approved':(($batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->admin_verified=='1')?'success':(($batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->admin_verified=='1')?'Approved':(($batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel=='1')?'Released':(($batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
+                                        @endif
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -76,17 +78,19 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchreassessments as $batchreassessment) 
-                                    @if ($batchreassessment->superadmin_cert_rel)
-                                        <td>{{$batchreassessment->batch->batch_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
-                                        <td>{{$batchreassessment->reassessment->assessment}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->aa_verified=='1')?'success':(($batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($batchreassessment->aa_verified=='1')?'Approved':(($batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->admin_verified=='1')?'success':(($batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->admin_verified=='1')?'Approved':(($batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                        <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel)?'Released':'Not Released'}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
-                                    @endif
+                                    <tr>
+                                        @if ($batchreassessment->superadmin_cert_rel)
+                                            <td>{{$batchreassessment->batch->batch_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
+                                            <td>{{$batchreassessment->reassessment->assessment}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->aa_verified=='1')?'success':(($batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($batchreassessment->aa_verified=='1')?'Approved':(($batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->admin_verified=='1')?'success':(($batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->admin_verified=='1')?'Approved':(($batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                            <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel=='1')?'Released':(($batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
+                                        @endif
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

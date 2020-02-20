@@ -10,6 +10,7 @@ use App\AgencyBatch;
 use App\Notification;
 use App\Reassessment;
 use App\BatchAssessment;
+use App\BatchReAssessment;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

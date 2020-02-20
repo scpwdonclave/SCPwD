@@ -70,9 +70,10 @@
 
                                     @if ($item->batch->batchassessment->admin_cert_rel==1 && $item->batch->batchassessment->supadmin_cert_rel==1)
                                     <td class="text-success"><strong>Released</strong></td>
+                                    @elseif($item->batch->batchassessment->supadmin_cert_rel==2)
+                                    <td class="text-danger"><strong>Rejected</strong></td>
                                     @else
                                     <td class="text-danger"><strong>Not Released</strong></td>
-
                                     @endif
 
                                     <td><a class="badge bg-green margin-0" href="{{route('assessor.assessment.view',['id'=>Crypt::encrypt($item->batch->batchassessment->id)])}}" >View</a></td>

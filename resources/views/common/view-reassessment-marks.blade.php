@@ -17,7 +17,7 @@
                         </h6>
                     </div>
                     <br>
-                    @if (!is_null($batchReAssessment->reject_note))
+                    @if (!is_null($batchReAssessment->reject_note) && (Request::segment(1)==='admin' || Request::segment(1)==='agency' || Request::segment(1)==='assessor'))
                         <div class="alert alert-danger">
                             <i class="zmdi zmdi-email"></i>  &nbsp;<strong>{{$batchReAssessment->reject_note}}</strong>
                         </div>

@@ -60,6 +60,8 @@
 
                                             @if ($item->batchreassessment->admin_cert_rel==1 && $item->batchreassessment->supadmin_cert_rel==1)
                                                 <td class="text-success"><strong>Released</strong></td>
+                                            @elseif($item->batchreassessment->supadmin_cert_rel==2)
+                                                <td class="text-danger"><strong>Rejected</strong></td>
                                             @else
                                                 <td class="text-danger"><strong>Not Released</strong></td>
                                             @endif

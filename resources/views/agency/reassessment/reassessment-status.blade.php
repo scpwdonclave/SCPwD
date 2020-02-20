@@ -33,8 +33,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($reassessments as $reassessment)
-                                    @if ($reassessment->batchreassessment)
-                                        @if (!$reassessment->batchreassessment->aa_verified)
+                                    <tr>
+                                        @if ($reassessment->batchreassessment && !$reassessment->batchreassessment->aa_verified)
                                             <td>{{$reassessment->batchreassessment->batch->batch_id}}</td>
                                             <td>{{$reassessment->batchreassessment->reassessment->agency->aa_id}}</td>
                                             <td>{{$reassessment->batchreassessment->reassessment->assessor->as_id}}</td>
@@ -42,10 +42,10 @@
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->aa_verified=='1')?'success':(($reassessment->batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->aa_verified=='1')?'Approved':(($reassessment->batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->admin_verified=='1')?'success':(($reassessment->batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->admin_verified=='1')?'Approved':(($reassessment->batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->sup_admin_verified=='1')?'success':(($reassessment->batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->sup_admin_verified=='1')?'Approved':(($reassessment->batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($reassessment->batchreassessment->supadmin_cert_rel)?'Released':'Not Released'}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('agency.reassessment.view',Crypt::encrypt($reassessment->batchreassessment->bt_reassid))}}" >View</a></td>
+                                            <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($reassessment->batchreassessment->supadmin_cert_rel=='1')?'Released':(($reassessment->batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('agency.reassessment.view',Crypt::encrypt($reassessment->batchreassessment->id))}}" >View</a></td>
                                         @endif
-                                    @endif
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -78,8 +78,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($reassessments as $reassessment)
-                                    @if ($reassessment->batchreassessment)
-                                        @if ($reassessment->batchreassessment->aa_verified)
+                                    <tr>
+                                        @if ($reassessment->batchreassessment && $reassessment->batchreassessment->aa_verified)
                                             <td>{{$reassessment->batchreassessment->batch->batch_id}}</td>
                                             <td>{{$reassessment->batchreassessment->reassessment->agency->aa_id}}</td>
                                             <td>{{$reassessment->batchreassessment->reassessment->assessor->as_id}}</td>
@@ -87,10 +87,10 @@
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->aa_verified=='1')?'success':(($reassessment->batchreassessment->aa_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->aa_verified=='1')?'Approved':(($reassessment->batchreassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->admin_verified=='1')?'success':(($reassessment->batchreassessment->admin_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->admin_verified=='1')?'Approved':(($reassessment->batchreassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->sup_admin_verified=='1')?'success':(($reassessment->batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($reassessment->batchreassessment->sup_admin_verified=='1')?'Approved':(($reassessment->batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($reassessment->batchreassessment->supadmin_cert_rel)?'Released':'Not Released'}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('agency.reassessment.view',Crypt::encrypt($reassessment->batchreassessment->bt_reassid))}}" >View</a></td>
+                                            <td style="font-weight:bold;" class="text-{{($reassessment->batchreassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($reassessment->batchreassessment->supadmin_cert_rel=='1')?'Released':(($reassessment->batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                            <td><a class="badge bg-green margin-0" href="{{route('agency.reassessment.view',Crypt::encrypt($reassessment->batchreassessment->id))}}" >View</a></td>
                                         @endif
-                                    @endif
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
