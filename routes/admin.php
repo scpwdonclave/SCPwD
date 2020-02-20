@@ -142,7 +142,7 @@ Route::get('assessment/all-assessment', 'AdminAuth\AdminAssessmentController@all
 Route::get('assessment/pending-assessment', 'AdminAuth\AdminAssessmentController@pendingAssessment')->name('assessment.pending-assessment');
 Route::get('assessment/assessment-view/{id}', 'AdminAuth\AdminAssessmentController@viewAssessment')->name('assessment.view');
 Route::get('assessment/approve-reject/{id}/{action}/{reason?}', 'AdminAuth\AdminAssessmentController@assessmentApproveReject')->where('action','accept|reject')->name('assessment.approve.reject'); 
-Route::get('assessment/certificate-release/approve-reject/{id}/{action}/{reason?}', 'AdminAuth\AdminAssessmentController@certificateReleaseApproveReject')->where('action','accept|reject')->name('certificate.release.approve.reject');
+Route::get('assessment/certificate-release/approve-reject/{id}/{action}/{reason?}', 'AdminAuth\AdminAssessmentController@certificateReleaseApproveReject')->where('action','accept|reject|release-request')->name('certificate.release.approve.reject');
 Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAssessmentController@certificatePrint')->name('assessment.certificate.print');
 
 

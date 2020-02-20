@@ -249,7 +249,7 @@ class AgencyAssessmentController extends Controller
                 
             }
             
-            return view('common.view-batch-assessment')->with(compact('assessment_tag','batchid','center_candidates','assessment_date','batchData'));
+            return view('common.view-batch-assessment')->with(compact('assessment_tag','center_candidates','assessment_date','batchData'));
         }
     }
     

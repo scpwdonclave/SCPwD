@@ -87,7 +87,7 @@ class AssessorBatchController extends Controller
             $batchAssessment->bt_id	=$request->bt_id;
     
             if($request->hasFile('attendence_doc')){
-                $request->batch->getClientOriginalExtension();
+               
                 $batchAssessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
             }	
             if($request->hasFile('marksheet_doc')){

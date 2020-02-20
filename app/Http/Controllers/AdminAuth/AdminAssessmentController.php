@@ -230,7 +230,7 @@ class AdminAssessmentController extends Controller
 
 
     public function certificateReleaseApproveReject(Request $request){
-        
+      
         if ($data=AppHelper::instance()->decryptThis($request->id)) {
             $id = explode(',',$data);
             if ($id[1]) {
