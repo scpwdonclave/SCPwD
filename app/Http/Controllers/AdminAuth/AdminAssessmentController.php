@@ -7,6 +7,7 @@ use PDF;
 use Auth;
 use Crypt;
 use Image;
+use Carbon\Carbon;
 use App\AgencyBatch;
 use App\Notification;
 use App\BatchAssessment;
@@ -182,6 +183,10 @@ class AdminAssessmentController extends Controller
                             $eachcand= $value->centerCandidate;
                             if($value->attendence==='present'){
                                 $eachcand->passed=$value->passed;
+                                if ($value->passed) {
+                                    $value->centerCandidate->assessment_certi_issued_on = Carbon::now();
+                                    $value->centerCandidate->save();
+                                }
                             }else{
                                 $eachcand->passed=2;
         
@@ -324,6 +329,7 @@ class AdminAssessmentController extends Controller
                                 }
                 
                                 $value->centerCandidate->certi_no=$new_certi_id;
+                                $value->centerCandidate->assessment_certi_issued_on= $value->centerCandidate->assessment_certi_issued_on.','.Carbon::now();
                                 $value->centerCandidate->save();
                         
                             }
@@ -370,30 +376,41 @@ class AdminAssessmentController extends Controller
     // }
 
     public function  certificatePrint($id){
-        $id= $this->decryptThis($id);
-        
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        $trigger=0;
-        foreach ($batchAssessment->candidateMarks as  $value) {
-            if($value->passed===1){
-                $trigger=1;
+
+        if ($data=AppHelper::instance()->decryptThis($id)) {
+            $id=explode(',',$data);
+
+            // * id[1]: True => Assessment|CandidateMark, False => Reassessment|CandidateMark
+
+            if ($id[1]) {
+                // * Assessment Model
+                $assessment=BatchAssessment::findOrFail($id[0]);
+            } else {
+                // * Re-Assessment Model
+                $assessment=BatchReAssessment::findOrFail($id[0]);
             }
-        }
-
-        if($trigger===0){
-
-            alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
-            return Redirect()->back();
-        }
-
-        if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
-            $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
             
-            
-            return $pdf->stream($batchAssessment->id.'.pdf');
-        }else{
-            abort(404);
-        }
+            $trigger=0;
+            foreach ($assessment->candidateMarks as  $value) {
+                if($value->passed===1){
+                    $trigger=1;
+                    break;
+                }
+            }
+    
+            if($trigger===0){
+                alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
+                return redirect()->back();
+            } else {
+                
+                if ($assessment->aa_verified==1 && $assessment->admin_verified==1 && $assessment->sup_admin_verified==1 && $assessment->admin_cert_rel==1 && $assessment->supadmin_cert_rel==1){
+                    $pdf=PDF::loadView('common.certificate', compact('assessment'))->setPaper('a4','landscape'); 
+                    return $pdf->stream($assessment->id.'.pdf');
+                }else{
+                    return abort(404);
+                }
+            }
 
+        }
     }
 }

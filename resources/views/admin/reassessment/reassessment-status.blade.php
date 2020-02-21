@@ -33,8 +33,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchreassessments as $batchreassessment) 
-                                    <tr>
-                                        @if (!$batchreassessment->superadmin_cert_rel)
+                                    @if (!$batchreassessment->supadmin_cert_rel)
+                                        <tr>
                                             <td>{{$batchreassessment->batch->batch_id}}</td>
                                             <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
                                             <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
@@ -44,8 +44,8 @@
                                             <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel=='1')?'Released':(($batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
-                                        @endif
-                                    </tr>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -78,8 +78,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($batchreassessments as $batchreassessment) 
-                                    <tr>
-                                        @if ($batchreassessment->superadmin_cert_rel)
+                                @if ($batchreassessment->supadmin_cert_rel)
+                                        <tr>
                                             <td>{{$batchreassessment->batch->batch_id}}</td>
                                             <td>{{$batchreassessment->reassessment->agency->aa_id}}</td>
                                             <td>{{$batchreassessment->reassessment->assessor->as_id}}</td>
@@ -89,8 +89,8 @@
                                             <td style="font-weight:bold;" class="text-{{($batchreassessment->sup_admin_verified=='1')?'success':(($batchreassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($batchreassessment->sup_admin_verified=='1')?'Approved':(($batchreassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
                                             <td style="font-weight:bold;" class="text-{{($batchreassessment->supadmin_cert_rel)?'success':'danger'}}">{{($batchreassessment->supadmin_cert_rel=='1')?'Released':(($batchreassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.reassessment-status.view',Crypt::encrypt($batchreassessment->id))}}" >View</a></td>
-                                        @endif
-                                    </tr>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

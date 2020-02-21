@@ -139,12 +139,13 @@
                                             <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
                                         @endif
 
-                                    @endif
+                                    @endif                                    
+                                    {{-- To Carry Forward request from admin to partner we have removed the break Statement --}}
 
-                                    @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==1)
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchReAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
-                                    @endif
-                                @break
+                            @case('partner')
+                                @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==1)
+                                    <button class="btn btn-success" onclick="location.href='{{route(Request::segment(1).'.assessment.certificate.print',Crypt::encrypt($batchReAssessment->id.',0'))}}';this.disabled = true;">Print Certificate</button>
+                                @endif
                             @default
                         @endswitch
                     </div>

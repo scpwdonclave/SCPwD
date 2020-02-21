@@ -31,24 +31,26 @@
                             <tbody>
                                 @foreach ($assessorBatch as $item)                                   
                                     @if(is_null($item->batch->batchassessment) && $item->batch->status)                                        
-                                        <tr>
-                                            <td>{{$item->batch->batch_id}}</td>
-                                            <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
-                                            <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
-                                            <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
-                                            @if (\Carbon\Carbon::parse($item->batch->assessment.' 00:00') > \Carbon\Carbon::now())
-                                                <td style="color:blue">Not Started Yet</td>
-                                                <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
-                                            @else
-                                                @if (\Carbon\Carbon::parse($item->batch->assessment.' 23:59') < \Carbon\Carbon::now())
-                                                    <td style="color:green">Completed</td>
-                                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
-                                                @else
-                                                    <td style="color:blue">On Going</td>
+                                        @if (is_null($item->reass_id))
+                                            <tr>
+                                                <td>{{$item->batch->batch_id}}</td>
+                                                <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
+                                                <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
+                                                <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
+                                                @if (\Carbon\Carbon::parse($item->batch->assessment.' 00:00') > \Carbon\Carbon::now())
+                                                    <td style="color:blue">Not Started Yet</td>
                                                     <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                                @else
+                                                    @if (\Carbon\Carbon::parse($item->batch->assessment.' 23:59') < \Carbon\Carbon::now())
+                                                        <td style="color:green">Completed</td>
+                                                        <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
+                                                    @else
+                                                        <td style="color:blue">On Going</td>
+                                                        <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </tr>
+                                            </tr>
+                                        @endif
                                     @endif
                                 @endforeach
                             </tbody>

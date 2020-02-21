@@ -508,34 +508,96 @@ class PartnerBatchController extends Controller
         }
         
     }
-    public function printCertificate($id){
-        
-        if ($id=AppHelper::instance()->decryptThis($id)) {
-            $batchAssessment=BatchAssessment::findOrFail($id);
-            
-            if ($this->guard()->user()->id == $batchAssessment->batch->tp_id) {
-                $trigger=0;
-                foreach ($batchAssessment->candidateMarks as  $value) {
-                    if($value->passed===1){
+    public function certificatePrint($id){
+
+        if ($data=AppHelper::instance()->decryptThis($id)) {
+            $id=explode(',',$data);
+            $trigger=0;
+
+            // * id[1]: True => Assessment|CenterCandidateMap, False => Reassessment|CandidateMark
+
+            if ($id[1]) {
+                // * Assessment Model
+                $assessment=BatchAssessment::findOrFail($id[0]);
+                foreach ($assessment->batch->candidatesmap as  $btachcandidate) {
+                    if(!is_null($btachcandidate->centercandidate->certi_no)){
                         $trigger=1;
+                        break;
                     }
                 }
-        
-                if(!$trigger){
+
+                if($trigger===0){
                     alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
                     return redirect()->back();
+                } else {
+                    
+                    if ($assessment->aa_verified==1 && $assessment->admin_verified==1 && $assessment->sup_admin_verified==1 && $assessment->admin_cert_rel==1 && $assessment->supadmin_cert_rel==1){
+                        $batch = $assessment->batch;
+                        $pdf=PDF::loadView('common.certificate', compact('batch'))->setPaper('a4','landscape'); 
+                        return $pdf->stream($assessment->id.'.pdf');
+                    }else{
+                        return abort(404);
+                    }
                 }
-                if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
-                    $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
-                    return $pdf->stream($batchAssessment->id.'.pdf');
-                }else{
-                    abort(404);
-                }
+                
             } else {
-                return abort(403, 'You are Not Authorized for This Action');
+                // * Re-Assessment Model
+                $assessment=BatchReAssessment::findOrFail($id[0]);
+                
+                foreach ($assessment->candidateMarks as  $value) {
+                    if($value->passed===1){
+                        $trigger=1;
+                        break;
+                    }
+                }
+                
+                if($trigger===0){
+                    alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
+                    return redirect()->back();
+                } else {
+                    
+                    if ($assessment->aa_verified==1 && $assessment->admin_verified==1 && $assessment->sup_admin_verified==1 && $assessment->admin_cert_rel==1 && $assessment->supadmin_cert_rel==1){
+                        $pdf=PDF::loadView('common.certificate', compact('assessment'))->setPaper('a4','landscape'); 
+                        return $pdf->stream($assessment->id.'.pdf');
+                    }else{
+                        return abort(404);
+                    }
+                }
+                
             }
-
+            
+    
+            
         }
+
+
+        
+        // if ($id=AppHelper::instance()->decryptThis($id)) {
+        //     $batchAssessment=BatchAssessment::findOrFail($id);
+            
+        //     if ($this->guard()->user()->id == $batchAssessment->batch->tp_id) {
+        //         $trigger=0;
+        //         foreach ($batchAssessment->candidateMarks as  $value) {
+        //             if($value->passed===1){
+        //                 $trigger=1;
+        //             }
+        //         }
+        
+        //         if(!$trigger){
+        //             alert()->error("No One has <span style='color:red;font-weight:bold;'> Qualified </span>for this Certification Programme", 'Attention!')->html()->autoclose(3000);
+        //             return redirect()->back();
+        //         }
+        //         if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1){
+        //             $pdf=PDF::loadView('common.certificate', compact('batchAssessment'))->setPaper('a4','landscape'); 
+        //             return $pdf->stream($batchAssessment->id.'.pdf');
+        //         }else{
+        //             abort(404);
+        //         }
+        //     } else {
+        //         return abort(403, 'You are Not Authorized for This Action');
+        //     }
+
+        // }
     }
 
     public function reassessments()

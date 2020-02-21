@@ -140,7 +140,7 @@
                                     @endif
 
                                     @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1)
-                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',['id' => Crypt::encrypt($batchAssessment->id) ])}}';this.disabled = true;">Print Certificate</button>
+                                        <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.certificate.print',Crypt::encrypt($batchAssessment->id.',1'))}}';this.disabled = true;">Print Certificate</button>
                                     @endif
                                 @break
                             @default
