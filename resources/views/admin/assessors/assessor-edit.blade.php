@@ -710,7 +710,7 @@
     /* Intializing Bootstrap DatePicker */
     
         
-        $('.date_picker .form-control').datepicker({
+        $('.date_picker .form-control').datepicker({ 
             autoclose: true,
             format: 'dd-mm-yyyy'
         });

@@ -5,6 +5,16 @@
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
+<style>
+    .datepicker-inline {
+        width: 100%;
+    }
+    .datepicker table {
+        width: 100%;
+    }
+    </style>
+
 
 
 @stop
@@ -120,16 +130,38 @@
                        
                         </ul>
                    
-                        
-                    {{-- <form id="form_payorder" action="{{route('agency.payorder.tc-wise')}}" method="post" >
+                      <br><br>  
+                    <form id="form_payorder" action="" method="post" >
                         @csrf
-                    
-                    <input type="hidden" name="center_id" value="{{$pay_order->id}}">
-
+                        <div class="row d-flex justify-content-around">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <label for="verification_date">Verification Date <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float date_picker">
+                                    <input type="text" class="form-control date_datepicker" placeholder="Verification Date" id="verification_date" name="verification_date"  required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="payment_date">Payment Date <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float date_picker ">
+                                    <input type="text" class="form-control" placeholder="Payment Date"  id="payment_date" name="payment_date"  required>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    {{-- <div class="text-center" >
+                        <button class="btn btn-round btn-primary" type="submit"> Confirm Pay Order</button>
+                    </div> --}}
+                    @auth('admin')
                     <div class="text-center" >
-                        <button class="btn btn-round btn-primary" type="submit"> Submit Pay Order</button>
+                        @if ($pay_order->verified===0 )
+                            <button class="btn btn-success" type="submit" >Accept</button>
+                            <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
+                                                
+                        @endif
                     </div>
-                    </form> --}}
+                @endauth 
+                    </form>
                    
                 </div>
             </div>
@@ -159,27 +191,27 @@
                                         </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($pay_order->paymentorder as $payorder)
+                                    @foreach ($pay_order->paymentorder as $payorder)
                                         
                                     <tr>
                                         <td>#</td>
-                                        @if ($aa_batch->reass_id===null)
+                                        @if ($payorder->agencyBatch->reass_id===null)
                                             
-                                        <td>{{$aa_batch->batch->batch_id}}</td>
-                                        <td>{{$aa_batch->batch->jobrole->job_role}}</td>
+                                        <td>{{$payorder->agencyBatch->batch->batch_id}}</td>
+                                        <td>{{$payorder->agencyBatch->batch->jobrole->job_role}}</td>
                                         <td>Assessment</td>
-                                        <td>{{\Carbon\Carbon::parse($aa_batch->batch->assessment)->format('d-m-Y')}}</td>
-                                        <td><a class="badge bg-green margin-0" href="{{route('agency.batch.bt-candidate',['id'=>Crypt::encrypt($aa_batch->bt_id)])}}" >View Candidate</a></td>
+                                        <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->batch->assessment)->format('d-m-Y')}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
 
                                         @else
-                                        <td>{{$aa_batch->reassessment->batch->batch_id}}</td>
-                                        <td>{{$aa_batch->reassessment->batch->jobrole->job_role}}</td>
+                                        <td>{{$payorder->agencyBatch->reassessment->batch->batch_id}}</td>
+                                        <td>{{$payorder->agencyBatch->reassessment->batch->jobrole->job_role}}</td>
                                         <td>Re-Assessment</td>
-                                        <td>{{\Carbon\Carbon::parse($aa_batch->reassessment->assessment)->format('d-m-Y')}}</td>   
-                                        <td><a class="badge bg-green margin-0" href="{{route('agency.batch.reass-bt-candidate',['id'=>Crypt::encrypt($aa_batch->reass_id)])}}" >View Candidate</a></td>
+                                        <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->reassessment->assessment)->format('d-m-Y')}}</td>   
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.batch.reass-bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->reass_id)])}}" >View Candidate</a></td>
                                         @endif
                                     </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                    
                                        
                                     </tbody>
@@ -192,10 +224,50 @@
 </div>
 @stop
 @section('page-script')
+<script>
 
+    function popupReject(id) {
+
+        var confirmatonText = document.createElement("div");
+        var _token=$('[name=_token]').val();
+        color = 'red'; text = 'Rejection'; 
+        displayText='Provide Payment Order Rejection Reason ';
+        confirmatonText="input"
+        
+        swal({
+            text: displayText,
+            content: confirmatonText,
+            icon: "info",
+            buttons: true,
+            buttons: {
+                    cancel: "No, Cancel",
+                    confirm: {
+                        text: "Confirm Reject",
+                        closeModal: false
+                    }
+                },
+            closeModal: false,
+            closeOnEsc: false,
+        }).then(function(val){
+            if (val != null) {
+                if (val === '') {
+                    swal('Attention', 'Please Describe the Reason of Rejection Payment Order', 'info');
+                } else {
+                    let url = "{{route('admin.paymentorder.reject',[':id',':reason'])}}";
+                    url = url.replace(':id', id); 
+                    location.href = url.replace(':reason', val);
+                }
+            }
+        });
+    }
+</script>
 
 {{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
+<script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
+
+<script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
+
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -204,4 +276,18 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
+
+<script>
+      $(function () {
+    
+    /* Intializing Bootstrap DatePicker */
+    $('.date_picker .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy'
+        });
+    
+    /* End Bootstrap DatePicker */
+    
+});
+</script>
 @stop
