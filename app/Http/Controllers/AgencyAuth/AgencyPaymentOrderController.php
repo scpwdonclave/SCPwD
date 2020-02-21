@@ -8,6 +8,7 @@ use App\AgencyBatch;
 use App\PaymentOrder;
 use App\PaymentOrderAgencyBatchMap;
 use App\Center;
+use App\Batch;
 use App\Reassessment;
 use App\Helpers\AppHelper;
 use Auth;
@@ -125,11 +126,18 @@ class AgencyPaymentOrderController extends Controller
 
     }
 
+    public function viewBatch($id){
+        if ($id= AppHelper::instance()->decryptThis($id)) {
+            $batchData=Batch::findOrFail($id);
+            return view('common.view-assessment-batch')->with(compact('batchData'));
+        }
+    }
+
     public function viewBatchReassessment($id){
         $id= AppHelper::instance()->decryptThis($id);
         $reassessment=Reassessment::findOrFail($id);
        
-        return view('agency.view-reassessment-batch')->with(compact('reassessment'));
+        return view('common.view-reassessment-batch')->with(compact('reassessment'));
 
     }
 

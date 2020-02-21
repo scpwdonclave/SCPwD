@@ -163,6 +163,9 @@ Route::get('placements/files/{id}/{file}', 'AdminAuth\FileController@placementFi
 //Payment Order
 Route::get('paymentorder/pending-request', 'AdminAuth\AdminPaymentOrderController@pendingPayOrderRequest')->name('paymentorder.pending-request');
 Route::get('paymentorder/view-pending-payorder/{id}', 'AdminAuth\AdminPaymentOrderController@viewPayOrder')->name('aa.payorder');
+Route::get('paymentorder/batch/candidates/{id}', 'AdminAuth\AdminPaymentOrderController@viewBatch')->name('batch.bt-candidate'); 
+Route::get('paymentorder/batch/reassessment-candidates/{id}', 'AdminAuth\AdminPaymentOrderController@viewBatchReassessment')->name('batch.reass-bt-candidate'); 
+Route::get('paymentorder/reject/{id}/{reason}', 'AdminAuth\AdminPaymentOrderController@paymentOrderReject')->name('paymentorder.reject'); 
 
 //End Payment Order
 //Support
