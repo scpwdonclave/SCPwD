@@ -35,6 +35,7 @@
                                     <th>Subject</th>
                                     <th>Issue</th>
                                     <th>Status</th>
+                                    <th>Assign to Support</th>
                                     <th>View</th>
                                     
                                 </tr>
@@ -57,6 +58,13 @@
                                  <td>{{$item->subject}}</td>
                                  <td>{{$item->issue}}</td>
                                  <td>{{$item->stage}}</td>
+                                 @if (!$item->assign_onclave)
+                                     
+                                 <td><a class="badge bg-green margin-0" href="{{route('admin.support.assign-to-onclave',['id'=>Crypt::encrypt($item->id)])}}" >Assign To Onclave Systems</a></td>
+                                 @else
+                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Assign To Onclave Systems</a></td>  
+                                     
+                                 @endif
                                  <td><a class="badge bg-green margin-0" href="{{route('admin.support.complain-view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>
                                  
                                  </tr>

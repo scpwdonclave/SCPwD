@@ -162,14 +162,17 @@ Route::get('placements/files/{id}/{file}', 'AdminAuth\FileController@placementFi
 
 //Payment Order
 Route::get('paymentorder/pending-request', 'AdminAuth\AdminPaymentOrderController@pendingPayOrderRequest')->name('paymentorder.pending-request');
+Route::get('paymentorder/closed-request', 'AdminAuth\AdminPaymentOrderController@closedPayOrderRequest')->name('paymentorder.closed-request');
 Route::get('paymentorder/view-pending-payorder/{id}', 'AdminAuth\AdminPaymentOrderController@viewPayOrder')->name('aa.payorder');
 Route::get('paymentorder/batch/candidates/{id}', 'AdminAuth\AdminPaymentOrderController@viewBatch')->name('batch.bt-candidate'); 
 Route::get('paymentorder/batch/reassessment-candidates/{id}', 'AdminAuth\AdminPaymentOrderController@viewBatchReassessment')->name('batch.reass-bt-candidate'); 
 Route::get('paymentorder/reject/{id}/{reason}', 'AdminAuth\AdminPaymentOrderController@paymentOrderReject')->name('paymentorder.reject'); 
+Route::post('paymentorder/accept', 'AdminAuth\AdminPaymentOrderController@paymentOrderAccept')->name('paymentorder.accept'); 
 
 //End Payment Order
 //Support
 Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
+Route::get('support/pending-request/{id}', 'AdminAuth\AdminSupportController@assignRequestToOnclave')->name('support.assign-to-onclave');
 Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');
 Route::get('support/view-complain/{id}', 'AdminAuth\AdminSupportController@viewComplain')->name('support.complain-view');
 Route::post('support/stage-define', 'AdminAuth\AdminSupportController@stageDefine')->name('support.stage-define');

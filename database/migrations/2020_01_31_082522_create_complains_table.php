@@ -24,6 +24,7 @@ class CreateComplainsTable extends Migration
             $table->string('stage');
             $table->date('process_at')->nullable();
             $table->date('closed_at')->nullable();
+            $table->integer('assign_onclave')->default(0);
             $table->timestamps();
         });
     }

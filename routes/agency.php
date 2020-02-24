@@ -50,6 +50,8 @@ Route::get('payment-order/batch/candidates/{id}', 'AgencyAuth\AgencyPaymentOrder
 Route::get('payment-order/batch/reassessment-candidates/{id}', 'AgencyAuth\AgencyPaymentOrderController@viewBatchReassessment')->name('batch.reass-bt-candidate'); 
 Route::get('payment-order/batch-wise', 'AgencyAuth\AgencyPaymentOrderController@batchWiseOrder')->name('payment-order.batch-wise'); 
 Route::post('payment-order/submit-batch-payorder', 'AgencyAuth\AgencyPaymentOrderController@submitPayOrderBatch')->name('payorder.batch-wise'); 
+Route::get('payment-order/my-payment-order', 'AgencyAuth\AgencyPaymentOrderController@myPaymentOrder')->name('payment-order.my-payment-order'); 
+Route::get('payment-order/view-my-payment-order/{id}', 'AgencyAuth\AgencyPaymentOrderController@viewMyPaymentOrder')->name('payorder.mypayorder'); 
 
 //End payment order
 
