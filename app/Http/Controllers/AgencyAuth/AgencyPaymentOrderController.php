@@ -194,4 +194,18 @@ class AgencyPaymentOrderController extends Controller
 
     }
 
+    public function myPaymentOrder(){
+        $pay_order=PaymentOrder::where('aa_id',$this->guard()->user()->id)->get();
+        return view('agency.my_pay_order')->with(compact('pay_order'));
+
+    }
+
+    public function viewMyPaymentOrder($id){
+       
+        $id= AppHelper::instance()->decryptThis($id);
+        // PaymentOrder::where('postal', $postal)->firstOrFail();
+         $pay_order=PaymentOrder::where([['aa_id','=',$this->guard()->user()->id],['id','=',$id]])->firstOrFail();
+         return view('agency.view-my-payorder')->with(compact('pay_order'));
+    }
+
 }

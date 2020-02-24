@@ -18,6 +18,11 @@ class CreatePaymentOrderAgencyBatchMapsTable extends Migration
             $table->unsignedBigInteger('po_id');
             $table->unsignedBigInteger('aa_batch_id');
             $table->timestamps();
+
+            $table->foreign('po_id')
+            ->references('id')
+            ->on('payment_orders')
+            ->onDelete('cascade');
         });
     }
 

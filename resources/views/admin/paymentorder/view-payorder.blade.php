@@ -130,38 +130,40 @@
                        
                         </ul>
                    
-                      <br><br>  
-                    <form id="form_payorder" action="" method="post" >
-                        @csrf
-                        <div class="row d-flex justify-content-around">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <label for="verification_date">Verification Date <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float date_picker">
-                                    <input type="text" class="form-control date_datepicker" placeholder="Verification Date" id="verification_date" name="verification_date"  required>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="payment_date">Payment Date <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float date_picker ">
-                                    <input type="text" class="form-control" placeholder="Payment Date"  id="payment_date" name="payment_date"  required>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                    {{-- <div class="text-center" >
-                        <button class="btn btn-round btn-primary" type="submit"> Confirm Pay Order</button>
-                    </div> --}}
-                    @auth('admin')
-                    <div class="text-center" >
-                        @if ($pay_order->verified===0 )
-                            <button class="btn btn-success" type="submit" >Accept</button>
-                            <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
-                                                
-                        @endif
-                    </div>
-                @endauth 
-                    </form>
+                      <br><br> 
+                      @if (!$pay_order->verified)
+                          
+                      <form id="form_payorder" action="{{route('admin.paymentorder.accept')}}" method="post" >
+                          @csrf
+                      <input type="hidden" name="po_id" value="{{$pay_order->id}}">
+                          <div class="row d-flex justify-content-around">
+                              <div class="col-sm-4"></div>
+                              <div class="col-sm-4">
+                                  <label for="verification_date">Verification Date <span style="color:red"> <strong>*</strong></span></label>
+                                  <div class="form-group form-float date_picker">
+                                      <input type="text" class="form-control date_datepicker" placeholder="Verification Date" id="verification_date" name="verification_date"  required>
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <label for="payment_date">Payment Date <span style="color:red"> <strong>*</strong></span></label>
+                                  <div class="form-group form-float date_picker ">
+                                      <input type="text" class="form-control" placeholder="Payment Date"  id="payment_date" name="payment_date"  required>
+                                  </div>
+                              </div>
+                          </div>
+                          <br>
+                      
+                      @auth('admin')
+                      <div class="text-center" >
+                          @if ($pay_order->verified===0 )
+                              <button class="btn btn-success" type="submit" >Accept</button>
+                              <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
+                                                  
+                          @endif
+                      </div>
+                  @endauth 
+                      </form>
+                 @endif 
                    
                 </div>
             </div>
@@ -178,6 +180,15 @@
                        
                     </div>
                     <div class="body">
+                        @if (!is_null($pay_order->payment_order_id))
+                        <div class="text-center">
+                            <h6>
+                                PAYMENT ORDER: <span style='color:blue'>{{$pay_order->payment_order_id}}</span> <br> <br>
+                                
+                            </h6>
+                        </div>
+                        <br>
+                    @endif
                         <div class="table-responsive">
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>

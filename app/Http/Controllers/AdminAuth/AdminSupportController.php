@@ -40,6 +40,14 @@ class AdminSupportController extends Controller
 
         return view('common.view-complain-details')->with(compact('complain'));
     }
+    public function assignRequestToOnclave($id){
+        $id= AppHelper::instance()->decryptThis($id);
+        $complain=Complain::findOrFail($id);
+        $complain->assign_onclave=1;
+        $complain->save();
+        alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been Assigned to <span style='color:blue;font-weight:bold'>Onclave Systems Pvt Ltd. </span>", 'Job Done')->html()->autoclose(4000);
+        return Redirect()->back();
+    }
 
     public function stageDefine(Request $request){
         $complain=Complain::findOrFail($request->comp_id);
