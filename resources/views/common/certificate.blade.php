@@ -106,7 +106,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                     <span class="cls_008" style="font-weight:normal;">Skill Council for Persons with Disability</span>
                 </div>
                 <div style="position:absolute;top:630px;left:1100px">
-                    {!! QrCode::size(230)->generate(route('assessment-qrdata',['id'=>$item->id])); !!}     
+                    {!! QrCode::size(230)->generate(route('assessment-qrdata',isset($assessment)?$item->centerCandidate->digital_key:$item->centercandidate->digital_key)); !!}     
                 </div>
                 <div style="position:absolute;top:840px;left:1100px">
                     <span class="cls_008" style="font-weight:normal;">Month/Year of Issue - {{Carbon\Carbon::parse($ass_cert_date[1])->format('M/Y')}}</span>    

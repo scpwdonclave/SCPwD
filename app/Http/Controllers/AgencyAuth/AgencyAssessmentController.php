@@ -211,6 +211,12 @@ class AgencyAssessmentController extends Controller
                 $assessment_tag = 'Assessment';
                 $batchData=Batch::findOrFail($id[0]);
                 $assessment_date = $batchData->assessment;
+                if (is_null($batchData->assessorbatch)) {
+                    $assessor = null;    
+                } else {
+                    $assessor = $batchData->assessorbatch->assessor->name .' ('.$batchData->assessorbatch->assessor->as_id.')';
+                }
+                
                 
                 foreach ($batchData->candidatesmap as $candidate) {
                     if ($batchData->batchassessment) {
@@ -232,6 +238,14 @@ class AgencyAssessmentController extends Controller
                 $reassessment=Reassessment::findOrFail($id[0]);
                 $assessment_date = $reassessment->assessment;
                 $batchData = $reassessment->batch;
+
+                if (is_null($reassessment->as_id)) {
+                    $assessor = null;    
+                } else {
+                    $assessor = $reassessment->assessor->name .' ('.$reassessment->assessor->as_id.')';
+                }
+
+
                 foreach ($reassessment->candidates as $candidate) {
                     if ($candidate->appear) {
 
@@ -250,7 +264,7 @@ class AgencyAssessmentController extends Controller
                 
             } 
             
-            return view('common.view-batch-assessment')->with(compact('assessment_tag','center_candidates','assessment_date','batchData'));
+            return view('common.view-batch-assessment')->with(compact('assessor','assessment_tag','center_candidates','assessment_date','batchData'));
         }
     }
     

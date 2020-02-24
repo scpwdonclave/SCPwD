@@ -90,12 +90,14 @@ class AdminReAssessmentController extends Controller
             'assessment' => ($request->action == '1')?'required':'nullable',
             'agency' => ($request->action == '1')?'required':'nullable',
         ]);
-
+            
+        // dd('Data Validated');
         $reassessment = Reassessment::findOrFail($request->reassid);
         if (is_null($reassessment->verified) && $reassessment->batch->status) {
             
             switch ($request->action) {
                 case '1':
+                        // * Re-Assessment Accepted [Candidates Present]
                         $reassessment->assessment=$request->assessment;            
                         AgencyBatch::create([
                             'aa_id' => $request->agency,
@@ -104,12 +106,13 @@ class AdminReAssessmentController extends Controller
                             'reass_id' => $reassessment->id,
                         ]);
 
-                        $reassessment->verified=0;
-                    break;
-                
+                    // break;
+                    // * Carry Forwarding this Request to next Case
                 case '2':
+                        // * Re-Assessment Accepted [Candidates are not Present]
+                        
                         foreach ($reassessment->candidates as $candidate) {
-                            if (!$candidate->assessment_status) {
+                            if (!$candidate->appear) {
                                 $centerCandidate = CenterCandidateMap::find($candidate->ccd_id);
                                 $centerCandidate->reassessed=0;
                                 $centerCandidate->save();
@@ -118,7 +121,11 @@ class AdminReAssessmentController extends Controller
                         
                         $reassessment->verified=1;
                     break;
+                    
                 default:
+                        // * Re-Assessment Rejected
+                        $reassessment->verified=0;
+                    
                     break;
             }
 

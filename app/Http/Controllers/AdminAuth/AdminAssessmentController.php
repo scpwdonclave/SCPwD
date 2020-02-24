@@ -329,6 +329,7 @@ class AdminAssessmentController extends Controller
                                 }
                 
                                 $value->centerCandidate->certi_no=$new_certi_id;
+                                $value->centerCandidate->digital_key=time().$value->centerCandidate->id.$value->centerCandidate->tc_id.$value->centerCandidate->cd_id;
                                 $value->centerCandidate->assessment_certi_issued_on= $value->centerCandidate->assessment_certi_issued_on.','.Carbon::now();
                                 $value->centerCandidate->save();
                         

@@ -45,7 +45,7 @@ class CenterBatchController extends Controller
                 if ($batchData->batchassessment) {
 
                     // * Batch has given an Exam
-                    if ($batchData->batchassessment->supadmin_cert_rel) {
+                    if ($batchData->batchassessment->sup_admin_verified) {
 
                         // * Batch certificate is Released
                         foreach ($batchData->candidatesmap as $centercandidate) {

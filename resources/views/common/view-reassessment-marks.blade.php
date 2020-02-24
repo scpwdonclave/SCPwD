@@ -144,7 +144,7 @@
 
                             @case('partner')
                                 @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && $batchReAssessment->sup_admin_verified==1 && $batchReAssessment->admin_cert_rel==1 && $batchReAssessment->supadmin_cert_rel==1)
-                                    <button class="btn btn-success" onclick="location.href='{{route(Request::segment(1).'.assessment.certificate.print',Crypt::encrypt($batchReAssessment->id.',0'))}}';this.disabled = true;">Print Certificate</button>
+                                    <button class="btn btn-success" onclick="window.open('{{route(Request::segment(1).'.assessment.certificate.print',Crypt::encrypt($batchReAssessment->id.',0'))}}');">Print Certificate</button>
                                 @endif
                             @default
                         @endswitch

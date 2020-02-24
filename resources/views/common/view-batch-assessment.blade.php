@@ -42,9 +42,16 @@
                                         <hr>
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <small class="text-muted">{{$assessment_tag}} Date</small>
                                         <p>{{\Carbon\Carbon::parse($assessment_date)->format('d-m-Y')}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Assessor</small>
+                                        <p>{!!is_null($assessor)?'<span style="color:blue">Not Assigned Yet</span>':$assessor!!}</p>
                                         <hr>
                                     </div>
                                 </div>
