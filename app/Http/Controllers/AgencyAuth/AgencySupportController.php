@@ -56,6 +56,8 @@ class AgencySupportController extends Controller
 
         $complain= new Complain;
         $complain->token_id=$new_tokenid;
+        $complain->username=$this->guard()->user()->name;
+        $complain->userid=$this->guard()->user()->aa_id;
         $complain->rel_id=$this->guard()->user()->id;
         $complain->rel_with="agency";
         $complain->subject=$request->subject;

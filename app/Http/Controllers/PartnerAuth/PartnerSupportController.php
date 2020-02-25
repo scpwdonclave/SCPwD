@@ -55,6 +55,8 @@ class PartnerSupportController extends Controller
 
         $complain= new Complain;
         $complain->token_id=$new_tokenid;
+        $complain->username=$this->guard()->user()->spoc_name;
+        $complain->userid=$this->guard()->user()->tp_id;
         $complain->rel_id=$this->guard()->user()->id;
         $complain->rel_with="partner";
         $complain->subject=$request->subject;

@@ -16,6 +16,8 @@ class CreateComplainsTable extends Migration
         Schema::create('complains', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('token_id');
+            $table->string('username');
+            $table->string('userid');
             $table->unsignedBigInteger('rel_id');
             $table->string('rel_with');
             $table->string('subject');

@@ -55,6 +55,8 @@ class AssessorSupportController extends Controller
 
         $complain= new Complain;
         $complain->token_id=$new_tokenid;
+        $complain->username=$this->guard()->user()->name;
+        $complain->userid=$this->guard()->user()->as_id;
         $complain->rel_id=$this->guard()->user()->id;
         $complain->rel_with="assessor";
         $complain->subject=$request->subject;

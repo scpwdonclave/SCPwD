@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Complain;
-use App\ComplainFile;
 use Auth;
-use App\Helpers\AppHelper;
+use App\Complain;
 use Carbon\Carbon;
+use App\ComplainFile;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Events\AdminMailEvent;
+use App\Http\Controllers\Controller;
 
 
 
@@ -44,6 +45,9 @@ class AdminSupportController extends Controller
         $id= AppHelper::instance()->decryptThis($id);
         $complain=Complain::findOrFail($id);
         $complain->assign_onclave=1;
+
+        event(new AdminMailEvent($complain));
+        
         $complain->save();
         alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been Assigned to <span style='color:blue;font-weight:bold'>Onclave Systems Pvt Ltd. </span>", 'Job Done')->html()->autoclose(4000);
         return Redirect()->back();

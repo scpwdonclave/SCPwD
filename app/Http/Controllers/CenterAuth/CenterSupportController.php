@@ -53,6 +53,8 @@ class CenterSupportController extends Controller
 
         $complain= new Complain;
         $complain->token_id=$new_tokenid;
+        $complain->username=$this->guard()->user()->spoc_name;
+        $complain->userid=$this->guard()->user()->tc_id;
         $complain->rel_id=$this->guard()->user()->id;
         $complain->rel_with="center";
         $complain->subject=$request->subject;

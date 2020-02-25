@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\AdminMailEvent;
+use App\Listeners\AdminMailListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,6 +32,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\ASMailEvent::class => [
             \App\Listeners\ASMailListener::class
+        ],
+        \App\Events\AdminMailEvent::class => [
+            \App\Listeners\AdminMailListener::class
         ],
     ];
 
