@@ -46,7 +46,7 @@ class AgencyPaymentOrderController extends Controller
         }
         $center=$center->unique('tc_id');
        
-        return view('agency.pay_order_center_wise')->with(compact('center'));
+        return view('agency.pay-order-center-wise')->with(compact('center'));
     } 
 
     public function viewTcWiseOrder($id){
@@ -169,7 +169,7 @@ class AgencyPaymentOrderController extends Controller
             
          }
          //dd($aa_batch->count());
-        return view('agency.pay_order_batch_wise')->with(compact('aa_batch'));
+        return view('agency.pay-order-batch-wise')->with(compact('aa_batch'));
 
     }
 
@@ -196,7 +196,7 @@ class AgencyPaymentOrderController extends Controller
 
     public function myPaymentOrder(){
         $pay_order=PaymentOrder::where('aa_id',$this->guard()->user()->id)->get();
-        return view('agency.my_pay_order')->with(compact('pay_order'));
+        return view('agency.my-pay-order')->with(compact('pay_order'));
 
     }
 
