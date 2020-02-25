@@ -95,6 +95,25 @@ class AgencyPaymentOrderController extends Controller
         $agencyBatch=AgencyBatch::where([['aa_id','=',$this->guard()->user()->id],['aa_verified','=',1]])->get();
 
         $p_order=new PaymentOrder;
+        $data=DB::table('payment_orders')
+        ->select(\DB::raw('SUBSTRING(payment_order_id,3) as payment_order_id'))
+        ->where("payment_order_id", "LIKE", "PO%")->get();
+        $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
+        if (count($data) > 0) {
+
+            $priceprod = array();
+                foreach ($data as $key=>$data) {
+                    $priceprod[$key]=$data->payment_order_id;
+                }
+                $lastid= max($priceprod);
+               
+                $new_poid = (substr($lastid, 0, 4)== $year) ? 'PO'.($lastid + 1) : 'PO'.$year.'000001' ;
+        } else {
+            $new_poid = 'PO'.$year.'000001';
+        }
+        $p_order->payment_order_id=$new_poid;
+        $p_order->ref_no=$request->ref_no;
         $p_order->aa_id=$this->guard()->user()->id;
         $p_order->po_date=Carbon::now()->format('Y-m-d');
         $p_order->save();
@@ -179,6 +198,26 @@ class AgencyPaymentOrderController extends Controller
         return redirect()->back(); 
         }
         $p_order=new PaymentOrder;
+        $data=DB::table('payment_orders')
+        ->select(\DB::raw('SUBSTRING(payment_order_id,3) as payment_order_id'))
+        ->where("payment_order_id", "LIKE", "PO%")->get();
+        $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+
+        if (count($data) > 0) {
+
+            $priceprod = array();
+                foreach ($data as $key=>$data) {
+                    $priceprod[$key]=$data->payment_order_id;
+                }
+                $lastid= max($priceprod);
+               
+                $new_poid = (substr($lastid, 0, 4)== $year) ? 'PO'.($lastid + 1) : 'PO'.$year.'000001' ;
+        } else {
+            $new_poid = 'PO'.$year.'000001';
+        }
+
+        $p_order->payment_order_id=$new_poid;
+        $p_order->ref_no=$request->ref_no;
         $p_order->aa_id=$this->guard()->user()->id;
         $p_order->po_date=Carbon::now()->format('Y-m-d');
         $p_order->save();

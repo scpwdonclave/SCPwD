@@ -60,6 +60,16 @@
                             </table>
                             </div>
                             @if($aa_batch->count()>0)
+                            <div class="row d-flex justify-content-around">
+                                
+                                <div class="col-sm-4">
+                                    <label for="ref_no">Enter Ref No. <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <input type="text" class="form-control " placeholder="Enter Ref No" id="ref_no" name="ref_no"  required>
+                                    </div>
+                                </div>
+                               
+                            </div>
                             <div class="text-center" >
                                 <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Pay Order</button>
                             </div>
@@ -103,6 +113,7 @@
     $('#save-btn').attr("disabled",!$(this).is(":checked"));   
 })
 </script>
+<script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -111,4 +122,6 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/js/scpwd-common.js')}}"></script>
+
 @stop

@@ -117,7 +117,16 @@
                         @csrf
                     
                     <input type="hidden" name="center_id" value="{{$center->id}}">
-
+                    <div class="row d-flex justify-content-around">
+                                
+                        <div class="col-sm-4">
+                            <label for="ref_no">Enter Ref No. <span style="color:red"> <strong>*</strong></span></label>
+                            <div class="form-group form-float">
+                                <input type="text" class="form-control " placeholder="Enter Ref No" id="ref_no" name="ref_no"  required>
+                            </div>
+                        </div>
+                       
+                    </div>
                     <div class="text-center" >
                         <button class="btn btn-round btn-primary" type="submit"> Submit Pay Order</button>
                     </div>
