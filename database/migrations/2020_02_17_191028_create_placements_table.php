@@ -18,8 +18,14 @@ class CreatePlacementsTable extends Migration
             $table->unsignedBigInteger('tp_id');
             $table->unsignedBigInteger('tc_id');
             $table->unsignedBigInteger('ccd_id');
-            $table->string('placed_in');
-            $table->string('placed_on');
+            $table->string('org_name');
+            $table->string('employment_date');
+            $table->string('emp_type');
+            $table->text('org_address');
+            $table->string('org_state_dist');
+            $table->string('emp_spoc_name')->nullable();
+            $table->string('emp_spoc_mobile')->nullable();
+            $table->string('emp_spoc_email')->nullable();
             $table->string('offer_letter');
             $table->string('appointment_letter');
             $table->string('payslip1')->nullable();

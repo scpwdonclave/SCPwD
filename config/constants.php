@@ -14,6 +14,17 @@ return [
         '9' => 'Diploma',
     ],
 
+    'organizations' => [
+        '0' => 'NGO',
+        '1' => 'Private Limited',
+        '2' => 'Partnership Firm',
+        '3' => 'Proprietorship',
+        '4' => 'Limited Company',
+        '5' => 'One Person Company',
+        '6' => 'LLP',
+        '7' => 'LLC',
+    ],
+
 
     'hours' => [
         '0' => [

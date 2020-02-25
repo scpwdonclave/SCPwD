@@ -43,23 +43,63 @@
                                 </div>
                                 
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">Training Partner</small>
                                         <p>{{'('.$placement->partner->org_name.')'.$placement->partner->tp_id}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">Training Center</small>
                                         <p>{{'('.$placement->center->center_name.')'.$placement->center->tc_id}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <small class="text-muted">Placed In</small>
-                                        <p>{{$placement->placed_in .' on '.$placement->placed_on}}</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Organization</small>
+                                        <p>{{$placement->org_name}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Employment Date</small>
+                                        <p>{{$placement->employment_date}}</p>
                                         <hr>
                                     </div>
                                 </div>
-                                
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Employer Type</small>
+                                        <p>{{$placement->emp_type}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Organization Address</small>
+                                        <p>{{$placement->org_address}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">State District</small>
+                                        <p>{{$placement->state_district->district .' ('.$placement->state_district->state.')'}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Employer SPOC Name</small>
+                                        <p>{{$placement->emp_spoc_name}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Employer SPOC Mobile</small>
+                                        <p>{{$placement->emp_spoc_mobile}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Employer SPOC Email</small>
+                                        <p>{{$placement->emp_spoc_email}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">Offer Letter</small>

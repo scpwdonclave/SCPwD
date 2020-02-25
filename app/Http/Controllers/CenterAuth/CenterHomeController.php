@@ -449,16 +449,24 @@ class CenterHomeController extends Controller
     public function addPlacement()
     {
         $center_candidates = CenterCandidateMap::where([['tc_id',$this->guard()->user()->id],['passed',1]])->get();
+        $states = DB::table('state_district')->get();
 
-        return view('center.addplacement')->with(compact('center_candidates'));
+        return view('center.addplacement')->with(compact('center_candidates','states'));
     }
 
     public function submitPlacement(Request $request)
     {
+
         $request->validate([
             'candidate'=>'required|numeric',
-            'placed_in'=>'required',
-            'placed_on'=>'required',
+            'org_name'=>'required',
+            'employment_date'=>'required',
+            'emp_type'=>'required',
+            'org_address'=>'required',
+            'state_district'=>'required|numeric',
+            'spoc_name'=>'nullable',
+            'spoc_mobile'=>'nullable',
+            'spoc_email'=>'nullable',
             'offer_letter'=>'required|file',
             'appointment_letter'=>'nullable|file',
             'payslip'=>'nullable|array|min:3|max:3',
@@ -469,8 +477,16 @@ class CenterHomeController extends Controller
         $placement->tp_id = $this->guard()->user()->tp_id;
         $placement->tc_id = $this->guard()->user()->id;
         $placement->ccd_id = $request->candidate;
-        $placement->placed_in = $request->placed_in;
-        $placement->placed_on = $request->placed_on;
+        $placement->org_name = $request->org_name;
+        $placement->employment_date = $request->employment_date;
+        
+        $placement->emp_type = $request->emp_type;
+        $placement->org_address = $request->org_address;
+        $placement->org_state_dist = $request->state_district;
+        $placement->emp_spoc_name = $request->spoc_name;
+        $placement->emp_spoc_mobile = $request->spoc_mobile;
+        $placement->emp_spoc_email = $request->spoc_email;
+
         $placement->offer_letter = Storage::disk('myDisk')->put('/placement', $request->offer_letter);
         if ($request->has('appointment_letter')) {
             $placement->appointment_letter = Storage::disk('myDisk')->put('/placement', $request->appointment_letter);

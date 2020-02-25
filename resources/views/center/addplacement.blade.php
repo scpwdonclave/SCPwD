@@ -37,7 +37,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_candidate" method="POST" action="{{ route('center.placement.submit') }}" enctype="multipart/form-data">
+                    <form id="form_placement" method="POST" action="{{ route('center.placement.submit') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-sm-4">
@@ -53,15 +53,63 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label id="placed_in" for="placed_in">Placed In <span style="color:red"> <strong>*</strong></span></label>
+                                <label id="org_name" for="org_name">Organization Name <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Candidate Placed in" name="placed_in" required>
+                                    <input type="text" class="form-control" placeholder="Organization Name" name="org_name" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label id="placed_on" for="placed_on">Placed On <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float placed_on">
-                                    <input type="text" class="form-control" placeholder="Candidate Placed on" name="placed_on" required>
+                                <label id="employment_date" for="employment_date">Employment Date <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float employment_date">
+                                    <input type="text" class="form-control" placeholder="Employment Date" name="employment_date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="emp_type">Employer Type</label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" data-live-search="true" name="emp_type" data-show-subtext="true" data-dropup-auto='false' required>
+                                        @foreach (Config::get('constants.organizations') as $organizations)
+                                            <option>{{$organizations}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label id="org_address" for="org_address">Organization Address <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Organization Address" name="org_address" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="state_district">Choose Organization State District <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
+                                        @foreach ($states as $state)
+                                            <option value="{{$state->id}}">{{ $state->district.' ('.$state->state.')' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label id="spoc_name" for="spoc_name">Employer SPOC Name</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="SPOC Name" name="spoc_name">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label id="spoc_mobile" for="spoc_mobile">Employer SPOC Mobile</label>
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="SPOC Mobile" name="spoc_mobile">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label id="spoc_email" for="spoc_email">Employer SPOC Email</label>
+                                <div class="form-group form-float">
+                                    <input type="email" class="form-control" placeholder="SPOC Email" name="spoc_email">
                                 </div>
                             </div>
                         </div>
@@ -157,18 +205,25 @@
 
 <script>
 
-$(function () {
-    
-    /* Intializing Bootstrap DatePicker */
-    
-        $('.placed_on .form-control').datepicker({
-            autoclose: true,
-            format: 'dd-mm-yyyy',
-        });
-    
-    /* End Bootstrap DatePicker */
-    
-});
+    $(function () {
+        
+        /* Intializing Bootstrap DatePicker */
+        
+            $('.employment_date .form-control').datepicker({
+                autoclose: true,
+                format: 'dd-mm-yyyy',
+            });
+        
+        /* End Bootstrap DatePicker */
+        
+    });
+
+    $("#form_placement").validate({
+        ru      les: {
+            spoc_mobile: { mobile: true },
+            "[type=email]": { email: true }
+        }
+    });
 
 
 </script>

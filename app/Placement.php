@@ -23,4 +23,9 @@ class Placement extends Model implements Auditable
     {
         return $this->belongsTo('App\CenterCandidateMap','ccd_id');
     }
+
+    public function state_district()
+    {
+        return $this->belongsTo('App\StateDistrict','org_state_dist');
+    }
 }

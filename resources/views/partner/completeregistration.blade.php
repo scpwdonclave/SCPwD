@@ -66,14 +66,9 @@
                                                     <label for="org_type">Oganization Type</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option>NGO</option>
-                                                            <option>Private Limited</option>
-                                                            <option>Partnership Firm</option>
-                                                            <option>Proprietorship</option>
-                                                            <option>Limited Company</option>
-                                                            <option>One Person Company</option>
-                                                            <option>LLP</option>
-                                                            <option>LLC</option>
+                                                            @foreach (Config::get('constants.organizations') as $organizations)
+                                                                <option>{{$organizations}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>

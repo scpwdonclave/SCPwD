@@ -24,7 +24,7 @@
                                     <th>TC ID</th>
                                     <th>Candidate Name</th>
                                     <th>Job Role</th>
-                                    <th>Placed In</th>
+                                    <th>Organization</th>
                                     <th>View</th>
                                 </tr>
                             </thead>
@@ -35,7 +35,7 @@
                                         <td>{{$placement->centercandidate->center->tc_id}}</td>
                                         <td>{{$placement->centercandidate->candidate->name}}</td>
                                         <td>{{$placement->centercandidate->jobrole->partnerjobrole->jobrole->job_role}}</td>
-                                        <td>{{$placement->placed_in}}</td>
+                                        <td>{{$placement->org_name}}</td>
                                         <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).'.placement.view',Crypt::encrypt($placement->id))}}'" >View</button></td>
                                     </tr>
                                 @endforeach
