@@ -22,6 +22,7 @@
                                 <thead>
                                         <tr>
                                         <th>#</th>
+                                        <th>Payment Order ID</th>
                                         <th>Agency ID</th>
                                         <th>Payment Order Date</th>
                                         <th>SPOC Name</th>
@@ -36,6 +37,7 @@
                                         
                                     <tr>
                                     <td>{{$key+1}}</td>
+                                    <td>{{$item->payment_order_id}}</td>
                                     <td>{{$item->agency->aa_id}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
                                     <td>{{$item->agency->name}}</td>

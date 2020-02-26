@@ -64,30 +64,30 @@ class AdminPaymentOrderController extends Controller
 
     public function paymentOrderAccept(Request $request){
         $pay_order=PaymentOrder::findOrFail($request->po_id);
-        $data=DB::table('payment_orders')
-        ->select(\DB::raw('SUBSTRING(payment_order_id,3) as payment_order_id'))
-        ->where("payment_order_id", "LIKE", "PO%")->get();
-        $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+        // $data=DB::table('payment_orders')
+        // ->select(\DB::raw('SUBSTRING(payment_order_id,3) as payment_order_id'))
+        // ->where("payment_order_id", "LIKE", "PO%")->get();
+        // $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
 
-        if (count($data) > 0) {
+        // if (count($data) > 0) {
 
-            $priceprod = array();
-                foreach ($data as $key=>$data) {
-                    $priceprod[$key]=$data->payment_order_id;
-                }
-                $lastid= max($priceprod);
+        //     $priceprod = array();
+        //         foreach ($data as $key=>$data) {
+        //             $priceprod[$key]=$data->payment_order_id;
+        //         }
+        //         $lastid= max($priceprod);
                
-                $new_poid = (substr($lastid, 0, 4)== $year) ? 'PO'.($lastid + 1) : 'PO'.$year.'000001' ;
-        } else {
-            $new_poid = 'PO'.$year.'000001';
-        }
-        $pay_order->payment_order_id=$new_poid;
+        //         $new_poid = (substr($lastid, 0, 4)== $year) ? 'PO'.($lastid + 1) : 'PO'.$year.'000001' ;
+        // } else {
+        //     $new_poid = 'PO'.$year.'000001';
+        // }
+        
         $pay_order->verification_date=Carbon::parse($request->verification_date)->format('Y-m-d');
         $pay_order->payment_date=Carbon::parse($request->payment_date)->format('Y-m-d');
         $pay_order->verified=1;
         $pay_order->save();
 
-        alert()->success("Payment Order ID: <span style='color:blue;font-weight:bold'>".$new_poid."</span>  has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+        alert()->success("Payment Order ID: <span style='color:blue;font-weight:bold'>".$pay_order->payment_order_id."</span>  has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
 
         return redirect()->route('admin.paymentorder.pending-request');
 

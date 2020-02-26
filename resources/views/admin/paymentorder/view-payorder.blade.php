@@ -184,6 +184,7 @@
                         <div class="text-center">
                             <h6>
                                 PAYMENT ORDER: <span style='color:blue'>{{$pay_order->payment_order_id}}</span> <br> <br>
+                                Ref No: <span style='color:blue'>{{$pay_order->ref_no}}</span> <br> <br>
                                 
                             </h6>
                         </div>

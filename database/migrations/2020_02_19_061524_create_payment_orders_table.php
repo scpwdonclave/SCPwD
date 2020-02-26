@@ -17,6 +17,7 @@ class CreatePaymentOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('aa_id');
             $table->string('payment_order_id')->nullable();
+            $table->string('ref_no')->nullable();
             $table->string('po_date');
             $table->string('verification_date')->nullable();
             $table->string('payment_date')->nullable();
