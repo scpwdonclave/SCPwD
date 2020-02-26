@@ -177,10 +177,9 @@
                         {{-- @if (Request::segment(1) === 'agency')
                             <li class="{{ Request::is('agency/reassessment/batches') ? 'active' : null }}"><a href="{{route('agency.reassessment.batches')}}">Batches</a></li>
                         @endif --}}
-                        @if (Request::segment(1) === 'admin')
-                            <li class="{{ Request::is('admin/reassessment/reassessment-status') ? 'active' : null }}"><a href="{{route('admin.reassessment.reassessment-status')}}">Result & Certificates</a></li>
-                        @endif
-                        <li class="{{ Request::is(Request::segment(1).'/reassessment/reassessments') ? 'active' : (Request::segment(3)=='reassessments')? 'active':null }}"><a href="{{route('admin.reassessment.reassessments')}}">Re-Assessments</a></li>
+                        <li class="{{ Request::is('admin/reassessment/reassessment-status') ? 'active' : null }}"><a href="{{route('admin.reassessment.reassessment-status')}}">Result & Certificates</a></li>
+                        <li class="{{ Request::is('admin/reassessment/reassessments') ? 'active' : null }}"><a href="{{route('admin.reassessment.reassessments')}}">Re-Assessments</a></li>
+                        <li class="{{ Request::is('admin/reassessment/agency-rejected') ? 'active' : null }}"><a href="{{route('admin.reassessment.agencyrejected')}}">Agency Re-Assign</a></li>
                     </ul>
                 </li>
             @endif

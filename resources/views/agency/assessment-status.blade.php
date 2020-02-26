@@ -35,15 +35,17 @@
                                 @foreach ($agencyBatches as $assessment)
                                     @if ($assessment->batch->batchassessment)
                                         @if (!$assessment->batch->batchassessment->aa_verified)
-                                            <td>{{$assessment->batch->batch_id}}</td>
-                                            <td>{{$assessment->agency->aa_id}}</td>
-                                            <td>{{$assessment->batch->assessorbatch->assessor->as_id}}</td>
-                                            <td>{{$assessment->batch->assessment}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->aa_verified=='1')?'success':(($assessment->batch->batchassessment->aa_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->aa_verified=='1')?'Approved':(($assessment->batch->batchassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->admin_verified=='1')?'success':(($assessment->batch->batchassessment->admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'success':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'Released':(($assessment->batch->batchassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('agency.assessment.view',Crypt::encrypt($assessment->batch->batchassessment->id))}}" >View</a></td>
+                                            <tr>
+                                                <td>{{$assessment->batch->batch_id}}</td>
+                                                <td>{{$assessment->agency->aa_id}}</td>
+                                                <td>{{$assessment->batch->assessorbatch->assessor->as_id}}</td>
+                                                <td>{{$assessment->batch->assessment}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->aa_verified=='1')?'success':(($assessment->batch->batchassessment->aa_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->aa_verified=='1')?'Approved':(($assessment->batch->batchassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->admin_verified=='1')?'success':(($assessment->batch->batchassessment->admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'success':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'Released':(($assessment->batch->batchassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('agency.assessment.view',Crypt::encrypt($assessment->batch->batchassessment->id))}}" >View</a></td>
+                                            </tr>
                                         @endif
                                     @endif
                                 @endforeach
@@ -80,15 +82,17 @@
                                 @foreach ($agencyBatches as $assessment)
                                     @if ($assessment->batch->batchassessment && ($assessment->batch->agencybatch->aa_id == Auth::guard('agency')->user()->id))
                                         @if ($assessment->batch->batchassessment->aa_verified)
-                                            <td>{{$assessment->batch->batch_id}}</td>
-                                            <td>{{$assessment->agency->aa_id}}</td>
-                                            <td>{{$assessment->batch->assessorbatch->assessor->as_id}}</td>
-                                            <td>{{$assessment->batch->assessment}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->aa_verified=='1')?'success':(($assessment->batch->batchassessment->aa_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->aa_verified=='1')?'Approved':(($assessment->batch->batchassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->admin_verified=='1')?'success':(($assessment->batch->batchassessment->admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'success':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
-                                            <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'Released':(($assessment->batch->batchassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
-                                            <td><a class="badge bg-green margin-0" href="{{route('agency.assessment.view',Crypt::encrypt($assessment->batch->batchassessment->id))}}" >View</a></td>
+                                            <tr>
+                                                <td>{{$assessment->batch->batch_id}}</td>
+                                                <td>{{$assessment->agency->aa_id}}</td>
+                                                <td>{{$assessment->batch->assessorbatch->assessor->as_id}}</td>
+                                                <td>{{$assessment->batch->assessment}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->aa_verified=='1')?'success':(($assessment->batch->batchassessment->aa_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->aa_verified=='1')?'Approved':(($assessment->batch->batchassessment->aa_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->admin_verified=='1')?'success':(($assessment->batch->batchassessment->admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'success':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'danger':'muted')}}">{{($assessment->batch->batchassessment->sup_admin_verified=='1')?'Approved':(($assessment->batch->batchassessment->sup_admin_verified=='2')?'Rejected':'Pending')}}</td>
+                                                <td style="font-weight:bold;" class="text-{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'success':'danger'}}">{{($assessment->batch->batchassessment->supadmin_cert_rel=='1')?'Released':(($assessment->batch->batchassessment->supadmin_cert_rel=='2')?'Rejected':'Not Released')}}</td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('agency.assessment.view',Crypt::encrypt($assessment->batch->batchassessment->id))}}" >View</a></td>
+                                            </tr>
                                         @endif
                                     @endif
                                 @endforeach

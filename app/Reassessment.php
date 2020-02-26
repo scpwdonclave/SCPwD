@@ -26,6 +26,11 @@ class Reassessment extends Model implements Auditable
         return $this->belongsTo('App\Agency', 'aa_id');
     }
 
+    public function agencybatch()
+    {
+        return $this->hasOne('App\AgencyBatch', 'reass_id');
+    }
+
     public function assessor()
     {
         return $this->belongsTo('App\Assessor', 'as_id');

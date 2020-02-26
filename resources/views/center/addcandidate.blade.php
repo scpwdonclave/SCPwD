@@ -460,7 +460,8 @@
                                 }
                             },
                             error: function (data) {
-                                swal({title: "Attention", content: 'Something Went Wrong, Please Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                                swalText.innerHTML = 'Something Went Wrong, Please Try Again';
+                                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                             }
                         });
                     

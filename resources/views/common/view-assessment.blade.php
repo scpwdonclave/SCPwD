@@ -180,29 +180,29 @@
             closeModal: true,
             closeOnEsc: false,
         }).then(function(val){
-            
-            if (val != '') {
-                var url = '';
-                switch (tag) {
-                    case 'agency':
-                        url = "{{ route('agency.assessment.approve.reject',[':id','reject',':reason']) }}";
-                        break;
-                    case 'admin':
-                        url = "{{ route('admin.assessment.approve.reject',[':id','reject',':reason']) }}";
-                        break;
-                    case 'certificate':
-                        url = "{{ route('admin.certificate.release.approve.reject',[':id','reject',':reason']) }}";
-                        break;
-                    default:
-                        break;
-                }
+            if (val !== null) {
+                if (val === '' ) {
+                    swal('Attention', 'You need to write something!', 'info');
+                } else {
+                    var url = '';
+                    switch (tag) {
+                        case 'agency':
+                            url = "{{ route('agency.assessment.approve.reject',[':id','reject',':reason']) }}";
+                            break;
+                        case 'admin':
+                            url = "{{ route('admin.assessment.approve.reject',[':id','reject',':reason']) }}";
+                            break;
+                        case 'certificate':
+                            url = "{{ route('admin.certificate.release.approve.reject',[':id','reject',':reason']) }}";
+                            break;
+                        default:
+                            break;
+                    }
 
-                url = url.replace(':id', id);
-                url = url.replace(':reason', val);
-                location.href = url;
-                
-            } else if (val!=null) {
-                swal('Attention', 'You need to write something!', 'info');
+                    url = url.replace(':id', id);
+                    url = url.replace(':reason', val);
+                    location.href = url;        
+                }
             }
         });
     }

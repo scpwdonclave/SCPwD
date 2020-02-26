@@ -149,9 +149,12 @@ Route::get('assessment/assessment-certificate-print/{id}', 'AdminAuth\AdminAsses
 // For ReAssessment
 Route::get('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@reassessments')->name('reassessment.reassessments');
 Route::get('reassessment/reassessments/{id}', 'AdminAuth\AdminReAssessmentController@viewReAssessment')->name('reassessment.view');
+Route::get('reassessment/agency-rejected', 'AdminAuth\AdminReAssessmentController@agencyRejected')->name('reassessment.agencyrejected');
 Route::get('reassessment/reassessment-status', 'AdminAuth\AdminReAssessmentController@reassessmentStatus')->name('reassessment.reassessment-status'); 
 Route::get('reassessment/reassessment-status/{id}', 'AdminAuth\AdminReAssessmentController@reassessmentStatusView')->name('reassessment.reassessment-status.view'); 
 Route::post('reassessment/reassessments', 'AdminAuth\AdminReAssessmentController@AcceptRejectReAssessment')->name('reassessment.accept-reject');
+Route::post('reassessment/reassessments/api', 'AdminAuth\AdminReAssessmentController@fetchAgency')->name('reassessment.fetch.agency');
+Route::post('reassessment/reassign', 'AdminAuth\AdminReAssessmentController@reassignAgency')->name('reassessment.reassign.submit');
 
 // End For ReAssessment
 

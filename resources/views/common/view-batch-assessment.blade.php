@@ -63,7 +63,7 @@
                             <thead>
                                 <tr>
                                     <th>Candidate Name</th>
-                                    @if (Request::segment(1)==='agency')
+                                    @if (Request::segment(1)==='agency' || Request::segment(1)==='assessor')
                                         <th>Category</th>
                                         <th>Education</th>
                                         <th>DOB</th>
@@ -74,7 +74,7 @@
                                         <th>Aadhaar/Voter</th>
                                     @endif
                                     <th>Result</th>
-                                    @if(Request::segment(1) !='agency')
+                                    @if(Request::segment(1) !='agency' && Request::segment(1) !='assessor')
                                         <th>View</th>
                                     @endif
                                 </tr>
@@ -84,7 +84,7 @@
                             
                                 <tr>
                                     <td>{{$center_candidate->candidate->name}}</td>
-                                    @if (Request::segment(1)==='agency')
+                                    @if (Request::segment(1)==='agency' || Request::segment(1)==='assessor')
                                         <td>{{$center_candidate->candidate->category}}</td>
                                         <td>{{$center_candidate->education}}</td>
                                         <td>{{$center_candidate->candidate->dob}}</td>
@@ -114,7 +114,7 @@
                                         {{-- <td style="color:{{($center_candidate->jobrole->partnerjobrole->status && $center_candidate->center->partner->status && $center_candidate->center->status && $center_candidate->candidate->status)?'green':'red'}}">{{($center_candidate->jobrole->partnerjobrole->status && $center_candidate->center->partner->status && $center_candidate->center->status && $center_candidate->candidate->status)?'Active':'Inactive'}}</td> --}}
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($center_candidate->candidate->id))}}" >View</a></<td>                                                                                
-                                    @elseif(Request::segment(1) !='agency')
+                                    @elseif(Request::segment(1) !='agency' && Request::segment(1) !='assessor')
                                         <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',Crypt::encrypt($center_candidate->candidate->id))}}" >View</a></<td>
                                     @endif
                                 </tr>

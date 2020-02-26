@@ -211,6 +211,11 @@ class AgencyAssessmentController extends Controller
                 $assessment_tag = 'Assessment';
                 $batchData=Batch::findOrFail($id[0]);
                 $assessment_date = $batchData->assessment;
+
+                if ($batchData->agencybatch->agency->id != $this->guard()->user()->id) {
+                    return abort(403, 'You are Not Authorized for This Action');
+                }
+
                 if (is_null($batchData->assessorbatch)) {
                     $assessor = null;    
                 } else {
@@ -238,6 +243,10 @@ class AgencyAssessmentController extends Controller
                 $reassessment=Reassessment::findOrFail($id[0]);
                 $assessment_date = $reassessment->assessment;
                 $batchData = $reassessment->batch;
+
+                if ($reassessment->agencybatch->agency->id != $this->guard()->user()->id) {
+                    return abort(403, 'You are Not Authorized for This Action');
+                }
 
                 if (is_null($reassessment->as_id)) {
                     $assessor = null;    

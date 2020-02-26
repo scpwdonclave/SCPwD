@@ -74,6 +74,6 @@ return [
     and correct the above information and agree that this information could be held for 3 months from the date of application and used
     for future training purpose by Differernt Ministry",
 
-    'onclave-support-mail' => 'connectshouvik@gmail.com',
+    'onclave-support-mail' => 'scpwd.support@onclavesystems.com',
 
 ];

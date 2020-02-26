@@ -21,11 +21,10 @@
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
                                     <th>Assessment Date</th>
                                     <th>Assessment Status</th>
                                     <th>Marks</th>
+                                    <th>View</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,8 +33,6 @@
                                         @if (is_null($item->reass_id))
                                             <tr>
                                                 <td>{{$item->batch->batch_id}}</td>
-                                                <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
-                                                <td>{{\Carbon\Carbon::parse($item->batch->batch_end)->format('d-m-Y')}}</td>
                                                 <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                                 @if (\Carbon\Carbon::parse($item->batch->assessment.' 00:00') > \Carbon\Carbon::now())
                                                     <td style="color:blue">Not Started Yet</td>
@@ -49,6 +46,7 @@
                                                         <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
                                                     @endif
                                                 @endif
+                                                <td><a class="badge bg-green margin-0" href="{{route('assessor.batch.view',Crypt::encrypt($item->batch->id.',1'))}}">View</a></td>
                                             </tr>
                                         @endif
                                     @endif
@@ -68,9 +66,10 @@
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
-                                    <th>Assessment Date</th>
-                                    <th>Assessment Status</th>
+                                    <th>Re-Assessment Date</th>
+                                    <th>Re-Assessment Status</th>
                                     <th>Marks</th>
+                                    <th>View</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -91,6 +90,7 @@
                                                     <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
                                                 @endif
                                             @endif
+                                            <td><a class="badge bg-green margin-0" href="{{route('assessor.batch.view',Crypt::encrypt($reassBatch->id.',0'))}}">View</a></td>
                                         </tr>
                                     @endif
                                 @endforeach

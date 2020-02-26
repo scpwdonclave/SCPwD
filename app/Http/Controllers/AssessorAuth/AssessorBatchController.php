@@ -47,6 +47,82 @@ class AssessorBatchController extends Controller
         return view('assessor.assessor-batch')->with(compact('assessorBatch','assessorReBatch'));
     }
 
+
+    public function viewAssessmentBatch(Request $request)
+    {
+        if ($data=AppHelper::instance()->decryptThis($request->id)) {
+
+            // * $data will consist of Batch/ReAssessment id and second parameter pointing the tables [1 for Assessment, 2 for ReAssessment]
+            $id = explode(',',$data);
+            $center_candidates = collect();
+
+            if ($id[1]) {
+
+                // * Request for Assessment Model
+
+                $assessment_tag = 'Assessment';
+                $batchData=Batch::findOrFail($id[0]);
+                $assessment_date = $batchData->assessment;
+                
+                if ($batchData->assessorbatch->assessor->id != $this->guard()->user()->id) {
+                    return abort(403, 'You are Not Authorized for This Action');
+                }
+                
+                $assessor = $batchData->assessorbatch->assessor->name .' ('.$batchData->assessorbatch->assessor->as_id.')';
+                
+                foreach ($batchData->candidatesmap as $candidate) {
+                    if ($batchData->batchassessment) {
+                        if ($candidate->centercandidate->candidateMark->attendence==='present') {
+                            $candidate->centercandidate->quilified = $candidate->centercandidate->candidateMark->passed;
+                        } else {
+                            $candidate->centercandidate->quilified = 2;
+                        }
+                    } else {
+                        $candidate->centercandidate->quilified = null;
+                    }
+                    $center_candidates->push($candidate->centercandidate);
+                }
+            } else {
+                
+                // * Request for Re-Assessment Model
+
+                $assessment_tag = 'Re-Assessment';
+                $reassessment=Reassessment::findOrFail($id[0]);
+                $assessment_date = $reassessment->assessment;
+                $batchData = $reassessment->batch;
+
+                if ($reassessment->as_id != $this->guard()->user()->id) {
+                    return abort(403, 'You are Not Authorized for This Action');
+                }
+                
+                $assessor = $reassessment->assessor->name .' ('.$reassessment->assessor->as_id.')';
+                
+
+                foreach ($reassessment->candidates as $candidate) {
+                    if ($candidate->appear) {
+
+                        if ($reassessment->batchreassessment) {
+                            if ($candidate->candidateMark->attendence==='present') {
+                                $candidate->centercandidate->quilified = $candidate->candidateMark->passed;
+                            } else {
+                                $candidate->centercandidate->quilified = 2;
+                            }
+                        } else {
+                            $candidate->centercandidate->quilified = null;
+                        }
+                        $center_candidates->push($candidate->centercandidate);
+                    }
+                }
+                
+            } 
+            
+            return view('common.view-batch-assessment')->with(compact('assessor','assessment_tag','center_candidates','assessment_date','batchData'));
+        }
+    }
+
+
+
+
     public function assessmentStatus(){
         $assessorBatch=AssessorBatch::where([['as_id',$this->guard()->user()->id],['reass_id',NULL]])->get();
         return view('assessor.assessment-status')->with(compact('assessorBatch'));

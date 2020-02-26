@@ -49,7 +49,7 @@ class AdminSupportController extends Controller
         event(new AdminMailEvent($complain));
         
         $complain->save();
-        alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been Assigned to <span style='color:blue;font-weight:bold'>Onclave Systems Pvt Ltd. </span>", 'Job Done')->html()->autoclose(4000);
+        alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been Assigned to <br><span style='color:blue;font-weight:bold'>Onclave Systems Pvt Ltd. </span>", 'Job Done')->html()->autoclose(4000);
         return Redirect()->back();
     }
 

@@ -11,6 +11,7 @@ use App\CenterCandidateMap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class AdminReAssessmentController extends Controller
 {
@@ -134,7 +135,7 @@ class AdminReAssessmentController extends Controller
             $batchid = $reassessment->batch->batch_id;
             if ($request->action) {
                 if ($request->action == '1') {
-                    AppHelper::instance()->writeNotification($reassessment->batch->agencybatch->aa_id,'agency','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
+                    AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>");
                 }
                 AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
                 AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
@@ -154,5 +155,60 @@ class AdminReAssessmentController extends Controller
 
     // * End Function to Approve or Reject Centers ReAssessment Requets
 
+
+    public function agencyRejected()
+    {
+        $reassessments = Reassessment::where([['verified',1],['aa_id',NULL]])->get();
+        $tag = [];
+        foreach ($reassessments as $key => $reassessment) {
+            $tag[$key] = false;
+            foreach ($reassessment->candidates as $candidate) {
+                if ($candidate->appear) {
+                    $tag[$key] = true;
+                break;
+                }
+            }
+        }
+        return view('admin.reassessment.agency-rejected')->with(compact('reassessments', 'tag'));
+    }
+
+    public function fetchAgency(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $reassessment = Reassessment::findOrFail($id);
+            $agencysectors = AgencySector::where('sector',$reassessment->batch->jobrole->sector_id)->get();
+
+            $agencies = collect();
+
+                foreach ($agencysectors as $agencysector) {
+                    $agencybatch = AgencyBatch::where([['aa_id',$agencysector->aa_id],['bt_id', $reassessment->bt_id]])->first();
+                    if (!$agencybatch) {
+                        $agencies->push($agencysector->agency);
+                    }
+                }
+
+            return response()->json(['success'=>true, 'agencies'=>$agencies, 'assessment'=>$reassessment->assessment, 'reassid'=>Crypt::encrypt($reassessment->id)]);
+        }
+    }
+
+    public function reassignAgency(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $reassessment = Reassessment::findOrFail($id);
+            $reassessment->assessment=$request->assessment;
+            $reassessment->save();
+            $agencyBatch = new AgencyBatch;
+            $agencyBatch->aa_id=$request->agency;
+            $agencyBatch->bt_id=$reassessment->bt_id;
+            $agencyBatch->aa_verified=0;
+            $agencyBatch->reass_id=$id;
+            $agencyBatch->save();
+        
+            AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>");
+            alert()->success("Re-Assessment Batch has been <span style='color:blue;font-weight:bold;'>Assigned</span> to a Agency", 'Attention')->html()->autoclose(5000);
+            
+            return redirect()->back();
+        }
+    }
     
 }
