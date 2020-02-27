@@ -363,45 +363,6 @@
 @section('page-script')
 <script>
 
-    /* Duplicate Email Checking */
-    // var dup_email_tag = true;
-    // var dup_mobile_tag = true;
-    // function checkduplicacy(val){
-    //     var _token = $('[name=_token]').val();
-    //     // console.log('Token :'+ _token);
-         
-    //     let value = $('[name='+val+']').val();
-    //     let dataString = { checkredundancy : value, section: val, _token: _token};
-    //     $.ajax({
-    //         url: "{{ route('partner.tc.addcenter.api') }}",
-    //         method: "POST",
-    //         data: dataString,
-    //         success: function(data){
-    //             if (data.success) {
-    //                 $('#'+val+'_error').html('');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = true;
-    //                 } else {
-    //                     dup_mobile_tag = true;
-    //                 } 
-    //             } else {
-    //                 $('#'+val+'_error').html(val+' already exists');
-    //                 if (val == 'email') {
-    //                     dup_email_tag = false;                        
-    //                 } else {
-    //                     dup_mobile_tag = false;
-    //                 } 
-    //             }
-    //         },
-    //         error:function(data){
-    //             $('#'+val+'_error').html(val+' already exists');
-    //             dup_email_tag = false;
-    //             dup_email_tag = false;
-    //         } 
-    //     });
-    // }
-    /* End Duplicate Email Checking */
-
     /* Validation of Each Sections */
 
     function checkIfDuplicateExists(w){
@@ -530,69 +491,6 @@
                 }
             }
 
-
-            // if (div[0] == 'collapseThree' && tag) {
-            //     var array = [];
-            //     var arrayValues = [];
-            //     var ajaxresponse = true;
-            //     $('select[id^=jobrole_]').each(function (){
-            //         array.push(this.value);
-            //         var temp = this.id.split('_');
-            //         var last = temp[temp.length - 1];
-            //         arrayValues.push($('#target_'+last).val());
-            //     });
-                
-                
-            //     if (checkIfDuplicateExists(array)) {
-            //         swal('','Please Select Unique Job Roles','info');
-            //         return false;
-            //     } else {
-            //         ajaxreqst = true;
-            //         var _token = $('[name=_token]').val();
-            //         var dataValidate = { _token: _token, array: array, values: arrayValues, validateArray: 1};
-            //         $.ajax({
-            //             url: "{{ route('partner.tc.addcenter.api') }}",
-            //             method: "POST",
-            //             data: dataValidate,
-            //             success: function(data){
-            //                 if (!data.success) {
-            //                     swal('Abort', 'You can add target Upto '+data.max+' to '+data.jobrole+' job Role','error');
-            //                     ajaxresponse = false;
-            //                     return true;
-            //                 } else {
-            //                     ajaxresponse = true;
-            //                     return true;
-            //                 }
-                            
-            //             },
-            //             error: function(){
-            //                 swal('Abort','Something went Wrong','error');
-            //                 ajaxresponse = false;
-            //                 return false;
-            //             }
-            //         }).done(function(){
-            //             if (tag && dup_email_tag && dup_mobile_tag && ajaxresponse) {
-            //                 $('#'+div[0]).collapse('hide');
-            //                 $('#'+div[0]).on('hidden.bs.collapse', function () {
-            //                     $('#'+div[1]).collapse('show');
-            //                 });
-            //             }
-
-            //         });
-            //     }
-            //     // console.log($('select[id^=jobrole_]')[0].value);
-                
-            // } else {
-            //     if (tag && dup_email_tag && dup_mobile_tag) {
-            //             $('#'+div[0]).collapse('hide');
-            //             $('#'+div[0]).on('hidden.bs.collapse', function () {
-            //                 $('#'+div[1]).collapse('show');
-            //             });
-            //         }
-            // }
-
-            
-
         }
 
     /* End Validation of Each Sections */
@@ -629,13 +527,15 @@
             var _URL = window.URL || window.webkitURL;
                 $("[type='file']").change(function(e) {
 
-                    var image, file;
+                var image, file;
 
-                    // var l = this.files.length;
-                    // if (l>6 || l<2) {
-                    // alert('You Have To select atleast 2 images ( max limit is 6)');
-                    // $("#file").val('');
-                    // }
+                if (e.currentTarget.id === 'class' || e.currentTarget.id === 'lab' || e.currentTarget.id === 'equipment' || e.currentTarget.id === 'wash') {
+                    var l = this.files.length;
+                    if ( l > 3 ) {
+                        $("#" + e.currentTarget.id + "_error").text('You Cannot Choose More than 3 Files');
+                        $("#"+e.currentTarget.id).val('');
+                    }
+                }
 
                 for (var i = this.files.length - 1; i >= 0; i--) {
 
@@ -660,6 +560,8 @@
                         } else {
                             $("#" + e.currentTarget.id + "_error").text('');
                         }
+
+                        
 
                         image.src = _URL.createObjectURL(file);
                         }
