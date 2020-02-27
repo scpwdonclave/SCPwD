@@ -228,7 +228,7 @@
     });
 
     $("#form_placement").validate({
-        ru      les: {
+        rules: {
             spoc_mobile: { mobile: true },
             "[type=email]": { email: true }
         }
