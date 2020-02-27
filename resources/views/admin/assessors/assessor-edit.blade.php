@@ -599,15 +599,15 @@
 
     function myFunction2(){
          if(dup_email_tag==false ||dup_mobile_tag==false || dup_aadhaar_tag ==false){
-           console.log('my reject');
-           console.log(dup_email_tag);
-           console.log(dup_mobile_tag);
-           console.log(dup_aadhaar_tag);
+        //    console.log('my reject');
+        //    console.log(dup_email_tag);
+        //    console.log(dup_mobile_tag);
+        //    console.log(dup_aadhaar_tag);
           
             return false;
         }
         else{
-            console.log('my accept');
+            // console.log('my accept');
 
             var form = document.getElementById("form_assessor");
             form.submit();
@@ -655,9 +655,7 @@
                 for (var i = this.files.length - 1; i >= 0; i--) {
 
                     if ((file = this.files[i])) {
-
-                        size = file.size/1024/1024;
-                        size = Math.round(size * 100) / 100
+                        size = Math.round((file.size/1024/1024) * 100) / 100; // Size in MB
 
                         image = new Image();
                         var fileType = file["type"];
@@ -671,13 +669,14 @@
                         }
 
                         image.onload = function() {
-                            if (size > 1.5) {
+                            if (size > 5) {
                                 $("#"+e.currentTarget.id).val('');
-                                $("#" + e.currentTarget.id + "_error").text('File Size Exceeding the limit of 1.5 MB');
+                                $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
                             } else {
                                 $("#" + e.currentTarget.id + "_error").text('');
                             }
                         };
+
 
                         image.src = _URL.createObjectURL(file);
                         }

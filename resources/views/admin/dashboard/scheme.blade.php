@@ -274,26 +274,36 @@
 
     /* File Type Validation */
     function filevalidate(){
-            var _URL = window.URL || window.webkitURL;
-            $("[type='file']").change(function(e) {
+        var _URL = window.URL || window.webkitURL;
+        $("[type='file']").change(function(e) {
             var image, file;
             for (var i = this.files.length - 1; i >= 0; i--) {
-            if ((file = this.files[i])) {
+                if ((file = this.files[i])) {
+                    size = Math.round((file.size/1024/1024) * 100) / 100; // Size in MB
+
                     image = new Image();
                     var fileType = file["type"];
                     var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png"];
                     if ($.inArray(fileType, ValidImageTypes) < 0) {
-                    $("#"+e.currentTarget.id).val('');
-                    
-                    $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg or png Format');
+                        $("#"+e.currentTarget.id).val('');
+                        
+                        $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg or png Format');
                     } else {
-                    $("#" + e.currentTarget.id + "_error").text('');
+                        $("#" + e.currentTarget.id + "_error").text('');
                     }
+                    image.onload = function() {
+                        if (size > 5) {
+                            $("#"+e.currentTarget.id).val('');
+                            $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
+                        } else {
+                            $("#" + e.currentTarget.id + "_error").text('');
+                        }
+                    };
                     image.src = _URL.createObjectURL(file);
                 }
             }
-            });
-        }
+        });
+    }
     /* End File Type Validation */
 
     /* Redesigning Certificate Number Format */

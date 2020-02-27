@@ -113,6 +113,8 @@
                 var image, file;
                 for (var i = this.files.length - 1; i >= 0; i--) {
                     if ((file = this.files[i])) {
+                        size = Math.round((file.size/1024/1024) * 100) / 100; // Size in MB
+
                         image = new Image();
                         var fileType = file["type"];
                         
@@ -130,6 +132,15 @@
                         } else {
                             $("#" + e.currentTarget.id + "_error").text('');
                         }
+
+                        image.onload = function() {
+                            if (size > 5) {
+                                $("#"+e.currentTarget.id).val('');
+                                $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
+                            } else {
+                                $("#" + e.currentTarget.id + "_error").text('');
+                            }
+                        };
                         
                         image.src = _URL.createObjectURL(file);
                     }
