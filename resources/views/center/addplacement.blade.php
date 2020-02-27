@@ -180,15 +180,13 @@
                                 }
                             }
                   
-                            image.onload = function() {
-                                if (size > 5) {
-                                    $("#"+e.currentTarget.id).val('');
-                                    $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
-                                } else {
-                                    $("#" + e.currentTarget.id + "_error").text('');
-                                }
-                            };
-
+                            if (size > 5) {
+                                $("#"+e.currentTarget.id).val('');
+                                $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
+                            } else {
+                                $("#" + e.currentTarget.id + "_error").text('');
+                            }
+                
                             image.src = _URL.createObjectURL(file);
                         }
                     }
