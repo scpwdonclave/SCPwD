@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('title', 'Payment Order')
-@section('parentPageTitle', 'Closed')
+@section('parentPageTitle', 'All')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header d-flex justify-content-between">
-                        <h2><strong>All</strong> Closed Payment Order</h2>
+                        <h2><strong>All</strong> Payment Order</h2>
                        
                     </div>
                     <div class="body">
@@ -27,6 +27,7 @@
                                         <th>Payment Order Date</th>
                                         <th>Verification Date</th>
                                         <th>Payment Date</th>
+                                        <th>Status</th>
                                         <th>View</th>
                                        
                                         </tr>
@@ -41,6 +42,13 @@
                                     <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->verification_date)->format('d-m-Y')}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->payment_date)->format('d-m-Y')}}</td>
+                                    @if ($item->verified ===1 && $item->payment_done===0)
+                                     <td>Verified</td>   
+                                    @elseif($item->verified ===1 && $item->payment_done===1)
+                                     <td>Payment Done</td>   
+                                        
+                                    @endif
+                                    
                                     <td><a class="badge bg-green margin-0" href="{{route('admin.aa.payorder',['id'=>Crypt::encrypt($item->id)])}}" >View Pay Order</a></td>
                                     </tr>
                                     @endforeach

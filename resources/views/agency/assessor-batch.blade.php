@@ -101,7 +101,7 @@ function fetchBatch(job){
     let _token = $("input[name='_token']").val();
     let as_id = '{{$assessor->id}}';
     $.ajax({
-        url:"{{route('agency.as.fetch-batch')}}", 
+        url:"{{route('agency.as.fetch-batch')}}",  
         data:{_token,job,as_id},
         method:'POST',
         success: function(data){
@@ -112,7 +112,7 @@ function fetchBatch(job){
                 var id=data.batch[index].id;
                 var batch_id=data.batch[index].batch_id;
                 var reass_id=data.aa_batch[index].reass_id;
-                 if(!data.selbatch.includes(id) || reass_id !=null){
+                 if(!data.selbatch.includes(id) ){
                     $('#batch').append('<option value="'+id+','+reass_id+'">'+batch_id+'</option>');
                 }
             });

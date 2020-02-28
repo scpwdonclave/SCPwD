@@ -26,6 +26,7 @@
                                         <th>Payment Order Date</th>
                                         <th>Verification Date</th>
                                         <th>Payment Date</th>
+                                        <th>Status</th>
                                         <th>View</th>
                                        
                                         </tr>
@@ -51,6 +52,12 @@
                                       <td class="text-muted">N/A</td>  
                                       <td class="text-muted">N/A</td>  
                                       
+                                    @endif
+                                    @if ($item->verified ===1 && $item->payment_done===0)
+                                     <td>Verified</td>   
+                                    @elseif($item->verified ===1 && $item->payment_done===1)
+                                     <td>Payment Done</td>   
+                                        
                                     @endif
                                     <td><a class="badge bg-green margin-0" href="{{route('agency.payorder.mypayorder',['id'=>Crypt::encrypt($item->id)])}}" >View Pay Order</a></td>
                                     </tr>

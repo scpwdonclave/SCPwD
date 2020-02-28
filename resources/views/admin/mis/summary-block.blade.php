@@ -40,6 +40,14 @@
             </div>
         </a>
         </div>
+        <div class="col-lg-3 col-md-2 col-6">
+            <a href="{{route('admin.mis.placement_wise_block')}}">
+            <div class="card blk info-box-2 hover-zoom-effect behance-widget">
+                <div class="icon"><i class="zmdi zmdi-account-box-phone"></i></div>
+                <span class="text-muted" style="font-size:20px;">Placement</span>
+            </div>
+        </a>
+        </div>
         
     </div>
    

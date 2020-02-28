@@ -22,6 +22,7 @@ class CreatePaymentOrdersTable extends Migration
             $table->string('verification_date')->nullable();
             $table->string('payment_date')->nullable();
             $table->integer('verified')->default(0);
+            $table->integer('payment_done')->default(0);
             $table->timestamps();
         });
     }

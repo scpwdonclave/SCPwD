@@ -24,7 +24,7 @@
                     <form id="form_scheme" action="{{route('admin.mis.agency_wise_enrolled')}}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="scheme">Select Scheme <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="scheme" data-dropup-auto='false' required>
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         
-                            <div class="col-sm-6">
+                            {{-- <div class="col-sm-6">
                                     <label for="scheme">Select Financial Year <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="input-group">
                                     <span class="input-group-addon">
@@ -43,7 +43,23 @@
                                     </span>
                                     <input type="text" class="form-control datetimepicker" name="financial_year" id="financial_year" placeholder="Choose Financial Year" required>
                                 </div>
-                            </div>
+                            </div> --}}
+                            <div class="col-sm-4">
+                                
+                                <label for="start_date">Start Date</label>
+                                <div class="form-group form-float date_picker">
+                                    <input type="text" class="form-control date_datepicker" placeholder="Start Date" id="start_date"  onchange="startchangescpwd('new')"  name="start_date" required >
+                                </div>
+                            
+                        </div>
+                        <div class="col-sm-4">
+                            
+                                <label for="end_date">End date</label>
+                                <div class="form-group form-float date_picker">
+                                    <input type="text" class="form-control date_datepicker" placeholder="End date" id="end_date" name="end_date"  required>
+                                </div>
+                        
+                        </div>
                         </div>
                         <div class="row d-flex justify-content-center">
                             <button class="btn btn-round btn-primary" type="submit">Search</button>
@@ -63,9 +79,10 @@
                     <h2><strong>Report</strong> Section Assessment Agency Wise</h2>                        
                 </div>
                 <div class="text-center">
-                    @if (isset($sel_scm) && isset($sel_yr))
+                    @if (isset($sel_scm) && isset($from) && isset($to))
                     <p><h6><strong>Selected Scheme: <span style="color:blue">{{$sel_scm}}</span></strong></h6></p>
-                    <p><h6><strong>Selected FY: <span style="color:blue">{{$sel_yr}}</span></strong></h6></p>
+                    <p><h6><strong>Selected DATE: <span style="color:blue">{{\Carbon\Carbon::parse($from)->format('d-m-Y')}} <span style="color:black">to</span> {{\Carbon\Carbon::parse($to)->format('d-m-Y')}}</span></strong></h6></p>
+
                     @endif
                 </div>
                 <div class="body">
@@ -130,17 +147,38 @@
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 <script>
-    $("#financial_year").datepicker({
-        format: "yy",
-        minViewMode: 2,
-        autoclose : true
-        }).on('hide',function(date){
-         if(date.target.value) {
-             $("#financial_year").val(date.target.value + "-" + (parseInt(date.target.value) + parseInt(1)));
-            }else{
-             $("#financial_year").val('');
+//     $("#financial_year").datepicker({
+//         format: "yy",
+//         minViewMode: 2,
+//         autoclose : true
+//         }).on('hide',function(date){
+//          if(date.target.value) {
+//              $("#financial_year").val(date.target.value + "-" + (parseInt(date.target.value) + parseInt(1)));
+//             }else{
+//              $("#financial_year").val('');
                
-            } 
-   });
+//             } 
+//    });
+$(function () {
+    
+    $('.date_picker .form-control').datepicker({ 
+           autoclose: true,
+           format: 'dd-mm-yyyy'
+       });
+/* End Bootstrap DatePicker */
+
+   $('#start_date')
+       .datepicker()
+       .on('changeDate', function(selected){
+           startDate = new Date(selected.date.valueOf());
+           startDate.setDate(startDate.getDate(new Date(selected.date.valueOf()))); 
+           $('#end_date').datepicker('setStartDate', startDate);
+       });
+   
+});
+
+function startchangescpwd(){
+           $('#end_date').val('');
+       }
 </script>
 @endsection
