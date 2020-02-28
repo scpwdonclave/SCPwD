@@ -157,13 +157,17 @@ class AdminAssessmentController extends Controller
             $id = explode(',', $data);
 
             if ($id[1]) {
-                // Request for BatchAssessment Model (Assessment)
+                // * Request for BatchAssessment Model (Assessment)
+
                 $assessment=BatchAssessment::findOrFail($id[0]);
                 $tag='Assessment';
+                $count = 0; // * Assessment Count
             } else {
-                // Request for BatchReAssessment Model (Re-Assessment)
+                // * Request for BatchReAssessment Model (Re-Assessment)
+                
                 $assessment=BatchReAssessment::findOrFail($id[0]);
                 $tag='Re-Assessment';
+                $count = $assessment->batch->batchreassessments->count(); // * ReAssessment Count
             }
         
 
@@ -184,12 +188,19 @@ class AdminAssessmentController extends Controller
                             if($value->attendence==='present'){
                                 $eachcand->passed=$value->passed;
                                 if ($value->passed) {
-                                    $value->centerCandidate->assessment_certi_issued_on = Carbon::now();
+                                    // * Candidate Passed The Assessment
+                                    $value->centerCandidate->assessment_certi_issued_on = ($tag==='Assessment')?$assessment->batch->assessment:$assessment->reassessment->assessment;
                                     $value->centerCandidate->save();
+                                } else {
+                                    // * Candidate Failed The Assessment
+                                    if ($count=='2') {
+                                        // * This was Candidate's Second Re-Assessment, So Candidate would be Released for Re-Registration Now
+                                        $eachcand->reassessed = 0;
+                                    }
                                 }
                             }else{
+                                // * Candidate was Absent
                                 $eachcand->passed=2;
-        
                             }
                             $eachcand->save();
                         }

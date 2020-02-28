@@ -77,16 +77,18 @@ class PartnerBatchController extends Controller
         $trainer_batches = Batch::where('tr_id', $trainer_id)->get();
         if ($trainer_batches) {
             foreach ($trainer_batches as $trainer_batch) {
-                $start = Carbon::parse($trainer_batch->start_time); 
-                $end = Carbon::parse($trainer_batch->end_time); 
-                if ($starttime->lessThan($start)) {
-                    if ($endtime->greaterThan($start)) {
-                        return false;
+                if (Carbon::now()<Carbon::parse($trainer_batch->batch_end.' 23:59')) {
+                    $start = Carbon::parse($trainer_batch->start_time); 
+                    $end = Carbon::parse($trainer_batch->end_time); 
+                    if ($starttime->lessThan($start)) {
+                        if ($endtime->greaterThan($start)) {
+                            return false;
+                        }
+                    } else {
+                        if ($starttime->lessThan($end)) {
+                            return false;
+                        }                
                     }
-                } else {
-                    if ($starttime->lessThan($end)) {
-                        return false;
-                    }                
                 }
             }
         } else {

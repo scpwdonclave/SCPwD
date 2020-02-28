@@ -344,12 +344,13 @@
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
-                            
                             if (!data.success) {
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html("<span class='glyphicon glyphicon-arrow-right'></span> Next");
                                 swalText.innerHTML = data.message;
-                                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 4000, buttons: false});
+                                var timer = 4000;
+                                if (data.timer !== undefined) { timer = data.timer; }
+                                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: timer, buttons: false});
                             } else {
                                 if (data.candidate != null) {
                                     $('[name=name]').val(data.candidate.name);

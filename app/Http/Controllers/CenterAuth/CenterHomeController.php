@@ -237,17 +237,51 @@ class CenterHomeController extends Controller
                 if ($data['user'] == 'candidate') {
                     $candidate = Candidate::find($data['userid']);
                     if ($candidate->status) {
-                        foreach ($candidate->centermap as $center) {
-                            if (!$center->dropout) {
-                                if (is_null($center->passed) || !$center->passed) {
-                                    return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is already Registered with SCPwD'], 200);
+                        // * Candidate is Active
+
+                        if (!$candidate->centerlatest->dropout) {
+                            // * Candidate is Linked with a Center and Not Dropped Out
+                        
+                            if ($candidate->centerlatest->passed == '1') {
+                                // * Candidate Passed An Assessment
+                                
+                                if (!is_null($candidate->centerlatest->certi_no)) {
+                                    // * Candidate Have Received a Certificate
+
+                                    $value = explode(',', $candidate->centerlatest->assessment_certi_issued_on);
+                                    $cert = Carbon::parse($value[1])->addYear(2); // * Adding 2 years to Certificate Issued Date
+                                    
+                                    if (Carbon::now() > $cert) {
+                                        return response()->json(['success' => true,'candidate'=> $candidate], 200);
+                                    } else {
+                                        return response()->json(['success' => false, 'message' => 'Candidate with this Doc No has already Received a Valid Certificate from SCPwD', 'timer' => 6000], 200);
+                                    }
+
                                 }
+
+                            } elseif ($candidate->centerlatest->passed == '2' || $candidate->centerlatest->passed == '0') {
+                                
+                                if ($candidate->centerlatest->reassessed=='0') {
+                                    return response()->json(['success' => true,'candidate'=> $candidate], 200);
+                                }
+
+                            }
+                            return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is already Present'], 200);
+                        
+                        } else {
+                            $dropout_limit = Carbon::parse($candidate->centerlatest->dropout_at)->addDays(2); // * Adding 2 days to Dropout Date
+                            if (Carbon::now() < $dropout_limit) {
+                                return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is Locked out for 48 Hours from his/her last Dropout Session, Try again After That', 'timer' => 8000], 200);
                             }
                         }
+                    
                     } else {
+                        // * Candidate BlackListed
+
                         return response()->json(['success' => false, 'message' => 'Candidate with this Doc No is Blacklisted, Contact with SCPwD'], 200);
-                    }                    
+                    }
                     return response()->json(['success' => true,'candidate'=> $candidate], 200);
+                
                 } else {
                     return response()->json(['success' => false, 'message' => 'We have This Doc No Registered with Someone else'], 200);
                 }

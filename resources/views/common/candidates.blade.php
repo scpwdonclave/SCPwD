@@ -231,7 +231,7 @@ var candidates = JSON.parse('{!!$candidates!!}');
 
 function format ( table_id ) {
     return '<table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable" id="opiniondt_'+table_id+'">'+
-    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Job Role</th><th>Status</th><th>Action</th></tr></thead></table>';
+    '<thead><tr><th>TP ID</th><th>TC ID</th><th>Job Role</th><th>Final Result</th><th>Action</th></tr></thead></table>';
   }
 
 function renderSubTable(tr, row, centerdata) {
