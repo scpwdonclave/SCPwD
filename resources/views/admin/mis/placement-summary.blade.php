@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Candidate Wise')
+@section('title', 'Candidate Wise Placement')
 @section('parentPageTitle', 'MIS')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -18,10 +18,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Search</strong> Candidate Wise</h2>                        
+                    <h2><strong>Search</strong> Candidate Wise Placement</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.mis.candidate_wise_enrolled')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.mis.candidate_wise_placement')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-4">
@@ -94,27 +94,29 @@
 
                                     <th>TP</th>
                                     <th>TC</th>
+                                    <th>TC ID</th>
+                                    <th>TC State</th>
+                                    <th>TC District</th>
                                     <th>Job Role</th>
-                                    <th>Batch</th>
                                     <th>Candidate ID</th>					 	
                                     <th>Candidate Name</th>
+                                    <th>Type of Disability</th>
                                     <th>State</th>
                                     <th>District</th>
                                     <th>Gender</th>
-                                    <th>Education</th>
                                     <th>Mobile</th>
-                                    <th>Type of Disability</th>
-                                    <th>Batch Start Date</th>
-                                    <th>Batch End Date</th>
-                                    <th>Result</th>
+                                    <th>Email</th>
                                     <th>Caste Category</th>
-                                    <th>Centre Address</th>
-                                    <th>Sector</th>
-                                    <th>TC State</th>
-                                    <th>TC District</th>
-                                    <th>TC SPOC Email</th>
-                                    <th>TC SPOC Mobile</th>
-                                    <th>TC SPOC Name</th>
+                                    <th>Employer Type</th>
+                                    <th>Employment Date</th>
+                                    <th>Organization Name</th>
+                                    <th>Organization Address</th>
+                                    <th>Organization State</th>
+                                    <th>Organization District</th>
+                                    <th>Employer Spoc Name</th>
+                                    <th>Employer Spoc Mobile</th>
+                                    <th>Employer Spoc Email</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,7 +129,7 @@
                                     <td>{{$item[1]}}</td>
                                     <td>{{$item[2]}}</td>
                                     <td>{{$item[3]}}</td>
-                                    <td>{{$item[22]}}</td>
+                                    
                                     
                                     <td>{{$item[4]}}</td>
                                     <td>{{$item[5]}}</td>
@@ -147,6 +149,8 @@
                                     <td>{{$item[19]}}</td>
                                     <td>{{$item[20]}}</td>
                                     <td>{{$item[21]}}</td>
+                                    <td>{{$item[22]}}</td>
+                                    <td>{{$item[23]}}</td>
                                     {{-- <td>{{$item[22]}}</td> --}}
                                     
                                 </tr>

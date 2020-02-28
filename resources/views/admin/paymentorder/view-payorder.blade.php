@@ -131,39 +131,7 @@
                         </ul>
                    
                       <br><br> 
-                      @if (!$pay_order->verified)
-                          
-                      <form id="form_payorder" action="{{route('admin.paymentorder.accept')}}" method="post" >
-                          @csrf
-                      <input type="hidden" name="po_id" value="{{$pay_order->id}}">
-                          <div class="row d-flex justify-content-around">
-                              <div class="col-sm-4"></div>
-                              <div class="col-sm-4">
-                                  <label for="verification_date">Verification Date <span style="color:red"> <strong>*</strong></span></label>
-                                  <div class="form-group form-float date_picker">
-                                      <input type="text" class="form-control date_datepicker" placeholder="Verification Date" id="verification_date" name="verification_date"  required>
-                                  </div>
-                              </div>
-                              <div class="col-sm-4">
-                                  <label for="payment_date">Payment Date <span style="color:red"> <strong>*</strong></span></label>
-                                  <div class="form-group form-float date_picker ">
-                                      <input type="text" class="form-control" placeholder="Payment Date"  id="payment_date" name="payment_date"  required>
-                                  </div>
-                              </div>
-                          </div>
-                          <br>
-                      
-                      @auth('admin')
-                      <div class="text-center" >
-                          @if ($pay_order->verified===0 )
-                              <button class="btn btn-success" type="submit" >Accept</button>
-                              <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
-                                                  
-                          @endif
-                      </div>
-                  @endauth 
-                      </form>
-                 @endif 
+                    
                    
                 </div>
             </div>
@@ -180,6 +148,8 @@
                        
                     </div>
                     <div class="body">
+                        <form id="form_payorder" action="{{route('admin.paymentorder.accept')}}" method="post" >
+
                         @if (!is_null($pay_order->payment_order_id))
                         <div class="text-center">
                             <h6>
@@ -194,7 +164,11 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
+                                        @if (!$pay_order->verified)
+                                        <th><input type="checkbox" class="checks" onchange="checkAll(this)" /></th>
+                                        @else
                                         <th>#</th>
+                                        @endif
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
                                         <th>Assessment status</th>
@@ -206,9 +180,13 @@
                                     @foreach ($pay_order->paymentorder as $payorder)
                                         
                                     <tr>
-                                        <td>#</td>
+                                        {{-- <td>#</td> --}}
+                                        @if (!$pay_order->verified)
+                                        <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$payorder->agencyBatch->id}}"></td>
+                                        @else
+                                         <td>#</td>   
+                                        @endif
                                         @if ($payorder->agencyBatch->reass_id===null)
-                                            
                                         <td>{{$payorder->agencyBatch->batch->batch_id}}</td>
                                         <td>{{$payorder->agencyBatch->batch->jobrole->job_role}}</td>
                                         <td>Assessment</td>
@@ -216,6 +194,7 @@
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
 
                                         @else
+                                        
                                         <td>{{$payorder->agencyBatch->reassessment->batch->batch_id}}</td>
                                         <td>{{$payorder->agencyBatch->reassessment->batch->jobrole->job_role}}</td>
                                         <td>Re-Assessment</td>
@@ -229,6 +208,44 @@
                                     </tbody>
                             </table>
                             </div>
+                            <br><br>
+                            
+                            @csrf
+                            <input type="hidden" name="po_id" value="{{$pay_order->id}}">
+                            <div class="row d-flex justify-content-around">
+                                @if (!$pay_order->verified)
+                                <input type="hidden" name="verify" value="verify">
+                                   <div class="col-sm-4">
+                                        <label for="verification_date">Verification Date <span style="color:red"> <strong>*</strong></span></label>
+                                        <div class="form-group form-float date_picker">
+                                            <input type="text" class="form-control date_datepicker" placeholder="Verification Date" id="verification_date" name="verification_date"  required>
+                                        </div>
+                                    </div>
+                                @endif
+                                @if ($pay_order->verified===1 && $pay_order->payment_done === 0)
+                                <input type="hidden" name="paymentMade" value="paymentMade">
+                                    <div class="col-sm-4">
+                                        <label for="payment_date">Payment Date <span style="color:red"> <strong>*</strong></span></label>
+                                        <div class="form-group form-float date_picker ">
+                                            <input type="text" class="form-control" placeholder="Payment Date"  id="payment_date" name="payment_date"  required>
+                                        </div>
+                                    </div>
+                                @endif
+                                </div>
+                                <br>
+                            
+                            {{-- @auth('admin') --}}
+                            <div class="text-center" >
+                                @if ($pay_order->verified===0 )
+                                    <button class="btn btn-success" type="submit" id="save-btn" >Mark as Verified</button>
+                                    <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
+                                @elseif($pay_order->verified===1 && $pay_order->payment_done === 0)
+                                <button class="btn btn-success" type="submit" >Payment Done</button>
+                                 @endif
+                            </div>
+                        {{-- @endauth  --}}
+                        
+                    </form>
                     </div>
                 </div>
             </div>
@@ -236,6 +253,33 @@
 </div>
 @stop
 @section('page-script')
+<script>
+    function checkAll(ele) {
+    var checkboxes = document.getElementsByTagName('input');
+    if (ele.checked) {
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].type == 'checkbox') {
+                checkboxes[i].checked = true;
+            }
+        }
+    } else {
+        for (var i = 0; i < checkboxes.length; i++) {
+            //console.log(i)
+            if (checkboxes[i].type == 'checkbox') {
+                checkboxes[i].checked = false;
+            }
+        }
+    }
+}
+
+
+</script>
+<script>
+    $('#save-btn').attr("disabled",true);
+    $('.checks').click(function(){
+    $('#save-btn').attr("disabled",!$(this).is(":checked"));   
+})
+</script>
 <script>
 
     function popupReject(id) {

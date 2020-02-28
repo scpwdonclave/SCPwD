@@ -27,11 +27,13 @@ Route::get('mis/summary/tp-tc-Wise', 'AdminAuth\AdminMisController@pageTpTcWise'
 Route::get('mis/summary/candidate-wise', 'AdminAuth\AdminMisController@pageCandidateWise')->name('mis.candidate_wise_block');
 Route::get('mis/summary/job-disability-wise', 'AdminAuth\AdminMisController@pageJobDisabilityWise')->name('mis.job_dsbl_wise_block');
 Route::get('mis/summary/agency-wise', 'AdminAuth\AdminMisController@pageAgencyWise')->name('mis.agency_wise_block');
+Route::get('mis/summary/placement-wise', 'AdminAuth\AdminMisController@pagePlacementWise')->name('mis.placement_wise_block');
 
 Route::post('mis/summary/tp-tc-wise', 'AdminAuth\AdminMisController@tpTcWiseSummary')->name('mis.tp-tc_wise_enrolled');
 Route::post('mis/summary/candidate-wise', 'AdminAuth\AdminMisController@candidateWiseSummary')->name('mis.candidate_wise_enrolled');
 Route::post('mis/summary/job-disability-wise', 'AdminAuth\AdminMisController@jobDisabilityWiseSummary')->name('mis.job_disability_wise_enrolled');
 Route::post('mis/summary/agency-wise', 'AdminAuth\AdminMisController@agencyWiseSummary')->name('mis.agency_wise_enrolled');
+Route::post('mis/summary/candidate-wise-placement', 'AdminAuth\AdminMisController@candidateWisePlacementSummary')->name('mis.candidate_wise_placement');
 
 
 /* Admin Verify Partner */

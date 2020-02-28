@@ -152,7 +152,8 @@ class AdminBatchController extends Controller
 
                         $data->batch_id=$new_batchid;
                         $data->f_month=$fmonth;	
-                        $data->f_year=$fyear;	
+                        $data->f_year=$fyear;
+                        $data->c_date=Carbon::now()->format('Y-m-d');	
                         $data->status=1;
                         $data->verified=1;
                         $data->save();

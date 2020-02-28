@@ -117,6 +117,7 @@ class AdminAgencyController extends Controller
         $agency->website=$request->website;	
         $agency->f_month=$fmonth;	
         $agency->f_year=$fyear;	
+        
         $agency->save();
 
         foreach ($request->sector as $sector) {

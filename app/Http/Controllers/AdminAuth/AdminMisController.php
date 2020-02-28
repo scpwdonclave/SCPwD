@@ -197,7 +197,9 @@ class AdminMisController extends Controller
         $scheme=$this->scheme();
         $scm=Scheme::findOrFail($request->scheme);
         $sel_scm=$scm->scheme;
-        $sel_yr=$request->financial_year;
+        // $sel_yr=$request->financial_year;
+        $from=Carbon::parse($request->start_date)->format('Y-m-d');
+        $to=Carbon::parse($request->end_date)->format('Y-m-d');
         $tp=PartnerJobrole::where('scheme_id',$request->scheme)->groupBy('tp_id')->get();
         // $partner_id=
         // $center_id=$candidate_enroll=$can_ongoing=$can_trained=$can_assessed=$can_passed=$can_failed=$can_absent=array();
@@ -207,13 +209,13 @@ class AdminMisController extends Controller
 
             foreach ($tc as $center) {
                 //enroll
-            $tp_tc_wise_candidate=CenterCandidateMap::where([['f_year','=',$request->financial_year],['tc_id','=',$center->id]])->get()->count();
+            $tp_tc_wise_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where('tc_id','=',$center->id)->get()->count();
                 //End Enroll
                 //Drop Out
-            $tp_tc_wise_drop_candidate=CenterCandidateMap::where([['f_year','=',$request->financial_year],['dropout','=',1],['tc_id','=',$center->id]])->get()->count();
+            $tp_tc_wise_drop_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where([['dropout','=',1],['tc_id','=',$center->id]])->get()->count();
                 //End Drop Out
                 //Ongoing
-            $batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['tc_id','=',$center->id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_ongoing=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['tc_id','=',$center->id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
             $bt_can_cnt=0;
             foreach ($batch_ongoing as $bt_ongoing) {
                 foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
@@ -223,7 +225,7 @@ class AdminMisController extends Controller
             }
                 //End Ongoing
             //Trained
-            $trained_batch=Batch::where([['f_year','=',$request->financial_year],['tc_id','=',$center->id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
+            $trained_batch=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['tc_id','=',$center->id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
             
             $trained_can_cnt=0;
             foreach ($trained_batch as $bt_trained) {
@@ -234,7 +236,7 @@ class AdminMisController extends Controller
             }
             //End trained
              //Assessed
-             $assessed_batch=Batch::where([['f_year','=',$request->financial_year],['tc_id','=',$center->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
+             $assessed_batch=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['tc_id','=',$center->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
             
              $assessed_can_cnt=$passed_can_cnt=$certified_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
              foreach ($assessed_batch as $bt_assessed) {
@@ -274,7 +276,8 @@ class AdminMisController extends Controller
                             }
 
                      }
-        return view('admin.mis.tp-tc-summary')->with(compact('center_stack','scheme','sel_scm','sel_yr'));
+                    
+        return view('admin.mis.tp-tc-summary')->with(compact('center_stack','scheme','sel_scm','from','to'));
         //dd($center_id);
     }
 
@@ -288,8 +291,9 @@ class AdminMisController extends Controller
         $scheme=$this->scheme();
         $scm=Scheme::findOrFail($request->scheme);
         $sel_scm=$scm->scheme;
-        $sel_yr=$request->financial_year;
-        $candidate=CenterCandidateMap::where('f_year',$request->financial_year)->get();
+        $from=Carbon::parse($request->start_date)->format('Y-m-d');
+        $to=Carbon::parse($request->end_date)->format('Y-m-d');
+        $candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();
         $can_stack=array();
         foreach ($candidate as $key => $value) {
            if($value->jobrole->partnerjobrole->where('scheme_id',$request->scheme)){
@@ -350,7 +354,7 @@ class AdminMisController extends Controller
 
            
         }
-        return view('admin.mis.candidate-summary')->with(compact('can_stack','scheme','sel_scm','sel_yr'));
+        return view('admin.mis.candidate-summary')->with(compact('can_stack','scheme','sel_scm','from','to'));
 
     }
 
@@ -364,7 +368,8 @@ class AdminMisController extends Controller
         $scheme=$this->scheme();
         $scm=Scheme::findOrFail($request->scheme);
         $sel_scm=$scm->scheme;
-        $sel_yr=$request->financial_year;
+        $from=Carbon::parse($request->start_date)->format('Y-m-d');
+        $to=Carbon::parse($request->end_date)->format('Y-m-d');
        //JOB ROLE wise Report 
         $job_role=JobRole::all();
         $can_stack=array();
@@ -377,8 +382,8 @@ class AdminMisController extends Controller
                 $center_job=CenterJobRole::where('tp_job_id',$p_job->id)->get(); 
  
                 foreach ($center_job as  $c_job) {
-                 $center_candidate=CenterCandidateMap::where([['tc_job_id','=',$c_job->id],['f_year','=',$request->financial_year]])->get();
-                 $center_drop_candidate=CenterCandidateMap::where([['tc_job_id','=',$c_job->id],['dropout','=',1],['f_year','=',$request->financial_year]])->get();
+                 $center_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where('tc_job_id','=',$c_job->id)->get();
+                 $center_drop_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where([['tc_job_id','=',$c_job->id],['dropout','=',1]])->get();
                  
                  $c_count += count($center_candidate);
                  $c_drop_count += count($center_drop_candidate);
@@ -387,7 +392,7 @@ class AdminMisController extends Controller
              }
              //End Total Enroll
              //Ongoing Batch
-             $batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
+             $batch_ongoing=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
             $bt_can_cnt=0;
             foreach ($batch_ongoing as $bt_ongoing) {
                 foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
@@ -397,7 +402,7 @@ class AdminMisController extends Controller
             }
             //End Ongoing Batch
             //Trained
-            $batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_trained=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
             $bt_train_can_cnt=0;
             foreach ($batch_trained as $bt_trained) {
                 foreach ($bt_trained->candidatesmap as $bt_can_map) {
@@ -407,7 +412,7 @@ class AdminMisController extends Controller
             }
             //End Of Trained
             //Assessed
-            $batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_assessed=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['jobrole_id','=',$job->id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
             $bt_assessed_can_cnt=$passed_can_cnt=$certified_can_cnt=$failed_can_cnt=$absent_can_cnt=0;
             foreach ($batch_assessed as $bt_assessed) {
                 foreach ($bt_assessed->candidatesmap as $bt_can_map) {
@@ -447,7 +452,7 @@ class AdminMisController extends Controller
             foreach ($expository as $expo) {
                 $dis_can_cnt=$dis_drop_can_cnt=0;
                 //enroll
-                $dis_candidate=CenterCandidateMap::where([['d_type','=',$expo->id],['f_year','=',$request->financial_year]])->get();
+                $dis_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where('d_type','=',$expo->id)->get();
                 foreach ($dis_candidate as  $dis_candidate) {
                     if($dis_candidate->jobrole->partnerjobrole->where('scheme_id',$request->scheme)){
                         $dis_can_cnt +=1;
@@ -455,7 +460,7 @@ class AdminMisController extends Controller
                 }
                 //end enroll
                 //Drop Out
-                $dis_drop_candidate=CenterCandidateMap::where([['d_type','=',$expo->id],['dropout','=',1],['f_year','=',$request->financial_year]])->get();
+                $dis_drop_candidate=CenterCandidateMap::whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->where([['d_type','=',$expo->id],['dropout','=',1]])->get();
                 foreach ($dis_drop_candidate as  $dis_drop_candidate) {
                     if($dis_drop_candidate->jobrole->partnerjobrole->where('scheme_id',$request->scheme)){
                         $dis_drop_can_cnt +=1;
@@ -463,7 +468,7 @@ class AdminMisController extends Controller
                 }
                 //end Drop Out
                 //ongoing Training
-                $dis_batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
+                $dis_batch_ongoing=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
                 $dis_bt_can_cnt=0;
                 foreach ($dis_batch_ongoing as $bt_ongoing) {
                     foreach ($bt_ongoing->candidatesmap as $bt_can_map) {
@@ -474,7 +479,7 @@ class AdminMisController extends Controller
                 }
                 //End ongoing Training
                 // Trained
-                $dis_batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
+                $dis_batch_trained=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
                 $dis_bt_trnd_can=0;
                 foreach ($dis_batch_trained as $bt_trained) {
                     foreach ($bt_trained->candidatesmap as $bt_can_map) {
@@ -484,7 +489,7 @@ class AdminMisController extends Controller
                 }
                 //End Trained
                 // Assessed
-                $dis_batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
+                $dis_batch_assessed=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
                 $dis_bt_assd_can=$dis_passed_can_cnt=$dis_certified_can_cnt=$dis_failed_can_cnt=$dis_absent_can_cnt=0;
                 foreach ($dis_batch_assessed as $bt_assessed) {
                     foreach ($bt_assessed->candidatesmap as $bt_can_map) {
@@ -518,7 +523,7 @@ class AdminMisController extends Controller
             }
             //dd($dis_can_stack);
         //END DISABILITY wise Report
-        return view('admin.mis.job-disability-summary')->with(compact('can_stack','dis_can_stack','scheme','sel_scm','sel_yr'));
+        return view('admin.mis.job-disability-summary')->with(compact('can_stack','dis_can_stack','scheme','sel_scm','from','to'));
 
     }
 
@@ -531,14 +536,15 @@ class AdminMisController extends Controller
         $scheme=$this->scheme();
         $scm=Scheme::findOrFail($request->scheme);
         $sel_scm=$scm->scheme;
-        $sel_yr=$request->financial_year;
+        $from=Carbon::parse($request->start_date)->format('Y-m-d');
+        $to=Carbon::parse($request->end_date)->format('Y-m-d');
        $agency= Agency::all();
        $candidate_stack=array();
        foreach ($agency  as $agency) {
         $enroll_candidate=$drop_candidate=$ongoing_candidate=$trained_candidate=$assessed_candidate=$passed_candidate=$failed_candidate=$absent_candidate=0;
-           foreach ($agency->agencyBatch->where('aa_verified',1) as $agBatch) {
+           foreach ($agency->agencyBatch->where('aa_verified',1)->where('reass_id','=',null) as $agBatch) {
                //Enroll/Assign
-            $batch=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id]])->get();
+            $batch=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id]])->get();
             foreach ($batch as $batch) {
                 foreach ($batch->candidatesmap as $bt_can_map) {
                     //all Enroll
@@ -553,7 +559,7 @@ class AdminMisController extends Controller
             //End Enroll/Assign
 
             //Ongoing Batch
-            $batch_ongoing=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_ongoing=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_start','<=',Carbon::now()->format('Y-m-d')],['batch_end','>=',Carbon::now()->format('Y-m-d')]])->get();
             foreach ($batch_ongoing as $batch_ongoing) {
                 foreach ($batch_ongoing->candidatesmap as $bt_can_map) {
                    $ongoing_candidate += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['dropout','=',0]])->get()->count();
@@ -562,7 +568,7 @@ class AdminMisController extends Controller
             }
             //End Ongoing Batch
             //Trained Batch
-            $batch_trained=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_trained=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['batch_end','<',Carbon::now()->format('Y-m-d')]])->get();
             foreach ($batch_trained as $batch_trained) {
                 foreach ($batch_trained->candidatesmap as $bt_can_map) {
                    $trained_candidate += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['dropout','=',0]])->get()->count();
@@ -572,7 +578,7 @@ class AdminMisController extends Controller
             //End Trained Batch
 
             // Batch Assessed
-            $batch_assessed=Batch::where([['f_year','=',$request->financial_year],['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
+            $batch_assessed=Batch::whereBetween('c_date', [$from." 00:00:00", $to." 23:59:59"])->where([['scheme_id','=',$request->scheme],['id','=',$agBatch->bt_id],['assessment','<',Carbon::now()->format('Y-m-d')]])->get();
             foreach ($batch_assessed as $batch_assessed) {
                 foreach ($batch_assessed->candidatesmap as $bt_can_map) {
                    $assessed_candidate += CenterCandidateMap::where([['id','=',$bt_can_map->candidate_id],['dropout','=',0]])->get()->count();
@@ -604,8 +610,98 @@ class AdminMisController extends Controller
                                                 ];
     }
     
-    return view('admin.mis.agency-summary')->with(compact('candidate_stack','scheme','sel_scm','sel_yr'));
+    return view('admin.mis.agency-summary')->with(compact('candidate_stack','scheme','sel_scm','from','to'));
 
 
+    }
+
+    public function pagePlacementWise(){
+        $scheme=$this->scheme();
+        return view('admin.mis.placement-summary')->with(compact('scheme'));  
+    }
+
+    public function candidateWisePlacementSummary(Request $request){
+        $scheme=$this->scheme();
+        $scm=Scheme::findOrFail($request->scheme);
+        $sel_scm=$scm->scheme;
+        $from=Carbon::parse($request->start_date)->format('Y-m-d');
+        $to=Carbon::parse($request->end_date)->format('Y-m-d');
+        $candidate=CenterCandidateMap::all();//whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();
+        $can_stack=array();
+        foreach ($candidate as $key => $value) {
+            if(!is_null( $value->placement)){
+            if($value->jobrole->partnerjobrole->where('scheme_id',$request->scheme)  && Carbon::parse($value->placement->employment_date)->format('Y-m-d') >= $from && Carbon::parse($value->placement->employment_date)->format('Y-m-d') <= $to){
+               
+            if(!is_null( $value->placement)){
+            $org_state_dist=DB::table('state_district')->where('id', $value->placement->org_state_dist)->first();
+
+                            $emp_type=$value->placement->emp_type;
+                            $employment_date=$value->placement->employment_date;
+                            $org_name=$value->placement->org_name;
+                            $org_address=$value->placement->org_address;
+                            $state=$org_state_dist->state;
+                            $district=$org_state_dist->district;
+                            $emp_spoc_name=$value->placement->emp_spoc_name;
+                            $emp_spoc_mobile=$value->placement->emp_spoc_mobile;
+                            $emp_spoc_email=$value->placement->emp_spoc_email;
+                }else{ 
+                            $emp_type='N/A';
+                            $employment_date='N/A';
+                            $org_name='N/A';
+                            $org_address='N/A';
+                            $state='N/A';
+                            $district='N/A';
+                            $emp_spoc_name='N/A';
+                            $emp_spoc_mobile='N/A';
+                            $emp_spoc_email='N/A';
+                
+                }
+
+            
+            $can_state_dist=DB::table('state_district')->where('id',$value->state_district)->first();
+            $tc_state_dist=DB::table('state_district')->where('id', $value->center->state_district)->first();
+            $can_stack[$value->id]=[
+                                    $value->center->partner->org_name,
+                                    $value->center->center_name,
+                                    $value->center->tc_id,
+                                    $tc_state_dist->state,
+                                    $tc_state_dist->district,
+                                    $value->jobrole->partnerjobrole->jobrole->job_role,
+                                    $value->candidate->cd_id,
+                                    $value->candidate->name,
+                                    $value->disability->e_expository,
+                                    $can_state_dist->state,
+                                    $can_state_dist->district,
+                                    $value->candidate->gender,
+                                    $value->candidate->contact,
+                                    $value->candidate->email,
+                                    $value->candidate->category,
+                                    $emp_type,
+                                    $employment_date,
+                                    $org_name,
+                                    $org_address,
+                                    $state,
+                                    $district,
+                                    $emp_spoc_name,
+                                    $emp_spoc_mobile,
+                                    $emp_spoc_email
+                                    // $result,
+                                    // $value->center->center_address,
+                                    // $value->jobrole->partnerjobrole->sector->sector,
+                                   
+                                    // $value->center->email,
+                                    // $value->center->mobile,
+                                    // $value->center->spoc_name,
+
+
+                                    ];
+
+           }
+
+        }
+
+           
+        }
+        return view('admin.mis.placement-summary')->with(compact('can_stack','scheme','sel_scm','from','to'));
     }
 }

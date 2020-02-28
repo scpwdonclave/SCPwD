@@ -101,7 +101,7 @@ function fetchBatch(job){
     let _token = $("input[name='_token']").val();
     let as_id = '{{$assessor->id}}';
     $.ajax({
-        url:"{{route('agency.as.fetch-batch')}}", 
+        url:"{{route('agency.as.fetch-batch')}}",  
         data:{_token,job,as_id},
         method:'POST',
         success: function(data){
