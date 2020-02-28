@@ -44,6 +44,7 @@
                         <li class="{{ Request::segment(3) === 'scheme' ? 'active' : null }}"><a href="{{route('admin.dashboard.scheme')}}">Schemes</a></li>
                         <li class="{{ Request::segment(3) === 'holiday' ? 'active' : null }}"><a href="{{route('admin.dashboard.holiday')}}">Holidays</a></li>
                         <li class="{{ Request::segment(3) === 'department' ? 'active' : null }}"><a href="{{route('admin.dashboard.department')}}">Department</a></li>
+                        <li class="{{ Request::segment(3) === 'logins' ? 'active' : null }}"><a href="{{route('admin.dashboard.logins')}}">Logins Audit</a></li>
                     @endif
                     
                 </ul>

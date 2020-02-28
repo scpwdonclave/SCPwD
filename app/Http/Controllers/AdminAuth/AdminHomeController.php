@@ -17,6 +17,7 @@ use App\Placement;
 use Carbon\Carbon;
 use App\Department;
 use App\Expository;
+use App\LoginAudit;
 use App\CandidateMark;
 use App\TrainerStatus;
 use App\BatchAssessment;
@@ -335,5 +336,12 @@ class AdminHomeController extends Controller
             // return $placement->centercandidate->candidate->cd_id;
             return view('common.view-placement')->with(compact('placement'));
         }
+    }
+
+    public function logins()
+    {
+        $logins = LoginAudit::all();
+        $supadmin = $this->guard()->user()->supadmin;
+        return view('admin.dashboard.logins')->with(compact('logins','supadmin'));
     }
 }
