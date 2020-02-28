@@ -374,9 +374,7 @@
                     });
                     break;
                 case 'collapseTwo':
-                    // var ajaxresponse = true;
-                    // var doc_no = $('[name=doc_no]').val();
-                
+                    
                     var _token = $('[name=_token]').val();
                     let email = $('[name=email]').val();
                     let contact = $('[name=contact]').val();

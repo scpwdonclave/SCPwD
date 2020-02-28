@@ -333,25 +333,6 @@ class CenterHomeController extends Controller
             }
 
 
-
-            // if ($emaildata['status'] && $contactdata['status']) {
-            //     // No Duplicate
-            //     return response()->json(['success' => true], 200);
-                
-            // } elseif ($emaildata['status'] && !$contactdata['status']) {
-            //     // Duplicate Contact
-            //     return response()->json(['success' => false, 'message' => 'We have This Contact No Registered with Someone else'], 200);
-                
-            // } elseif (!$emaildata['status'] && $contactdata['status']) {
-            //     // Duplicate Email    
-            //     return response()->json(['success' => false, 'message' => 'We have This Email Registered with Someone else'], 200);
-                
-            // } elseif (!$emaildata['status'] || !$contactdata['status']) {
-            //     // Duplicate Email & Contact    
-            //     return response()->json(['success' => false, 'message' => 'We have This Email & Contact No Registered with Someone else'], 200);
-           
-            // }
-
         } elseif ($request->has('jobid')) {
             $centerJob = CenterJobRole::find($request->jobid);
             if ($centerJob) {
