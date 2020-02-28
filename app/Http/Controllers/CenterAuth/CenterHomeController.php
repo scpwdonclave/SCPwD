@@ -248,8 +248,9 @@ class CenterHomeController extends Controller
                                 if (!is_null($candidate->centerlatest->certi_no)) {
                                     // * Candidate Have Received a Certificate
 
-                                    $value = explode(',', $candidate->centerlatest->assessment_certi_issued_on);
-                                    $cert = Carbon::parse($value[1])->addYear(2); // * Adding 2 years to Certificate Issued Date
+                                    // ? $value = explode(',', $candidate->centerlatest->assessment_certi_issued_on);
+                                    
+                                    $cert = Carbon::parse($candidate->centerlatest->batchcandidate->batch->batch_end)->addYear(2); // * Adding 2 years to Batch End Date
                                     
                                     if (Carbon::now() > $cert) {
                                         return response()->json(['success' => true,'candidate'=> $candidate], 200);

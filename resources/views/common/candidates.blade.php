@@ -36,6 +36,7 @@ tr.shown td.details-control {
                                     <th></th>
                                     <th>Name</th>
                                     <th>Contact</th>
+                                    <th>Aadhaar/Voter</th>
                                     <th>Category</th>
                                     <th>Date of Birth</th>
                                     <th>Candidate Status</th>
@@ -273,6 +274,7 @@ $(document).ready(function() {
                 defaultContent: '' },
             { data:'name'},
             { data:'contact'}, 
+            { data:'doc_no'}, 
             { data:'category'},
             { data:'dob'},
             { data:'candidate_status'},
@@ -286,6 +288,7 @@ $(document).ready(function() {
                 defaultContent: '' },
             { data:'name'},
             { data:'contact'}, 
+            { data:'doc_no'}, 
             { data:'category'},
             { data:'dob'},
             { data:'candidate_status'},
