@@ -13,6 +13,7 @@ Route::post('dashboard/holiday-delete', 'AdminAuth\AdminHomeController@holidayDe
 Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->name('dashboard.scheme_action');
 
 Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->name('dashboard.department');
+Route::get('dashboard/logins', 'AdminAuth\AdminHomeController@logins')->name('dashboard.logins');
 Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
 Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@departmentDelete')->name('dashboard.department-delete');
 

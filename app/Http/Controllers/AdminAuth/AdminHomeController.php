@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use App\Department;
 use App\Expository;
 use App\Notification;
+use App\LoginAudit;
 use App\CandidateMark;
 use App\TrainerStatus;
 use App\BatchAssessment;
@@ -394,4 +395,10 @@ class AdminHomeController extends Controller
         }
     }
 
+    public function logins()
+    {
+        $logins = LoginAudit::all();
+        $supadmin = $this->guard()->user()->supadmin;
+        return view('admin.dashboard.logins')->with(compact('logins','supadmin'));
+    }
 }
