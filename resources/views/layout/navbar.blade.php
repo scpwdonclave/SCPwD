@@ -56,7 +56,7 @@
                             <ul class="menu list-unstyled">
                                 @foreach ($notifications as $notification)
                                     <li id="notification_{{$notification->id}}" class="countli">
-                                        <a href="javascript:void(0);">
+                                        <a href="{{route(Request::segment(1).'.notification.click',Crypt::encrypt($notification->id))}}">
                                             <div class="media">
                                                 <div class="media-body">
                                                     <span class="name">{{$notification->title}}<span class="time" onclick="dismiss('{{$notification->id}}');" style="color:red">DISMISS</span></span>

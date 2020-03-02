@@ -6,6 +6,7 @@ Route::get('dashboard/dashboard', 'AssessorAuth\AssessorHomeController@index')->
 /* Custom URLs */
 Route::get('profile', 'AssessorAuth\AssessorHomeController@profile')->name('profile');
 Route::post('profile', 'AssessorAuth\AssessorHomeController@profile_update')->name('profile'); 
+Route::get('notification/{id}', 'AssessorAuth\AssessorHomeControllerr@clickNotification')->name('notification.click');
 
 Route::get('batches', 'AssessorAuth\AssessorBatchController@batches')->name('batch'); 
 Route::get('batches/batch-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessmentBatch')->name('batch.view'); 

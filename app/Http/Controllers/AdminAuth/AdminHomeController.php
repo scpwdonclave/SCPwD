@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminAuth;
 
 use DB;
 use Crypt;
+use Request;
 use App\Agency;
 use App\Center;
 use App\Scheme;
@@ -17,16 +18,17 @@ use App\Placement;
 use Carbon\Carbon;
 use App\Department;
 use App\Expository;
+use App\Notification;
 use App\CandidateMark;
 use App\TrainerStatus;
 use App\BatchAssessment;
 use App\JobQualification;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Config;
 
 class AdminHomeController extends Controller
 {
@@ -48,11 +50,66 @@ class AdminHomeController extends Controller
     {
         return Auth::guard('admin');
     }
+    
+    // public function clickNotification($id)
+    // {  
+    //     if ($id=AppHelper::instance()->decryptThis($id)) {
+    //         $notification = Notification::findOrFail($id);
+    //         if (is_null($notification->url) || $notification->read || $notification->rel_with !== 'admin') {
+    //             if (is_null($notification->url)) {
+    //                 $notification->read_by = $this->guard()->user()->name;
+    //                 $notification->read = 1;
+    //                 $notification->save();
+    //             }
+    //             return redirect()->back();
+    //         } else {
+    //             $notification->read_by = $this->guard()->user()->name;
+    //             $notification->read = 1;
+    //             $notification->save();
+    //             return redirect($notification->url);
+    //         }
+    //     }
+    // }
+
+
+    public function clickNotification($id)
+    {  
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $notification = Notification::findOrFail($id);
+            if ($notification->rel_with === 'admin') {
+                
+                if (!is_null($notification->rel_id)) {
+                    if ($notification->rel_id && !$this->guard()->user()->supadmin) {
+                        return redirect()->back();
+                    } elseif (!$notification->rel_id && $this->guard()->user()->supadmin) {
+                        return redirect()->back();
+                    }
+                }
+                
+                if (!$notification->read) {
+                    if (is_null($notification->url)) {
+                        $route = redirect()->back();
+                    } else {
+                        $route = redirect($notification->url);
+                    }
+                    $notification->read_by = $this->guard()->user()->name;
+                    $notification->read = 1;
+                    $notification->save();
+                    return $route;
+                }
+                return redirect()->back();
+            }
+        }
+    }
+
+
+
 
     public function profile(){
         $admin = $this->guard()->user();
         return view('common.profile')->with(compact('admin'));
     }
+
 
     public function profile_update(Request $request){
 
@@ -336,4 +393,5 @@ class AdminHomeController extends Controller
             return view('common.view-placement')->with(compact('placement'));
         }
     }
+
 }

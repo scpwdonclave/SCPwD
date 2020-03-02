@@ -34,6 +34,26 @@ class CenterHomeController extends Controller
         return Auth::guard('center');
     }
 
+    public function clickNotification($id)
+    {  
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $notification = Notification::findOrFail($id);
+            if ($notification->rel_with === 'center' && $this->guard()->user()->id == $notification->rel_id) {
+                if (!$notification->read) {
+                    if (is_null($notification->url)) {
+                        $route = redirect()->back();
+                    } else {
+                        $route = redirect($notification->url);
+                    }
+                    $notification->read_by = $this->guard()->user()->name;
+                    $notification->read = 1;
+                    $notification->save();
+                    return $route;
+                }
+            }
+        }
+    }
+
     protected function dycryptThis($id){
         try {
             return Crypt::decrypt($id);

@@ -20,6 +20,8 @@ class CreateNotificationsTable extends Migration
             $table->string('title');
             $table->text('message');
             $table->boolean('read')->default(0);
+            $table->string('read_by')->nullable();
+            $table->text('url')->nullable();
             $table->timestamps();
         });
     }

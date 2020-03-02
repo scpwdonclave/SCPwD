@@ -11,6 +11,7 @@ Route::post('/complete_registration/api_partner', 'PartnerAuth\PartnerHomeContro
 /* Custom URLs */
 Route::get('profile', 'PartnerAuth\PartnerHomeController@profile')->name('profile');
 Route::post('profile', 'PartnerAuth\PartnerHomeController@profile_update')->name('profile');
+Route::get('notification/{id}', 'PartnerAuth\PartnerHomeController@clickNotification')->name('notification.click');
 
 Route::get('training_centers', function () { return redirect(route('partner.tc.centers')); });
 Route::get('training_centers/centers', 'PartnerAuth\PartnerCenterController@centers')->name('tc.centers');

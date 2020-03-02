@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\AgencyAuth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Notification;
 use Auth;
+use App\Notification;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AgencyHomeController extends Controller
 {
@@ -20,6 +21,27 @@ class AgencyHomeController extends Controller
         return Auth::guard('agency');
     }
 
+    public function clickNotification($id)
+    {  
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $notification = Notification::findOrFail($id);
+            if ($notification->rel_with === 'agency' && $this->guard()->user()->id == $notification->rel_id) {
+                if (!$notification->read) {
+                    if (is_null($notification->url)) {
+                        $route = redirect()->back();
+                    } else {
+                        $route = redirect($notification->url);
+                    }
+                    $notification->read_by = $this->guard()->user()->name;
+                    $notification->read = 1;
+                    $notification->save();
+                    return $route;
+                }
+            }
+        }
+    }
+
+    
     public function index() {
         return view('agency.home')->with('agency',Auth::guard('agency')->user());
     }
@@ -28,6 +50,7 @@ class AgencyHomeController extends Controller
         $agency = Auth::guard('agency')->user();
         return view('common.profile')->with(compact('agency'));
     }
+
 
     public function profile_update(Request $request){
         
