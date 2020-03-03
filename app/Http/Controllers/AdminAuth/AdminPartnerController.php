@@ -326,15 +326,16 @@ class AdminPartnerController extends Controller
                             'updated_at' => Carbon::now()
                             ]
                         );
-                        $dataMail->tag = 'tpreject';
-                        $dataMail->reason = $request->reason;                      
                     });
+                    $dataMail->tag = 'tpreject';
+                    $dataMail->reason = $request->reason;                      
                     alert()->success("Training Partner Account has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                 }
-
+                
                 $dataMail->spoc_name = $partner->spoc_name;
                 $dataMail->email = $partner->email;
                 event(new TPMailEvent($dataMail));
+                $partner->delete();
                 
                 return redirect(route('admin.tp.partners'));
             } else {
