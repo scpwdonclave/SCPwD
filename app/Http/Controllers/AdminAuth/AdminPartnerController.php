@@ -670,7 +670,7 @@ class AdminPartnerController extends Controller
         } else {
             $partnerJob=PartnerJobrole::find($request->jobid);
             if ($partnerJob) {
-                if ($partnerJob->scheme_id==$request->scheme && $partnerJob->sector_id==$request->sector && $partnerJob->jobrole_id==$request->jobrole) {
+                if ($partnerJob->scheme_id==$request->scheme && $partnerJob->sector_id==$request->sector && $partnerJob->jobrole_id==$request->jobrole && $partnerJob->target==$request->target) {
                     alert()->info("You have not changed anything yet", 'Attention')->html()->autoclose(4000);
                 } else {
                     $partnerJobFetch=PartnerJobrole::where([['id','<>',$request->jobid],['tp_id','==',$request->userid],['scheme_id','=',$request->scheme],['sector_id','=',$request->sector],['jobrole_id','=',$request->jobrole]])->first();
