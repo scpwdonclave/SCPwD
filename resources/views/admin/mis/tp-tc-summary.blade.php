@@ -46,7 +46,7 @@
                             </div> --}}
                             <div class="col-sm-4">
                                 
-                                    <label for="start_date">Start Date</label>
+                                    <label for="start_date">Start Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float date_picker">
                                         <input type="text" class="form-control date_datepicker" placeholder="Start Date" id="start_date"  onchange="startchangescpwd('new')"  name="start_date" required >
                                     </div>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="col-sm-4">
                                 
-                                    <label for="end_date">End date</label>
+                                    <label for="end_date">End date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float date_picker">
                                         <input type="text" class="form-control date_datepicker" placeholder="End date" id="end_date" name="end_date"  required>
                                     </div>

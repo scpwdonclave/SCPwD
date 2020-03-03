@@ -175,6 +175,14 @@ Route::get('paymentorder/reject/{id}/{reason}', 'AdminAuth\AdminPaymentOrderCont
 Route::post('paymentorder/accept', 'AdminAuth\AdminPaymentOrderController@paymentOrderAccept')->name('paymentorder.accept'); 
 
 //End Payment Order
+
+//Invoice
+Route::get('invoice/pending-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.pending-invoice');
+Route::get('invoice/all-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.all-invoice');
+Route::post('invoice/fetch-partner', 'AdminAuth\AdminInvoiceController@fetchPartner')->name('invoice.fetch-partner');
+
+//End Invoice
+
 //Support
 Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
 Route::get('support/pending-request/{id}', 'AdminAuth\AdminSupportController@assignRequestToOnclave')->name('support.assign-to-onclave');
