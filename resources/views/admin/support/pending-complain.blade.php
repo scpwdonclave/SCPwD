@@ -62,7 +62,7 @@
                                      
                                  <td><a class="badge bg-green margin-0" href="{{route('admin.support.assign-to-onclave',['id'=>Crypt::encrypt($item->id)])}}" >Assign To Onclave Systems</a></td>
                                  @else
-                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Assign To Onclave Systems</a></td>  
+                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Assigned To Onclave Systems</a></td>  
                                      
                                  @endif
                                  <td><a class="badge bg-green margin-0" href="{{route('admin.support.complain-view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>

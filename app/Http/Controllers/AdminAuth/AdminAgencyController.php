@@ -433,7 +433,7 @@ class AdminAgencyController extends Controller
            $agencyBatch->save();
         }
 
-        AppHelper::instance()->writeNotification($request->aa_id,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you one or more batch(es) Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> Them");
+        AppHelper::instance()->writeNotification($request->aa_id,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you one or more batch(es) Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> Them",route('agency.pending-batch'));
         alert()->success("Batch(es) has been <span style='color:blue;font-weight:bold'>Added</span> with Assessment Agency", 'Job Done')->html()->autoclose(3000);
         return redirect()->back();
     }
@@ -445,7 +445,7 @@ class AdminAgencyController extends Controller
             return response()->json(['status' => 'fail'],200);
         } else {
             $agencyBatch->delete();
-            AppHelper::instance()->writeNotification($agencyBatch->agency->id,'agency','Batch Removed',"Admin has <span style='color:red;'>removed</span> a batch from your batch list.");
+            AppHelper::instance()->writeNotification($agencyBatch->agency->id,'agency','Batch Removed',"Admin has <span style='color:red;'>removed</span> a batch from your batch list.",route('agency.batch'));
             return response()->json(['status' => 'done'],200);
         }
     }

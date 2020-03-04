@@ -484,7 +484,7 @@
         /* End File Type Validation for jpg,jpeg,png,pdf */
 
 
-        /* Finantial Year Calculator for CA Certificate Section */
+        /* Financial Year Calculator for CA Certificate Section */
         
             var now = new Date();
             var initial_year = (now.getMonth() > 2) ? now.getFullYear() : (now.getFullYear()-1);
@@ -495,7 +495,7 @@
                 initial_year--;
             }
 
-        /* End Finantial Year Calculator for CA Certificate Section */
+        /* End Financial Year Calculator for CA Certificate Section */
     });
 
         /* Check Redundancy */

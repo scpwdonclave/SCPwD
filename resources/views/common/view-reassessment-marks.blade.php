@@ -110,7 +110,7 @@
                         @switch(Request::segment(1))
                             @case('assessor')
                                     @if ($batchReAssessment->aa_verified==2 || $batchReAssessment->admin_verified==2 || $batchReAssessment->sup_admin_verified==2)
-                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.assessment.edit',Crypt::encrypt($batchReAssessment->id))}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
+                                        <button class="btn btn-primary" onclick="location.href='{{route('assessor.reassessment.edit',Crypt::encrypt($batchReAssessment->id))}}';this.disabled = true;"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>
                                     @endif
                                 @break
                             @case('agency')

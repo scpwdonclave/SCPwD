@@ -14,7 +14,6 @@ use App\Center;
 use App\Holiday;
 use Carbon\Carbon;
 use App\BatchUpdate;
-use App\Notification;
 use App\Reassessment;
 use App\PartnerJobrole;
 use App\TrainerJobRole;
@@ -422,13 +421,8 @@ class PartnerBatchController extends Controller
                 DB::table('batch_trainer_map')->insert(['bt_id'=> $batch->id, 'tr_id'=> $batch->tr_id, 'assign_date'=> $batch->batch_start]);
     
                 $partner = $this->guard()->user();
-                /* For Admin */
-                $notification = new Notification;
-                //$notification->rel_id = 1;
-                $notification->rel_with = 'admin';
-                $notification->title = 'New Batch Registred';
-                $notification->message = "TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.";
-                $notification->save();
+                AppHelper::instance()->writeNotification(NULL,'admin','New Batch Registred',"TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.", route('admin.bt.batch.view', Crypt::encrypt($batch->id)));
+
             });
 
             alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
@@ -480,7 +474,7 @@ class PartnerBatchController extends Controller
                             $batchstore->assessment = Carbon::parse($request->assessment)->format('Y-m-d') ;
                             $batchstore->save();
 
-                            AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
+                            AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.", route('admin.batch.bu'));
 
                             alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                             return redirect()->back();
@@ -496,7 +490,7 @@ class PartnerBatchController extends Controller
                         $batchstore->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
                         $batchstore->save();
 
-                        AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.");
+                        AppHelper::instance()->writeNotification(NULL,'admin','Batch Update Requested',"TP ".$batch->partner->spoc_name."(ID: <span style='color:blue'>$batch->batch_id</span>) Requested for an Update.", route('admin.batch.bu'));
 
                         alert()->success("Your Update Request has been Submiited, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
                         return redirect()->back();

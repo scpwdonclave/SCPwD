@@ -158,8 +158,8 @@ class AdminBatchController extends Controller
                         $data->verified=1;
                         $data->save();
                 
-                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
-                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved");
+                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved", route('partner.bt.batch.view', $request->id));
+                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Approved',"Batch <br>(ID: <span style='color:blue;'>$new_batchid</span>) has been Approved", route('center.bt.batch.view', $request->id));
                         $dataMail->status = 1;
                         $dataMail->bt_id = $new_batchid;
                         event(new TPMailEvent($dataMail));
@@ -172,8 +172,8 @@ class AdminBatchController extends Controller
                     }
                 } elseif ($request->action === 'reject') {
                     if (!is_null($request->reason)) {
-                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Rejected',"One of your Batch has been <span style='color:blue;'>Rejected</span>, Kindly Check your Mail");
-                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Rejected',"One of your Batch (Requested by your TP) has been <span style='color:blue;'>Rejected</span>");
+                        AppHelper::instance()->writeNotification($data->tp_id,'partner','Batch Rejected',"One of your Batch has been <span style='color:blue;'>Rejected</span>, Kindly Check your Mail",NULL);
+                        AppHelper::instance()->writeNotification($data->tc_id,'center','Batch Rejected',"One of your Batch (Requested by your TP) has been <span style='color:blue;'>Rejected</span>",NULL);
                         
                         $dataMail->status = 0;
                         $dataMail->reason = $request->reason;
@@ -246,8 +246,8 @@ class AdminBatchController extends Controller
                     $dataMail->status = 1;
                     event(new TPMailEvent($dataMail));
 
-                    AppHelper::instance()->writeNotification($batch->tp_id,'partner','Batch Update Accepted',"Your Requested Batch(ID: <span style='color:blue'>$batch->batch_id</span>) Update has been Accepted.");
-                    AppHelper::instance()->writeNotification($batch->tc_id,'center','Batch Update Accepted',"Your Batch(ID: <span style='color:blue'>$batch->batch_id</span>) details has been Updated.");    
+                    AppHelper::instance()->writeNotification($batch->tp_id,'partner','Batch Update Accepted',"Your Requested Batch(ID: <span style='color:blue'>$batch->batch_id</span>) Update has been Accepted.", route('partner.bt.batch.view', Crypt::encrypt($batchupdate->batch->id)));
+                    AppHelper::instance()->writeNotification($batch->tc_id,'center','Batch Update Accepted',"Your Batch(ID: <span style='color:blue'>$batch->batch_id</span>) details has been Updated.", route('center.bt.batch.view', Crypt::encrypt($batchupdate->batch->id)));    
                     alert()->success('Batch Update Request has been <span style="color:blue;font-weight:bold">Approved</span> Successfully', 'Job Done')->html()->autoclose(3000);
                 
                 } elseif ($request->action === 'reject') {
@@ -263,7 +263,7 @@ class AdminBatchController extends Controller
                         $dataMail->status = 0;
                         event(new TPMailEvent($dataMail));
                         $batchid = $batchupdate->batch->batch_id;
-                        AppHelper::instance()->writeNotification($batchupdate->batch->tp_id,'partner','Batch Update Rejected',"Your Requested Batch(ID: <span style='color:blue'>$batchid</span>) Update has been Rejected.Kindly Check your Mail");
+                        AppHelper::instance()->writeNotification($batchupdate->batch->tp_id,'partner','Batch Update Rejected',"Your Requested Batch(ID: <span style='color:blue'>$batchid</span>) Update has been Rejected.Kindly Check your Mail", route('partner.bt.batch.view', Crypt::encrypt($batchupdate->batch->id)));
 
                         alert()->success('Batch Update Request has been <span style="color:red;font-weight:bold">Rejected</span> Successfully', 'Job Done')->html()->autoclose(3000);
                     } else {

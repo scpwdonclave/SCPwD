@@ -8,7 +8,6 @@ use Crypt;
 use App\Center;
 use App\Candidate;
 use App\CenterDoc;
-use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
 use App\Helpers\AppHelper;
@@ -303,16 +302,9 @@ class PartnerCenterController extends Controller
                 $partnerJobRole->save();
             }
 
-
-            /* Notification For Partner */
             $partner_name = $this->guard()->user()->spoc_name;
-            $notification = new Notification;
-            //$notification->rel_id = 1;
-            $notification->rel_with = 'admin';
-            $notification->title = 'Training Center Added';
-            $notification->message = "<span style='color:blue;'>".$partner_name."</span> Added New Training Center, TC Verification Required";
-            $notification->save();
-            /* End Notification For Partner */
+            AppHelper::instance()->writeNotification(NULL,'admin','New Training Center Added',"<span style='color:blue;'>".$partner_name."</span> Added New Training Center, TC Verification Required. kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('admin.tc.center.view', Crypt::encrypt($center->id)));
+
             alert()->success("Training Center Data has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
 
         });

@@ -65,7 +65,7 @@ class AgencyReAssessmentController extends Controller
             $reassessment->as_id = $request->assessor;
             $reassessment->save();
             $batchid = $reassessment->batch->batch_id;
-            AppHelper::instance()->writeNotification($request->assessor,'assessor','Re-Assessment Assigned',"A Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Assigned</span> to you.");
+            AppHelper::instance()->writeNotification($request->assessor,'assessor','Re-Assessment Assigned',"A Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Assigned</span> to you.", route('assessor.batch.view', Crypt::encrypt($reassessment->id)));
 
             alert()->success("Trainer has been <span style='color:blue;font-weight:bold'>Linked</span> with This Re-Assessment Batch", 'Job Done')->html()->autoclose(4000);
         } else {

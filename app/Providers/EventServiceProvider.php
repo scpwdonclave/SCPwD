@@ -36,6 +36,14 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\AdminMailEvent::class => [
             \App\Listeners\AdminMailListener::class
         ],
+
+        \Illuminate\Auth\Events\Login::class => [
+            \App\Listeners\LogSuccessfulLogin::class,
+        ],
+    
+        \Illuminate\Auth\Events\Logout::class => [
+            \App\Listeners\LogSuccessfulLogout::class,
+        ],
     ];
 
     /**

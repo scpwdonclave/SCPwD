@@ -9,7 +9,6 @@ use Crypt;
 use Image;
 use Carbon\Carbon;
 use App\AgencyBatch;
-use App\Notification;
 use App\BatchAssessment;
 use App\BatchReAssessment;
 use App\Helpers\AppHelper;
@@ -60,97 +59,6 @@ class AdminAssessmentController extends Controller
         return view('common.view-assessment')->with(compact('batchAssessment'));
     }
 
-    public function assessmentAccept($id){
-        $id= $this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        if (($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) )) || ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && ($batchAssessment->sup_admin_verified==0 || ($batchAssessment->sup_admin_verified==2 && $batchAssessment->recheck==1) )) ){
-
-            if(!$this->guard()->user()->supadmin){
-                $batchAssessment->admin_verified=1;
-
-                /* Notification For Super Admin */
-                $batch_no=$batchAssessment->batch->batch_id;
-                $notification = new Notification;
-                $notification->rel_id = $this->supadmin()->id;
-                $notification->rel_with = 'admin';
-                $notification->title = 'Assessment Approved by Admin';
-                $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment approved by Admin";
-                $notification->save();
-                /* End Notification For Super Admin */
-                
-            }else{
-                $batchAssessment->sup_admin_verified=1;
-
-                //=====================
-                foreach ($batchAssessment->candidateMarks as $key => $value) {
-
-                        $eachcand= $value->centerCandidate;
-                    if($value->attendence==='present'){
-                     $eachcand->passed=$value->passed;
-                     }else{
-                        $eachcand->passed=2;
-
-                     }
-                    $eachcand->save();
-                }
-
-                 /* Notification For Admin */
-                 $batch_no=$batchAssessment->batch->batch_id;
-                 $notification = new Notification;
-                 $notification->rel_with = 'admin';
-                 $notification->title = 'Certificate Release Request';
-                 $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment approved by Super Admin,Please request for certificate release";
-                 $notification->save();
-                 /* End Notification For Admin */
-            }
-            $batchAssessment->recheck=0;
-            $batchAssessment->reject_note=null;
-            $batchAssessment->save();
-    
-            alert()->success("Assessment has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
-             return Redirect()->back();
-        }else{
-            abort(404);
-        }
-    }
-
-    public function assessmentReject(Request $request){
-        $batchAssessment=BatchAssessment::findOrFail($request->id);
-        if(!$this->guard()->user()->supadmin){
-            $batchAssessment->admin_verified=2;
-
-                /* Notification For Assessor */
-                $batch_no=$batchAssessment->batch->batch_id;
-                $notification = new Notification;
-                $notification->rel_id = $batchAssessment->batch->assessorbatch->as_id;
-                $notification->rel_with = 'assessor';
-                $notification->title = 'Assessment Rejected by Admin';
-                $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment rejected by Admin";
-                $notification->save();
-                /* End Notification For Assessor */
-
-        }else{
-            $batchAssessment->sup_admin_verified=2;
-
-            /* Notification For Assessor */
-            $batch_no=$batchAssessment->batch->batch_id;
-            $notification = new Notification;
-            $notification->rel_id = $batchAssessment->batch->assessorbatch->as_id;
-            $notification->rel_with = 'assessor';
-            $notification->title = 'Assessment Rejected by Super Admin';
-            $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment rejected by Super Admin";
-            $notification->save();
-            /* End Notification For Assessor */
-
-        }
-        $batchAssessment->reject_note=$request->note;
-        $batchAssessment->save();
-
-        return response()->json(['success' => true], 200);
-    }
-
-
-
     public function assessmentApproveReject(Request $request)
     {
         if ($data=AppHelper::instance()->decryptThis($request->id)) {
@@ -162,18 +70,22 @@ class AdminAssessmentController extends Controller
                 $assessment=BatchAssessment::findOrFail($id[0]);
                 $tag='Assessment';
                 $count = 0; // * Assessment Count
+                $adminroute = route('admin.assessment.view', Crypt::encrypt($id[0]));
+                $assessorroute = route('assessor.assessment.view', Crypt::encrypt($id[0]));
             } else {
                 // * Request for BatchReAssessment Model (Re-Assessment)
                 
                 $assessment=BatchReAssessment::findOrFail($id[0]);
                 $tag='Re-Assessment';
                 $count = $assessment->batch->batchreassessments->count(); // * ReAssessment Count
+                $adminroute = route('admin.reassessment.reassessment-status.view', Crypt::encrypt($id[0]));
+                $assessorroute = route('assessor.reassessment.view', Crypt::encrypt($id[0]));
             }
         
 
             if ($this->guard()->user()->supadmin) {
+                $batch_no=$assessment->batch->batch_id;
                 if ($request->action === 'accept') {
-                    $batch_no=$assessment->batch->batch_id;
 
                     if ($assessment->aa_verified==1 && $assessment->admin_verified==1 && ($assessment->sup_admin_verified==0 || ($assessment->sup_admin_verified==2 && $assessment->recheck==1))) {
                 
@@ -205,7 +117,9 @@ class AdminAssessmentController extends Controller
                             $eachcand->save();
                         }
 
-                        AppHelper::instance()->writeNotification(NULL,'admin',$tag.' Approved by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Super Admin");
+                        AppHelper::instance()->writeNotification($assessment->batch->partner->id,'partner',$tag.' Results out',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag Results has been <span style='color:blue;'>Published</span>, Certificates yet to be Released", route('partner.bt.batch.view', Crypt::encrypt($assessment->batch->id)));
+                        AppHelper::instance()->writeNotification($assessment->batch->center->id,'center',$tag.' Results out',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag Results has been <span style='color:blue;'>Published</span>, Certificates yet to be Released", route('center.bt.batch.view', Crypt::encrypt($assessment->batch->id)));
+                        AppHelper::instance()->writeNotification(0,'admin',$tag.' Approved by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Super Admin. Kindly Request for Certificates",$adminroute);
                         alert()->success("$tag has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
                     }
                 } else {
@@ -215,13 +129,13 @@ class AdminAssessmentController extends Controller
                         $assessment->reject_note=$request->reason;
                         $assessment->save();
                         
-                        AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->as_id,'assessor',$tag.' Rejected by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Super Admin");
+                        AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->reassessment->as_id,'assessor',$tag.' Rejected by Super Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Super Admin",$assessorroute);
                         alert()->success("$tag has been <span style='color:red;font-weight:bold;'> Rejected </span>", 'Job Done')->html()->autoclose(3000);
                     }
                 }
             } else {
+                $batch_no=$assessment->batch->batch_id;
                 if ($request->action === 'accept') {
-                    $batch_no=$assessment->batch->batch_id;
 
                     if ($assessment->aa_verified==1 && ($assessment->admin_verified==0 || ($assessment->admin_verified==2 && $assessment->recheck==1))) {
                 
@@ -230,7 +144,7 @@ class AdminAssessmentController extends Controller
                         $assessment->reject_note=null;
                         $assessment->save();
 
-                        AppHelper::instance()->writeNotification($this->supadmin()->id,'admin',$tag.' Approved by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Admin");
+                        AppHelper::instance()->writeNotification($this->supadmin()->id,'admin',$tag.' Approved by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Admin. Kindly <span style='color:blue;'>Approve</span> or <span style='color:blue;'>Reject</span>",$adminroute);
                         alert()->success("$tag has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
                     }
                 } else {
@@ -240,7 +154,7 @@ class AdminAssessmentController extends Controller
                         $assessment->reject_note=$request->reason;
                         $assessment->save();
                         
-                        AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->as_id,'assessor',$tag.' Rejected by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Admin");
+                        AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->reassessment->as_id,'assessor',$tag.' Rejected by Admin',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Admin",$assessorroute);
                         alert()->success("$tag has been <span style='color:red;font-weight:bold;'> Rejected </span>", 'Job Done')->html()->autoclose(3000);
                     }
                 }
@@ -251,12 +165,6 @@ class AdminAssessmentController extends Controller
     }
 
 
-
-
-
-
-
-
     public function certificateReleaseApproveReject(Request $request){
       
         if ($data=AppHelper::instance()->decryptThis($request->id)) {
@@ -265,10 +173,12 @@ class AdminAssessmentController extends Controller
                 // * Request for BatchAssessment Model (Assessment)
                 $assessment=BatchAssessment::findOrFail($id[0]);
                 $tag='Assessment';
+                $adminroute = route('admin.assessment.view', Crypt::encrypt($id[0]));
             } else {
                 // * Request for BatchReAssessment Model (Re-Assessment)
                 $assessment=BatchReAssessment::findOrFail($id[0]);
                 $tag='Re-Assessment';
+                $adminroute = route('admin.reassessment.reassessment-status.view', Crypt::encrypt($id[0]));
             }
             
 
@@ -281,7 +191,7 @@ class AdminAssessmentController extends Controller
                     $assessment->reject_note=null;
                     $text="<p>$tag Certificate has been <span style='color:blue;font-weight:bold;'>Requested to Released</span> Wait for Super Admin <span style='color:red;font-weight:bold;'>Approval</span>.</p>";
 
-                    AppHelper::instance()->writeNotification($this->supadmin()->id,'admin',$tag.' Certificate Requested',"Batch (ID: <span style='color:blue;'>$batch_no</span>) please release certificate.");            
+                    AppHelper::instance()->writeNotification(1,'admin',$tag.' Certificate Requested',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> certificate Release.",$adminroute);            
                 
                 }else{
 
@@ -353,9 +263,9 @@ class AdminAssessmentController extends Controller
 
                         $text="$tag Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.";
                         
-                        AppHelper::instance()->writeNotification(NULL,'admin','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.");
-                        AppHelper::instance()->writeNotification($assessment->batch->tp_id,'partner',$tag.' Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.");
-                        AppHelper::instance()->writeNotification($assessment->batch->tc_id,'center',$tag.' Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;font-weight:bold;'>Released</span>.");
+                        AppHelper::instance()->writeNotification(0,'admin','Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.", $adminroute);
+                        AppHelper::instance()->writeNotification($assessment->batch->tp_id,'partner',$tag.' Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.",route('partner.bt.batch.view', Crypt::encrypt($assessment->batch->id)));
+                        AppHelper::instance()->writeNotification($assessment->batch->tc_id,'center',$tag.' Certificate Released',"Batch (ID: <span style='color:blue;'>$batch_no</span>)  Certificate has been <span style='color:blue;'>Released</span>.",NULL);
                         
                     } else {
                         $assessment->supadmin_cert_rel=2;
@@ -363,7 +273,7 @@ class AdminAssessmentController extends Controller
                         $assessment->save();
                         
                         $text="$tag Certificate Release Request has been <span style='color:blue;font-weight:bold;'>Rejected</span>.";
-                        AppHelper::instance()->writeNotification(NULL,'admin','Certificate Released Rejected',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Certificate Release has been <span style='color:blue;'>Rejected</span>.");
+                        AppHelper::instance()->writeNotification(0,'admin','Certificate Released Rejected',"Batch (ID: <span style='color:blue;'>$batch_no</span>) Certificate Release Request has been <span style='color:red;'>Rejected</span>.", $adminroute);
                 
                     }
                 }
@@ -377,15 +287,6 @@ class AdminAssessmentController extends Controller
         }
 
     }
-
-    // public function assessmentReleaseReject(Request $request){
-    //     $batchAssessment=BatchAssessment::findOrFail($request->id);
-    //     $batchAssessment->supadmin_cert_rel=2;
-    //     $batchAssessment->reject_note=$request->reason;
-    //     $batchAssessment->save();
-
-    //     return response()->json(['success' => true], 200);
-    // }
 
     public function  certificatePrint($id){
 

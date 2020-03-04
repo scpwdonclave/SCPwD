@@ -17,6 +17,8 @@ use App\Placement;
 use Carbon\Carbon;
 use App\Department;
 use App\Expository;
+use App\LoginAudit;
+use App\Notification;
 use App\CandidateMark;
 use App\TrainerStatus;
 use App\BatchAssessment;
@@ -27,6 +29,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Config;
 
 class AdminHomeController extends Controller
 {
@@ -49,10 +52,74 @@ class AdminHomeController extends Controller
         return Auth::guard('admin');
     }
 
+    public function notifications()
+    {
+        if ($this->guard()->user()->supadmin) {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',1]])->orWhere([['rel_with','admin'],['rel_id',NULL]])->get();
+        } else {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',0]])->orWhere([['rel_with','admin'],['rel_id',NULL]])->get();
+        }
+        return view('common.notifications')->with(compact('notifications'));
+    }
+
+    public function clearNotifications(Request $request)
+    {   
+        $request->validate([
+            'dismiss'=>'required',
+        ]);
+
+        if ($this->guard()->user()->supadmin) {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',1],['read',0]])->orWhere([['rel_with','admin'],['rel_id',NULL],['read',0]])->get();
+        } else {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',0],['read',0]])->orWhere([['rel_with','admin'],['rel_id',NULL],['read',0]])->get();
+        }
+        foreach ($notifications as $notification) {
+            $notification->read=1;
+            $notification->read_by = $this->guard()->user()->name;
+            $notification->save();
+        }
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function clickNotification($id)
+    {  
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $notification = Notification::findOrFail($id);
+            if ($notification->rel_with === 'admin') {
+                
+                if (!is_null($notification->rel_id)) {
+                    if ($notification->rel_id && !$this->guard()->user()->supadmin) {
+                        return redirect()->back();
+                    } elseif (!$notification->rel_id && $this->guard()->user()->supadmin) {
+                        return redirect()->back();
+                    }
+                }
+                
+                if (!$notification->read) {
+                    if (is_null($notification->url)) {
+                        $route = redirect()->back();
+                    } else {
+                        $route = redirect($notification->url);
+                    }
+                    $notification->read_by = $this->guard()->user()->name;
+                    $notification->read = 1;
+                    $notification->save();
+                    return $route;
+                }
+                return redirect()->back();
+            }
+        }
+    }
+
+
+
+
     public function profile(){
         $admin = $this->guard()->user();
         return view('common.profile')->with(compact('admin'));
     }
+
 
     public function profile_update(Request $request){
 
@@ -335,5 +402,12 @@ class AdminHomeController extends Controller
             // return $placement->centercandidate->candidate->cd_id;
             return view('common.view-placement')->with(compact('placement'));
         }
+    }
+
+    public function logins()
+    {
+        $logins = LoginAudit::all();
+        $supadmin = $this->guard()->user()->supadmin;
+        return view('admin.dashboard.logins')->with(compact('logins','supadmin'));
     }
 }

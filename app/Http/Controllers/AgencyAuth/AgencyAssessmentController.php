@@ -7,7 +7,6 @@ use Crypt;
 use App\Batch;
 use App\Reason;
 use App\AgencyBatch;
-use App\Notification;
 use App\Reassessment;
 use App\BatchAssessment;
 use App\BatchReAssessment;
@@ -52,51 +51,7 @@ class AgencyAssessmentController extends Controller
         
     }
 
-    // public function assessmentAccept($id){
-    //     $id= AppHelper::instance()->decryptThis($id);
-    //     $batchAssessment=BatchAssessment::findOrFail($id);
-    //     if($batchAssessment->aa_verified==0 || ($batchAssessment->aa_verified==2 && $batchAssessment->recheck==1)){
-    //     $batchAssessment->aa_verified=1;
-    //     $batchAssessment->recheck=0;
-    //     $batchAssessment->reject_note=null;
-    //     $batchAssessment->save();
-
-        
-    //     /* Notification For Admin */
-    //     $batch_no=$batchAssessment->batch->batch_id;
-    //     $notification = new Notification;
-    //     $notification->rel_with = 'admin';
-    //     $notification->title = 'Assessment Approved by Agency';
-    //     $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment approved by Agency";
-    //     $notification->save();
-    //     /* End Notification For Admin */
-
-    //     alert()->success("Assessment has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
-    //      return Redirect()->back();
-    //     }else{
-    //         abort(404);
-    //     }
-    // }
-
-    // public function assessmentReject(Request $request){
-    //     $batchAssessment=BatchAssessment::findOrFail($request->id);
-    //     $batchAssessment->aa_verified=2;
-    //     $batchAssessment->reject_note=$request->note;
-    //     $batchAssessment->save();
-
-    //      /* Notification For Assessor */
-    //      $batch_no=$batchAssessment->batch->batch_id;
-    //      $notification = new Notification;
-    //      $notification->rel_id = $batchAssessment->batch->assessorbatch->as_id;
-    //      $notification->rel_with = 'assessor';
-    //      $notification->title = 'Assessment Rejected by Agency';
-    //      $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) assessment rejected by Agency";
-    //      $notification->save();
-    //      /* End Notification For Assessor */
-
-    //     return response()->json(['success' => true], 200);
-    // }
-
+    // * Assessment ReAssessment Marks Approve Reject which is Submitted by Assessor
 
     public function assessmentApproveReject(Request $request)
     {
@@ -107,10 +62,14 @@ class AgencyAssessmentController extends Controller
                 // Request for BatchAssessment Model (Assessment)
                 $assessment=BatchAssessment::findOrFail($id[0]);
                 $tag='Assessment';
+                $adminroute = route('admin.assessment.view', Crypt::encrypt($id[0]));
+                $assessorroute = route('assessor.assessment.view', Crypt::encrypt($id[0]));
             } else {
                 // Request for BatchReAssessment Model (Re-Assessment)
                 $assessment=BatchReAssessment::findOrFail($id[0]);
                 $tag='Re-Assessment';
+                $adminroute = route('admin.reassessment.reassessment-status.view', Crypt::encrypt($id[0]));
+                $assessorroute = route('assessor.reassessment.view', Crypt::encrypt($id[0]));
             }
             
 
@@ -123,7 +82,7 @@ class AgencyAssessmentController extends Controller
                     $assessment->reject_note=null;
                     $assessment->save();
 
-                    AppHelper::instance()->writeNotification(NULL,'admin',$tag.' Approved by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Agency");
+                    AppHelper::instance()->writeNotification(0,'admin',$tag.' Approved by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag approved by Agency. Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", $adminroute);
                     alert()->success("$tag has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
                     
                 } else {
@@ -132,7 +91,7 @@ class AgencyAssessmentController extends Controller
                     $assessment->reject_note=$request->reason;
                     $assessment->save();
                     
-                    AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->as_id,'assessor',$tag.' Rejected by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Agency");
+                    AppHelper::instance()->writeNotification(($tag==='Assessment')?$assessment->batch->assessorbatch->as_id:$assessment->reassessment->as_id,'assessor',$tag.' Rejected by Agency',"Batch (ID: <span style='color:blue;'>$batch_no</span>) $tag rejected by Agency", $assessorroute);
                     alert()->success("$tag has been <span style='color:red;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(3000);
 
                 }
@@ -143,6 +102,8 @@ class AgencyAssessmentController extends Controller
             
         }
     }
+
+    // * End Assessment ReAssessment Marks Approve Reject which is Submitted by Assessor
 
 
 
@@ -175,18 +136,18 @@ class AgencyAssessmentController extends Controller
                     }
                     $agencyBatch->aa_verified=1;
                     $agencyBatch->save();
-                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Approved by Agency',"Agency (ID: <span style='color:blue;'>$agencyID</span>) Approved Batch (ID: <span style='color:blue;'>$batchID</span>).");
+                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Approved by Agency',"Agency (ID: <span style='color:blue;'>$agencyID</span>) Approved Batch (ID: <span style='color:blue;'>$batchID</span>).",NULL);
                     alert()->success('Batch has been <span style="color:blue">Approved</span>', 'Job Done')->html()->autoclose(4000);
             
                 } elseif ($request->action == 'reject' && $request->reason != '') {
                   
+                    AppHelper::instance()->writeNotification(NULL,'admin','Batch Rejected by Agency',"Agency (ID <span style='color:blue;'>$agencyID</span>) Rejected your assigned Batch.", route('admin.reassessment.agencyrejected'));
                     $agencyBatch->delete();
                     $reason = new Reason;
                     $reason->rel_with = 'admin';
                     $reason->reason = $request->reason;
                     $reason->save();
                     
-                    AppHelper::instance()->writeNotification($agencyBatch->tp_id,'admin','Batch Rejected by Agency',"Agency (ID <span style='color:blue;'>$agencyID</span>) Rejected your assigned Batch.");
                     alert()->success("Batch(ID: <span style='color:blue'>$batchID</span>) has been <span style='color:red'>Rejeted</span>", 'job Done')->html()->autoclose(3000);
                 } else {
                     alert()->error('Something went Wrong, Try Again', 'Oops!')->autoclose(3000);

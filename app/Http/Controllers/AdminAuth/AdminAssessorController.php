@@ -10,7 +10,6 @@ use App\Reason;
 use App\Sector;
 use App\Assessor;
 use App\AgencySector;
-use App\Notification;
 use App\AssessorBatch;
 use App\AssessorJobRole;
 use App\AssessorLanguage;
@@ -90,7 +89,7 @@ class AdminAssessorController extends Controller
     
                                 $dataMail->reason = $request->reason; 
                                 
-                                AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Deactivated',"AS (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
+                                AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Deactivated',"AS (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:red;'>Dectivated</span>.", route('agency.as.assessor.view', Crypt::encrypt($assessor->id)));
                                 $array = array('type' => 'success', 'message' => "Assessor Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                             } else {
                                 $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -99,7 +98,7 @@ class AdminAssessorController extends Controller
                             $assessor->status = 1;
                             $assessor->save();
     
-                            AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Activated',"TC (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
+                            AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Activated',"AS (ID: <span style='color:blue;'>$assessor->as_id</span>) Account is now <span style='color:blue;'>Activated</span>.", route('agency.as.assessor.view', Crypt::encrypt($assessor->id)));
                             $array = array('type' => 'success', 'message' => "Assessor Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                         }
     
@@ -189,7 +188,7 @@ class AdminAssessorController extends Controller
                         $dataMail->email = $assessor->agency->email;
                         event(new AAMailEvent($dataMail));
                         
-                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Accepted',"Your Assessor (ID: <span style='color:blue'>$assessor->as_id</span>) has been <span style='color:blue;'>Approved</span>.");
+                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Accepted',"Your Assessor (ID: <span style='color:blue'>$assessor->as_id</span>) has been <span style='color:blue;'>Approved</span>.", route('agency.as.assessor.view', Crypt::encrypt($assessor->id)));
                         alert()->success("Assessor has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
                         
                         
@@ -206,7 +205,7 @@ class AdminAssessorController extends Controller
 
                         event(new AAMailEvent($dataMail));
 
-                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Rejected',"Your Requested Assessor has been <span style='color:red;'>Rejected</span>.Kindly check your mail");
+                        AppHelper::instance()->writeNotification($assessor->agency->id,'agency','Assessor Rejected',"Your Requested Assessor has been <span style='color:red;'>Rejected</span>.Kindly check your mail", NULL);
                         alert()->success("Assessor has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                     }
                     return redirect(route('admin.as.assessors'));
@@ -366,14 +365,7 @@ class AdminAssessorController extends Controller
             $languages->save();
         }
 
-        /* Notification For Agency */
-        $notification = new Notification;
-        $notification->rel_id =$assessor->aa_id;
-        $notification->rel_with = 'agency';
-        $notification->title = 'Assessor has been Updated';
-        $notification->message = "Assessor ID: <span style='color:blue;'>$assessor->as_id</span><br> has been <span style='color:blue;'>Updated</span>";
-        $notification->save();
-        /* End Notification For Agency */
+        AppHelper::instance()->writeNotification($assessor->aa_id,'agency','Assessor Details has Updated',"Assessor ID: <span style='color:blue;'>$assessor->as_id</span><br> has been <span style='color:blue;'>Updated</span>", route('agency.as.assessor.view', Crypt::encrypt($assessor->id)));
         
         alert()->success("This Assessor ID <span style='color:blue;'>".$assessor->as_id."</span> has Update", 'Job Done')->html()->autoclose(3000);
         return Redirect()->back();

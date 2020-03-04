@@ -34,6 +34,49 @@ class CenterHomeController extends Controller
         return Auth::guard('center');
     }
 
+    public function notifications()
+    {
+        $notifications = Notification::where([['rel_with','center'],['rel_id',$this->guard()->user()->id]])->get();
+        return view('common.notifications')->with(compact('notifications'));
+    }
+
+    public function clearNotifications(Request $request)
+    {   
+        $request->validate([
+            'dismiss'=>'required',
+        ]);
+
+        $notifications = Notification::where([['rel_with','center'],['rel_id',$this->guard()->user()->id],['read',0]])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->read=1;
+            $notification->read_by = $this->guard()->user()->spoc_name;
+            $notification->save();
+        }
+
+        return response()->json(['success' => true],200);
+    }
+
+    public function clickNotification($id)
+    {  
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $notification = Notification::findOrFail($id);
+            if ($notification->rel_with === 'center' && $this->guard()->user()->id == $notification->rel_id) {
+                if (!$notification->read) {
+                    if (is_null($notification->url)) {
+                        $route = redirect()->back();
+                    } else {
+                        $route = redirect($notification->url);
+                    }
+                    $notification->read_by = $this->guard()->user()->name;
+                    $notification->read = 1;
+                    $notification->save();
+                    return $route;
+                }
+            }
+        }
+    }
+
     protected function dycryptThis($id){
         try {
             return Crypt::decrypt($id);
@@ -218,8 +261,8 @@ class CenterHomeController extends Controller
             $centerjob->save();
 
             /* For Admin */
-            $center = $this->guard()->user();
-            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.");
+            $center = $this->guard()->user(); 
+            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.", route('partner.tc.candidate.view', Crypt::encrypt($center_candidate->id)));
 
         });
         alert()->success("Candidate has been <span style='font-weight:bold;color:blue'>Registered</span> Successfully", 'Job Done')->html()->autoclose(6000);
@@ -248,8 +291,9 @@ class CenterHomeController extends Controller
                                 if (!is_null($candidate->centerlatest->certi_no)) {
                                     // * Candidate Have Received a Certificate
 
-                                    $value = explode(',', $candidate->centerlatest->assessment_certi_issued_on);
-                                    $cert = Carbon::parse($value[1])->addYear(2); // * Adding 2 years to Certificate Issued Date
+                                    // ? $value = explode(',', $candidate->centerlatest->assessment_certi_issued_on);
+                                    
+                                    $cert = Carbon::parse($candidate->centerlatest->batchcandidate->batch->batch_end)->addYear(2); // * Adding 2 years to Batch End Date
                                     
                                     if (Carbon::now() > $cert) {
                                         return response()->json(['success' => true,'candidate'=> $candidate], 200);
@@ -332,25 +376,6 @@ class CenterHomeController extends Controller
             }
 
 
-
-            // if ($emaildata['status'] && $contactdata['status']) {
-            //     // No Duplicate
-            //     return response()->json(['success' => true], 200);
-                
-            // } elseif ($emaildata['status'] && !$contactdata['status']) {
-            //     // Duplicate Contact
-            //     return response()->json(['success' => false, 'message' => 'We have This Contact No Registered with Someone else'], 200);
-                
-            // } elseif (!$emaildata['status'] && $contactdata['status']) {
-            //     // Duplicate Email    
-            //     return response()->json(['success' => false, 'message' => 'We have This Email Registered with Someone else'], 200);
-                
-            // } elseif (!$emaildata['status'] || !$contactdata['status']) {
-            //     // Duplicate Email & Contact    
-            //     return response()->json(['success' => false, 'message' => 'We have This Email & Contact No Registered with Someone else'], 200);
-           
-            // }
-
         } elseif ($request->has('jobid')) {
             $centerJob = CenterJobRole::find($request->jobid);
             if ($centerJob) {
@@ -391,7 +416,7 @@ class CenterHomeController extends Controller
                             
                             $name = $centerCandidate->candidate->name;
                             $tcid = $centerCandidate->center->tc_id;
-                            AppHelper::instance()->writeNotification($centerCandidate->center->tp_id,'partner','Candidate Dropped Out',"Candidate (<span style='color:blue;'>$name</span>) is Dropped Out by TC <span style='color:red;'>$tcid</span>.");
+                            AppHelper::instance()->writeNotification($centerCandidate->center->tp_id,'partner','Candidate Dropped Out',"Candidate (<span style='color:blue;'>$name</span>) is Dropped Out by TC <span style='color:red;'>$tcid</span>.", route('partner.tc.candidate.view', Crypt::encrypt($centerCandidate->id)));
                             $array = array('type' => 'success', 'message' => "Candidate <span style='font-weight:bold;color:blue'>$name</span> is now <span style='font-weight:bold;color:red'>De-Linked</span> from your Training Center");
                         
                         } else {

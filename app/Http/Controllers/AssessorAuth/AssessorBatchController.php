@@ -194,74 +194,77 @@ class AssessorBatchController extends Controller
             }
             $batch_no=$batchAssessment->batch->batch_id;
             $assessor = $this->guard()->user()->as_id;
-            AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
+            AppHelper::instance()->writeNotification($batchAssessment->batch->agencybatch->aa_id,'agency','Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks", route('agency.assessment.view',Crypt::encrypt($batchAssessment->id)));
 
             alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
             return redirect()->route('assessor.batch');
         }
     }
 
+    // * Update Candidate Assessment & Re-Assessment Marks
+
     public function candidateMarksUpdate(Request $request){
-        $batchAssessment= BatchAssessment::findOrFail($request->bt_assessment_id);
+
+        // ? $request->assessment_type [1 Assessmnt : 0 Re-Assessment]
+        
+        $type=AppHelper::instance()->decryptThis($request->assessment_type);
+        if ($type) {
+            // * Request For Assessment
+            $assessment= BatchAssessment::findOrFail(AppHelper::instance()->decryptThis($request->bt_assessment_id));
+            
+        } else {
+            // * Request For Re-Assessment
+            $assessment= BatchReAssessment::findOrFail(AppHelper::instance()->decryptThis($request->bt_assessment_id));
+
+        }
+
+        
 
         if($request->hasFile('attendence_doc')){
-            $batchAssessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
-             }	
+            $assessment->attendence_sheet = Storage::disk('myDisk')->put('/marksheet',$request->attendence_doc);
+        }	
         if($request->hasFile('marksheet_doc')){
-            $batchAssessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
-             }	
-             $batchAssessment->recheck=1;
-             $batchAssessment->save();
+            $assessment->mark_sheet = Storage::disk('myDisk')->put('/marksheet',$request->marksheet_doc);
+        }	
+        $assessment->recheck=1;
+        $assessment->save();
 
-             foreach ($batchAssessment->candidateMarks as $key => $candidatemark) {
-                $a='remark'.($key+1);
-                if($request->mark[$key]===null){
-                    $candidatemark->mark=0;	
-                        }else{
-                    $candidatemark->mark=$request->mark[$key];	
-                        }
-               	//$candidatemark->mark=$request->mark[$key];	
-                $candidatemark->attendence=$request->attendence[$key];
-                if($request->$a===null){
-                    $candidatemark->passed=0;
-    
-                }else{
-                    $candidatemark->passed=$request->$a;
-                }
-                //$candidatemark->passed=$request->$a;
-               
-                $candidatemark->save();
+        foreach ($assessment->candidateMarks as $key => $candidatemark) {
+            $a='remark'.($key+1);
+            if($request->mark[$key]===null){
+                $candidatemark->mark=0;	
+            }else{
+                $candidatemark->mark=$request->mark[$key];	
             }
+                //$candidatemark->mark=$request->mark[$key];	
+            $candidatemark->attendence=$request->attendence[$key];
+            if($request->$a===null){
+                $candidatemark->passed=0;
+            }else{
+                $candidatemark->passed=$request->$a;
+            }
+            //$candidatemark->passed=$request->$a;
+            
+            $candidatemark->save();
+        }
 
-                $batch_no=$batchAssessment->batch->batch_id;
-                if($batchAssessment->aa_verified==2){
-                /* Notification For Agency */
-                $notification = new Notification;
-                $notification->rel_id =  $batchAssessment->batch->agencybatch->aa_id;
-                $notification->rel_with = 'agency';
-                $notification->title = 'Assessment Review & Submit';
-                $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) review assessment submit by Assessor";
-                $notification->save();
-                /* End Notification For Agency */
-                }else if($batchAssessment->admin_verified==2 || $batchAssessment->sup_admin_verified==2){
-                /* Notification For Admin */
-                $notification = new Notification;
-                if($batchAssessment->sup_admin_verified==2){
-                    $supadmin_id=DB::table('admins')->where('supadmin','=',1)->first();
-                    $notification->rel_id =$supadmin_id->id;
-                }
-                $notification->rel_with = 'admin';
-                $notification->title = 'Assessment Review & Submit';
-                $notification->message = "Batch (ID: <span style='color:blue;'>$batch_no</span>) review assessment submit by Assessor";
-                $notification->save();
-                /* End Notification For Admin */
-                }
+        $batch_no=$assessment->batch->batch_id;
+        if($assessment->aa_verified==2){
+            AppHelper::instance()->writeNotification($type?$assessment->batch->agencybatch->aa_id:$assessment->reassessment->aa_id,'agency',($type?'Assessment':'Reassessment').' Reviewed & Re-Submitted',"Batch (ID: <span style='color:blue;'>$batch_no</span>) marks reviewed & resubmitted by Assessor, Kindly <span style='color:blue;'>Accept</span> or <span style='color:red;'>Reject</span>", route('agency.reassessment.view',Crypt::encrypt($assessment->id)));
+        }else if($assessment->admin_verified==2){
+            AppHelper::instance()->writeNotification(0,'admin',($type?'Assessment':'Reassessment').' Reviewed & Re-Submitted',"Batch (ID: <span style='color:blue;'>$batch_no</span>) marks reviewed & resubmitted by Assessor, Kindly <span style='color:blue;'>Accept</span> or <span style='color:red;'>Reject</span>", $type?route('admin.assessment.view',Crypt::encrypt($assessment->id)):route('admin.reassessment.reassessment-status.view',Crypt::encrypt($assessment->id)));
+        } elseif ($assessment->sup_admin_verified==2) {
+            AppHelper::instance()->writeNotification(1,'admin',($type?'Assessment':'Reassessment').' Reviewed & Re-Submitted',"Batch (ID: <span style='color:blue;'>$batch_no</span>) marks reviewed & resubmitted by Assessor, Kindly <span style='color:blue;'>Accept</span> or <span style='color:red;'>Reject</span>", $type?route('admin.assessment.view',Crypt::encrypt($assessment->id)):route('admin.reassessment.reassessment-status.view',Crypt::encrypt($assessment->id)));
+        }
 
-                alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
-                // alert()->success('Marks has been Updated wait for <span style="color:blue;font-weight:bold;"> Approved </span>', 'Job Done')->html()->autoclose(3000);
-                return redirect()->route('assessor.batch');
+        alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
+        return redirect()->route('assessor.batch');            
+        
 
     }
+
+    // * End Update Candidate Assessment & Re-Assessment Marks
+
 
     public function viewAssessment(Request $request){
         if ($id=AppHelper::instance()->decryptThis($request->id)) {
@@ -276,9 +279,25 @@ class AssessorBatchController extends Controller
 
     public function editAssessment($id){
         $id= $this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        if ($batchAssessment->aa_verified==2 || $batchAssessment->admin_verified==2 || $batchAssessment->sup_admin_verified==2){
-            return view('assessor.candidate-marks-edit')->with(compact('batchAssessment'));
+        $assessment=BatchAssessment::findOrFail($id);
+        if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
+            $type=Crypt::encrypt('1');
+            return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
+
+        }else{
+            abort(404);
+        }
+
+    }
+    public function editReAssessment($id){
+        $id= $this->decryptThis($id);
+        $assessment=BatchReAssessment::findOrFail($id);
+        if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
+            $type=Crypt::encrypt('0');
+
+            // return $type;
+            // return AppHelper::instance()->decryptThis($type);
+            return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
 
         }else{
             abort(404);
@@ -334,7 +353,7 @@ class AssessorBatchController extends Controller
             $batch_no=$batchReAssessment->reassessment->batch->batch_id;
             $assessor = $this->guard()->user()->as_id;
             $batch_no = $batchReAssessment->reassessment->batch->batch_id;
-            AppHelper::instance()->writeNotification($batchReAssessment->reassessment->aa_id,'agency','Re-Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks");
+            AppHelper::instance()->writeNotification($batchReAssessment->reassessment->aa_id,'agency','Re-Assessment Marks Submitted',"Assessor (ID: <span style='color:blue;'>$assessor</span>) has submitted Batch (ID: <span style='color:blue;'>$batch_no</span>) Marks", route('agency.reassessment.view',Crypt::encrypt($batchReAssessment->id)));
 
             alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
             return redirect()->route('assessor.batch');

@@ -224,6 +224,10 @@ class CenterBatchController extends Controller
                             }
                         }
                     }
+                    $tcid = $this->guard()->user()->tc_id;
+                    $batch_no = $batch->batch_id;
+                    AppHelper::instance()->writeNotification(NULL,'admin','Request for Re-Assessment',"TC (ID: <span style='color:blue;'>$tcid</span>) has Requested for a Re-Assessment of <span style='color:blue;'>$batch_no</span> Batch. Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span> it", route('admin.reassessment.view', Crypt::encrypt($reassessment->id)));
+
                     alert()->success("A Request for Re-Assessment with Selected Candidates List has been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);     
                 }
 

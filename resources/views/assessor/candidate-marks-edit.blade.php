@@ -18,13 +18,13 @@
                         <h2><strong>Edit</strong> candidates Mark </h2>
                     </div>
                     <div class="text-center">
-                    <h6><strong>Batch ID: {{$batchAssessment->batch->batch_id}}</strong></h6>
+                    <h6><strong>Batch ID: {{$assessment->batch->batch_id}}</strong></h6>
                     </div>
                     <div class="body">
                     <form id="form_candidate_mark" method="POST" action="{{route('assessor.as.batch.candidate-mark-update')}}" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="bt_assessment_id" value="{{$batchAssessment->id}}">
-
+                        <input type="hidden" name="bt_assessment_id" value="{{Crypt::encrypt($assessment->id)}}">
+                        <input type="hidden" name="assessment_type" value="{{$type}}">
                         <div class="table-responsive">
                             <table class="table nobtn table-bordered ">
                                 <thead>
@@ -39,7 +39,7 @@
                                         </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($batchAssessment->candidateMarks as $key=>$item)
+                                    @foreach ($assessment->candidateMarks as $key=>$item)
                                    
                                     <tr>
                                     <td>{{$key+1}}</td>
@@ -185,8 +185,8 @@ function markDisable(val,id) {
 }
 
 function passFail(m,m_id){
-    var full_mark='{{$batchAssessment->batch->jobrole->full_marks}}';
-    var pass_mark='{{$batchAssessment->batch->jobrole->pass_marks}}';
+    var full_mark='{{$assessment->batch->jobrole->full_marks}}';
+    var pass_mark='{{$assessment->batch->jobrole->pass_marks}}';
   if (m > Number(full_mark) || m < 0){
      alert("No numbers above "+full_mark+" and Below 0");
     $('#mark'+m_id).val('');

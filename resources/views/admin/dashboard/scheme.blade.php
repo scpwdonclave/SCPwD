@@ -97,11 +97,11 @@
                         
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="finyear">Include Finantial Year in Cert. No <span style="color:red"> <strong>*</strong></span></label>
+                                <label for="finyear">Include Financial Year in Cert. No <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="finyear" class="form-control show-tick" data-live-search="true" name="finyear" onchange="redesign()" data-dropup-auto='false' required>
-                                        <option value="1">Include Finantial Year</option>
-                                        <option value="0">Exclude Finantial Year</option>
+                                        <option value="1">Include Financial Year</option>
+                                        <option value="0">Exclude Financial Year</option>
                                     </select>
                                 </div>
                             </div>
@@ -259,7 +259,7 @@
     $('#scheme_table').attr('data-page-length',5);
 
 
-    /* Add Finantial Year Items to Scheme Year */
+    /* Add Financial Year Items to Scheme Year */
     $(function(){
         var now = new Date();
         var value;
@@ -270,7 +270,7 @@
             $('#year').selectpicker('refresh');
         }
     });
-    /* End Add Finantial Year Items to Scheme Year */
+    /* End Add Financial Year Items to Scheme Year */
 
     /* File Type Validation */
     function filevalidate(){

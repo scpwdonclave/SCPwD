@@ -18,57 +18,74 @@
                 <li><a href="javascript:void(0)"><i class="zmdi zmdi-view-column m-r-10"></i><span>Taskboard</span></a></li>                
             </ul>
         </li> --}}
-        <li class="dropdown notifications hidden-sm-down"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
-            <span id="label-count" class="label-count"></span>
+        @php
+            if (Auth::guard(Request::segment(1))->check()) {
+                switch (Request::segment(1)) {
+                    case 'admin':
+                        if(Auth::guard('admin')->user()->supadmin){
+                            $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=',null]])->orWhere([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id','=', 1]])->orderBy('created_at', 'desc')->get();
+                        }else{
+                            $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=',null]])->orWhere([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id','=', 0]])->orderBy('created_at', 'desc')->get();
+                        }
+                        break;
+                    case 'partner':
+                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('partner')->user()->id]])->orderBy('created_at', 'desc')->get();
+                        break;                                
+                    case 'center':
+                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('center')->user()->id]])->orderBy('created_at', 'desc')->get();
+                        break;                                
+                    case 'agency':
+                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('agency')->user()->id]])->orderBy('created_at', 'desc')->get();
+                        break;
+                    case 'assessor':
+                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('assessor')->user()->id]])->orderBy('created_at', 'desc')->get();
+                        break;
+                }
+            }
+        @endphp
+        <li class="dropdown notifications hidden-sm-down">
+            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
+                <span id="label-count" class="label-count"></span>
             </a>
             <ul id="notification_ul" class="dropdown-menu pullDown">
-                <li id="notification_header" class="header d-flex justify-content-between">Notifications<span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">DISMISS ALL</span></li>
+                <li id="notification_header" class="header d-flex justify-content-between">Notifications
+                    @if (count($notifications))
+                        <span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">
+                            DISMISS ALL
+                        </span>
+                    @endif
+                </li>
 
                 <li class="body">
-                        @php
-                        if (Auth::guard(Request::segment(1))->check()) {
-                            switch (Request::segment(1)) {
-                                case 'admin':
-                                    if(!Auth::guard('admin')->user()->supadmin){
-
-                                        $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=',null]])->orderBy('created_at', 'desc')->get();
-                                    }else{
-                                         $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0]])->orderBy('created_at', 'desc')->get();
-
-                                    }
-                                    break;
-                                case 'partner':
-                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('partner')->user()->id]])->orderBy('created_at', 'desc')->get();
-                                    break;                                
-                                case 'center':
-                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('center')->user()->id]])->orderBy('created_at', 'desc')->get();
-                                    break;                                
-                                case 'agency':
-                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('agency')->user()->id]])->orderBy('created_at', 'desc')->get();
-                                    break;
-                                case 'assessor':
-                                    $notifications = \App\Notification::where([['rel_with', '=', Request::segment(1)],['read', '=', 0],['rel_id', '=', Auth::guard('assessor')->user()->id]])->orderBy('created_at', 'desc')->get();
-                                    break;
-                            }
-                        }
-                        @endphp
-                        @if (count($notifications))
-                            <ul class="menu list-unstyled">
-                                @foreach ($notifications as $notification)
-                                    <li id="notification_{{$notification->id}}" class="countli">
-                                        <a href="javascript:void(0);">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <span class="name">{{$notification->title}}<span class="time" onclick="dismiss('{{$notification->id}}');" style="color:red">DISMISS</span></span>
-                                                    <span class="message">{!!$notification->message!!}</span>
-                                                </div>
+                    @if (count($notifications))
+                        <ul class="menu list-unstyled">
+                            @foreach ($notifications as $notification)
+                                <li id="notification_{{$notification->id}}" class="countli">
+                                    <a href="{{route(Request::segment(1).'.notification.click',Crypt::encrypt($notification->id))}}">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                {{-- <span class="name">{{$notification->title}}<span class="time" onclick="dismiss('{{$notification->id}}');" style="color:red">DISMISS</span></span> --}}
+                                                <span class="name">{{$notification->title}}</span>
+                                                <span class="message">{!!$notification->message!!}</span>
                                             </div>
-                                        </a>
-                                    </li>
-                                @endforeach
-                           </ul> 
-                        @endif
+                                        </div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <span class="text-center">
+                            <span class="d-flex justify-content-center"  style="margin-top:30px">
+                                <i class="zmdi zmdi-hc-3x zmdi-mood"></i>
+                            </span>
+                            <span class="d-flex justify-content-center"  style="margin-bottom:30px">
+                                <h6>All Caught up</h6>
+                            </span>
+                        </span>
+                    @endif
                 </li>
+                <li id="notification_header" class="header d-flex justify-content-center"><span style="cursor: pointer;color:blue;" onclick="location.href='{{route(Request::segment(1).'.notifications')}}'">View All Notifications</span></li>
+
             </ul>
         </li>
         <li style="width:50%">

@@ -12,7 +12,6 @@ use App\Assessor;
 use Carbon\Carbon;
 use App\AgencyBatch;
 use App\AgencySector;
-use App\Notification;
 use App\AssessorBatch;
 use App\AssessorJobRole;
 use App\AssessorLanguage;
@@ -158,7 +157,7 @@ class AgencyAssessorController extends Controller
         
         }
         $aaid = $this->guard()->user()->aa_id;
-        AppHelper::instance()->writeNotification(NULL,'admin','New Assessor Added',"Agency <br>(ID: <span style='color:blue;'>$aaid</span>) has added an <span style='color:blue;'>Assessor</span>. Pending Approval");
+        AppHelper::instance()->writeNotification(NULL,'admin','New Assessor Added',"Agency <br>(ID: <span style='color:blue;'>$aaid</span>) has added an <span style='color:blue;'>Assessor</span>. Pending Approval", route('admin.as.assessor.view', Crypt::encrypt($assessor->id)));
         
         alert()->success("Assessor data has Been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
         return redirect()->back();
@@ -256,11 +255,13 @@ class AgencyAssessorController extends Controller
             $assessorBatch=new AssessorBatch;
             $assessorBatch->as_id=$request->as_id;
             $assessorBatch->bt_id=$ex_bt[0];
+            $route_parameter = $ex_bt[0];
             if($ex_bt[1] != 'null'){
-
+                
                 $assessorBatch->reass_id=$ex_bt[1];
                 $assessorBatch->reassessment->as_id =  $request->as_id;
                 $assessorBatch->reassessment->save();
+                $route_parameter = $ex_bt[1];
 
             }
             $assessorBatch->aa_bt_id=$ex_bt[2];
@@ -277,7 +278,7 @@ class AgencyAssessorController extends Controller
         $dataMail->email = $assessor->email;
         event(new ASMailEvent($dataMail));
 
-        AppHelper::instance()->writeNotification($request->as_id,'assessor','New Batch(es) Assigned',"Batch(es) are <span style='color:blue;'>assigned</span> to you by your Assessment Agency.");
+        AppHelper::instance()->writeNotification($request->as_id,'assessor','New Batch(es) Assigned',"Batch(es) are <span style='color:blue;'>assigned</span> to you by your Assessment Agency.", route('assessor.batch'));
 
         alert()->success("Batch(es) are <span style='color:blue;'>Assigned</span> to this Assessor", 'Job Done')->html()->autoclose(4000);
         return redirect()->back();
@@ -297,9 +298,9 @@ class AgencyAssessorController extends Controller
         $dataMail->email = $assessorBatch->assessor->email;
 
         if (is_null($assessorBatch->batch->batchassessment)) {
-            $assessorBatch->delete();
             event(new ASMailEvent($dataMail));
-            AppHelper::instance()->writeNotification($assessorBatch->as_id,'assessor',"Batch Revoked By Agency","A Batch (ID: <span style='color:blue;'>$batch_no</span>) has been revoked by your <span style='color:blue;'>Agency</span>.");
+            AppHelper::instance()->writeNotification($assessorBatch->as_id,'assessor',"Batch Revoked By Agency","A Batch (ID: <span style='color:blue;'>$batch_no</span>) has been revoked by your <span style='color:blue;'>Agency</span>.", route('assessor.batch'));
+            $assessorBatch->delete();
             return response()->json(["status" => true],200);
         } else {
             return response()->json(["status" => false ],200);

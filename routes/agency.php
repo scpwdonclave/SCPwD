@@ -5,7 +5,10 @@ Route::get('dashboard/dashboard', 'AgencyAuth\AgencyHomeController@index')->name
 
 /* Custom URLs */
 Route::get('profile', 'AgencyAuth\AgencyHomeController@profile')->name('profile');
-Route::post('profile', 'AgencyAuth\AgencyHomeController@profile_update')->name('profile'); 
+Route::post('profile', 'AgencyAuth\AgencyHomeController@profile_update')->name('profile');
+Route::get('notifications', 'AgencyAuth\AgencyHomeController@notifications')->name('notifications');
+Route::post('notification-dismiss', 'AgencyAuth\AgencyHomeController@clearNotifications')->name('notifications.clear');
+Route::get('notification/{id}', 'AgencyAuth\AgencyHomeController@clickNotification')->name('notification.click');
 
 
 Route::get('assessors', 'AgencyAuth\AgencyAssessorController@assessor')->name('assessors'); 

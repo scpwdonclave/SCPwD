@@ -25,7 +25,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Scheme | Sector | Job Role</th>
+                                    <th class="text-center">Scheme | Sector | Job Role</th>
                                     <th>Allocated</th>
                                     <th>Distributed</th>
                                     <th>Enrolled</th>

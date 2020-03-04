@@ -13,11 +13,15 @@ Route::post('dashboard/holiday-delete', 'AdminAuth\AdminHomeController@holidayDe
 Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->name('dashboard.scheme_action');
 
 Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->name('dashboard.department');
+Route::get('dashboard/logins', 'AdminAuth\AdminHomeController@logins')->name('dashboard.logins');
 Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
 Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@departmentDelete')->name('dashboard.department-delete');
 
 Route::get('profile', 'AdminAuth\AdminHomeController@profile')->name('profile');
 Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('profile');
+Route::get('notifications', 'AdminAuth\AdminHomeController@notifications')->name('notifications');
+Route::post('notification-dismiss', 'AdminAuth\AdminHomeController@clearNotifications')->name('notifications.clear');
+Route::get('notification/{id}', 'AdminAuth\AdminHomeController@clickNotification')->name('notification.click');
 
 /* Admin Mis Section */
 Route::get('mis', function () { return redirect(route('admin.mis.quick_view')); });
