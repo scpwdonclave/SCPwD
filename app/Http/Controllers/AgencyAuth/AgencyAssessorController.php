@@ -233,7 +233,7 @@ class AgencyAssessorController extends Controller
 
         $selBatch=array();
         foreach ($assessorBatch as $value) {
-            array_push($selBatch,$value->batch->id); 
+            array_push($selBatch,$value->aa_bt_id); 
         }
 
         $batch=array();
@@ -263,6 +263,8 @@ class AgencyAssessorController extends Controller
                 $assessorBatch->reassessment->save();
 
             }
+            $assessorBatch->aa_bt_id=$ex_bt[2];
+
             $assessorBatch->save();
         }
 
