@@ -28,6 +28,7 @@
                                         <th>Verification Date</th>
                                         <th>Payment Date</th>
                                         <th>Status</th>
+                                        
                                         <th>View</th>
                                        
                                         </tr>
@@ -46,13 +47,16 @@
                                     @endif
                                     <td>{{$item->ref_no}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
-                                    @if ($item->verification_date !=null && $item->payment_date !=null)
+                                    @if ($item->verification_date !=null )
                                     <td>{{\Carbon\Carbon::parse($item->verification_date)->format('d-m-Y')}}</td>
+                                    @else
+                                      <td class="text-muted">N/A</td>  
+                                    @endif
+                                    @if ( $item->payment_date !=null)
+                                   
                                     <td>{{\Carbon\Carbon::parse($item->payment_date)->format('d-m-Y')}}</td>
                                     @else
                                       <td class="text-muted">N/A</td>  
-                                      <td class="text-muted">N/A</td>  
-                                      
                                     @endif
                                     @if ($item->verified ===1 && $item->payment_done===0)
                                      <td>Verified</td>   

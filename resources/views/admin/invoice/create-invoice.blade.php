@@ -21,16 +21,16 @@
                     <h2><strong>Search</strong> Assessment Agency Wise</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="#" method="post">
+                    <form id="form_scheme" action="{{route('admin.invoice.assessment_invoice')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="scheme">Select Scheme <span style="color:red"> <strong>*</strong></span></label>
+                                <label for="scheme">Select Scheme with Department <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="scheme" onchange="fetchPartner(this.value)" data-dropup-auto='false' required>
                                         <option value="">--select--</option>
                                         @foreach ($scheme as $scheme)
-                                        <option value="{{$scheme->id}}">{{$scheme->scheme}}</option>
+                                        <option value="{{$scheme->id}}" data-subtext="{{$scheme->department->dept_address }}">{{$scheme->scheme}} ({{$scheme->department->dept_name}})</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -43,6 +43,7 @@
                                     </select>
                                 </div>
                             </div>
+                            
                         
                             
                         </div>
@@ -56,7 +57,7 @@
     </div>
 </div>
 
-<div class="container-fluid">
+{{-- <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12">
             <div class="card">
@@ -115,7 +116,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 
 @stop

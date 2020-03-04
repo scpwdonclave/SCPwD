@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Scheme;
+use App\Batch;
 use App\PartnerJobrole;
 
 class AdminInvoiceController extends Controller
@@ -21,16 +22,30 @@ class AdminInvoiceController extends Controller
     }
 
     public function fetchPartner(Request $request){
-        // $scheme = Scheme::findOrFail($request->scheme);
-        // return response()->json(['partner' => $scheme->partners],200); 
-        
 
-
-      $partnersJob=PartnerJobrole::where('scheme_id',$request->scheme)->get();
+       $partnersJob=PartnerJobrole::where('scheme_id',$request->scheme)->get()->unique('tp_id');
 
       foreach ($partnersJob as $partnerJob) {
         $partnerJob->tpid = $partnerJob->partner->tp_id;
       }
         return response()->json(['partnerJob' => $partnersJob],200); 
+    }
+
+    public function assessmentInvoice(Request $request){
+      $partnerJob=PartnerJobrole::where([['scheme_id','=',$request->scheme],['tp_id','=',$request->partner]])->get();
+      $batchassessment=collect();
+      foreach ($partnerJob as $key => $value) {
+        
+        $batch=Batch::where('tp_job_id',$value->id)->get();
+        foreach ($batch as $i => $batch) {
+          //$batchassessment->push($batch->batchassessment);
+          
+          foreach ($batch->batchassessment as $k => $bt_assessment) {
+            
+          }
+        }
+      }
+     // dd($batchassessment);
+
     }
 }

@@ -125,6 +125,8 @@ class AgencyPaymentOrderController extends Controller
                    
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
+                    $payment_order->total_candidate=$value->batch->batchassessment->candidateMarks->count();
+                    $payment_order->amount=$value->batch->batchassessment->candidateMarks->count()*500;
                     $payment_order->save();
                     
                 }
@@ -133,6 +135,8 @@ class AgencyPaymentOrderController extends Controller
                 if(($value->reassessment->assessment < Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id == $request->center_id){
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
+                    $payment_order->total_candidate=$value->reassessment->candidates->count();
+                    $payment_order->amount=$value->reassessment->candidates->count()*500;
                     $payment_order->save();
 
     
@@ -193,6 +197,7 @@ class AgencyPaymentOrderController extends Controller
     }
 
     public function submitPayOrderBatch(Request $request){
+       
         if(is_null($request->chkbox)){
             alert()->error("Please Check minimum One <span style='color:blue'>Batch</span>", 'Error!')->html()->autoclose(5000);     
         return redirect()->back(); 
@@ -225,6 +230,8 @@ class AgencyPaymentOrderController extends Controller
             $payment_order=new PaymentOrderAgencyBatchMap;
             $payment_order->po_id=$p_order->id;
             $payment_order->aa_batch_id=$value;
+            $payment_order->total_candidate=$request->t_can[$key];
+            $payment_order->amount=$request->t_can[$key]*500;
             $payment_order->save();
            
         }

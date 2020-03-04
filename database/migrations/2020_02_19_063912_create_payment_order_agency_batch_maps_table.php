@@ -17,6 +17,8 @@ class CreatePaymentOrderAgencyBatchMapsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('po_id');
             $table->unsignedBigInteger('aa_batch_id');
+            $table->unsignedBigInteger('total_candidate');
+            $table->unsignedBigInteger('amount');
             $table->timestamps();
 
             $table->foreign('po_id')

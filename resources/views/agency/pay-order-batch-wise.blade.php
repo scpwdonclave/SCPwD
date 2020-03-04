@@ -28,6 +28,8 @@
                                         <th>Job Role</th>
                                         <th>Assessment status</th>
                                         <th>Assessment Date</th>
+                                        <th>Total Candidate</th>
+                                        <th>Amount</th>
                                         <th>View Candidate</th>
                                         </tr>
                                 </thead>
@@ -35,21 +37,45 @@
                                     @foreach ($aa_batch as $aa_batch)
                                         
                                     <tr>
-                                        @if ($aa_batch->reass_id===null)
+                                        @if ($aa_batch->reass_id===null && !is_null($aa_batch->batch->batchassessment))
                                         
                                         <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$aa_batch->id}}"></td>
                                         <td>{{$aa_batch->batch->batch_id}}</td>
                                         <td>{{$aa_batch->batch->jobrole->job_role}}</td>
                                         <td>Assessment</td>
                                         <td>{{\Carbon\Carbon::parse($aa_batch->batch->assessment)->format('d-m-Y')}}</td>
+                                        @if (!is_null($aa_batch->batch->batchassessment))
+                                        <td>
+                                            {{$aa_batch->batch->batchassessment->candidateMarks->count()}}
+                                            <input type="hidden" name="t_can[]" value="{{$aa_batch->batch->batchassessment->candidateMarks->count()}}">
+
+                                        </td>
+                                        <td>{{$aa_batch->batch->batchassessment->candidateMarks->count()*500}}</td>
+                                        @else
+                                          <td>0</td>  
+                                          <td>0</td>  
+                                        @endif
+
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.bt-candidate',['id'=>Crypt::encrypt($aa_batch->bt_id)])}}" >View Candidate</a></td>
 
-                                        @else
+                                        @elseif(!is_null($aa_batch->reassessment))
                                         <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$aa_batch->id}}"></td>
                                         <td>{{$aa_batch->reassessment->batch->batch_id}}</td>
                                         <td>{{$aa_batch->reassessment->batch->jobrole->job_role}}</td>
                                         <td>Re-Assessment</td>
-                                        <td>{{\Carbon\Carbon::parse($aa_batch->reassessment->assessment)->format('d-m-Y')}}</td>   
+                                        <td>{{\Carbon\Carbon::parse($aa_batch->reassessment->assessment)->format('d-m-Y')}}</td> 
+                                        @if (!is_null($aa_batch->reassessment))
+                                            
+                                        <td>
+                                            {{$aa_batch->reassessment->candidates->count()}}
+                                            <input type="hidden" name="t_can[]" value="{{$aa_batch->reassessment->candidates->count()}}">
+                                        </td>
+                                        <td>{{$aa_batch->reassessment->candidates->count()*500}}</td>
+                                        @else
+                                          <td>0</td>  
+                                          <td>0</td>  
+                                        @endif
+
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.reass-bt-candidate',['id'=>Crypt::encrypt($aa_batch->reass_id)])}}" >View Candidate</a></td>
                                         @endif
                                     </tr>

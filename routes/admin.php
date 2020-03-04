@@ -180,6 +180,7 @@ Route::post('paymentorder/accept', 'AdminAuth\AdminPaymentOrderController@paymen
 Route::get('invoice/pending-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.pending-invoice');
 Route::get('invoice/all-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.all-invoice');
 Route::post('invoice/fetch-partner', 'AdminAuth\AdminInvoiceController@fetchPartner')->name('invoice.fetch-partner');
+Route::post('invoice/assessment-invoice', 'AdminAuth\AdminInvoiceController@assessmentInvoice')->name('invoice.assessment_invoice');
 
 //End Invoice
 
