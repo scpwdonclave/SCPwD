@@ -23,6 +23,7 @@
                                         <tr>
                                         <th>#</th>
                                         <th>Payment Order ID</th>
+                                        <th>My Ref No</th>
                                         <th>Payment Order Date</th>
                                         <th>Verification Date</th>
                                         <th>Payment Date</th>
@@ -43,11 +44,11 @@
                                     <td  class="text-muted">Not Verified</td>
                                         
                                     @endif
+                                    <td>{{$item->ref_no}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
                                     @if ($item->verification_date !=null && $item->payment_date !=null)
                                     <td>{{\Carbon\Carbon::parse($item->verification_date)->format('d-m-Y')}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->payment_date)->format('d-m-Y')}}</td>
-                                        
                                     @else
                                       <td class="text-muted">N/A</td>  
                                       <td class="text-muted">N/A</td>  

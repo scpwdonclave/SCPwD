@@ -685,13 +685,7 @@ class AdminMisController extends Controller
                                     $emp_spoc_name,
                                     $emp_spoc_mobile,
                                     $emp_spoc_email
-                                    // $result,
-                                    // $value->center->center_address,
-                                    // $value->jobrole->partnerjobrole->sector->sector,
                                    
-                                    // $value->center->email,
-                                    // $value->center->mobile,
-                                    // $value->center->spoc_name,
 
 
                                     ];
