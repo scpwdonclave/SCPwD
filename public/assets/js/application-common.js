@@ -5,7 +5,7 @@ function countlevel() {
   } else {
     $("#label-count").html("");
     // $("#notification_header").remove();
-    $('[id^=notification_]').remove();
+    // $('[id^=notification_]').remove();
   }
 }
 

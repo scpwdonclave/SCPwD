@@ -20,7 +20,7 @@ class AppHelper
         return new AppHelper();
     }
 
-    public function writeNotification($relid,$relwith,$title,$msg,$url){
+    public function writeNotification($relid,$relwith,$title,$msg,$url = NULL){
         $notification = new Notification;
         $notification->rel_id = $relid;
         $notification->rel_with = $relwith;

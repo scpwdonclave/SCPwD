@@ -9,7 +9,6 @@ use App\Batch;
 use App\Reason;
 use App\Trainer;
 use Carbon\Carbon;
-use App\Notification;
 use App\TrainerStatus;
 use App\TrainerJobRole;
 use App\Helpers\AppHelper;
@@ -82,10 +81,10 @@ class AdminTrainerController extends Controller
         
         if ($for == 'trainer') {
             $stat = ($trainer->status)?'Re-Activated':'Deactivated';
-            AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer '.$stat,"Your Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
+            AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer '.$stat,"Your Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.", route('partner.trainer.view', Crypt::encrypt($trainer->id)));
             foreach ($trainer->batches as $batch) {
                 if ($batch->status && $batch->verified && (Carbon::parse($batch->batch_end.' 23:59') > Carbon::now())) {
-                    AppHelper::instance()->writeNotification($batch->center->id,'center','Trainer '.$stat,"Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.");
+                    AppHelper::instance()->writeNotification($batch->center->id,'center','Trainer '.$stat,"Trainer ".$trainer->name."(ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>".$stat."</span>.", NULL);
                 }
             }
             $dataMail->status = $trainer->status;
@@ -216,13 +215,13 @@ class AdminTrainerController extends Controller
                         });
                         
                         $dataMail->tr_id = $trainer->trainer_id;
-                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Accepted',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>Approved</span>.");
+                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Accepted',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>Approved</span>.", route('partner.trainer.view', Crypt::encrypt($trainer->id)));
                         alert()->success("Trainer has been <span style='color:blue;font-weight:bold;'>Approved</span>", 'Job Done')->html()->autoclose(3000);
                     } else {
                         $trainer->trainer_jobroles()->delete();
                         $trainer->delete();
                         $dataMail->reason = $request->reason;
-                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Rejected',"Your Requested Trainer has been <span style='color:red;'>Rejected</span>.Kindly check your mail");
+                        AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer Rejected',"Your Requested Trainer has been <span style='color:red;'>Rejected</span>.Kindly check your mail",NULL);
                         alert()->success("Trainer has been <span style='color:red;font-weight:bold'>Rejected</span>", "Job Done")->html()->autoclose(4000);
                     }
                     $dataMail->name = $trainer->name;
@@ -281,7 +280,7 @@ class AdminTrainerController extends Controller
                                 $dataMail->email = $trainer->partner->email;
                                 $trainer->delete();
                                 event(new TPMailEvent($dataMail));
-                                AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer De Linked',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>DeLinked</span> from You.");
+                                AppHelper::instance()->writeNotification($trainer->partner->id,'partner','Trainer De Linked',"Your Trainer (ID: <span style='color:blue'>$trainer->trainer_id</span>) has been <span style='color:blue;'>DeLinked</span> from You.", NULL);
                                 $array = array('type' => 'success', 'message' => "Trainer (<span style='font-weight:bold;color:blue'>$trainer->name</span>) is <span style='font-weight:bold;color:blue'>De Linked</span> Successfully", 'title' => "Job Done");
                             }
                         }

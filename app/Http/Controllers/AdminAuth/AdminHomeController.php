@@ -4,7 +4,6 @@ namespace App\Http\Controllers\AdminAuth;
 
 use DB;
 use Crypt;
-use Request;
 use App\Agency;
 use App\Center;
 use App\Scheme;
@@ -18,14 +17,15 @@ use App\Placement;
 use Carbon\Carbon;
 use App\Department;
 use App\Expository;
-use App\Notification;
 use App\LoginAudit;
+use App\Notification;
 use App\CandidateMark;
 use App\TrainerStatus;
 use App\BatchAssessment;
 use App\JobQualification;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -51,27 +51,36 @@ class AdminHomeController extends Controller
     {
         return Auth::guard('admin');
     }
-    
-    // public function clickNotification($id)
-    // {  
-    //     if ($id=AppHelper::instance()->decryptThis($id)) {
-    //         $notification = Notification::findOrFail($id);
-    //         if (is_null($notification->url) || $notification->read || $notification->rel_with !== 'admin') {
-    //             if (is_null($notification->url)) {
-    //                 $notification->read_by = $this->guard()->user()->name;
-    //                 $notification->read = 1;
-    //                 $notification->save();
-    //             }
-    //             return redirect()->back();
-    //         } else {
-    //             $notification->read_by = $this->guard()->user()->name;
-    //             $notification->read = 1;
-    //             $notification->save();
-    //             return redirect($notification->url);
-    //         }
-    //     }
-    // }
 
+    public function notifications()
+    {
+        if ($this->guard()->user()->supadmin) {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',1]])->orWhere([['rel_with','admin'],['rel_id',NULL]])->get();
+        } else {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',0]])->orWhere([['rel_with','admin'],['rel_id',NULL]])->get();
+        }
+        return view('common.notifications')->with(compact('notifications'));
+    }
+
+    public function clearNotifications(Request $request)
+    {   
+        $request->validate([
+            'dismiss'=>'required',
+        ]);
+
+        if ($this->guard()->user()->supadmin) {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',1],['read',0]])->orWhere([['rel_with','admin'],['rel_id',NULL],['read',0]])->get();
+        } else {
+            $notifications = Notification::where([['rel_with','admin'],['rel_id',0],['read',0]])->orWhere([['rel_with','admin'],['rel_id',NULL],['read',0]])->get();
+        }
+        foreach ($notifications as $notification) {
+            $notification->read=1;
+            $notification->read_by = $this->guard()->user()->name;
+            $notification->save();
+        }
+
+        return response()->json(['success' => true],200);
+    }
 
     public function clickNotification($id)
     {  

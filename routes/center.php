@@ -7,6 +7,8 @@ Route::get('dashboard/job_roles', 'CenterAuth\CenterHomeController@jobroles')->n
 /* Custom URLs */
 Route::get('profile', 'CenterAuth\CenterHomeController@profile')->name('profile');
 Route::post('profile', 'CenterAuth\CenterHomeController@profile_update')->name('profile');
+Route::get('notifications', 'CenterAuth\CenterHomeController@notifications')->name('notifications');
+Route::post('notification-dismiss', 'CenterAuth\CenterHomeController@clearNotifications')->name('notifications.clear');
 Route::get('notification/{id}', 'CenterAuth\CenterHomeController@clickNotification')->name('notification.click');
 
 Route::get('candidates', 'CenterAuth\CenterHomeController@candidates')->name('candidates');

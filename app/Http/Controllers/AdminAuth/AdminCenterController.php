@@ -12,7 +12,6 @@ use App\Reason;
 use App\Candidate;
 use App\CenterDoc;
 use App\Mail\TCMail;
-use App\Notification;
 use App\CenterJobRole;
 use App\PartnerJobrole;
 use App\Helpers\AppHelper;
@@ -115,7 +114,7 @@ class AdminCenterController extends Controller
                         $center->status= $center->verified = 1;
                         $center->save();
 
-                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.");
+                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Approved',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:blue;'>Approved</span>.", route('partner.tc.center.view', Crypt::encrypt($center->id)));
                         alert()->success('Training Center has been Approved', 'Job Done')->autoclose(3000);
                 
                         $dataMail->tag = 'tcaccept';
@@ -129,7 +128,7 @@ class AdminCenterController extends Controller
                         event(new TPMailEvent($dataMail));
 
                 } elseif ($request->action == 'reject' && $request->reason != '') {
-                    AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.");
+                    AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Rejected',"Your Requested TC(SPOC Name: <span style='color:blue;'>$center->spoc_name</span>) has been <span style='color:red;'>Rejected</span>.",NULL);
                     $spoc_name = $center->partner->spoc_name;
                     $tc_name = $center->spoc_name;
                     $email = $center->email;
@@ -283,26 +282,12 @@ class AdminCenterController extends Controller
             $center->safety = Storage::disk('myDisk')->put('/centers', $request['safety']);
         }
 
-            /* Notification For center */
-            $notification = new Notification;
-            $notification->rel_id = $center->id;
-            $notification->rel_with = 'center';
-            $notification->title = 'Account Updated';
-            $notification->message = "Your Profile has been <span style='color:blue;'>Updated</span>.";
-            $notification->save();
-            /* End Notification For center */
-            /* Notification For Partner */
-            $notification = new Notification;
-            $notification->rel_id = $center->tp_id;
-            $notification->rel_with = 'partner';
-            $notification->title = 'Account Updated';
-            $notification->message = "Your Center has been <span style='color:blue;'>Updated</span>.";
-            $notification->save();
-            /* End Notification For Partner */
+        AppHelper::instance()->writeNotification($center->id,'center','Account Updated',"Your Profile has been <span style='color:blue;'>Updated</span>.", NULL);
+        AppHelper::instance()->writeNotification($center->tp_id,'partner','Account Updated',"Your Center has been <span style='color:blue;'>Updated</span>.", route('partner.tc.center.view', Crypt::encrypt($center->id)));
 
-            $center->save();
-            alert()->success("Center Details <span style='color:blue;font-weight:bold'>Updated</span>", 'Done')->html()->autoclose(2000);
-            return Redirect()->back();
+        $center->save();
+        alert()->success("Center Details <span style='color:blue;font-weight:bold'>Updated</span>", 'Done')->html()->autoclose(2000);
+        return Redirect()->back();
     }
 
     // * Training Cenetr Activation Deactvation
@@ -329,7 +314,7 @@ class AdminCenterController extends Controller
                             $dataMail->tag = 'tcdeactive'; // * Mailling Tag
                             $dataMail->reason = $request->reason; 
                             
-                            AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.");
+                            AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Deactivated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:red;'>Dectivated</span>.", route('partner.tc.center.view', Crypt::encrypt($center->id)));
                             $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -340,7 +325,7 @@ class AdminCenterController extends Controller
 
                         $dataMail->tag = 'tcactive'; // * Mailling Tag
 
-                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.");
+                        AppHelper::instance()->writeNotification($center->tp_id,'partner','Training Center Activated',"TC (ID: <span style='color:blue;'>$center->tc_id</span>) Account is now <span style='color:blue;'>Activated</span>.", route('partner.tc.center.view', Crypt::encrypt($center->id)));
                         $array = array('type' => 'success', 'message' => "Training Center Account is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
 
@@ -422,8 +407,8 @@ class AdminCenterController extends Controller
                             $reason->rel_with = 'candidate';
                             $reason->reason = $request->reason;
                             $reason->save();
-                            AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.");
-                            AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.");
+                            AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Deactive</span>.", route('center.candidate.view', Crypt::encrypt($candidate->id)));
+                            AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Deactivated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Dectivated</span>.", route('partner.candidate.view', Crypt::encrypt($candidate->id)));
                             $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:red'>Deactivated</span> now");
                         } else {
                             $array = array('type' => 'error', 'message' => "Deactivation Reason can not be <span style='font-weight:bold;color:red'>NULL</span>");
@@ -431,8 +416,8 @@ class AdminCenterController extends Controller
                     } else {
                         $candidate->status = 1;
                         $candidate->save();
-                        AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
-                        AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.");
+                        AppHelper::instance()->writeNotification($candidate->centerlatest->tc_id,'center','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.", route('center.candidate.view', Crypt::encrypt($candidate->id)));
+                        AppHelper::instance()->writeNotification($candidate->centerlatest->center->tp_id,'partner','Candidate Activated',"Candidate (<span style='color:blue;'>$candidate->name</span>) is now <span style='color:red;'>Active</span>.", route('partner.candidate.view', Crypt::encrypt($candidate->id)));
                         $array = array('type' => 'success', 'message' => "Candidate is <span style='font-weight:bold;color:blue'>Activated</span> now");
                     }
                     return response()->json($array,200);
@@ -520,8 +505,8 @@ class AdminCenterController extends Controller
     
                     $docno = $candidate->candidate->doc_no;
                     $tpid = $candidate->center->partner->id;
-                    AppHelper::instance()->writeNotification($candidate->tc_id,'center','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin");
-                    AppHelper::instance()->writeNotification($tpid,'partner','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin");
+                    AppHelper::instance()->writeNotification($candidate->tc_id,'center','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('center.candidate.view', Crypt::encrypt($candidate->candidate->id)));
+                    AppHelper::instance()->writeNotification($tpid,'partner','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('partner.candidate.view', Crypt::encrypt($candidate->candidate->id)));
     
                     alert()->success('Candidate Details have been <span style="color:blue;">Updated</span>', 'Done')->html()->autoclose(3000);
                 } else {

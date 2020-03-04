@@ -34,6 +34,29 @@ class CenterHomeController extends Controller
         return Auth::guard('center');
     }
 
+    public function notifications()
+    {
+        $notifications = Notification::where([['rel_with','center'],['rel_id',$this->guard()->user()->id]])->get();
+        return view('common.notifications')->with(compact('notifications'));
+    }
+
+    public function clearNotifications(Request $request)
+    {   
+        $request->validate([
+            'dismiss'=>'required',
+        ]);
+
+        $notifications = Notification::where([['rel_with','center'],['rel_id',$this->guard()->user()->id],['read',0]])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->read=1;
+            $notification->read_by = $this->guard()->user()->spoc_name;
+            $notification->save();
+        }
+
+        return response()->json(['success' => true],200);
+    }
+
     public function clickNotification($id)
     {  
         if ($id=AppHelper::instance()->decryptThis($id)) {
@@ -238,8 +261,8 @@ class CenterHomeController extends Controller
             $centerjob->save();
 
             /* For Admin */
-            $center = $this->guard()->user();
-            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.");
+            $center = $this->guard()->user(); 
+            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.", route('partner.tc.candidate.view', Crypt::encrypt($center_candidate->id)));
 
         });
         alert()->success("Candidate has been <span style='font-weight:bold;color:blue'>Registered</span> Successfully", 'Job Done')->html()->autoclose(6000);
@@ -393,7 +416,7 @@ class CenterHomeController extends Controller
                             
                             $name = $centerCandidate->candidate->name;
                             $tcid = $centerCandidate->center->tc_id;
-                            AppHelper::instance()->writeNotification($centerCandidate->center->tp_id,'partner','Candidate Dropped Out',"Candidate (<span style='color:blue;'>$name</span>) is Dropped Out by TC <span style='color:red;'>$tcid</span>.");
+                            AppHelper::instance()->writeNotification($centerCandidate->center->tp_id,'partner','Candidate Dropped Out',"Candidate (<span style='color:blue;'>$name</span>) is Dropped Out by TC <span style='color:red;'>$tcid</span>.", route('partner.tc.candidate.view', Crypt::encrypt($centerCandidate->id)));
                             $array = array('type' => 'success', 'message' => "Candidate <span style='font-weight:bold;color:blue'>$name</span> is now <span style='font-weight:bold;color:red'>De-Linked</span> from your Training Center");
                         
                         } else {

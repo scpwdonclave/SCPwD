@@ -25,19 +25,23 @@
             @yield('page-style')
         @endif
         <script>
-            function dismiss(id) {
+            function dismiss() {
+                var _token=$('[name=_token]').val();
+                var swalText = document.createElement("div");
+                swalText.innerHTML = 'Something Went Wrong, Please Try Again'; 
                 $.ajax({
                     type: "POST",
-                    url: "{{route('api.dismiss')}}",
-                    data: {'dismiss':true,id:id},
+                    url: "{{route(Request::segment(1).'.notifications.clear')}}",
+                    data: {dismiss:true, _token:_token},
                     success: function(data) {
-                        if (data.status === 'all') {
-                            $('[id^=notification_]').remove();
-                            countlevel();
+                        if (data.success) {
+                            location.reload();
                         } else {
-                            $('#notification_'+id).remove();
-                            countlevel();
+                            swal({title: "Oops!", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});
                         }
+                    },
+                    error: function(data){
+                        swal({title: "Oops!", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});
                     }
                 });
             }

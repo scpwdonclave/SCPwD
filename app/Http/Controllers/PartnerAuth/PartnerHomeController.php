@@ -49,6 +49,30 @@ class PartnerHomeController extends Controller
         return Auth::guard('partner');
     }
 
+    public function notifications()
+    {
+        $notifications = Notification::where([['rel_with','partner'],['rel_id',$this->guard()->user()->id]])->get();
+        $partner = $this->guard()->user();
+        return view('common.notifications')->with(compact('notifications','partner'));
+    }
+
+    public function clearNotifications(Request $request)
+    {   
+        $request->validate([
+            'dismiss'=>'required',
+        ]);
+
+        $notifications = Notification::where([['rel_with','partner'],['rel_id',$this->guard()->user()->id],['read',0]])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->read=1;
+            $notification->read_by = $this->guard()->user()->spoc_name;
+            $notification->save();
+        }
+
+        return response()->json(['success' => true],200);
+    }
+
     public function clickNotification($id)
     {  
         if ($id=AppHelper::instance()->decryptThis($id)) {
@@ -190,14 +214,7 @@ class PartnerHomeController extends Controller
     
             $partner->save();
             
-            /* For Admin */
-            $notification = new Notification;
-            //$notification->rel_id = 1;
-            $notification->rel_with = 'admin';
-            $notification->title = 'New Registration';
-            $notification->message = "<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted Registration Form. Pending Trining Partner Account Verification";
-            $notification->save();
-            
+            AppHelper::instance()->writeNotification(NULL,'New TP Registration',"<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted a TP Registration Form. Pending Trining Partner Account Verification. Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('admin.tp.partner.view', Crypt::encrypt($partner->id)));
     
             alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
             return redirect(route('partner.dashboard.dashboard'));

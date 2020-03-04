@@ -5,8 +5,10 @@ Route::get('dashboard/dashboard', 'AssessorAuth\AssessorHomeController@index')->
 
 /* Custom URLs */
 Route::get('profile', 'AssessorAuth\AssessorHomeController@profile')->name('profile');
-Route::post('profile', 'AssessorAuth\AssessorHomeController@profile_update')->name('profile'); 
-Route::get('notification/{id}', 'AssessorAuth\AssessorHomeControllerr@clickNotification')->name('notification.click');
+Route::post('profile', 'AssessorAuth\AssessorHomeController@profile_update')->name('profile');
+Route::get('notifications', 'AssessorAuth\AssessorHomeController@notifications')->name('notifications');
+Route::post('notification-dismiss', 'AssessorAuth\AssessorHomeController@clearNotifications')->name('notifications.clear');
+Route::get('notification/{id}', 'AssessorAuth\AssessorHomeController@clickNotification')->name('notification.click');
 
 Route::get('batches', 'AssessorAuth\AssessorBatchController@batches')->name('batch'); 
 Route::get('batches/batch-view/{id}', 'AssessorAuth\AssessorBatchController@viewAssessmentBatch')->name('batch.view'); 
@@ -19,6 +21,7 @@ Route::get('batches/assessment-edit/{id}', 'AssessorAuth\AssessorBatchController
 
 Route::get('batches/reassessments', 'AssessorAuth\AssessorBatchController@reAssessments')->name('reassessments'); 
 Route::get('batches/reassessments/{id}', 'AssessorAuth\AssessorBatchController@viewReAssessment')->name('reassessment.view'); 
+Route::get('batches/reassessments-edit/{id}', 'AssessorAuth\AssessorBatchController@editReAssessment')->name('reassessment.edit'); 
 Route::get('batches/candidate-re-marks/{id}', 'AssessorAuth\AssessorBatchController@candidateReMarks')->name('as.batch.candidate-re-mark'); 
 Route::post('batches/candidate-re-marks-insert', 'AssessorAuth\AssessorBatchController@candidateReMarksInsert')->name('as.batch.candidate-re-mark-insert'); 
 Route::post('batches/candidate-re-marks-update', 'AssessorAuth\AssessorBatchController@candidateReMarksUpdate')->name('as.batch.candidate-re-mark-update'); 

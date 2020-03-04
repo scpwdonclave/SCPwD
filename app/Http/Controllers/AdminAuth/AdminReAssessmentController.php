@@ -135,14 +135,14 @@ class AdminReAssessmentController extends Controller
             $batchid = $reassessment->batch->batch_id;
             if ($request->action) {
                 if ($request->action == '1') {
-                    AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>");
+                    AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('agency.pending-batch'));
                 }
-                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
-                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.");
+                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.", route('center.reassessment.view', Crypt::encrypt($reassessment->id))); 
+                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Approved',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:blue;'>Approved</span>.", route('partner.reassessment.view', Crypt::encrypt($reassessment->id)));
                 alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Approved </span>", 'Job Done')->html()->autoclose(3000);
             } else {
-                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.");
-                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.");
+                AppHelper::instance()->writeNotification($reassessment->batch->tc_id,'center','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.", route('center.reassessment.view', Crypt::encrypt($reassessment->id)));
+                AppHelper::instance()->writeNotification($reassessment->batch->tp_id,'parter','Re-Assessment Rejected',"Re-Assessment of Batch (ID: <span style='color:blue;'>$batchid</span>) has been <span style='color:red;'>Rejected</span>.", route('partner.reassessment.view', Crypt::encrypt($reassessment->id)));
                 alert()->success("Re-Assessment has been <span style='color:blue;font-weight:bold;'> Rejected </span>", 'Job Done')->html()->autoclose(3000);
             }
             
@@ -204,7 +204,7 @@ class AdminReAssessmentController extends Controller
             $agencyBatch->reass_id=$id;
             $agencyBatch->save();
         
-            AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>");
+            AppHelper::instance()->writeNotification($request->agency,'agency','Batch Added',"Admin has <span style='color:blue;'>assigned</span> you a Batch for Re-Assessment Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('agency.pending-batch'));
             alert()->success("Re-Assessment Batch has been <span style='color:blue;font-weight:bold;'>Assigned</span> to a Agency", 'Attention')->html()->autoclose(5000);
             
             return redirect()->back();

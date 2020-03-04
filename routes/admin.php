@@ -19,6 +19,8 @@ Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@depart
 
 Route::get('profile', 'AdminAuth\AdminHomeController@profile')->name('profile');
 Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('profile');
+Route::get('notifications', 'AdminAuth\AdminHomeController@notifications')->name('notifications');
+Route::post('notification-dismiss', 'AdminAuth\AdminHomeController@clearNotifications')->name('notifications.clear');
 Route::get('notification/{id}', 'AdminAuth\AdminHomeController@clickNotification')->name('notification.click');
 
 /* Admin Mis Section */
