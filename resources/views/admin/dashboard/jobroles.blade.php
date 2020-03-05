@@ -133,7 +133,7 @@
                                     <tr style="height:5px !important">
                                     <td>{{$key+1}}</td>
                                     <td>{{$expository->initials}}</td>
-                                    <td>{{$expository->e_expository}}</td>
+                                    <td>{{$expository->expository}}</td>
                                     <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                     </tr>
                                     @endforeach
@@ -170,7 +170,7 @@
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick selectpicker" data-live-search="true" name="role_expository[]" multiple data-show-subtext="true" data-dropup-auto='true' required>
                                         @foreach ($expositories as $expository)
-                                            <option value="{{$expository->id}}" data-subtext="({{ $expository->e_expository }})">{{$expository->initials}}</option>
+                                            <option value="{{$expository->id}}" data-subtext="({{ $expository->expository }})">{{$expository->initials}}</option>
                                         @endforeach
                                     </select>
                                 </div>

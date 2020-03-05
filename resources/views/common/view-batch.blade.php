@@ -49,19 +49,24 @@
                                   
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Scheme</small>
                                         <p>{{$batchData->scheme->scheme}} <span style='color:{{($batchData->tpjobrole->status)?"green":"red"}}'><strong>{{($batchData->tpjobrole->status)?"Active":"Inactive"}}</strong></span></p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Sector</small>
                                         <p>{{$batchData->jobrole->sector->sector}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <small class="text-muted">Job Role</small>
                                         <p>{{$batchData->jobrole->job_role}}</p>
+                                        <hr>
+                                    </div>                
+                                    <div class="col-sm-3">
+                                        <small class="text-muted">Disability Type</small>
+                                        <p>{{$batchData->scheme->disability?'Multi Disability':'Single Disability'}}</p>
                                         <hr>
                                     </div>                
                                 </div>

@@ -23,6 +23,7 @@
                                     <th>Batch ID</th>
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
+                                    <th>Disability Type</th>
                                     <th>Assessment Date</th>
                                     <th>View</th>
                                     <th>Action</th>
@@ -36,6 +37,7 @@
                                             <td>{{$item->batch->batch_id}}</td>
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
+                                            <td>{{$item->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                             <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',Crypt::encrypt($item->batch->id.',1'))}}">View</a></td>
                                             <td>
@@ -67,6 +69,7 @@
                                     <th>Batch ID</th>
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
+                                    <th>Disability Type</th>
                                     <th>Assessment Date</th>
                                     <th>View</th>
                                     <th>Action</th>
@@ -80,6 +83,7 @@
                                             <td>{{$item->batch->batch_id}}</td>
                                             <td>{{$item->batch->partner->tp_id}}</td>
                                             <td>{{$item->batch->center->tc_id}}</td>
+                                            <td>{{$item->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                             <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',Crypt::encrypt($item->reass_id.',0'))}}">View</a></td>
                                             <td>

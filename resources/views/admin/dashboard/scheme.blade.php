@@ -134,7 +134,7 @@
                                     <th>Certificate Format</th>
                                     <th>Logo</th>
                                     <th>Action</th>
-                                    <th>Status</th>
+                                    <th>Status Action</th>
                                 </tr>
                             </thead>
                             <tbody>

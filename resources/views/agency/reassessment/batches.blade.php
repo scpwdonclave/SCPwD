@@ -21,6 +21,7 @@
                                     <thead>
                                         <tr>
                                             <th>Batch ID</th>
+                                            <th>Disability Type</th>
                                             <th>Assessor</th>
                                             <th>Assessment Date</th>
                                             <th>Re-Assessment Status</th>
@@ -31,6 +32,7 @@
                                         @foreach ($reassessments as $reassessment) 
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
+                                            <td>{{$reassessment->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                             <td>{!!is_null($reassessment->assessor)?'<span style="color:blue">Not Assigned Yet</span>':$reassessment->assessor->as_id!!}</td>
                                             <td>{{\Carbon\Carbon::parse($reassessment->batch->assessment)->format('d-m-Y')}}</td>
                                             @if (\Carbon\Carbon::parse($reassessment->assessment.' 00:00') > \Carbon\Carbon::now())

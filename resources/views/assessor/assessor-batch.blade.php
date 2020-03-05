@@ -21,6 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
+                                    <th>Disability Type</th>
                                     <th>Assessment Date</th>
                                     <th>Assessment Status</th>
                                     <th>Marks</th>
@@ -33,6 +34,7 @@
                                         @if (is_null($item->reass_id))
                                             <tr>
                                                 <td>{{$item->batch->batch_id}}</td>
+                                                <td>{{$item->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                                 <td>{{\Carbon\Carbon::parse($item->batch->assessment)->format('d-m-Y')}}</td>
                                                 @if (\Carbon\Carbon::parse($item->batch->assessment.' 00:00') > \Carbon\Carbon::now())
                                                     <td style="color:blue">Not Started Yet</td>

@@ -48,7 +48,12 @@
                                         <hr>
                                     </div>
                                 </div>
-                                <div class="row justify-content-center">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Disability Type</small>
+                                        <p>{{$batchData->scheme->disability?'Multi Disability':'Single Disability'}}</p>
+                                        <hr>
+                                    </div>
                                     <div class="col-sm-6">
                                         <small class="text-muted">Assessor</small>
                                         <p>{!!is_null($assessor)?'<span style="color:blue">Not Assigned Yet</span>':$assessor!!}</p>

@@ -47,7 +47,7 @@ table.dataTable thead th:first-child {
                         <form id="form_addbatch" action="{{route('partner.submitbatch')}}" method="post">
                             @csrf
                             <div class="row d-flex justify-content-around">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="scheme">Scheme <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="scheme" class="form-control show-tick" data-live-search="true" name="scheme" onchange="update('job')" data-dropup-auto='false' required>
@@ -59,27 +59,34 @@ table.dataTable thead th:first-child {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="jobrole">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole" onchange="update('center')" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <label for="center">Training Center <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
-                                        <select id="center" class="form-control show-tick" data-live-search="true" name="center" onchange="update('table')" data-dropup-auto='false' required>
+                                        <select id="center" class="form-control show-tick" data-live-search="true" name="center" onchange="update('disability')" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row d-flex justify-content-around">
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <label for="trainer">Trainer <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float">
                                         <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="disability" class="d-flex justify-content-between"><span>Disability <span style="color:red"> <strong>*</strong></span></span><span style="color:blue;" id="disability_text"></span></label>
+                                    <div class="form-group form-float">
+                                        <select id="disability" class="form-control show-tick" data-live-search="true" name="disability[]" onchange="update('table')" data-dropup-auto='false' required>
                                         </select>
                                     </div>
                                 </div>
@@ -123,7 +130,7 @@ table.dataTable thead th:first-child {
                                 </div>
                             </div>
 
-                            <table id="batchtable" data-page-length="30" class="batchtable nobtn table table-bordered table-striped table-hover display select">
+                            <table id="batchtable" data-page-length="30" class="batchtable nobtn nowrap table table-bordered table-striped table-hover display select" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th><input name="select_all" value="1" type="checkbox"></th>
@@ -211,10 +218,20 @@ table.dataTable thead th:first-child {
                         data: { _token, schemeid },
                         success: function(data){
                             clearDropdown('jobrole','Job Role');
+                            var selectbox = $('#disability'); 
                             data.jobrole.forEach(value => {
                                 $('#jobrole').append('<option value="'+value.id+','+value.jobrole.id+'">'+value.jobrole.job_role+'</option>');
                             });
                             $('#jobrole').selectpicker('refresh');
+                            if(data.disability == 0){
+                                selectbox.prop("multiple", false);
+                                $('#disability_text').html('Single Disability');
+                            } else {
+                                selectbox.prop("multiple", true);
+                                $('#disability_text').html('Multi Disability');
+                            }
+                            selectbox.selectpicker('destroy');
+                            selectbox.selectpicker();
                             clearDropdown('center','Center');
                             clearDropdown('trainer','Trainer');
                         } 
@@ -252,7 +269,8 @@ table.dataTable thead th:first-child {
                         });
                     }
                 break;
-            case 'table':
+            case 'disability':
+                
                     var centerid = $('#center :selected').val();
                     var sid = $("#scheme :selected").val();
                     $.ajax({
@@ -260,22 +278,56 @@ table.dataTable thead th:first-child {
                         method: "POST",
                         data: { _token, centerid, sid },
                         success: function(data){
-                            var datatable = $('.batchtable').DataTable();
-                            datatable.clear().draw();
-                            if (data.candidates.length > 0) {
-                                data.candidates.forEach(value => {
-                                    if (value[0].length > 0) {
-                                        datatable.rows.add([value]); // Add new data
-                                    }
-                                });
-                            }
-
-                            datatable.columns.adjust().draw();
+                                $('#disability').empty();
+                                if (data.disabilities !== undefined) {
+                                    data.disabilities.forEach(value => {
+                                        $('#disability').append('<option value="'+value[0]+'">'+ value[1]+'</option>');
+                                    });
+                                }
+                                $('#disability').selectpicker('refresh');
+                                update('table')
                             },
                         error: function(data){                            
                                 swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
                             }
                         });
+                break;
+            case 'table':
+                    var center_id = $('#center :selected').val();
+                    var sid = $("#scheme :selected").val();
+                    var disabilities = [];
+                    $.each($("#disability option:selected"), function(){            
+                        disabilities.push($(this).val());
+                    });
+                    var datatable = $('.batchtable').DataTable();
+                    
+                    if (disabilities.length>0) {
+                        $.ajax({
+                            url: "{{ route('partner.addbatch.api') }}",
+                            method: "POST",
+                            data: { _token, center_id, sid, disabilities },
+                            success: function(data){
+    
+                                datatable.clear();
+                                if (data.candidates.length > 0) {
+                                    data.candidates.forEach(value => {
+                                        if (value[0].length > 0) {
+                                            datatable.rows.add([value]); // Add new data
+                                        }
+                                    });
+                                }
+    
+                                datatable.columns.adjust().draw();
+                                },
+                            error: function(data){                            
+                                    swal('UnAuthorized','Something Went Wrong, Try Again', 'error').then(function(){ location.reload(); });
+                                }
+                            });
+                    } else {
+                        datatable.clear();
+                        datatable.columns.adjust().draw();
+                    }
+                    
                 break;
             default:
                 break;

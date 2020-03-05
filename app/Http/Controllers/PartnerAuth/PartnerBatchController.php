@@ -191,7 +191,7 @@ class PartnerBatchController extends Controller
             foreach ($partnerJob as $job) {
                 $job->jobrole->job_role;
             }
-            return response()->json(['success' => true, 'jobrole' => $partnerJob], 200);                        
+            return response()->json(['success' => true, 'jobrole' => $partnerJob, 'disability' => $partnerJob[0]->scheme->disability], 200);                        
         }
         if ($request->has('jobid')) {
             $filteredCenters = collect([]);
@@ -230,6 +230,56 @@ class PartnerBatchController extends Controller
         if ($request->has('centerid')) {
             $partner = $this->guard()->user();
             $center = Center::find($request->centerid);
+            $disabilityArray = [];
+            if ($center) {
+                if ($center->partner->id == $partner->id) {
+                    // * Making Sure that this center belongs to current partner
+                    
+                    $disabilityRow = [[]];
+                    foreach ($center->candidatesmap as $centerCandidate) {
+                        // * looping through all the centercandidate of that center 
+                        
+                        if ($centerCandidate->candidate->status && $this->partnerscheme($centerCandidate,'candidate')) {
+                            // * checked candidate is active and the scheme is also active
+
+                            if (!$centerCandidate->dropout) {
+                                // * all dropped out candidates are excluded 
+
+                                if ($centerCandidate->jobrole->partnerjobrole->scheme->id == $request->sid) {
+                                    // * Making Sure Candidates are coming from same Scheme
+                                    
+                                    if (is_null($centerCandidate->passed)) {
+                                        // * candidates either in a batch [with no results] or not in a batch
+                                        
+                                        if (!($centerCandidate->batchcandidate)) {
+                                            // * candidates not in a batch
+
+                                            $disabilityRow[0] = $centerCandidate->disability->id;
+                                            $disabilityRow[1] = $centerCandidate->disability->expository;
+
+                                            array_push($disabilityArray, $disabilityRow);
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                    return response()->json(['success' => true, 'disabilities' => array_unique($disabilityArray, SORT_REGULAR)],200);               
+                } else {
+                    return response()->json(['success' => false],400);               
+                }
+            } else {
+                return response()->json(['success' => true, 'disabilities' => $disabilityArray],200);
+            }
+        }
+
+        if ($request->has('disabilities')) {
+            $partner = $this->guard()->user();
+            $center = Center::find($request->center_id);
             $candidateArray = [];
             if ($center) {
                 if ($center->partner->id == $partner->id) {
@@ -259,10 +309,21 @@ class PartnerBatchController extends Controller
                                             $candidateRow[1] = $centerCandidate->candidate->name;
                                             $candidateRow[2] = $centerCandidate->candidate->contact;
                                             $candidateRow[3] = $centerCandidate->candidate->category;
-                                            $candidateRow[4] = $centerCandidate->disability->e_expository;
+                                            $candidateRow[4] = $centerCandidate->disability->expository;
                                             $candidateRow[5] = '<button type="button" onclick="viewcandidate(\''.$id.'\')" class="badge bg-green margin-0">View</button>';
                                             $candidateRow[6] = $centerCandidate->id;
-                                            array_push($candidateArray, $candidateRow);         
+
+                                            foreach ($request->disabilities as $disability) {
+                                                if ($centerCandidate->d_type == $disability) {
+                                                    array_push($candidateArray, $candidateRow);
+                                                break;
+                                                }
+                                            }
+                                            // $candidateRow[0] = $centerCandidate->disability->id;
+                                            // $candidateRow[1] = $centerCandidate->disability->expository;
+
+
+
                                         }
 
                                     }
@@ -272,7 +333,7 @@ class PartnerBatchController extends Controller
                             }
                         }
                     }
-                    return response()->json(['success' => true, 'candidates' => $candidateArray],200);               
+                    return response()->json(['success' => true, 'candidates' => array_unique($candidateArray, SORT_REGULAR)],200);               
                 } else {
                     return response()->json(['success' => false],400);               
                 }

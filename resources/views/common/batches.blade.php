@@ -37,6 +37,7 @@
                                             <th>Center ID</th>
                                         @endif
                                     @endif
+                                    <th>Disability Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
@@ -58,6 +59,7 @@
                                                 <td>{{$item->center->tc_id}}</td>
                                             @endif
                                         @endif
+                                        <td>{{$item->scheme->disability?'Multi Disabilty':'Single DIsability'}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>

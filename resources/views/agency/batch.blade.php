@@ -24,6 +24,7 @@
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
                                     <th>Assessor</th>
+                                    <th>Disability Type</th>
                                     <th>Assessment Date</th>
                                     <th>Assessment Status</th>
                                     <th>View</th>
@@ -37,6 +38,7 @@
                                             <td>{{$batch->batch->partner->tp_id}}</td>
                                             <td>{{$batch->batch->center->tc_id}}</td>
                                             <td>{!!is_null($batch->batch->assessorbatch)?'<span style="color:blue">Not Assigned Yet</span>':$batch->batch->assessorbatch->assessor->as_id!!}</td>
+                                            <td>{{$batch->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                             <td>{{\Carbon\Carbon::parse($batch->batch->assessment)->format('d-m-Y')}}</td>
                                             @if (\Carbon\Carbon::parse($batch->batch->assessment.' 00:00') > \Carbon\Carbon::now())
                                                 <td style="color:blue">Not Started Yet</td>
@@ -73,6 +75,7 @@
                                     <th>Batch ID</th>
                                     <th>Partner ID</th>
                                     <th>Center ID</th>
+                                    <th>Disability Type</th>
                                     <th>Assessor</th>
                                     <th>Re-Assessment Date</th>
                                     <th>Re-Assessment Status</th>
@@ -87,6 +90,7 @@
                                             <td>{{$batch->batch->partner->tp_id}}</td>
                                             <td>{{$batch->batch->center->tc_id}}</td>
                                             <td>{!!is_null($batch->reassessment->as_id)?'<span style="color:blue">Not Assigned Yet</span>':$batch->reassessment->assessor->as_id!!}</td>
+                                            <td>{{$batch->batch->scheme->disability?'Multi Disability':'Single Disability'}}</td>
                                             <td>{{\Carbon\Carbon::parse($batch->reassessment->assessment)->format('d-m-Y')}}</td>
                                             @if (\Carbon\Carbon::parse($batch->reassessment->assessment.' 00:00') > \Carbon\Carbon::now())
                                                 <td style="color:blue">Not Started Yet</td>
