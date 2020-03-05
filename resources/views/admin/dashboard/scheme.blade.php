@@ -19,50 +19,17 @@
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card">
-                <div class="header">
-                    <h2><strong>Scheme</strong> Section</h2>                        
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>Scheme</strong> Section</h2>
+                    <button id="btn_scheme" onclick="toggleit()" class="btn btn-primary btn-sm btn-round waves-effect">Add New Scheme</button>
                 </div>
                 <div class="body">
-                    <div class="table-responsive">
-                        <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr>
-                                    <th>Department | Scheme</th>
-                                    <th>Certificate Format</th>
-                                    <th>Logo</th>
-                                    <th>Action</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($schemes as $scheme)
-                                <tr style="height:5px !important">
-                                <td>{{$scheme->department->dept_name}} | {{$scheme->scheme}}</td>
-                                <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.substr($scheme->year, 2):null)!!}</td>
-                                <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
-                                {{-- <td> <img src="{{asset('storage/'.$scheme->logo)}}" width="50" alt="No Image"> </td> --}}
-                                <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
-                                <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="header">
-                    <h2><strong>Add</strong> Scheme</h2>                        
-                </div>
-                <div class="body">
-                    <form id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post" enctype="multipart/form-data">
+                    <form style="display:none" id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-4">
                                 <label for="scheme">Scheme <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <input type="text" class="form-control" placeholder="Scheme Name" value="{{ old('scheme') }}" name="scheme" required>
@@ -71,19 +38,16 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
-                    
-                        <div class="row">
-                            <div class="col-sm-12">
+
+                            <div class="col-sm-4">
                                 <label for="year">Year <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="year" class="form-control show-tick" data-live-search="true" name="year" onchange="redesign()" data-dropup-auto='false' required>
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
+
+                            <div class="col-sm-4">
                                 <label for="dept">Department <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="dept" data-show-subtext="true" data-dropup-auto='false' required>
@@ -94,9 +58,28 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="invoice_on">Invoice on Total <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" name="invoice_on" data-dropup-auto='false' required>
+                                        <option value="0">Appeared</option>
+                                        <option value="1">Assigned</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="disability">Disabilty Type <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" name="disability" data-dropup-auto='false' required>
+                                        <option value="0">Single Type</option>
+                                        <option value="1">Multi Type</option>
+                                    </select>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-4">
                                 <label for="finyear">Include Financial Year in Cert. No <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="finyear" class="form-control show-tick" data-live-search="true" name="finyear" onchange="redesign()" data-dropup-auto='false' required>
@@ -106,9 +89,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-4">
                                 <label for="cert_format">Certificate Number Format <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <input type="text" class="form-control" placeholder="Certificate Number Format" value="{{ old('cert_format') }}" onkeyup="redesign()" name="cert_format" required>
@@ -117,9 +100,17 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
-                        <div class="row" id="cert_no_div" style="display:none;">
-                            <div class="col-sm-12">
+                        
+                        
+                            <div class="col-sm-4">
+                                <label for="logo">Scheme Logo <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <input type="file" id="logo" class="form-control" name="logo" required>
+                                    <span id="logo_error"  style="color:red;"></span>
+                                </div>
+                            </div>
+                        
+                            <div class="col-sm-4" id="cert_no_div" style="display:none;">
                                 <label>Certificate Number will look like</label>
                                 <div class="form-group form-float text-center">
                                     <span id="cert_no" style="color:blue;font-weight:bold;"></span>
@@ -127,19 +118,41 @@
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label for="logo">Scheme Logo <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float">
-                                    <input type="file" id="logo" class="form-control" name="logo" required>
-                                    <span id="logo_error"  style="color:red;"></span>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row d-flex justify-content-center">
                             <button class="btn btn-round btn-primary" type="submit">ADD</button>
                         </div>
                     </form>
+
+                    <div id="table_scheme" class="table-responsive">
+                        <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Scheme</th>
+                                    <th>Invoice on Total</th>
+                                    <th>Disability Type</th>
+                                    <th>Certificate Format</th>
+                                    <th>Logo</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($schemes as $scheme)
+                                    <tr style="height:5px !important">
+                                        <td>{{$scheme->department->dept_name}}</td>
+                                        <td>{{$scheme->scheme}}</td>
+                                        <td>{{$scheme->disability?'Assigned':'Appeared'}}</td>
+                                        <td>{{$scheme->invoice_on?'Multy Type':'Single Type'}}</td>
+                                        <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.substr($scheme->year, 2):null)!!}</td>
+                                        <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
+                                        <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
+                                        <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -322,6 +335,20 @@
             }
         }
     /* End Redesigning Certificate Number Format */
+
+
+    // * Toggle Function
+
+    function toggleit() {
+        $('#form_scheme').toggle('slide');
+        if ($('#btn_scheme').text() == 'Add New Scheme') {
+            $('#btn_scheme').text('View Scheme Table');
+        } else {
+            $('#btn_scheme').text('Add New Scheme');
+        }
+        $('#table_scheme').toggle('slide');
+    }
+
 </script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

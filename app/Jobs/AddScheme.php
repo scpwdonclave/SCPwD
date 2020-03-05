@@ -36,6 +36,8 @@ class AddScheme implements ShouldQueue
             'scheme' => 'required|unique:schemes',
             'logo' => 'required|mimes:jpeg,jpg,png',
             'year' => 'required',
+            'disability' => 'required',
+            'invoice_on' => 'required',
             'finyear' => 'required',
             'cert_format' => 'required',
         ]);
@@ -48,6 +50,8 @@ class AddScheme implements ShouldQueue
         $scheme->logo = Storage::disk('public')->put('/adminscheme', $request->logo);
         $scheme->year = $request->year;
         $scheme->dept_id = $request->dept;
+        $scheme->invoice_on = $request->invoice_on;
+        $scheme->disability = $request->disability;
         $scheme->cert_format = $request->cert_format.'/';
         $scheme->fin_yr = $request->finyear;
         $scheme->save();

@@ -21,6 +21,8 @@ class CreateSchemesTable extends Migration
             $table->string('cert_format');
             $table->boolean('fin_yr')->default(0);
             $table->string('year');
+            $table->boolean('invoice_on')->comment='1: assigned, 0: appeared';
+            $table->boolean('disability')->comment='1: multi type, 0: single type';
             $table->boolean('status')->default(1);
             $table->timestamps();
         });
