@@ -32,6 +32,8 @@ return [
             'admin',
             'partner',
             'center',
+            'agency',
+            'assessor',
         ],
     ],
 
