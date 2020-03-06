@@ -25,6 +25,7 @@ class CreateBatchAssessmentsTable extends Migration
             $table->boolean('aa_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';
             $table->boolean('admin_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';
             $table->boolean('sup_admin_verified')->default(0)->comment = '0:pending,1:Approved,2:Reject';
+            $table->string('sup_admin_verified_on')->nullable();
             $table->string('reject_note')->nullable();
             $table->boolean('recheck')->default(0)->comment = '0:Not recheck,1:checking done';
             $table->boolean('admin_cert_rel')->default(0)->comment = '1:Released,0:Not release';

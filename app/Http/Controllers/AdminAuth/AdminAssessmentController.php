@@ -90,6 +90,7 @@ class AdminAssessmentController extends Controller
                     if ($assessment->aa_verified==1 && $assessment->admin_verified==1 && ($assessment->sup_admin_verified==0 || ($assessment->sup_admin_verified==2 && $assessment->recheck==1))) {
                 
                         $assessment->sup_admin_verified=1;
+                        $assessment->sup_admin_verified_on= Carbon::now();
                         $assessment->recheck=0;
                         $assessment->reject_note=null;
                         $assessment->save();
