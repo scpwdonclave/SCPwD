@@ -102,7 +102,53 @@ class PartnerHomeController extends Controller
     }
 
     public function index() {
-        return view('partner.home')->with('partner',$this->guard()->user());
+
+        $partner = $this->guard()->user();
+        $candidate=0;
+        $placed = 0;
+        $dropped = 0;
+        $registered = 0;
+        $failed = 0;
+        $passed = 0;
+        $absent = 0;
+        $assessment = 0;
+
+        foreach ($partner->centers as $center) {
+            $candidate +=count($center->candidatesmap);
+
+            foreach ($center->candidatesmap as $centerCandidate) {
+                if ($centerCandidate->placement) {
+                    $placed+=1;
+                }
+    
+                if ($centerCandidate->dropout) {
+                    $dropped+=1;
+                } elseif (is_null($centerCandidate->passed)) {
+                    $registered+=1;
+                } elseif ($centerCandidate->passed == 0) {
+                    $failed+=1;
+                } elseif ($centerCandidate->passed == 1) {
+                    $passed+=1;
+                } else {
+                    $absent+=1;
+                }    
+            }
+
+        }
+
+        $data = [
+            'partner' => $partner,
+            'placed'=>$placed,
+            'dropped'=>$dropped,
+            'registered'=>$registered,
+            'failed'=>$failed,
+            'absent'=>$absent,
+            'passed'=>$passed,
+            'assessment'=>$assessment,
+            'candidate' => $candidate,
+        ];
+
+        return view('partner.home')->with($data);
     }
 
     public function jobroles(){

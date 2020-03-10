@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CenterAuth;
 use DB;
 use Auth;
 use Crypt;
+use App\Center;
 use App\Reason;
 use App\Candidate;
 use App\Placement;
@@ -86,7 +87,59 @@ class CenterHomeController extends Controller
     }
 
     public function index() {
-        return view('center.home')->with('center',$this->guard()->user());
+
+        $center = $this->guard()->user();
+        $placed = 0;
+        $dropped = 0;
+        $registered = 0;
+        $failed = 0;
+        $passed = 0;
+        $absent = 0;
+        $assessment = 0;
+        foreach ($center->candidatesmap as $centerCandidate) {
+            if ($centerCandidate->placement) {
+                $placed+=1;
+            }
+
+            if ($centerCandidate->dropout) {
+                $dropped+=1;
+            } elseif (is_null($centerCandidate->passed)) {
+                $registered+=1;
+            } elseif ($centerCandidate->passed == 0) {
+                $failed+=1;
+            } elseif ($centerCandidate->passed == 1) {
+                $passed+=1;
+            } else {
+                $absent+=1;
+            }
+
+        }
+
+        foreach ($center->batches as $batch) {
+            if (Carbon::parse($batch->assessment) < Carbon::now()) {
+                $assessment+=1;
+            }
+            if ($batch->reassessments) {
+                foreach ($batch->reassessments as $reassessment) {
+                    if (!is_null($reassessment->assessment) && Carbon::parse($reassessment->assessment) < Carbon::now()) {
+                        $assessment+=1;
+                    }
+                }
+            }
+        }
+
+        $data = [
+            'center'=>$center,
+            'placed'=>$placed,
+            'dropped'=>$dropped,
+            'registered'=>$registered,
+            'failed'=>$failed,
+            'absent'=>$absent,
+            'passed'=>$passed,
+            'assessment'=>$assessment,
+        ];
+
+        return view('center.home')->with($data);
     }
 
     public function profile(){
