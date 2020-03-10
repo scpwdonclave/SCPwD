@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AgencyAuth;
 
 use Auth;
+use Carbon\Carbon;
 use App\Notification;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
@@ -66,7 +67,70 @@ class AgencyHomeController extends Controller
 
     
     public function index() {
-        return view('agency.home')->with('agency',Auth::guard('agency')->user());
+        $absent = 0;
+        $failed = 0;
+        $passed = 0;
+
+        $assessed = 0;
+        $assessment = 0;
+        $reassessment = 0;
+        $agency = $this->guard()->user();
+
+        foreach ($agency->agencyBatch as $agencyBatch) {
+            if (is_null($agencyBatch->reass_id)) {
+                if (!is_null($agencyBatch->batch->assessment) && Carbon::parse($agencyBatch->batch->assessment) < Carbon::now()) {
+                    $assessed+=count($agencyBatch->batch->candidatesmap);
+                }
+                if ($agencyBatch->batch->batchassessment) {
+                    foreach ($agencyBatch->batch->batchassessment->candidateMarks as $candidateMark) {
+                        if ($candidateMark->attendence==='present') {
+                            if ($candidateMark->passed==1) {
+                                $passed+=1;
+                            } elseif ($candidateMark->passed==0){
+                                $failed+=1;
+                            }
+                        } else {
+                            $absent+=1;
+                        }
+                    }
+                }
+                $assessment+=1;
+            } else {
+                if (!is_null($agencyBatch->reassessment->assessment) && Carbon::parse($agencyBatch->reassessment->assessment) < Carbon::now()) {
+                    $assessed+=count($agencyBatch->reassessment->candidates);
+                }
+                if ($agencyBatch->reassessment->batchreassessment) {
+                    // $candidate += count($agencyBatch->reassessment->batchreassessment->candidateMarks)
+                    foreach ($agencyBatch->reassessment->batchreassessment->candidateMarks as $candidateMark) {
+                        if ($candidateMark->attendence==='present') {
+                            if ($candidateMark->passed==1) {
+                                $passed+=1;
+                            } elseif ($candidateMark->passed==0){
+                                $failed+=1;
+                            }
+                        } else {
+                            $absent+=1;
+                        }
+                    }
+                }
+                $reassessment+=1;
+            }
+        }
+
+
+        $data = [
+            'agency'=>$agency,
+            
+            'failed'=>$failed,
+            'absent'=>$absent,
+            'passed'=>$passed,
+            
+            'assessed'=>$assessed,
+            'assessment'=>$assessment,
+            'reassessment'=>$reassessment,
+        ];
+        
+        return view('agency.home')->with($data);
     }
 
     public function profile(){

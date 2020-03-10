@@ -21,4 +21,9 @@ class AgencyBatch extends Model implements Auditable
     public function reassessment(){
         return $this->belongsTo('App\Reassessment', 'reass_id');
     }
+
+    public function assessorBatch()
+    {
+        return $this->hasOne('App\AssessorBatch', 'aa_bt_id');
+    }
 }

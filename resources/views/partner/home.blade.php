@@ -1,9 +1,5 @@
 @extends('layout.master')
 @section('title', 'Dashboard')
-@section('page-style')
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
-@stop
 @section('content')
 <div class="container-fluid home">
     <div class="row clearfix">
@@ -68,9 +64,9 @@
                                           
                     <div class="progress m-b-20">
                         <div class="progress-bar progress-bar-success" style="width: {{100*$passed/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-warning progress-bar-striped active" style="width: {{100*$failed/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-info" style="width: {{100*$absent/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-danger" style="width: {{100*$dropped/$candidate}}%"></div>
+                        <div class="progress-bar progress-bar-danger" style="width: {{100*$failed/$candidate}}%"></div>
+                        <div class="progress-bar progress-bar-warning" style="width: {{100*$absent/$candidate}}%"></div>
+                        <div class="progress-bar progress-bar-info" style="width: {{100*$dropped/$candidate}}%"></div>
                         <div class="progress-bar l-slategray" style="width: {{100*$registered/$candidate}}%"></div>
                     </div>
                     <div class="table-responsive">
@@ -80,31 +76,31 @@
                                     <th><i class="zmdi zmdi-circle text-success"></i></th>
                                     <td>Passed</td>
                                     <td><span>{{$passed}} Candidate(s)</span></td>
-                                    <td>{{100*$passed/$candidate}}%</td>
+                                    <td>{{round(100*$passed/$candidate,2)}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-danger"></i></th>
                                     <td>Failed</td>
                                     <td><span>{{$failed}} Candidate(s)</span></td>
-                                    <td>{{100*$failed/$candidate}}%</td>
+                                    <td>{{round(100*$failed/$candidate,2)}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-warning"></i></th>
                                     <td>Absent</td>
                                     <td><span>{{$absent}} Candidate(s)</span></td>
-                                    <td>{{100*$absent/$candidate}}%</td>
+                                    <td>{{round(100*$absent/$candidate,2)}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-info"></i></th>
                                     <td>Dropped out</td>
                                     <td><span>{{$dropped}} Candidate(s)</span></td>
-                                    <td>{{100*$dropped/$candidate}}%</td>
+                                    <td>{{round(100*$dropped/$candidate,2)}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-l-slategray"></i></th>
                                     <td>Newly Registered</td>
                                     <td><span>{{$registered}} Candidate(s)</span></td>
-                                    <td>{{100*$registered/$candidate}}%</td>
+                                    <td>{{round(100*$registered/$candidate,2)}}%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -114,10 +110,4 @@
         </div>
     </div>
 </div>
-@stop
-@section('page-script')
-<script src="{{asset('assets/bundles/morrisscripts.bundle.js')}}"></script>
-<script src="{{asset('assets/bundles/jvectormap.bundle.js')}}"></script>
-<script src="{{asset('assets/bundles/knob.bundle.js')}}"></script>
-<script src="{{asset('assets/js/pages/index.js')}}"></script>
 @stop

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\AssessorAuth;
 
 use Auth;
-use App\Notification;
+use Carbon\Carbon;
 
+use App\Notification;
 use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -66,7 +67,74 @@ class AssessorHomeController extends Controller
     }
     
     public function index() {
-        return view('assessor.home')->with('assessor',Auth::guard('assessor')->user());
+
+        $assessor = $this->guard()->user();
+        
+        $absent = 0;
+        $failed = 0;
+        $passed = 0;
+
+        $assessed = 0;
+        $assessment = 0;
+        $reassessment = 0;
+
+
+        foreach ($assessor->assessorBatch as $assessorBatch) {
+            if (is_null($assessorBatch->reass_id)) {
+                if (!is_null($assessorBatch->batch->assessment) && Carbon::parse($assessorBatch->batch->assessment) < Carbon::now()) {
+                    $assessed+=count($assessorBatch->batch->candidatesmap);
+                }
+                if ($assessorBatch->batch->batchassessment) {
+                    foreach ($assessorBatch->batch->batchassessment->candidateMarks as $candidateMark) {
+                        if ($candidateMark->attendence==='present') {
+                            if ($candidateMark->passed==1) {
+                                $passed+=1;
+                            } elseif ($candidateMark->passed==0){
+                                $failed+=1;
+                            }
+                        } else {
+                            $absent+=1;
+                        }
+                    }
+                }
+                $assessment+=1;
+            } else {
+                if (!is_null($assessorBatch->reassessment->assessment) && Carbon::parse($assessorBatch->reassessment->assessment) < Carbon::now()) {
+                    $assessed+=count($assessorBatch->reassessment->candidates);
+                }
+                if ($assessorBatch->reassessment->batchreassessment) {
+                    // $candidate += count($assessorBatch->reassessment->batchreassessment->candidateMarks)
+                    foreach ($assessorBatch->reassessment->batchreassessment->candidateMarks as $candidateMark) {
+                        if ($candidateMark->attendence==='present') {
+                            if ($candidateMark->passed==1) {
+                                $passed+=1;
+                            } elseif ($candidateMark->passed==0){
+                                $failed+=1;
+                            }
+                        } else {
+                            $absent+=1;
+                        }
+                    }
+                }
+                $reassessment+=1;
+            }
+        }
+        
+
+
+        $data = [
+            'assessor'=>$assessor,
+            
+            'failed'=>$failed,
+            'absent'=>$absent,
+            'passed'=>$passed,
+            
+            'assessed'=>$assessed,
+            'assessment'=>$assessment,
+            'reassessment'=>$reassessment,
+        ];
+
+        return view('assessor.home')->with($data);
     }
 
     public function profile(){
