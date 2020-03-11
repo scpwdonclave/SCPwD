@@ -211,9 +211,10 @@
                 </ul>
             </li>
             <li class="{{ Request::segment(2) === 'invoice' ? 'active open' : null }}">
-                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-star-circle"></i><span>Invoice</span></a>
+                <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-shield-security"></i><span>Invoice</span></a>
                 <ul class="ml-menu">
-                    <li class="{{ Request::is('admin/invoice/pending-invoice') ? 'active' : null }}"><a href="{{route('admin.invoice.pending-invoice')}}">Pending Invoice</a></li>
+                    <li class="{{ Request::is('admin/invoice/create-assessment-invoice') ? 'active' : null }}"><a href="{{route('admin.invoice.pending-invoice')}}">Assessment</a></li>
+                    <li class="{{ Request::is('admin/invoice/create-re-assessment-invoice') ? 'active' : null }}"><a href="{{route('admin.invoice.reassessment-invoice')}}">Re-Assessment</a></li>
                     <li class="{{ Request::is('admin/invoice/all-invoice') ? 'active' : null }}"><a href="{{route('admin.invoice.all-invoice')}}">All Invoice</a></li>
                 </ul>
             </li>

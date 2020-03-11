@@ -181,10 +181,16 @@ Route::post('paymentorder/accept', 'AdminAuth\AdminPaymentOrderController@paymen
 //End Payment Order
 
 //Invoice
-Route::get('invoice/pending-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.pending-invoice');
-Route::get('invoice/all-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.all-invoice');
+Route::get('invoice/create-assessment-invoice', 'AdminAuth\AdminInvoiceController@pendingInvoice')->name('invoice.pending-invoice');
+Route::get('invoice/all-invoice', 'AdminAuth\AdminInvoiceController@allInvoice')->name('invoice.all-invoice');
 Route::post('invoice/fetch-partner', 'AdminAuth\AdminInvoiceController@fetchPartner')->name('invoice.fetch-partner');
 Route::post('invoice/assessment-invoice', 'AdminAuth\AdminInvoiceController@assessmentInvoice')->name('invoice.assessment_invoice');
+Route::post('invoice/submit-invoice', 'AdminAuth\AdminInvoiceController@submitInvoice')->name('invoice.assessment_invoice.submit');
+Route::get('invoice/print/{id}', 'AdminAuth\AdminInvoicePdfController@printInvoice')->name('invoice.print.invoice');
+Route::get('invoice/create-re-assessment-invoice', 'AdminAuth\AdminInvoiceController@pendingReassessmentInvoice')->name('invoice.reassessment-invoice');
+Route::post('invoice/re-assessment-invoice', 'AdminAuth\AdminInvoiceController@reassessmentInvoice')->name('invoice.reassessment_invoice');
+Route::post('invoice/submit-re-assessment-invoice', 'AdminAuth\AdminInvoiceController@submitReassessmentInvoice')->name('invoice.reassessment_invoice.submit');
+Route::post('invoice/fetch-center', 'AdminAuth\AdminInvoiceController@fetchCenter')->name('invoice.fetch-center');
 
 //End Invoice
 
