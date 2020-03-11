@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Create Assessment Invoice')
+@section('title', 'Create Re-Assessment Invoice')
 @section('parentPageTitle', 'Invoice')
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
@@ -18,13 +18,13 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2><strong>Create</strong> Invoice</h2>                        
+                    <h2><strong>Create</strong> Re Assessment Invoice</h2>                        
                 </div>
                 <div class="body">
-                    <form id="form_scheme" action="{{route('admin.invoice.assessment_invoice')}}" method="post">
+                    <form id="form_scheme" action="{{route('admin.invoice.reassessment_invoice')}}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="scheme">Select Scheme with Department <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="scheme" onchange="fetchPartner(this.value)" data-dropup-auto='false' required>
@@ -35,10 +35,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="partner">Select Training Partner <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="partner" id="partner" data-dropup-auto='false' required>
+                                    <select class="form-control show-tick" data-live-search="true" name="partner" id="partner" onchange="fetchCenter(this.value)" data-dropup-auto='false' required>
+                                      
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="center">Select Training Center <span style="color:red"> <strong>*</strong></span></label>
+                                <div class="form-group form-float">
+                                    <select class="form-control show-tick" data-live-search="true" name="center" id="center"  data-dropup-auto='false' required>
                                       
                                     </select>
                                 </div>
@@ -67,7 +75,7 @@
                 <div class="text-center">
                     @if (isset($scheme_sel) )
                     <p><h6><strong>Selected Scheme: <span style="color:blue">{{$scheme_sel->scheme}}</span></strong></h6></p>
-                    <p><h6><strong>Selected Partner: <span style="color:blue">{{$partner->tp_id}}</span></strong></h6></p>
+                    <p><h6><strong>Partner: <span style="color:blue">{{$partner->tp_id}}</span> || Center: <span style="color:blue">{{$center->tc_id}}</span></strong></h6></p>
                     {{-- <p><h6><strong>Selected DATE: <span style="color:blue">{{\Carbon\Carbon::parse($from)->format('d-m-Y')}} <span style="color:black">to</span> {{\Carbon\Carbon::parse($to)->format('d-m-Y')}}</span></strong></h6></p> --}}
 
                     @endif
@@ -110,7 +118,7 @@
                         </table>
                     </div>
                     @if(!empty($stack))
-                    <form id="form_invoice" action="{{route('admin.invoice.assessment_invoice.submit')}}" method="post" >
+                    <form id="form_invoice" action="{{route('admin.invoice.reassessment_invoice.submit')}}" method="post" >
                     @csrf
                     <div class="row d-flex justify-content-around">
                                 
@@ -120,6 +128,7 @@
                                 <input type="text" class="form-control " placeholder="Enter Ref No" id="ref_no" name="ref_no"  required>
                             <input type="hidden" name="partner" value="{{$partner->id}}">
                             <input type="hidden" name="scheme" value="{{$scheme_sel->id}}">
+                            <input type="hidden" name="center" value="{{$center->id}}">
                             </div>
                         </div>
                        
@@ -160,6 +169,8 @@
             method:'POST',
             success: function(data){
                 $('#partner').empty();
+                $('#partner').append('<option value="">--select--</option>');
+
                 $.each (data.partnerJob, function (index) {
                     var id=data.partnerJob[index].tp_id;
                     var tpid=data.partnerJob[index].tpid;
@@ -170,5 +181,31 @@
             }
         });
     }
+
+function fetchCenter(partner){
+    let _token = $("input[name='_token']").val();
+       
+        var partner=partner;
+        $.ajax({
+            url:"{{route('admin.invoice.fetch-center')}}", 
+            data:{_token,partner},
+            method:'POST',
+            success: function(data){
+                console.log(data);
+                
+                $('#center').empty();
+                $('#center').append('<option value="">--select--</option>');
+
+                $.each (data.centers, function (index) {
+                    var id=data.centers[index].id;
+                    var tcid=data.centers[index].tc_id;
+                    $('#center').append('<option value="'+id+'">'+tcid+'</option>');
+                    
+                });
+                $('#center').selectpicker('refresh');
+            }
+        });
+    
+}
 </script>
 @endsection
