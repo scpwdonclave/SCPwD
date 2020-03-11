@@ -30,7 +30,7 @@ tr.shown td.details-control {
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable" id="opiniondt">
+                        <table class="table nobtn table-bordered table-striped table-hover nowrap dataTable js-exportable display select" id="opiniondt">
                             <thead>
                                 <tr>
                                     <th></th>

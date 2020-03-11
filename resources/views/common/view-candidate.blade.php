@@ -14,7 +14,10 @@
                 <div class="body">
                         <div class="text-center">
                             <h6>
-                                This Candidate is <span style='color:{{($center_candidate->candidate->status)?"green":"red"}}'>{{($center_candidate->candidate->status)?"Active":"Inactive"}}</span>
+                               CD ID: <span style="color:blue">{{$center_candidate->candidate->cd_id}}</span>
+                            </h6>
+                            <h6>
+                                <span style='color:{{($center_candidate->candidate->status)?"green":"red"}}'>{{($center_candidate->candidate->status)?"Active":"Inactive"}}</span>
                             </h6>
                             @if ($center_candidate->dropout)
                                 <h6><span style="color:blue">Dropped out</span></h6>

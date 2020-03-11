@@ -531,8 +531,8 @@
 
                 if (e.currentTarget.id === 'class' || e.currentTarget.id === 'lab' || e.currentTarget.id === 'equipment' || e.currentTarget.id === 'wash') {
                     var l = this.files.length;
-                    if ( l > 3 ) {
-                        $("#" + e.currentTarget.id + "_error").text('You Cannot Choose More than 3 Files');
+                    if ( l > 2 ) {
+                        $("#" + e.currentTarget.id + "_error").text('You Cannot Choose more than 2 Files');
                         $("#"+e.currentTarget.id).val('');
                     }
                 }

@@ -31,13 +31,14 @@
             </style>
     </head>
   <title>{{$centerCandidate->certi_no}}</title>
+
     <body>
-            <div style="position:relative;margin-left:30%">
-                    <img src="{{asset('assets/images/scpwd-logo.png')}}" alt="SCPwD" style="height:120px;width:300px;">
-            </div>
-            <div style="position:relative;margin-left:30%">
-                    {!! QrCode::size(300)->generate(route('assessment-qrdata',$centerCandidate->digital_key)); !!}     
-            </div>
+        <div style="text-align: center;">
+                <img src="{{asset('assets/images/scpwd-logo.png')}}" alt="SCPwD" style="height:120px;width:300px;">
+        </div>
+        <div style="text-align: center;">
+                {!! QrCode::size(300)->generate(route('assessment-qrdata',$centerCandidate->digital_key)); !!}     
+        </div>
         <div style="position:relative">
         <table id="customers">
             <tr>
