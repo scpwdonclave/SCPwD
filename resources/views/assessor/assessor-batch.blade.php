@@ -40,13 +40,8 @@
                                                     <td style="color:blue">Not Started Yet</td>
                                                     <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
                                                 @else
-                                                    @if (\Carbon\Carbon::parse($item->batch->assessment.' 23:59') < \Carbon\Carbon::now())
-                                                        <td style="color:green">Completed</td>
-                                                        <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
-                                                    @else
-                                                        <td style="color:blue">On Going</td>
-                                                        <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
-                                                    @endif
+                                                    <td style="color:green">Completed</td>
+                                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-mark',Crypt::encrypt($item->batch->id))}}" >Enter Marks</a></td>
                                                 @endif
                                                 <td><a class="badge bg-green margin-0" href="{{route('assessor.batch.view',Crypt::encrypt($item->batch->id.',1'))}}">View</a></td>
                                             </tr>
@@ -84,13 +79,8 @@
                                                 <td style="color:blue">Not Started Yet</td>
                                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
                                             @else
-                                                @if (\Carbon\Carbon::parse($reassBatch->assessment.' 23:59') < \Carbon\Carbon::now())
-                                                    <td style="color:green">Completed</td>
-                                                    <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-re-mark',Crypt::encrypt($reassBatch->id))}}" >Enter Marks</a></td>
-                                                @else
-                                                    <td style="color:blue">On Going</td>
-                                                    <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Enter Marks</a></td>  
-                                                @endif
+                                                <td style="color:green">Completed</td>
+                                                <td><a class="badge bg-green margin-0" href="{{route('assessor.as.batch.candidate-re-mark',Crypt::encrypt($reassBatch->id))}}" >Enter Marks</a></td>
                                             @endif
                                             <td><a class="badge bg-green margin-0" href="{{route('assessor.batch.view',Crypt::encrypt($reassBatch->id.',0'))}}">View</a></td>
                                         </tr>
