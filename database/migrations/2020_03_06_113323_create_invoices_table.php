@@ -20,6 +20,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('tc_id')->nullable();
             $table->unsignedBigInteger('scheme_id');
             $table->string('ref_no');
+            $table->string('other_ref_no')->nullable();
             $table->string('invoice_date');
             $table->boolean('re_assessment')->default(0);
 

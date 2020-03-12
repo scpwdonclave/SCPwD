@@ -122,13 +122,20 @@
                     @csrf
                     <div class="row d-flex justify-content-around">
                                 
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <label for="ref_no">Enter Ref No. <span style="color:red"> <strong>*</strong></span></label>
                             <div class="form-group form-float">
                                 <input type="text" class="form-control " placeholder="Enter Ref No" id="ref_no" name="ref_no"  required>
                             <input type="hidden" name="partner" value="{{$partner->id}}">
                             <input type="hidden" name="scheme" value="{{$scheme_sel->id}}">
                             <input type="hidden" name="center" value="{{$center->id}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="other_ref_no">Enter Other Ref No. <span style="color:red"> <strong>*</strong></span></label>
+                            <div class="form-group form-float">
+                                <input type="text" class="form-control " placeholder="Enter Other Ref No" id="other_ref_no" name="other_ref_no" >
+                           
                             </div>
                         </div>
                        
