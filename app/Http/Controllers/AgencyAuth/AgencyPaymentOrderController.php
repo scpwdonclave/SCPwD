@@ -12,6 +12,7 @@ use App\Batch;
 use App\Reassessment;
 use App\Helpers\AppHelper;
 use Auth;
+use Crypt;
 use DB;
 use Carbon\Carbon;
 
@@ -164,8 +165,11 @@ class AgencyPaymentOrderController extends Controller
                 }
             } 
             
-         }
-         alert()->success("Payment Order has Been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
+        }
+        $agencyID = $this->guard()->user()->aa_id;
+        AppHelper::instance()->writeNotification(NULL,'admin', 'Payment Order Submitted',"A Payment Order (ID: <span style='color:blue;'>$new_poid</span>) has Submitted by Agency (ID: <span style='color:blue;'>$agencyID</span>). Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>",route('admin.aa.payorder',Crypt::encrypt($p_order->id)));
+         
+        alert()->success("Payment Order has Been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
         return redirect()->route('agency.payment-order.tc-wise');
 
     }
@@ -256,6 +260,9 @@ class AgencyPaymentOrderController extends Controller
             $payment_order->save();
            
         }
+        $agencyID = $this->guard()->user()->aa_id;
+        AppHelper::instance()->writeNotification(NULL,'admin', 'Payment Order Submitted',"A Payment Order (ID: <span style='color:blue;'>$new_poid</span>) has Submitted by Agency (ID: <span style='color:blue;'>$agencyID</span>). Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>",route('admin.aa.payorder',Crypt::encrypt($p_order->id)));
+        
         alert()->success("Payment Order has Been Submitted for Review, Once <span style='color:blue'>Approved</span> or <span style='color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(5000);     
         return redirect()->back();
 
