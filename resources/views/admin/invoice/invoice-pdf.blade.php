@@ -90,7 +90,13 @@
                     </strong>
                 </span><br>
             <span style="font-size:15px;">
+                @if ($invoice->other_ref_no === null)
                 Other Reference(s): <strong>N/A</strong>
+                
+                @else
+            Other Reference(s): <strong>{{$invoice->other_ref_no}}</strong>
+                    
+                @endif
                 </span><br><br>
         </div>
    </div>

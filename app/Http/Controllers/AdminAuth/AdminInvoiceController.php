@@ -104,6 +104,7 @@ class AdminInvoiceController extends Controller
     }
 
     public function submitInvoice(Request $request){
+     
       $partnerJob=PartnerJobrole::where([['scheme_id','=',$request->scheme],['tp_id','=',$request->partner]])->get();
      
       $scheme_sel=Scheme::findOrFail($request->scheme);
@@ -138,6 +139,7 @@ class AdminInvoiceController extends Controller
       $invoice->tp_id=$request->partner;
       $invoice->scheme_id=$request->scheme;
       $invoice->ref_no=$request->ref_no;
+      $invoice->other_ref_no=$request->other_ref_no;
       $invoice->invoice_date=Carbon::now()->format('Y-m-d');
      
       $invoice->save();
@@ -204,7 +206,7 @@ class AdminInvoiceController extends Controller
     }
 
     public function allInvoice(){
-      $all_invoice=Invoice::all();
+      $all_invoice=Invoice::all(); 
       return view('admin.invoice.all-invoice')->with(compact('all_invoice'));
 
     }
@@ -311,6 +313,7 @@ class AdminInvoiceController extends Controller
       $invoice->tc_id=$request->center;
       $invoice->scheme_id=$request->scheme;
       $invoice->ref_no=$request->ref_no;
+      $invoice->other_ref_no=$request->other_ref_no;
       $invoice->invoice_date=Carbon::now()->format('Y-m-d');
       $invoice->re_assessment=1;
       $invoice->save();
