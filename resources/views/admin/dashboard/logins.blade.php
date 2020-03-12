@@ -37,7 +37,7 @@
                                             <td>{{$login->display_id}}</td>
                                             <td>{{$login->user_type}}</td>
                                             <td><span style="color:{{($login->event)?'blue':'red'}};font-weight:bold;">{{($login->event)?'Logged in':'Logged out'}}</span> from {{$login->ip_address}}</td>
-                                            <td>{{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y h:i:s')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y H:i:s')}}</td>
                                         </tr>
                                     @else
                                         @if ($login->user_type !== 'admin')
@@ -48,7 +48,7 @@
                                                 <td><span style="color:{{($login->event)?'blue':'red'}};font-weight:bold;">{{($login->event)?'Logged in':'Logged out'}}</span> from {{$login->ip_address}}</td>
                                                 <td>
                                                     <span style="display:none;">{{ \Carbon\Carbon::parse($login->created_at)->getTimestamp()}}</span>
-                                                    {{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y h:i:s a')}}
+                                                    {{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y H:i:s')}}
                                                 </td>
                                             </tr>
                                             @php

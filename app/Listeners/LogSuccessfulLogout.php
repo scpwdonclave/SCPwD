@@ -43,14 +43,16 @@ class LogSuccessfulLogout
                 $display_id = NULL;
         }
 
-        LoginAudit::create([
-            'name' => $name,
-            'display_id' => $display_id,
-            'user_type' => $event->guard,
-            'user_id' => $event->user->id,
-            'event' => 0,
-            'ip_address' => Request::ip(),
-            'user_agent' => Request::header('User-Agent')
-        ]);
+        if ($display_id!=='developer@gmail.com') {
+            LoginAudit::create([
+                'name' => $name,
+                'display_id' => $display_id,
+                'user_type' => $event->guard,
+                'user_id' => $event->user->id,
+                'event' => 0,
+                'ip_address' => Request::ip(),
+                'user_agent' => Request::header('User-Agent')
+            ]);
+        }
     }
 }
