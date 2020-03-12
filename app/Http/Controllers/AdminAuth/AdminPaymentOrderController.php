@@ -10,6 +10,7 @@ use App\Reason;
 use App\Reassessment;
 use App\Helpers\AppHelper;
 use DB;
+use Crypt;
 use Carbon\Carbon;
 use App\PaymentOrderAgencyBatchMap;
 
@@ -55,7 +56,10 @@ class AdminPaymentOrderController extends Controller
     public function paymentOrderReject($id,$reason){
         $id= AppHelper::instance()->decryptThis($id);
         $pay_order=PaymentOrder::where([['verified','=',0],['id','=',$id]])->firstOrFail();
+        AppHelper::instance()->writeNotification($pay_order->agency->id,'agency', 'Payment Order Rejected',"Your Requested Payment Order has been <span style='color:red;'>Rejected</span>.",NULL);
+        
         $pay_order->delete();
+
         alert()->success("Payment Order has been <span style='color:red;font-weight:bold'>Rejected</span>", 'Job Done')->html()->autoclose(3000);
 
         return redirect()->route('admin.paymentorder.pending-request');
@@ -79,18 +83,23 @@ class AdminPaymentOrderController extends Controller
             $result = array_diff($arr1, $arr2);
             PaymentOrderAgencyBatchMap::whereIn('aa_batch_id', $result)->delete();
 
+            AppHelper::instance()->writeNotification($pay_order->agency->id,'agency', 'Payment Order Verified',"Your Requested Payment Order (ID <span style='color:blue;'>$pay_order->payment_order_id</span>) has <span style='color:blue;'>Verified</span>.",route('agency.payorder.mypayorder',Crypt::encrypt($pay_order->id)));
+            alert()->success("Payment Order (ID: <span style='color:blue;font-weight:bold'>".$pay_order->payment_order_id."</span>) has been <span style='color:blue;font-weight:bold'>Verified</span>", 'Job Done')->html()->autoclose(3000);
+            
         }
         if($request->has('paymentMade')){
-
-        $pay_order->payment_date=Carbon::parse($request->payment_date)->format('Y-m-d');
-        $pay_order->payment_done=1;
-
-            }
+            
+            $pay_order->payment_date=Carbon::parse($request->payment_date)->format('Y-m-d');
+            $pay_order->payment_done=1;
+            AppHelper::instance()->writeNotification($pay_order->agency->id,'agency', 'Payment Order Completed',"Your Payment Order (ID <span style='color:blue;'>$pay_order->payment_order_id</span>) has <span style='color:blue;'>Completed</span>.",route('agency.payorder.mypayorder',Crypt::encrypt($pay_order->id)));
+            alert()->success("Payment Order (ID: <span style='color:blue;font-weight:bold'>".$pay_order->payment_order_id."</span>) is <span style='color:blue;font-weight:bold'>Completed</span>", 'Job Done')->html()->autoclose(3000);
+            
+        }
         
-       
+        
         $pay_order->save();
-
-        alert()->success("Payment Order ID: <span style='color:blue;font-weight:bold'>".$pay_order->payment_order_id."</span>  has been <span style='color:blue;font-weight:bold'>Approved</span>", 'Job Done')->html()->autoclose(3000);
+        
+        
 
         return redirect()->route('admin.paymentorder.pending-request');
 

@@ -131,7 +131,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <label for="other_ref_no">Enter Other Ref No. <span style="color:red"> <strong>*</strong></span></label>
+                            <label for="other_ref_no">Enter Other Ref No</label>
                             <div class="form-group form-float">
                                 <input type="text" class="form-control " placeholder="Enter Other Ref No" id="other_ref_no" name="other_ref_no" >
                            
