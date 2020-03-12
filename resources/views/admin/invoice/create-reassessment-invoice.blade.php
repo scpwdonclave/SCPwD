@@ -76,7 +76,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable">
                             <thead>
                                 <tr>
                                     <th>#</th>							
@@ -106,6 +106,11 @@
                                 <tr>
                                     <td colspan="5" class="text-right"><strong>TOTAL AMOUNT</strong></td>
                                     <td><strong>&#8377; {{$total_candidate*1000}}</strong></td>
+                                </tr>
+                                @else 
+                                <tr>
+                                    <td colspan="6" class="text-center"><strong>No Record Found</strong></td>
+
                                 </tr>
                                 @endif
                             </tbody>

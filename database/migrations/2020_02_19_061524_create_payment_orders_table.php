@@ -19,6 +19,7 @@ class CreatePaymentOrdersTable extends Migration
             $table->string('payment_order_id')->nullable();
             $table->string('ref_no')->nullable();
             $table->string('po_date');
+
             $table->string('verification_date')->nullable();
             $table->string('payment_date')->nullable();
             $table->boolean('verified')->default(0);

@@ -125,8 +125,18 @@ class AgencyPaymentOrderController extends Controller
                    
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
-                    $payment_order->total_candidate=$value->batch->batchassessment->candidateMarks->count();
-                    $payment_order->amount=$value->batch->batchassessment->candidateMarks->count()*500;
+                    if ($value->batch->scheme->invoice_on===1){
+                        $payment_order->total_candidate=$value->batch->batchassessment->candidateMarks->count();
+                        $payment_order->amount=$value->batch->batchassessment->candidateMarks->count()*500;
+                        $payment_order->po_on=1;
+                        
+                    }else{
+                        $payment_order->total_candidate=$value->batch->batchassessment->candidateMarks->where('attendence','=','present')->count();
+                        $payment_order->amount=$value->batch->batchassessment->candidateMarks->where('attendence','=','present')->count()*500;
+                        $payment_order->po_on=0;
+
+                    }
+
                     $payment_order->save();
                     
                 }
@@ -135,8 +145,19 @@ class AgencyPaymentOrderController extends Controller
                 if(($value->reassessment->assessment < Carbon::now()->format('Y-m-d'))  && $value->reassessment->tc_id == $request->center_id){
                     $payment_order->po_id=$p_order->id;
                     $payment_order->aa_batch_id=$value->id;
-                    $payment_order->total_candidate=$value->reassessment->candidates->count();
-                    $payment_order->amount=$value->reassessment->candidates->count()*500;
+                    if ($value->batch->scheme->invoice_on===1){
+                        $payment_order->total_candidate=$value->reassessment->batchreassessment->candidateMarks->count();
+                        $payment_order->amount=$value->reassessment->batchreassessment->candidateMarks->count()*500;
+                        $payment_order->po_on=1;
+
+                        
+                    }else{
+                        $payment_order->total_candidate=$value->reassessment->batchreassessment->candidateMarks->where('attendence','=','present')->count();
+                        $payment_order->amount=$value->reassessment->batchreassessment->candidateMarks->where('attendence','=','present')->count()*500;
+                        $payment_order->po_on=0;
+
+                    }
+                    
                     $payment_order->save();
 
     
@@ -251,7 +272,9 @@ class AgencyPaymentOrderController extends Controller
         $id= AppHelper::instance()->decryptThis($id);
         // PaymentOrder::where('postal', $postal)->firstOrFail();
          $pay_order=PaymentOrder::where([['aa_id','=',$this->guard()->user()->id],['id','=',$id]])->firstOrFail();
+        
          return view('agency.view-my-payorder')->with(compact('pay_order'));
+         
     }
 
 }

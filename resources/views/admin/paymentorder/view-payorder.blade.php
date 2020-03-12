@@ -175,6 +175,7 @@
                                         <th>Assessment Date</th>
                                         <th>Total candidate</th>
                                         <th>Amount</th>
+                                        <th>Order On</th>
                                         <th>View Candidate</th>
                                         </tr>
                                 </thead>
@@ -195,6 +196,13 @@
                                         <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->batch->assessment)->format('d-m-Y')}}</td>
                                         <td>{{$payorder->total_candidate}}</td>
                                         <td>{{$payorder->amount}}</td>
+                                        @if ($payorder->po_on===1)
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                            
+                                        @else
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                            
+                                        @endif
                                         
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
 
@@ -206,6 +214,13 @@
                                         <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->reassessment->assessment)->format('d-m-Y')}}</td>   
                                         <td>{{$payorder->total_candidate}}</td>
                                         <td>{{$payorder->amount}}</td>
+                                        @if ($payorder->po_on===1)
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                            
+                                        @else
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                            
+                                        @endif
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.batch.reass-bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->reass_id)])}}" >View Candidate</a></td>
                                         @endif
                                     </tr>

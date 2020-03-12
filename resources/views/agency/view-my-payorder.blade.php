@@ -21,6 +21,7 @@
                         <div class="text-center">
                             <h6>
                                 PAYMENT ORDER: <span style='color:blue'>{{$pay_order->payment_order_id}}</span> <br> <br>
+                                REFERENCE NO: <span style='color:blue'>{{$pay_order->ref_no}}</span> <br> <br>
                                 
                             </h6>
                         </div>
@@ -94,6 +95,7 @@
                                         <th>Assessment Date</th>
                                         <th>Total Candidate</th>
                                         <th>Amount</th>
+                                        <th>Order On</th>
                                         <th>View Candidate</th>
                                         </tr>
                                 </thead>
@@ -110,6 +112,13 @@
                                         <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->batch->assessment)->format('d-m-Y')}}</td>
                                         <td>{{$payorder->total_candidate}}</td>
                                         <td>{{$payorder->amount}}</td>
+                                        @if ($payorder->po_on===1)
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                            
+                                        @else
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                            
+                                        @endif
                                         
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
 
@@ -121,6 +130,13 @@
                                         <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->reassessment->assessment)->format('d-m-Y')}}</td>   
                                         <td>{{$payorder->total_candidate}}</td>
                                         <td>{{$payorder->amount}}</td>
+                                        @if ($payorder->po_on===1)
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                            
+                                        @else
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                            
+                                        @endif
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.reass-bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->reass_id)])}}" >View Candidate</a></td>
                                         @endif
                                     </tr>
@@ -137,7 +153,7 @@
 </div>
 @stop
 @section('page-script')
-<script>
+{{-- <script>
 
     function popupReject(id) {
 
@@ -173,7 +189,7 @@
             }
         });
     }
-</script>
+</script> --}}
 
 {{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>

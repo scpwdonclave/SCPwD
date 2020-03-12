@@ -158,6 +158,7 @@
                                         <th>Assessment Date</th>
                                         <th>Total Candidate</th>
                                         <th>Amount</th>
+                                        <th>Order On</th>
                                         <th>View Candidate</th>
                                         </tr>
                                 </thead>
@@ -173,26 +174,47 @@
                                         <td>Assessment</td>
                                         <td>{{\Carbon\Carbon::parse($aa_batch->batch->assessment)->format('d-m-Y')}}</td>
                                         @if (!is_null($aa_batch->batch->batchassessment))
+                                        @if ($aa_batch->batch->scheme->invoice_on===1)
+                                            
                                         <td>{{$aa_batch->batch->batchassessment->candidateMarks->count()}}</td>
                                         <td>{{$aa_batch->batch->batchassessment->candidateMarks->count()*500}}</td>
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                        @else
+                                        <td>{{$aa_batch->batch->batchassessment->candidateMarks->where('attendence','=','present')->count()}}</td>
+                                        <td>{{$aa_batch->batch->batchassessment->candidateMarks->where('attendence','=','present')->count()*500}}</td>  
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                        
+                                        @endif
                                         @else
                                           <td>0</td>  
                                           <td>0</td>  
+                                          <td>N/A</td>  
                                         @endif
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.bt-candidate',['id'=>Crypt::encrypt($aa_batch->bt_id)])}}" >View Candidate</a></td>
 
-                                        @elseif(!is_null($aa_batch->reassessment))
+                                        @elseif(!is_null($aa_batch->reassessment->batchreassessment))
                                         <td>{{$aa_batch->reassessment->batch->batch_id}}</td>
                                         <td>{{$aa_batch->reassessment->batch->jobrole->job_role}}</td>
                                         <td>Re-Assessment</td>
                                         <td>{{\Carbon\Carbon::parse($aa_batch->reassessment->assessment)->format('d-m-Y')}}</td>
-                                        @if (!is_null($aa_batch->reassessment))
+                                        @if (!is_null($aa_batch->reassessment->batchreassessment))
+                                        @if ($aa_batch->batch->scheme->invoice_on===1)
                                             
-                                        <td>{{$aa_batch->reassessment->candidates->count()}}</td>
-                                        <td>{{$aa_batch->reassessment->candidates->count()*500}}</td>
+                                        <td>{{$aa_batch->reassessment->batchreassessment->candidateMarks->count()}}</td>
+                                        <td>{{$aa_batch->reassessment->batchreassessment->candidateMarks->count()*500}}</td>
+                                        <td style="color:blue">Count Made on Assigned</td>
+                                        @else
+                                        <td>{{$aa_batch->reassessment->batchreassessment->candidateMarks->where('attendence','=','present')->count()}}</td>
+                                        <td>{{$aa_batch->reassessment->batchreassessment->candidateMarks->where('attendence','=','present')->count()*500}}</td>
+                                          
+                                        <td style="color:blue">Count Made on Appeared</td>
+                                        
+                                        @endif   
+                                        
                                         @else
                                           <td>0</td>  
                                           <td>0</td>  
+                                          <td>N/A</td>  
                                         @endif   
                                         <td><a class="badge bg-green margin-0" href="{{route('agency.batch.reass-bt-candidate',['id'=>Crypt::encrypt($aa_batch->reass_id)])}}" >View Candidate</a></td>
                                         @endif

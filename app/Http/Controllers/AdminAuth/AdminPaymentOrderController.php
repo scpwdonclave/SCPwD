@@ -22,7 +22,7 @@ class AdminPaymentOrderController extends Controller
 
     public function pendingPayOrderRequest(){
 
-        $pay_order=PaymentOrder::where('verified',0)->get();
+        $pay_order=PaymentOrder::where('payment_done',0)->get();
         return view('admin.paymentorder.pay_order_pending')->with(compact('pay_order'));
     }
     public function viewPayOrder($id){
@@ -33,7 +33,7 @@ class AdminPaymentOrderController extends Controller
     }
 
     public function closedPayOrderRequest(){
-        $pay_order=PaymentOrder::where('verified',1)->get();
+        $pay_order=PaymentOrder::where('payment_done',1)->get();
         return view('admin.paymentorder.pay_order_closed')->with(compact('pay_order'));
     }
 
