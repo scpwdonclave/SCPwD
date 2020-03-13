@@ -93,14 +93,6 @@ class PartnerHomeController extends Controller
         }
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     public function index() {
 
         $partner = $this->guard()->user();
@@ -160,7 +152,7 @@ class PartnerHomeController extends Controller
     }
 
     public function viewjobrole($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $partner_job = PartnerJobrole::where('tp_id',$this->guard()->user()->id)->findOrFail($id);
             $data = [
                 'partner' => $this->guard()->user(),

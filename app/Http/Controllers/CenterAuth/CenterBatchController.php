@@ -26,14 +26,6 @@ class CenterBatchController extends Controller
         return Auth::guard('center');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     protected function batchHasFailedorAbsentCandidate($batchData){
         $reassess_button = false;
         if ($batchData->status) {
@@ -97,7 +89,7 @@ class CenterBatchController extends Controller
     }
     
     public function viewBatch($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
             
             // * Making Sure This Batch Belongs to The Current Center
@@ -105,18 +97,6 @@ class CenterBatchController extends Controller
                 
                 // * $reassess_button will Ensures Batch has Failed or Absent Candidates during Assessment or ReAssessments
                 $reassess_button = $this->batchHasFailedorAbsentCandidate($batchData);
-                // $reass_completed = false;
-
-                // if ($batchData->batchreassessmentlatest) {
-                //     if ($batchData->batchreassessmentlatest->sup_admin_verified) {
-                //         $reass_completed = true;
-                //     } else {
-                //         $reass_completed = false;
-                //     }
-                // } else {
-                //     $reass_completed = false;
-                // }
-                
     
                 if ($batchData->center->id==$this->guard()->user()->id) {
                     return view('common.view-batch')->with(compact('batchData','reassess_button'));

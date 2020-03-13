@@ -37,15 +37,7 @@ class AdminCenterController extends Controller
     {
         return Auth::guard('admin');
     }
-
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
+    
     public function centers(){ 
 
         $data=Center::where('verified',1)->get();
@@ -59,7 +51,7 @@ class AdminCenterController extends Controller
 
     public function centerView($id){
 
-        if ($id = $this->decryptThis($id)) {
+        if ($id = AppHelper::instance()->decryptThis($id)) {
             $centerData=Center::findOrFail($id);
             $state_district=DB::table('centers AS c')
             ->join('state_district AS s','c.state_district','=','s.id')
@@ -75,7 +67,7 @@ class AdminCenterController extends Controller
 
     public function centerAction(Request $request)
     {
-        if ($id=$this->decryptThis($request->id)) {
+        if ($idAppHelper::instance()->decryptThis($request->id)) {
             $center = Center::findOrFail($id);
             if ($center->verified) {
                 alert()->info('Training Center Already has been Approved', 'Attention')->autoclose(3000);
@@ -161,7 +153,7 @@ class AdminCenterController extends Controller
 
     
     public function centerEdit($id){
-        if ($id = $this->decryptThis($id)) {
+        if ($id = AppHelper::instance()->decryptThis($id)) {
             $data = [
                 'center'=>Center::findOrFail($id),
                 'states'=>DB::table('state_district')->get(),
@@ -295,7 +287,7 @@ class AdminCenterController extends Controller
     public function centerStatusAction(Request $request){
         if ($request->has('data')) {
 
-            if ($id=$this->decryptThis($request->data)) {
+            if ($id=AppHelper::instance()->decryptThis($request->data)) {
                 $data = explode(',',$id);
                 $center = Center::find($data[0]);
 
@@ -382,7 +374,7 @@ class AdminCenterController extends Controller
     }
 
     public function view_candidate($id){
-        if ($id = $this->decryptThis($id)) {
+        if ($id = AppHelper::instance()->decryptThis($id)) {
             $center_candidate = CenterCandidateMap::findOrFail($id);
             $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
             return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
@@ -393,7 +385,7 @@ class AdminCenterController extends Controller
     {
         if ($request->has('data')) {
 
-            if ($id=$this->decryptThis($request->data)) {
+            if ($id = AppHelper::instance()->decryptThis($request->data)) {
                 $data = explode(',',$id);
                 $candidate = Candidate::find($data[0]);
 

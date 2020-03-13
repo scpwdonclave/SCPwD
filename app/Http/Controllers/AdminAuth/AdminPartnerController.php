@@ -38,15 +38,6 @@ class AdminPartnerController extends Controller
         return Auth::guard('admin');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
-
     public function partners(){
         $data=Partner::where('pending_verify',0)->get();
         return view('admin.partners.partners')->with(compact('data'));
@@ -67,7 +58,7 @@ class AdminPartnerController extends Controller
     public function partnerStatusAction(Request $request){
         if ($request->has('data')) {
 
-            if ($id=$this->decryptThis($request->data)) {
+            if ($id=AppHelper::instance()->decryptThis($request->data)) {
                 $data = explode(',',$id);
                 $partner = Partner::find($data[0]);
 
@@ -163,7 +154,7 @@ class AdminPartnerController extends Controller
     // * Training Partner View with ID
     
     public function partnerView($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $partnerData=Partner::findOrFail($id); 
             $partnerState=DB::table('partners')
             ->join('state_district','partners.state_district','=','state_district.id')
@@ -202,7 +193,7 @@ class AdminPartnerController extends Controller
     // * Training Partner Accept Reject
     
     public function partnerAction(Request $request){
-        if ($req=$this->decryptThis($request->id)) {
+        if ($req=AppHelper::instance()->decryptThis($request->id)) {
             $data = explode(',',$req);
             $partner = Partner::findOrFail($data[0]);
             if ($partner->pending_verify) {
@@ -396,7 +387,7 @@ class AdminPartnerController extends Controller
     // * View Partner Target Page
     
     public function partnerTargetView($id){        
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $data = [
                 'partner' => Partner::findOrFail($id),
                 'sectors' => Sector::all(),
@@ -495,7 +486,7 @@ class AdminPartnerController extends Controller
         
         if ($request->has('data')) {
 
-            if ($id=$this->decryptThis($request->data)) {
+            if ($id=AppHelper::instance()->decryptThis($request->data)) {
                 $data = explode(',',$id);
                 $partnerJob = PartnerJobrole::where([['tp_id',$data[0]],['scheme_id',$data[1]]])->get();
                 if ($partnerJob[0]->scheme->status) {

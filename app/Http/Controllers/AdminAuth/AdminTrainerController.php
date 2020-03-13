@@ -31,14 +31,6 @@ class AdminTrainerController extends Controller
         return Auth::guard('admin');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     protected function updateTrainerStatus($trainer,$for,$request,$id){
         
         $dataMail = collect();
@@ -107,7 +99,7 @@ class AdminTrainerController extends Controller
     }
 
     public function trainerView($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $data = [
                 'trainerData' => Trainer::findOrFail($id),
                 'trainerdoc' => TrainerJobRole::where('tr_id',$id)->get(),
@@ -116,7 +108,7 @@ class AdminTrainerController extends Controller
         }
     }
     public function dlinkTrainerView($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $trainerData=TrainerStatus::findOrFail($id);
             $trainerdoc=TrainerJobRole::where('tr_id',$trainerData->prv_id)->get();
             $delinked = true;
@@ -128,7 +120,7 @@ class AdminTrainerController extends Controller
     
     public function trainerAction(Request $request)
     {
-        if ($req=$this->decryptThis($request->id)) {
+        if ($req=AppHelper::instance()->decryptThis($request->id)) {
             $data = explode(',',$req);
             $trainer = Trainer::findOrFail($data[0]);
             if (!$trainer->verify) {
@@ -247,7 +239,7 @@ class AdminTrainerController extends Controller
         if ($request->has('data')) {
             $data = explode(',',$request->data);
             
-            if ($id=$this->decryptThis($data[0])) {
+            if ($id=AppHelper::instance()->decryptThis($data[0])) {
                 
                 if ($data[2]) {
                     // * Request for Trainers Table
@@ -321,7 +313,7 @@ class AdminTrainerController extends Controller
     
     
     public function trainerEdit($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $trainer=Trainer::findOrFail($id);
             return view('admin.trainers.trainer-edit')->with(compact('trainer'));            
         }

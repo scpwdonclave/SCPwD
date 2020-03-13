@@ -2,16 +2,17 @@
 
 namespace App\Jobs;
 
-use Illuminate\Contracts\Encryption\DecryptException;
+use DB;
+use Crypt;
+use App\Scheme;
+use App\Helpers\AppHelper;
+use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Request;
-use App\Scheme;
-use Crypt;
-use DB;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 
 class UpdateScheme implements ShouldQueue
@@ -26,14 +27,6 @@ class UpdateScheme implements ShouldQueue
     public function __construct()
     {
         //
-    }
-
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return response()->json(array('type' => 'error', 'message' => "Something went Wrong"),400);
-        }
     }
     /**
      * Execute the job.
@@ -63,7 +56,7 @@ class UpdateScheme implements ShouldQueue
             $request->validate([
                 'id' => 'required',
             ]);
-            if ($id=$this->decryptThis($request->id)) {
+            if ($id=AppHelper::instance()->decryptThis($request->id)) {
                 $scheme = Scheme::find($id);
                 if ($scheme) {
     

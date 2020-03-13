@@ -31,14 +31,6 @@ class AssessorBatchController extends Controller
     {
         return Auth::guard('assessor');
     }
-    
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
 
     public function batches(){
 
@@ -130,13 +122,15 @@ class AssessorBatchController extends Controller
 
     public function candidateMarks($id){
         
-        $id= $this->decryptThis($id);
-        $batch=Batch::findOrFail($id);
-        
-        if(!$batch->status || !$batch->tpjobrole->status || Carbon::now() < Carbon::parse($batch->assessment) || !is_null($batch->batchassessment)){
-            abort(404);
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $batch=Batch::findOrFail($id);
+            
+            if(!$batch->status || !$batch->tpjobrole->status || Carbon::now() < Carbon::parse($batch->assessment) || !is_null($batch->batchassessment)){
+                abort(404);
+            }
+            return view('assessor.candidate-marks')->with(compact('batch')); 
+            
         }
-        return view('assessor.candidate-marks')->with(compact('batch')); 
     }
 
 
@@ -278,31 +272,28 @@ class AssessorBatchController extends Controller
     }
 
     public function editAssessment($id){
-        $id= $this->decryptThis($id);
-        $assessment=BatchAssessment::findOrFail($id);
-        if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
-            $type=Crypt::encrypt('1');
-            return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
-
-        }else{
-            abort(404);
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $assessment=BatchAssessment::findOrFail($id);
+            if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
+                $type=Crypt::encrypt('1');
+                return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
+                
+            }else{
+                abort(404);
+            }
         }
-
+            
     }
     public function editReAssessment($id){
-        $id= $this->decryptThis($id);
-        $assessment=BatchReAssessment::findOrFail($id);
-        if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
-            $type=Crypt::encrypt('0');
-
-            // return $type;
-            // return AppHelper::instance()->decryptThis($type);
-            return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
-
-        }else{
-            abort(404);
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $assessment=BatchReAssessment::findOrFail($id);
+            if ($assessment->aa_verified==2 || $assessment->admin_verified==2 || $assessment->sup_admin_verified==2){
+                $type=Crypt::encrypt('0');
+                return view('assessor.candidate-marks-edit')->with(compact('assessment','type'));
+            }else{
+                abort(404);
+            }
         }
-
     }
 
 

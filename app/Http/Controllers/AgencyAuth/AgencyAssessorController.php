@@ -35,14 +35,6 @@ class AgencyAssessorController extends Controller
         return Auth::guard('agency');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     protected function partnerstatus($batch){
         if ($batch->partner->status && $batch->tpjobrole->status) {
             return true;
@@ -164,23 +156,24 @@ class AgencyAssessorController extends Controller
     }
 
     public function assessorView($id){
-        $id=$this->decryptThis($id);
-        $assessorData=Assessor::findOrFail($id);
-        if($assessorData->aa_id != $this->guard()->user()->id){
-            abort(404);
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $assessorData=Assessor::findOrFail($id);
+            if($assessorData->aa_id != $this->guard()->user()->id){
+                abort(404);
+            }
+            $assessorState=DB::table('assessors')
+            ->join('state_district','assessors.state_district','=','state_district.id')
+            ->join('parliament','assessors.parliament','=','parliament.id')
+            ->first();
+            $language=DB::table('assessor_languages')
+            ->join('language','language.id','=','assessor_languages.language_id')
+            ->where('assessor_languages.as_id',$id)->get();
+            return view('common.view-assessor')->with(compact('assessorData','language','assessorState'));
         }
-        $assessorState=DB::table('assessors')
-        ->join('state_district','assessors.state_district','=','state_district.id')
-        ->join('parliament','assessors.parliament','=','parliament.id')
-        ->first();
-        $language=DB::table('assessor_languages')
-         ->join('language','language.id','=','assessor_languages.language_id')
-         ->where('assessor_languages.as_id',$id)->get();
-        return view('common.view-assessor')->with(compact('assessorData','language','assessorState'));
     }
 
     public function viewBatch($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
             return view('common.view-batch')->with(compact('batchData'));
         }
@@ -216,14 +209,13 @@ class AgencyAssessorController extends Controller
 
 
     public function assessorBatch($id){
-        $id=$this->decryptThis($id);
-        $assessor=Assessor::findOrFail($id);
-        if(!$assessor->status || !$assessor->verified || $assessor->aa_id != $this->guard()->user()->id){
-            abort(404);
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $assessor=Assessor::findOrFail($id);
+            if(!$assessor->status || !$assessor->verified || $assessor->aa_id != $this->guard()->user()->id){
+                abort(404);
+            }
+            return view('agency.assessor-batch')->with(compact('assessor'));
         }
-        return view('agency.assessor-batch')->with(compact('assessor'));
-
-
     }
 
     public function assessorFetchBatch(Request $request){

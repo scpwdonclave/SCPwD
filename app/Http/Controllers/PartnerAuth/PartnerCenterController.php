@@ -32,14 +32,6 @@ class PartnerCenterController extends Controller
         return Auth::guard('partner');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     public function centers(){
 
         $partner = $this->guard()->user();
@@ -47,7 +39,7 @@ class PartnerCenterController extends Controller
     }
 
     public function viewcenter($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $data = [
                 'partner' => $this->guard()->user(),
                 'centerData' => Center::findOrFail($id),
@@ -342,23 +334,7 @@ class PartnerCenterController extends Controller
     }
 
     public function view_candidate($id){
-        if ($id=$this->decryptThis($id)) {
-            // $candidate = Candidate::findOrFail($id);
-            // if ($candidate->centerlatest->center->partner->id == $this->guard()->user()->id) {
-            //     $partner = $this->guard()->user();
-            //     $state_dist = DB::table('state_district')->where('id',$candidate->centerlatest->state_district)->first();
-            //     $center_candidate = $candidate->centerlatest;
-            //     return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
-            // } else {
-            //     return abort(404);
-            // }
-
-            // $center_candidate = CenterCandidateMap::where([['cd_id',$id],['tc_id', $this->guard()->user()->center->id]])->get()->last();
-            // $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
-            
-            // return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
-
-
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $partner = $this->guard()->user();
             $center_candidate = CenterCandidateMap::findOrFail($id);
             $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();

@@ -29,14 +29,6 @@ class AdminBatchController extends Controller
         return Auth::guard('admin');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     protected function getHolidays(){
         $hds = Holiday::all();
         $holidays = [];
@@ -108,7 +100,7 @@ class AdminBatchController extends Controller
         return view('admin.batches.pending-batches')->with(compact('data')); 
     }
     public function viewBatch($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             
             $batchData=Batch::findOrFail($id);
             return view('common.view-batch')->with(compact('batchData'));
@@ -117,7 +109,7 @@ class AdminBatchController extends Controller
 
 
     public function batchAction(Request $request){
-        if ($id=$this->decryptThis($request->id)) {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
             $data=Batch::findOrFail($id);
             $scheme=$data->scheme->scheme;
             $sch_len=4+strlen($scheme)+1+1;
@@ -207,7 +199,7 @@ class AdminBatchController extends Controller
     }
 
     public function batchUpdateAction(Request $request){
-        if ($id=$this->decryptThis($request->id)) {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
             $batchupdate = BatchUpdate::findOrFail($id);
             $dataMail = collect();
             $dataMail->tag = 'btupdateacceptreject';

@@ -34,14 +34,6 @@ class AdminAssessmentController extends Controller
         
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     public function allAssessment(){
         $agencyBatch=AgencyBatch::all();
 
@@ -54,9 +46,10 @@ class AdminAssessmentController extends Controller
         return view('admin.assessment.pending-assessment')->with(compact('agencyBatch'));
     }
     public function viewAssessment($id){
-        $id= $this->decryptThis($id);
-        $batchAssessment=BatchAssessment::findOrFail($id);
-        return view('common.view-assessment')->with(compact('batchAssessment'));
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $batchAssessment=BatchAssessment::findOrFail($id);
+            return view('common.view-assessment')->with(compact('batchAssessment'));
+        }
     }
 
     public function assessmentApproveReject(Request $request)

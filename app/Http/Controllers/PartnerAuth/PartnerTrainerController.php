@@ -36,14 +36,6 @@ class PartnerTrainerController extends Controller
         return Auth::guard('partner');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     public function trainers(){
         $partner = $this->guard()->user();
         $trainers = Trainer::where('tp_id', $partner->id)->get();
@@ -276,7 +268,7 @@ class PartnerTrainerController extends Controller
     }
 
     public function viewtrainer($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $trainer = Trainer::findOrFail($id);
             if ($this->guard()->user()->id === $trainer->partner->id) {
                 $data = [

@@ -39,14 +39,6 @@ class PartnerBatchController extends Controller
         return Auth::guard('partner');
     }
 
-    protected function decryptThis($id){
-        try {
-            return Crypt::decrypt($id);
-        } catch (DecryptException $e) {
-            return abort(404);
-        }
-    }
-
     protected function getHolidays(){
         $hds = Holiday::all();
         $holidays = [];
@@ -130,7 +122,7 @@ class PartnerBatchController extends Controller
     }
 
     public function viewBatch($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $batchData=Batch::findOrFail($id);
             if ($batchData->partner->id==$this->guard()->user()->id) {
                 $partner = $this->guard()->user();
@@ -142,7 +134,7 @@ class PartnerBatchController extends Controller
     }
 
     public function editBatch($id){
-        if ($id=$this->decryptThis($id)) {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
             $batchData = Batch::where([['id', $id],['tp_id', $this->guard()->user()->id],['status', 1],['verified', 1]])->first();
             if ($batchData) {
     
