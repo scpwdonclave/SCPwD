@@ -38,9 +38,9 @@
                 <div class="body">
                                           
                     <div class="progress m-b-20">
-                        <div class="progress-bar progress-bar-success" style="width: {{100*$passed/($passed+$absent+$failed)}}%"></div>
-                        <div class="progress-bar progress-bar-danger" style="width: {{100*$failed/($passed+$absent+$failed)}}%"></div>
-                        <div class="progress-bar progress-bar-warning" style="width: {{100*$absent/($passed+$absent+$failed)}}%"></div>
+                        <div class="progress-bar progress-bar-success" style="width: {{($passed+$absent+$failed)?(100*$passed/($passed+$absent+$failed)):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-danger" style="width: {{($passed+$absent+$failed)?(100*$failed/($passed+$absent+$failed)):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-warning" style="width: {{($passed+$absent+$failed)?(100*$absent/($passed+$absent+$failed)):'0'}}%"></div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover m-b-0">
@@ -49,19 +49,19 @@
                                     <th><i class="zmdi zmdi-circle text-success"></i></th>
                                     <td>Passed</td>
                                     <td><span>{{$passed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$passed/($passed+$absent+$failed),2)}}%</td>
+                                    <td>{{($passed+$absent+$failed)?(round(100*$passed/($passed+$absent+$failed),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-danger"></i></th>
                                     <td>Failed</td>
                                     <td><span>{{$failed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$failed/($passed+$absent+$failed),2)}}%</td>
+                                    <td>{{($passed+$absent+$failed)?(round(100*$failed/($passed+$absent+$failed),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-warning"></i></th>
                                     <td>Absent</td>
                                     <td><span>{{$absent}} Candidate(s)</span></td>
-                                    <td>{{round(100*$absent/($passed+$absent+$failed),2)}}%</td>
+                                    <td>{{($passed+$absent+$failed)?(round(100*$absent/($passed+$absent+$failed),2)):'0'}}%</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -63,11 +63,11 @@
                 <div class="body">
                                           
                     <div class="progress m-b-20">
-                        <div class="progress-bar progress-bar-success" style="width: {{100*$passed/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-danger" style="width: {{100*$failed/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-warning" style="width: {{100*$absent/$candidate}}%"></div>
-                        <div class="progress-bar progress-bar-info" style="width: {{100*$dropped/$candidate}}%"></div>
-                        <div class="progress-bar l-slategray" style="width: {{100*$registered/$candidate}}%"></div>
+                        <div class="progress-bar progress-bar-success" style="width: {{$candidate?(100*$passed/$candidate):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-danger" style="width: {{$candidate?(100*$failed/$candidate):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-warning" style="width: {{$candidate?(100*$absent/$candidate):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-info" style="width: {{$candidate?(100*$dropped/$candidate):'0'}}%"></div>
+                        <div class="progress-bar l-slategray" style="width: {{$candidate?(100*$registered/$candidate):'0'}}%"></div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover m-b-0">
@@ -76,31 +76,31 @@
                                     <th><i class="zmdi zmdi-circle text-success"></i></th>
                                     <td>Passed</td>
                                     <td><span>{{$passed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$passed/$candidate,2)}}%</td>
+                                    <td>{{$candidate?(round(100*$passed/$candidate,2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-danger"></i></th>
                                     <td>Failed</td>
                                     <td><span>{{$failed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$failed/$candidate,2)}}%</td>
+                                    <td>{{$candidate?(round(100*$failed/$candidate,2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-warning"></i></th>
                                     <td>Absent</td>
                                     <td><span>{{$absent}} Candidate(s)</span></td>
-                                    <td>{{round(100*$absent/$candidate,2)}}%</td>
+                                    <td>{{$candidate?(round(100*$absent/$candidate,2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-info"></i></th>
                                     <td>Dropped out</td>
                                     <td><span>{{$dropped}} Candidate(s)</span></td>
-                                    <td>{{round(100*$dropped/$candidate,2)}}%</td>
+                                    <td>{{$candidate?(round(100*$dropped/$candidate,2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-l-slategray"></i></th>
                                     <td>Newly Registered</td>
                                     <td><span>{{$registered}} Candidate(s)</span></td>
-                                    <td>{{round(100*$registered/$candidate,2)}}%</td>
+                                    <td>{{$candidate?(round(100*$registered/$candidate,2)):'0'}}%</td>
                                 </tr>
                             </tbody>
                         </table>

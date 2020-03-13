@@ -46,11 +46,11 @@
                 <div class="body">
                                           
                     <div class="progress m-b-20">
-                        <div class="progress-bar progress-bar-success" style="width: {{100*$passed/count($center->candidatesmap)}}%"></div>
-                        <div class="progress-bar progress-bar-danger" style="width: {{100*$failed/count($center->candidatesmap)}}%"></div>
-                        <div class="progress-bar progress-bar-warning" style="width: {{100*$absent/count($center->candidatesmap)}}%"></div>
-                        <div class="progress-bar progress-bar-info" style="width: {{100*$dropped/count($center->candidatesmap)}}%"></div>
-                        <div class="progress-bar l-slategray" style="width: {{100*$registered/count($center->candidatesmap)}}%"></div>
+                        <div class="progress-bar progress-bar-success" style="width: {{count($center->candidatesmap)?(100*$passed/count($center->candidatesmap)):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-danger" style="width: {{count($center->candidatesmap)?(100*$failed/count($center->candidatesmap)):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-warning" style="width: {{count($center->candidatesmap)?(100*$absent/count($center->candidatesmap)):'0'}}%"></div>
+                        <div class="progress-bar progress-bar-info" style="width: {{count($center->candidatesmap)?(100*$dropped/count($center->candidatesmap)):'0'}}%"></div>
+                        <div class="progress-bar l-slategray" style="width: {{count($center->candidatesmap)?(100*$registered/count($center->candidatesmap)):'0'}}%"></div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover m-b-0">
@@ -59,31 +59,31 @@
                                     <th><i class="zmdi zmdi-circle text-success"></i></th>
                                     <td>Passed</td>
                                     <td><span>{{$passed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$passed/count($center->candidatesmap),2)}}%</td>
+                                    <td>{{count($center->candidatesmap)?(round(100*$passed/count($center->candidatesmap),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-danger"></i></th>
                                     <td>Failed</td>
                                     <td><span>{{$failed}} Candidate(s)</span></td>
-                                    <td>{{round(100*$failed/count($center->candidatesmap),2)}}%</td>
+                                    <td>{{count($center->candidatesmap)?(round(100*$failed/count($center->candidatesmap),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-warning"></i></th>
                                     <td>Absent</td>
                                     <td><span>{{$absent}} Candidate(s)</span></td>
-                                    <td>{{round(100*$absent/count($center->candidatesmap),2)}}%</td>
+                                    <td>{{count($center->candidatesmap)?(round(100*$absent/count($center->candidatesmap),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-info"></i></th>
                                     <td>Dropped out</td>
                                     <td><span>{{$dropped}} Candidate(s)</span></td>
-                                    <td>{{round(100*$dropped/count($center->candidatesmap),2)}}%</td>
+                                    <td>{{count($center->candidatesmap)?(round(100*$dropped/count($center->candidatesmap),2)):'0'}}%</td>
                                 </tr>
                                 <tr>
                                     <th><i class="zmdi zmdi-circle text-l-slategray"></i></th>
                                     <td>Newly Registered</td>
                                     <td><span>{{$registered}} Candidate(s)</span></td>
-                                    <td>{{round(100*$registered/count($center->candidatesmap),2)}}%</td>
+                                    <td>{{count($center->candidatesmap)?(round(100*$registered/count($center->candidatesmap),2)):'0'}}%</td>
                                 </tr>
                             </tbody>
                         </table>
