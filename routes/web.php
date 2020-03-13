@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,6 +17,20 @@
 // Route::get('/', function () { return redirect('admin'); });
 
 Route::get('/', 'Controller@index')->name('index');
+
+Route::get('/test', function(){
+  dump(substr(exec('getmac'), 0, 17));
+  dump(exec('getmac'));
+  dump(trim(substr(shell_exec('getmac'), 159,20)));
+  dump(shell_exec('getmac'));
+
+  $mac = shell_exec("arp -a ".escapeshellarg($_SERVER['REMOTE_ADDR'])." | grep -o -E '(:xdigit:{1,2}:){5}:xdigit:{1,2}'");
+  dump($mac);
+
+  dump($_SERVER['REMOTE_ADDR']);
+  return "Done";
+});
+
 
 
 /* Admin Routes */
