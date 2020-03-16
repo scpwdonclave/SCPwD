@@ -40,10 +40,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-sm-4">
+                                <label>Choose File</label>
+                                <div class="form-group form-float">
+                                    <input id="screen" type="file" class="form-control" name="screen_shot[]" multiple>
+                                    <span id="screen_error" style="color:red;"></span>                                                            
+                                </div>
+                            </div>
                             
                         </div>
                         <div class="row">
-                            <div class="col-sm-8">
+                            <div class="col-sm-12">
                                 <label for="issue">Description <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group">
                                     <div class="form-line">
@@ -52,17 +59,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Choose File</label>
-                                <div class="form-group form-float">
-                                    <input id="screen" type="file" class="form-control" name="screen_shot[]" multiple>
-                                    <span id="screen_error" style="color:red;"></span>                                                            
-                                </div>
-                            </div>
-                        </div>
-                    
-                        
                         <div class="row d-flex justify-content-center">
                             <button class="btn btn-round btn-primary" type="submit">Register</button>
                         </div>

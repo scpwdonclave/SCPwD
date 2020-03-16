@@ -4,10 +4,8 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/customtimeline.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-
 @stop
 @section('content')
 <div class="container-fluid">
@@ -24,23 +22,30 @@
                         <br>
                         <div class="timeline">
                             <div class="events">
-                              <ol>
-                                <ul>
-                                  <li>
-                                  <a href="#0" class="selected">Initiated<br>{{ \Carbon\Carbon::parse($complain->created_at)->format('d-m-Y')}}</a>
-                                  </li>
-                                  <li>
-                                    <a href="#1" class="{{$complain->process_at === null ? '' :'selected'}}">Processing<br>{{($complain->process_at) === null ? '' : \Carbon\Carbon::parse($complain->process_at)->format('d-m-Y')}}</a>
-                                  </li>
-                                  <li>
-                                  <a href="#2" class="{{$complain->closed_at === null ? '' :'selected'}}">Closed<br>{{($complain->closed_at) === null ? '' : \Carbon\Carbon::parse($complain->closed_at)->format('d-m-Y')}}</a>
-                                  </li>
-                                  
-                                </ul>
-                              </ol>
+                                <ol>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript::void()" class="selected">Initiated<br>{{ \Carbon\Carbon::parse($complain->created_at)->format('d-m-Y')}}</a>
+                                        </li>
+                                        <li>
+                                            @if (is_null($complain->process_at))
+                                                <a href="javascript::void()">Not Processed Yet</a>
+                                            @else
+                                                <a href="javascript::void()" class="selected">Processing<br>{{\Carbon\Carbon::parse($complain->process_at)->format('d-m-Y')}}</a>
+                                            @endif
+                                        </li>
+                                        <li>
+                                            @if (is_null($complain->closed_at))
+                                                <a href="javascript::void()">Not Closed Yet</a>
+                                            @else
+                                                <a href="javascript::void()" class="selected">Closed<br>{{\Carbon\Carbon::parse($complain->closed_at)->format('d-m-Y')}}</a>
+                                            @endif
+                                        </li>
+                                    </ul>
+                                </ol>
                             </div>
-                          </div>
-                          <br>
+                        </div>
+                        <br>
                     @endif
                    
                     <ul class="cbp_tmtimeline">
@@ -83,73 +88,58 @@
                             </div>
                         </li>
                         @if ($complain->complainfile->isNotEmpty())
-                            
-                        <li>
-                            <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Complain Files</span></time> 
-                            <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-pin"></i></div>
-                            <div class="cbp_tmlabel">
-                                
-                                    <div class="table-responsive">
-                                            <table class="table m-b-0">
-                                                <thead>
+                            <li>
+                                <time class="cbp_tmtime" datetime="2017-11-03T13:22"><span>Complain Files</span></time> 
+                                <div class="cbp_tmicon bg-pink"> <i class="zmdi zmdi-pin"></i></div>
+                                <div class="cbp_tmlabel">
+                                    
+                                <div class="table-responsive">
+                                        <table class="table m-b-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>File</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $i=0;
+                                                @endphp
+                                                @foreach ($complain->complainfile as $item) 
                                                     <tr>
-                                                        <th>#</th>
-                                                        
-                                                        <th>File</th>
-                                                        
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        $i=0;
-                                                    @endphp
-                                                    @foreach ($complain->complainfile as $item) 
-                                                    <tr>
-                                                      
                                                         @php
                                                             $i++;
                                                         @endphp
                                                         <td>{{$i}}</td>
-                                                    <td>Sample File {{$i}} &nbsp;&nbsp;<a class="btn-icon-mini" href="{{route(Request::segment(1).'.support.complain-file',['id'=>$item->id,'action'=>'download','column'=>'screen_shot'])}}" ><i class="zmdi zmdi-download"></i></a></td>
+                                                        <td>Sample File {{$i}} &nbsp;&nbsp;<a class="btn-icon-mini" href="{{route(Request::segment(1).'.support.complain-file',['id'=>$item->id,'action'=>'download','column'=>'screen_shot'])}}" ><i class="zmdi zmdi-download"></i></a></td>
                                                     </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </li>
-                             @endif
-                        </ul>
+                                </div>
+                            </li>
+                        @endif
+                    </ul>
                     @auth('admin')
                     @if ($complain->stage !='Closed')
                         <div class="row d-flex justify-content-center m-t-20 m-b-20">
                             <h6>
                                 @if ($complain->assign_onclave)
-                                    You have <span style="color:blue">Assigned</span> This Isuue to <span style="color:blue"> Onclave Systems Support Team</span>
+                                    You have <span style="color:blue">Assigned</span> This Issue to <span style="color:blue"> Onclave Systems Support Team</span>
                                 @else
                                     Assign this Issue to <button type="button" onclick="location.href='{{route('admin.support.assign-to-onclave',Crypt::encrypt($complain->id))}}'" class="badge margin-0" title="Click to Assign it to Onclave Systems" style="color:blue">Onclave Systems Support Team</button> 
                                 @endif
                             </h6>
                         </div>
-                        <form id="form_complain" action="{{route('admin.support.stage-define')}}" method="post">
-                            @csrf
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-sm-4">
-                                    <label for="stage">Select Stage <span style="color:red"> <strong>*</strong></span></label>
-                                    <div class="form-group form-float">
-                                        <select class="form-control show-tick" data-live-search="true" name="stage"  required>
-                                            <option value="">--Select--</option>
-                                            <option value="Processing">Processing</option>
-                                            <option value="Closed">Closed</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="comp_id" value="{{$complain->id}}">
-                            <div class="text-center" >
-                                <button class="btn btn-round btn-primary" type="submit">Submit</button>
-                            </div>
-                        </form>
+                        <div class="row d-flex justify-content-center">
+                            @if ($complain->stage === 'Processing')
+                                <button class="btn btn-danger m-l-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',1'))}}';this.disabled = true;">Mark as <strong>Closed</strong></button>
+                            @else
+                                <button class="btn btn-primary m-r-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',0'))}}';this.disabled = true;">Mark as <strong>Processing</strong></button>
+                                <button class="btn btn-danger m-l-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',1'))}}';this.disabled = true;">Mark as <strong>Closed</strong></button>
+                            @endif
+                        </div>
                     @endif
                     @endauth
                 </div>
@@ -160,7 +150,6 @@
 @stop
 @section('page-script')
 
-<script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

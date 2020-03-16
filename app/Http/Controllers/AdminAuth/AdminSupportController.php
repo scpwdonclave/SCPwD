@@ -54,22 +54,43 @@ class AdminSupportController extends Controller
     }
 
     public function stageDefine(Request $request){
-        $complain=Complain::findOrFail($request->comp_id);
-        $complain->stage=$request->stage;
-        if($request->stage==='Processing'){
-            $complain->process_at=Carbon::now()->format('Y-m-d');
-        }else if ($request->stage==='Closed') {
-            if($complain->process_at===null){
-                $complain->process_at=Carbon::now()->format('Y-m-d'); 
-                $complain->closed_at=Carbon::now()->format('Y-m-d'); 
-            }else{
-                $complain->closed_at=Carbon::now()->format('Y-m-d'); 
 
+        // dd($request->data);
+        if ($data = AppHelper::instance()->decryptThis($request->data)) {
+            $id = explode(',',$data);
+            $complain=Complain::findOrFail($id[0]);
+            if ($id[1]) {
+                if ($complain->stage==='Initiated') {
+                    $complain->process_at=Carbon::now(); 
+                }
+                $complain->stage='Closed';
+                $complain->closed_at=Carbon::now();
+            } else {
+                $complain->stage='Processing';
+                $complain->process_at=Carbon::now();
             }
+            $complain->save();
+            alert()->success("Complain (ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span>) Changed <br>its stage as <span style='color:blue;font-weight:bold'>".$complain->stage." </span>", 'Job Done')->html()->autoclose(5000);
+            return redirect()->back();
         }
-        $complain->save();
 
-        alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been changed to <span style='color:blue;font-weight:bold'>".$request->stage." </span> Stage", 'Job Done')->html()->autoclose(4000);
-        return Redirect()->back();
+        // return $id[1];
+        // $complain=Complain::findOrFail($request->comp_id);
+        // $complain->stage=$request->stage;
+        // if($request->stage==='Processing'){
+        //     $complain->process_at=Carbon::now()->format('Y-m-d');
+        // }else if ($request->stage==='Closed') {
+        //     if($complain->process_at===null){
+        //         $complain->process_at=Carbon::now()->format('Y-m-d'); 
+        //         $complain->closed_at=Carbon::now()->format('Y-m-d'); 
+        //     }else{
+        //         $complain->closed_at=Carbon::now()->format('Y-m-d'); 
+
+        //     }
+        // }
+        // $complain->save();
+
+        // alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been changed to <span style='color:blue;font-weight:bold'>".$request->stage." </span> Stage", 'Job Done')->html()->autoclose(4000);
+        // return Redirect()->back();
     }
 }

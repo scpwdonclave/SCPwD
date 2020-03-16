@@ -73,13 +73,11 @@ class CenterSupportController extends Controller
             }   
         }
         
-        alert()->success("Your Complain has been <span style='color:blue;font-weight:bold'>Submitted </span> Your Token ID is : <span style='color:blue;font-weight:bold'>".$new_tokenid." </span>", 'Job Done')->html()->autoclose(4000);
+        alert()->success("We have Received your Complain (ID:<span style='color:blue;font-weight:bold'>".$new_tokenid."</span> ).<br> We will get back to you shortly.", 'Job Done')->html()->autoclose(6000);
            
-            });
+        });
 
-         return Redirect()->back();
-
-        
+        return Redirect()->back();
     }
 
     public function myComplain(){
