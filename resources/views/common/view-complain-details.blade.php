@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/customtimeline.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 
 @stop
 @section('content')
@@ -121,27 +122,34 @@
                         </ul>
                     @auth('admin')
                     @if ($complain->stage !='Closed')
-                        
-                    <form id="form_complain" action="{{route('admin.support.stage-define')}}" method="post" >
-                        @csrf
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-sm-4">
-                            <label for="stage">Select Stage <span style="color:red"> <strong>*</strong></span></label>
-                            <div class="form-group form-float">
-                                <select class="form-control show-tick" data-live-search="true" name="stage"  required>
-                                    <option value="">--Select--</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Closed">Closed</option>
-                                </select>
-                            </div>
+                        <div class="row d-flex justify-content-center m-t-20 m-b-20">
+                            <h6>
+                                @if ($complain->assign_onclave)
+                                    You have <span style="color:blue">Assigned</span> This Isuue to <span style="color:blue"> Onclave Systems Support Team</span>
+                                @else
+                                    Assign this Issue to <button type="button" onclick="location.href='{{route('admin.support.assign-to-onclave',Crypt::encrypt($complain->id))}}'" class="badge margin-0" title="Click to Assign it to Onclave Systems" style="color:blue">Onclave Systems Support Team</button> 
+                                @endif
+                            </h6>
                         </div>
-                    </div>
-                    <input type="hidden" name="comp_id" value="{{$complain->id}}">
-
-                    <div class="text-center" >
-                        <button class="btn btn-round btn-primary" type="submit">Submit</button>
-                    </div>
-                    </form>
+                        <form id="form_complain" action="{{route('admin.support.stage-define')}}" method="post">
+                            @csrf
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-sm-4">
+                                    <label for="stage">Select Stage <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <select class="form-control show-tick" data-live-search="true" name="stage"  required>
+                                            <option value="">--Select--</option>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Closed">Closed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="comp_id" value="{{$complain->id}}">
+                            <div class="text-center" >
+                                <button class="btn btn-round btn-primary" type="submit">Submit</button>
+                            </div>
+                        </form>
                     @endif
                     @endauth
                 </div>
@@ -149,18 +157,9 @@
         </div>
     </div>
 </div>
-
-{{-- =================== --}} 
-
-
-
-
-{{-- =================== --}}
 @stop
 @section('page-script')
 
-
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

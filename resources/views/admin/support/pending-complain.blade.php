@@ -35,7 +35,6 @@
                                     <th>Subject</th>
                                     <th>Issue</th>
                                     <th>Status</th>
-                                    <th>Assign to Support</th>
                                     <th>View</th>
                                     
                                 </tr>
@@ -43,30 +42,22 @@
                             <tbody>
                              @foreach ($complain as $key =>$item)
                                  <tr>
-                                 <td>{{$key+1}}</td>
-                                 <td>{{$item->token_id}}</td>
-                                 @if ($item->rel_with === 'agency')
-                                 <td>{{$item->agency->aa_id}}</td>
-                                 @elseif($item->rel_with === 'assessor')
-                                 <td>{{$item->assessor->as_id}}</td>
-                                 @elseif($item->rel_with === 'partner')
-                                 <td>{{$item->partner->tp_id}}</td>
-                                 @elseif($item->rel_with === 'center')
-                                 <td>{{$item->center->tc_id}}</td>
-                                 @endif
-                                 <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y')}}</td>
-                                 <td>{{$item->subject}}</td>
-                                 <td>{{$item->issue}}</td>
-                                 <td>{{$item->stage}}</td>
-                                 @if (!$item->assign_onclave)
-                                     
-                                 <td><a class="badge bg-green margin-0" href="{{route('admin.support.assign-to-onclave',['id'=>Crypt::encrypt($item->id)])}}" >Assign To Onclave Systems</a></td>
-                                 @else
-                                 <td><a class="badge bg-grey margin-0" href="javascript:void(0)" >Assigned To Onclave Systems</a></td>  
-                                     
-                                 @endif
-                                 <td><a class="badge bg-green margin-0" href="{{route('admin.support.complain-view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>
-                                 
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$item->token_id}}</td>
+                                    @if ($item->rel_with === 'agency')
+                                        <td>{{$item->agency->aa_id}}</td>
+                                    @elseif($item->rel_with === 'assessor')
+                                        <td>{{$item->assessor->as_id}}</td>
+                                    @elseif($item->rel_with === 'partner')
+                                        <td>{{$item->partner->tp_id}}</td>
+                                    @elseif($item->rel_with === 'center')
+                                        <td>{{$item->center->tc_id}}</td>
+                                    @endif
+                                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('d-m-Y')}}</td>
+                                    <td>{{$item->subject}}</td>
+                                    <td>{{$item->issue}}</td>
+                                    <td>{{$item->stage}}</td>
+                                    <td><a class="badge bg-green margin-0" href="{{route('admin.support.complain-view',['id'=>Crypt::encrypt($item->id)])}}" >View</a></td>
                                  </tr>
                              @endforeach
                             </tbody>
