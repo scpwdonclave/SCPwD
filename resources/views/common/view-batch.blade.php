@@ -190,9 +190,9 @@
                                     @endif
                                         {{-- <td style="color:{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'green':'red'}}">{{($item->centercandidate->jobrole->partnerjobrole->status && $item->centercandidate->center->partner->status && $item->centercandidate->center->status && $item->centercandidate->candidate->status)?'Active':'Inactive'}}</td> --}}
                                     @if (Request::segment(1)==='center')
-                                        <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->centercandidate->candidate->id))}}" >View</a></<td>                                                                                
+                                        <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($item->centercandidate->id))}}" >View</a></<td>                                                                                
                                     @elseif(Request::segment(1) !='agency')
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',Crypt::encrypt($item->centercandidate->candidate->id))}}" >View</a></<td>
+                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.tc.candidate.view',Crypt::encrypt($item->centercandidate->id))}}" >View</a></<td>
                                     @endif
                                 </tr>
                                 @endforeach     

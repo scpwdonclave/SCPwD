@@ -179,6 +179,15 @@ class AdminMisController extends Controller
         'p_can_count','b_total_candidate','b_drop_total_candidate','bt_can_cnt','trained_can_cnt','assessed_can_cnt','candidate_passed','candidate_failed','candidate_absent'));
     }
 
+    public function oldMis(){
+        return view('admin.mis.old-mis');
+    }
+    
+    public function oldDocument(){
+        return view('admin.mis.old-document');
+    }
+
+
     public function summary(){
         return view('admin.mis.summary-block');
        

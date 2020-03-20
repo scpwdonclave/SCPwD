@@ -55,6 +55,7 @@
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-calendar-check"></i><span>MIS</span></a>
                     <ul class="ml-menu">
                         <li class="{{ Request::is('admin/mis/quick_view') ? 'active' : null }}"><a href="{{route('admin.mis.quick_view')}}"> Quick View</a></li>
+                        <li class="{{ Request::is('admin/mis/old_mis_view') ? 'active' : null }}"><a href="{{route('admin.mis.old_mis_view')}}"> Old Mis View</a></li>
                         <li class="{{ Request::is('admin/mis/summary') ? 'active' : null }}"><a href="{{route('admin.mis.summary')}}"> Summary</a></li>
                         {{-- <li class="{{ Request::is('admin/training_partners/pending-partners') ? 'active' : null }}"><a href="{{route('admin.tp.pp')}}"> Pending Partners</a></li> --}}
                     </ul>

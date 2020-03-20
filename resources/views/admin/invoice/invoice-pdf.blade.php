@@ -110,7 +110,7 @@
                       
                         <thead>
                             <tr style="height:50px;">
-                                <th style="width:5px;">#</th>
+                                <th style="width:2px;">Sl No</th>
                                 <th>Particulars</th>
                                 <th style="width:155px;">Amount</th>
                                 

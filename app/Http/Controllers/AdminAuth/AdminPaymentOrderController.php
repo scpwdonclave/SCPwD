@@ -22,7 +22,8 @@ class AdminPaymentOrderController extends Controller
     }
 
     public function pendingPayOrderRequest(){
-
+        // $shellexec = exec('getmac');//shell_exec('getmac');
+        // dd($shellexec);
         $pay_order=PaymentOrder::where('payment_done',0)->get();
         return view('admin.paymentorder.pay_order_pending')->with(compact('pay_order'));
     }
@@ -43,7 +44,7 @@ class AdminPaymentOrderController extends Controller
             $batchData=Batch::findOrFail($id);
             return view('common.view-assessment-batch')->with(compact('batchData'));
         }
-    }
+    } 
 
     public function viewBatchReassessment($id){
         $id= AppHelper::instance()->decryptThis($id);

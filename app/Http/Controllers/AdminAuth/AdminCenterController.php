@@ -375,6 +375,7 @@ class AdminCenterController extends Controller
 
     public function view_candidate($id){
         if ($id = AppHelper::instance()->decryptThis($id)) {
+           
             $center_candidate = CenterCandidateMap::findOrFail($id);
             $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
             return view('common.view-candidate')->with(compact('center_candidate','state_dist'));

@@ -26,6 +26,9 @@ Route::get('notification/{id}', 'AdminAuth\AdminHomeController@clickNotification
 /* Admin Mis Section */
 Route::get('mis', function () { return redirect(route('admin.mis.quick_view')); });
 Route::get('mis/quick_view', 'AdminAuth\AdminMisController@mis')->name('mis.quick_view');
+Route::get('mis/old_mis_view', 'AdminAuth\AdminMisController@oldMis')->name('mis.old_mis_view');
+Route::get('mis/old_document_view', 'AdminAuth\AdminMisController@oldDocument')->name('mis.old-document-block');
+Route::get('mis/old_document_download/{document}', 'AdminAuth\FileController@oldDocumentDownload')->name('mis.old-document-download');
 Route::get('mis/summary', 'AdminAuth\AdminMisController@summary')->name('mis.summary');
 Route::get('mis/summary/tp-tc-Wise', 'AdminAuth\AdminMisController@pageTpTcWise')->name('mis.tp-tc_wise_block');
 Route::get('mis/summary/candidate-wise', 'AdminAuth\AdminMisController@pageCandidateWise')->name('mis.candidate_wise_block');
