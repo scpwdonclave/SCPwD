@@ -39,13 +39,9 @@
                                 <label for="partner">Select Training Partner <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="partner" id="partner" data-dropup-auto='false' required>
-                                      
                                     </select>
                                 </div>
                             </div>
-                            
-                        
-                            
                         </div>
                         <div class="row d-flex justify-content-center">
                             <button class="btn btn-round btn-primary" type="submit">Search</button>

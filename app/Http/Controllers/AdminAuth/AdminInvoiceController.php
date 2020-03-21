@@ -38,13 +38,16 @@ class AdminInvoiceController extends Controller
        $partnersJob=PartnerJobrole::where('scheme_id',$request->scheme)->get()->unique('tp_id');
 
       foreach ($partnersJob as $partnerJob) {
-        $partnerJob->tpid = $partnerJob->partner->tp_id;
+        $partnerJob->tpid = $partnerJob->partner->tp_id.' ('.$partnerJob->partner->org_name.')';
       }
         return response()->json(['partnerJob' => $partnersJob],200); 
     }
 
     public function fetchCenter(Request $request){
       $centers=Center::where('tp_id',$request->partner)->get();
+      foreach ($centers as $center) {
+        $center->tcid = $center->tc_id.' ('.$center->center_name.')';
+      }
       return response()->json(['centers' => $centers],200); 
 
     }

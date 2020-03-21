@@ -648,7 +648,6 @@
                 <label for="jobrole[{?}]">Scheme - Sectors - Job Roles <span style="color:red"> <strong>*</strong></span></label>
                 <div class="form-group form-float">
                     <select id="jobrole_{?}" class="form-control show-tick jobroleclass" data-live-search="true" name="jobrole[{?}]" data-dropup-auto='false' required>
-                        
                     </select>
                 </div>
             </div>

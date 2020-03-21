@@ -168,7 +168,7 @@ table.dataTable thead th:first-child {
                                                 <select id="agency" class="form-control show-tick" data-live-search="true" name="agency" data-dropup-auto='false' required>
                                                     @foreach ($agencies as $agency)
                                                         @if ($agency->status)
-                                                            <option value="{{$agency->id}}">{{$agency->name.' ('.$agency->aa_id.')'}}</option>
+                                                            <option value="{{$agency->id}}">{{$agency->aa_id.' ('.$agency->agency_name.')'}}</option>
                                                         @endif
                                                     @endforeach
                                                 </select>

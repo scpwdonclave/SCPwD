@@ -412,9 +412,9 @@
                                                 <label for="job_role">Job Role <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="job_role[]" id="job_role" data-dropup-auto='false' multiple >
-                                                            @foreach ($assessor->sectors->job_roles as $job)
+                                                        @foreach ($assessor->sectors->job_roles as $job)
                                                             <option value="{{$job->id}}" {{ (in_array($job->id,$selJob)) ? 'selected' : '' }} >{{$job->job_role}}</option>
-                                                            @endforeach
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>

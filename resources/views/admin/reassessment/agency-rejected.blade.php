@@ -121,7 +121,7 @@
                 $('#agency').empty();
                 $('#agency').append('<option disabled selected value="">Choose an Agency</option>');
                 data.agencies.forEach(element => {
-                    $('#agency').append('<option value="'+element.id+'">'+element.name+' ('+element.aa_id+')</option>');
+                    $('#agency').append('<option value="'+element.id+'">'+element.agency_name+' ('+element.aa_id+')</option>');
                     $('#assessment').val(data.assessment);
                     $('#reassid').val(data.reassid);
                 });

@@ -29,7 +29,7 @@
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="scheme" data-dropup-auto='false' required>
                                         @foreach ($scheme as $scheme)
-                                        <option value="{{$scheme->id}}">{{$scheme->scheme}}</option>
+                                            <option value="{{$scheme->id}}">{{$scheme->scheme}}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -132,14 +132,9 @@
                                                     <label for="org_type">Type of Oganization</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false' required>
-                                                            <option {{ ( $agency->org_type =='NGO') ? 'selected' : '' }} >NGO</option>
-                                                            <option {{ ( $agency->org_type =='Private Limited') ? 'selected' : '' }}>Private Limited</option>
-                                                            <option {{ ( $agency->org_type =='Partnership Firm') ? 'selected' : '' }} >Partnership Firm</option>
-                                                            <option {{ ( $agency->org_type =='Proprietorship') ? 'selected' : '' }} >Proprietorship</option>
-                                                            <option {{ ( $agency->org_type =='Limited Company') ? 'selected' : '' }} >Limited Company</option>
-                                                            <option {{ ( $agency->org_type =='One Person Company') ? 'selected' : '' }} >One Person Company</option>
-                                                            <option {{ ( $agency->org_type =='LLP') ? 'selected' : '' }} >LLP</option>
-                                                            <option {{ ( $agency->org_type =='LLC') ? 'selected' : '' }} >LLC</option>
+                                                            @foreach (Config::get('constants.organizations') as $organizations)
+                                                                <option {{ ($organizations == $agency->org_type)? 'selected' : null }} >{{$organizations}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
@@ -166,23 +161,17 @@
                                                     </div>
                                                 </div>
                                                
-
                                                 <div class="col-sm-4">
                                                     <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="sector[]"  data-dropup-auto='false' multiple required>
-                                                               
                                                             @foreach ($sectors as $sector)
-                                                               
                                                                 <option value="{{$sector->id}}"  {{ (in_array($sector->id,$selSector)) ? 'selected' : '' }} >{{ $sector->sector }}</option>
-                                                               
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
-                                               
                                             </div>
-                                           
                                         </div>
                                     </div>
                                 </div>

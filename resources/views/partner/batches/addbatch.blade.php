@@ -254,12 +254,12 @@ table.dataTable thead th:first-child {
                                 $("#trainer").prepend("<option value='' selected='selected'>Select Trainer</option>");
                                 if (data.centers !== undefined) {
                                     data.centers.forEach(value => {
-                                        $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' '+ value.spoc_name+'</option>');
+                                        $('#center').append('<option value="'+value.id+'">'+ value.tc_id +' ('+ value.center_name+')</option>');
                                     });
                                 }
                                 if (data.trainers !== undefined) {
                                     data.trainers.forEach(value => {
-                                        $('#trainer').append('<option value="'+value.id+'">'+value.name+'</option>');
+                                        $('#trainer').append('<option value="'+value.id+'">'+value.trainer_id+' ('+ value.name +')</option>');
                                     });
                                 }
                                 $('#center').selectpicker('refresh');

@@ -204,10 +204,10 @@
                                                     <label for="category">Category <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="category" class="form-control show-tick" name="category" data-dropup-auto='false' required>
+                                                            <option>General</option>
                                                             <option>SC</option>
                                                             <option>ST</option>
                                                             <option>OBC</option>
-                                                            <option>General</option>
                                                         </select>
                                                     </div>
                                                 </div>

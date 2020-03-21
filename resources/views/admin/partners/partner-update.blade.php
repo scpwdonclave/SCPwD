@@ -76,14 +76,9 @@
                                                     <label for="org_type">Oganization Type</label>
                                                     <div class="form-group form-float">
                                                         <select class="form-control show-tick" data-live-search="true" name="org_type" data-show-subtext="true" data-dropup-auto='false'>
-                                                            <option {{ ( $partner->org_type =='NGO') ? 'selected' : '' }}>NGO</option>
-                                                            <option {{ ( $partner->org_type =='Private Limited') ? 'selected' : '' }}>Private Limited</option>
-                                                            <option {{ ( $partner->org_type =='Partnership Firm') ? 'selected' : '' }}>Partnership Firm</option>
-                                                            <option {{ ( $partner->org_type =='Proprietorship') ? 'selected' : '' }}>Proprietorship</option>
-                                                            <option {{ ( $partner->org_type =='Limited Company') ? 'selected' : '' }}>Limited Company</option>
-                                                            <option {{ ( $partner->org_type =='One Person Company') ? 'selected' : '' }}>One Person Company</option>
-                                                            <option {{ ( $partner->org_type =='LLP') ? 'selected' : '' }}>LLP</option>
-                                                            <option {{ ( $partner->org_type =='LLC') ? 'selected' : '' }}>LLC</option>
+                                                            @foreach (Config::get('constants.organizations') as $organizations)
+                                                                <option {{ ( $organizations == $partner->org_type ) ? 'selected' : null }} >{{$organizations}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>

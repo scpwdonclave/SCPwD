@@ -33,7 +33,6 @@
                                 <label for="partner">Select Training Partner <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select class="form-control show-tick" data-live-search="true" name="partner" id="partner" onchange="fetchCenter(this.value)" data-dropup-auto='false' required>
-                                      
                                     </select>
                                 </div>
                             </div>
@@ -196,16 +195,14 @@ function fetchCenter(partner){
             data:{_token,partner},
             method:'POST',
             success: function(data){
-                console.log(data);
-                
+                // console.log(data);                
                 $('#center').empty();
                 $('#center').append('<option value="">--select--</option>');
 
                 $.each (data.centers, function (index) {
                     var id=data.centers[index].id;
-                    var tcid=data.centers[index].tc_id;
-                    $('#center').append('<option value="'+id+'">'+tcid+'</option>');
-                    
+                    var tcid=data.centers[index].tcid;
+                    $('#center').append('<option value="'+id+'">'+tcid+'</option>');                    
                 });
                 $('#center').selectpicker('refresh');
             }

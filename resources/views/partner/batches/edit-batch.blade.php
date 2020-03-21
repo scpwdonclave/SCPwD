@@ -62,7 +62,7 @@ table.dataTable thead th:first-child {
                                     <div class="form-group form-float">
                                         <select id="trainer" class="form-control show-tick" data-live-search="true" name="trainer" data-dropup-auto='false' onchange="changetrainer()" required>
                                             @foreach ($trainers as $trainer)
-                                                <option value="{{$trainer->id}}" {{($trainer->id == $batchData->tr_id)?'selected':null}}>{{$trainer->name}}</option>
+                                                <option value="{{$trainer->id}}" {{($trainer->id == $batchData->tr_id)?'selected':null}}>{{$trainer->trainer_id.' ('.$trainer->name.')'}}</option>
                                             @endforeach
                                         </select>
                                     </div>
