@@ -392,7 +392,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>TC ID</th>
+                                    <th>Center</th>
                                     <th>Spoc Name</th>
                                     <th>Spoc Email</th>
                                     <th>Spoc Mobile</th>
@@ -403,7 +403,7 @@
                                 @foreach ($partnerData->centers as $key=>$center)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$center->tc_id}}</td>
+                                        <td>{{$center->center_name.' ('.$center->tc_id.')'}}</td>
                                         <td>{{$center->spoc_name}}</td>
                                         <td>{{$center->email}}</td>
                                         <td>{{$center->mobile}}</td>

@@ -34,8 +34,8 @@
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
-                                    <th>TP ID</th>
-                                    <th>TC ID</th>
+                                    <th>Training Partner</th>
+                                    <th>Training Center</th>
                                     <th>View</th>
                                     <th>Action</th> 
                                 </tr>
@@ -45,8 +45,8 @@
                                     @if (!$reassessment->agencybatch && $tag[$key])
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
-                                            <td>{{$reassessment->partner->tp_id}}</td>
-                                            <td>{{$reassessment->center->tc_id}}</td>
+                                            <td>{{$reassessment->partner->org_name.' ('.$reassessment->partner->tp_id.')'}}</td>
+                                            <td>{{$reassessment->center->center_name.' ('.$reassessment->center->tc_id.')'}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.reassessment.view',Crypt::encrypt($reassessment->id))}}">View</a></td>
                                             <td> <button type="button" class="badge bg-green margin-0" onclick="popup('{{Crypt::encrypt($reassessment->id)}}')">Assign to Agency</button> </td>
                                         </tr>

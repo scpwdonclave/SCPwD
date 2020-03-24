@@ -23,7 +23,6 @@
                                             <th>#</th>
                                             <th>AA ID</th>
                                             <th>AS ID</th>
-                                            <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
                                             <th>Overall Status</th>
@@ -36,9 +35,9 @@
                                         @foreach ($data as $key=>$item)
                                             <tr>
                                                 <td>{{$key+1}}</td>
-                                                <td>{{$item->agency->aa_id}}</td>
+                                                <td>{{$item->agency->agency_name.' ('.$item->agency->aa_id.')'}}</td>
+                                                <td>{{$item->name.' ('.$item->as_id.')'}}</td>
                                                 <td>{{$item->as_id}}</td>
-                                                <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
                                                 <td style="color:{{($item->status && $item->agency->status)?'green':'red'}}">{{($item->status && $item->agency->status)?'Active':'Inactive'}}</td>

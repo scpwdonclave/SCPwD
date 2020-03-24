@@ -20,8 +20,8 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>TP ID</th>
-                                    <th>TC ID</th>
+                                    <th>Training Partner</th>
+                                    <th>Training Center</th>
                                     <th>Candidate Name</th>
                                     <th>Job Role</th>
                                     <th>Organization</th>
@@ -31,8 +31,8 @@
                             <tbody>
                                 @foreach ($placements as $placement)
                                     <tr>
-                                        <td>{{$placement->centercandidate->center->partner->tp_id}}</td>
-                                        <td>{{$placement->centercandidate->center->tc_id}}</td>
+                                        <td>{{$placement->centercandidate->center->partner->org_name.' ('.$placement->centercandidate->center->partner->tp_id.')'}}</td>
+                                        <td>{{$placement->centercandidate->center->center_name.' ('.$placement->centercandidate->center->tc_id.')'}}</td>
                                         <td>{{$placement->centercandidate->candidate->name}}</td>
                                         <td>{{$placement->centercandidate->jobrole->partnerjobrole->jobrole->job_role}}</td>
                                         <td>{{$placement->org_name}}</td>

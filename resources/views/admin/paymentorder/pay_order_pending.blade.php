@@ -10,51 +10,47 @@
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="header d-flex justify-content-between">
-                        <h2><strong>All</strong> Pending Payment Order</h2>
-                       
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                                <thead>
-                                        <tr>
-                                        <th>#</th>
-                                        <th>Payment Order ID</th>
-                                        <th>Agency ID</th>
-                                        <th>Payment Order Date</th>
-                                        <th>SPOC Name</th>
-                                        <th>SPOC Email</th>
-                                        <th>SPOC Mobile</th>
-                                        <th>View</th>
-                                       
-                                        </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($pay_order as $key=>$item)
-                                        
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header d-flex justify-content-between">
+                    <h2><strong>All</strong> Pending Payment Order</h2>
+                    
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Payment Order ID</th>
+                                    <th>Assessment Agency</th>
+                                    <th>Payment Order Date</th>
+                                    <th>SPOC Name</th>
+                                    <th>SPOC Email</th>
+                                    <th>SPOC Mobile</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pay_order as $key=>$item)
                                     <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$item->payment_order_id}}</td>
-                                    <td>{{$item->agency->aa_id}}</td>
-                                    <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
-                                    <td>{{$item->agency->name}}</td>
-                                    <td>{{$item->agency->email}}</td>
-                                    <td>{{$item->agency->mobile}}</td>
-                                    <td><a class="badge bg-green margin-0" href="{{route('admin.aa.payorder',['id'=>Crypt::encrypt($item->id)])}}" >View Pay Order</a></td>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$item->payment_order_id}}</td>
+                                        <td>{{$item->agency->agency_name.' ('.$item->agency->aa_id.')'}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->po_date)->format('d-m-Y')}}</td>
+                                        <td>{{$item->agency->name}}</td>
+                                        <td>{{$item->agency->email}}</td>
+                                        <td>{{$item->agency->mobile}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.aa.payorder',['id'=>Crypt::encrypt($item->id)])}}" >View Pay Order</a></td>
                                     </tr>
-                                    @endforeach
-                                   
-                                       
-                                    </tbody>
-                            </table>
-                            </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
 
 

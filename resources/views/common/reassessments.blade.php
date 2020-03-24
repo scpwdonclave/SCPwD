@@ -25,8 +25,8 @@
                                 <tr>
                                     <th>Batch ID</th>
                                     @if (Request::segment(1)==='admin')
-                                        <th>Partner ID</th>
-                                        <th>Center ID</th>
+                                        <th>Training Partner</th>
+                                        <th>Training Center</th>
                                     @else
                                         @if (Request::segment(1)==='partner')
                                             <th>Center ID</th>
@@ -48,8 +48,8 @@
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
                                             @if (Request::segment(1)==='admin')
-                                                <td>{{$reassessment->batch->partner->tp_id}}</td>
-                                                <td>{{$reassessment->batch->center->tc_id}}</td>
+                                                <td>{{$reassessment->batch->partner->org_name.' ('.$reassessment->batch->partner->tp_id.')'}}</td>
+                                                <td>{{$reassessment->batch->center->center_name.' ('.$reassessment->batch->center->tc_id.')'}}</td>
                                             @else
                                                 @if (Request::segment(1)==='partner')
                                                     <td>{{$reassessment->batch->center->tc_id}}</td>
@@ -104,8 +104,8 @@
                                 <tr>
                                     <th>Batch ID</th>
                                     @if (Request::segment(1)==='admin')
-                                        <th>Partner ID</th>
-                                        <th>Center ID</th>
+                                        <th>Training Partner</th>
+                                        <th>Training Center</th>
                                     @else
                                         @if (Request::segment(1)==='partner')
                                             <th>Center ID</th>
@@ -130,8 +130,8 @@
                                         <tr>
                                             <td>{{$reassessment->batch->batch_id}}</td>
                                             @if (Request::segment(1)==='admin')
-                                                <td>{{$reassessment->batch->partner->tp_id}}</td>
-                                                <td>{{$reassessment->batch->center->tc_id}}</td>
+                                                <td>{{$reassessment->batch->partner->org_name.' ('.$reassessment->batch->partner->tp_id.')'}}</td>
+                                                <td>{{$reassessment->batch->center->center_name.' ('.$reassessment->batch->center->tc_id.')'}}</td>
                                             @else
                                                 @if (Request::segment(1)==='partner')
                                                     <td>{{$reassessment->batch->center->tc_id}}</td>

@@ -22,7 +22,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>AA ID</th>
+                                            <th>Assessment Agency</th>
                                             <th>Assessor Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
@@ -32,16 +32,14 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $key=>$item)
-                                            
                                             <tr>
                                                 <td>{{$key+1}}</td>
-                                                <td>{{$item->agency->aa_id}}</td>
+                                                <td>{{$item->agency->agency_name.' ('.$item->agency->aa_id.')'}}</td>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
                                                 <td>{{$item->mobile}}</td>
                                                 <td><a class="badge bg-green margin-0" href="{{route('admin.as.assessor.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
                                             </tr>
-                                        
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -54,7 +52,6 @@
 
 @stop
 @section('page-script')
-
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -62,5 +59,4 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 @stop

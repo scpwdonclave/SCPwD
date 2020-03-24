@@ -24,32 +24,28 @@
                     <div class="table-responsive">
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
-                               
                                 <tr>
                                     <th>#</th> 
-                                    {{-- <th>Batch ID</th> --}}
-                                    <th>Partner ID</th>
-                                    <th>Center ID</th>
+                                    <th>Training Partner</th>
+                                    <th>Training Center</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Assessment Date</th>
                                     <th>View</th>
                                     
                                 </tr>
-                               
                             </thead>
                             <tbody>
                                 @foreach ($data as $key=>$item)
-                                <tr>
-                                <td>{{$key+1}}</td>
-                                {{-- <td>{{$item->batch_id}}</td> --}}
-                                <td>{{$item->partner->tp_id}}</td>
-                                <td>{{$item->center->tc_id}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
-                                <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
-                                <td><a class="badge bg-green margin-0" href="{{route('admin.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
-                                </tr>
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{ $item->partner->org_name.' ('.$item->partner->tp_id.')'}}</td>
+                                        <td>{{ $item->center->center_name.' ('.$item->center->tc_id.')'}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</td>
+                                        <td><a class="badge bg-green margin-0" href="{{route('admin.bt.batch.view',['id'=>Crypt::encrypt($item->id)])}}">View</a></td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -62,7 +58,6 @@
 @endsection
 
 @section('page-script')
-
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>

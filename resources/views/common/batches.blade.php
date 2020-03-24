@@ -30,8 +30,8 @@
                                 <tr>
                                     <th>Batch ID</th>
                                     @if (Request::segment(1)==='admin')
-                                        <th>Partner ID</th>
-                                        <th>Center ID</th>
+                                        <th>Training Partner</th>
+                                        <th>Training Center</th>
                                     @else
                                         @if (Request::segment(1)==='partner')
                                             <th>Center ID</th>
@@ -52,8 +52,8 @@
                                     <tr>
                                         <td>{{is_null($item->batch_id)?Config::get('constants.nullidtext'):$item->batch_id}}</td>
                                         @if (Request::segment(1)==='admin')
-                                            <td>{{$item->partner->tp_id}}</td>
-                                            <td>{{$item->center->tc_id}}</td>
+                                            <td>{{ $item->partner->org_name.' ('.$item->partner->tp_id.')'}}</td>
+                                            <td>{{ $item->center->center_name.' ('.$item->center->tc_id.')'}}</td>
                                         @else
                                             @if (Request::segment(1)==='partner')
                                                 <td>{{$item->center->tc_id}}</td>

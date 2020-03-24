@@ -20,8 +20,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>TP ID</th>
-                                    <th>TC ID</th>
+                                    <th>Training Partner</th>
+                                    <th>Training Center</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
@@ -34,8 +34,8 @@
                             @foreach ($data as $key=>$item)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td>{{$item->partner->tp_id}}</td>
-                                    <td>{{$item->tc_id}}</td>
+                                    <td>{{$item->partner->org_name.' ('.$item->partner->tp_id.')'}}</td>
+                                    <td>{{$item->center_name.' ('.$item->tc_id.')'}}</td>
                                     <td>{{$item->spoc_name}}</td>
                                     <td>{{$item->email}}</td>
                                     <td>{{$item->mobile}}</td>

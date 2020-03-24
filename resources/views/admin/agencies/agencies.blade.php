@@ -24,7 +24,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Agency ID</th>
+                                    <th>Assessment Agency</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
@@ -37,7 +37,7 @@
                                 @foreach ($data as $key=>$item)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$item->aa_id}}</td>
+                                        <td>{{$item->agency_name.' ('.$item->aa_id.')'}}</td>
                                         <td>{{$item->name}}</td>
                                         <td>{{$item->email}}</td>
                                         <td>{{$item->mobile}}</td>
@@ -68,7 +68,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Agency ID</th>
+                                    <th>Assessment Agency</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
@@ -80,7 +80,7 @@
                                 @foreach ($deactiveData as $key=>$item)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$item->aa_id}}</td>
+                                        <td>{{$item->agency_name.' ('.$item->aa_id.')'}}</td>
                                         <td>{{$item->name}}</td>
                                         <td>{{$item->email}}</td>
                                         <td>{{$item->mobile}}</td>
