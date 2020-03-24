@@ -6,6 +6,7 @@ use App\Assessor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Hesto\MultiAuth\Traits\LogsoutGuard;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -42,6 +43,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('assessor.guest', ['except' => 'logout']);
+    }
+
+    protected function redirectTo()
+    {
+        return Session::get('backUrl') ? Session::get('backUrl') :   $this->redirectTo;
     }
 
     /* Logout Route */

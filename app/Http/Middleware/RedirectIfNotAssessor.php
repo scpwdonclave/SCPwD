@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class RedirectIfNotAssessor
 {
@@ -18,6 +20,7 @@ class RedirectIfNotAssessor
 	public function handle($request, Closure $next, $guard = 'assessor')
 	{
 	    if (!Auth::guard($guard)->check()) {
+			Session::put('backUrl', URL::current());
 	        return redirect('assessor/login');
 	    }
 

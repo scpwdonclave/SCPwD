@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
-use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Session;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -40,6 +42,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('admin.guest', ['except' => 'logout']);
+    }
+
+    protected function redirectTo()
+    {
+        return Session::get('backUrl') ? Session::get('backUrl') :   $this->redirectTo;
     }
 
     /* Logout Route */

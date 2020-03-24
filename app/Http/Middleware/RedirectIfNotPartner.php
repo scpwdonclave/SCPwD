@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class RedirectIfNotPartner
 {
@@ -18,6 +20,7 @@ class RedirectIfNotPartner
 	public function handle($request, Closure $next, $guard = 'partner')
 	{
 	    if (!Auth::guard($guard)->check()) {
+			Session::put('backUrl', URL::current());
 			return redirect()->route('partner.login');			
 	    }
 

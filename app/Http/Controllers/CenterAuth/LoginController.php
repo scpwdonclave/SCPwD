@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\CenterAuth;
  
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Auth;
-use Hesto\MultiAuth\Traits\LogsoutGuard;
-use Illuminate\Http\Request;
 use App\Center;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 
 class LoginController extends Controller
@@ -34,6 +35,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('center.guest', ['except' => 'logout']);
+    }
+
+    protected function redirectTo()
+    {
+        return Session::get('backUrl') ? Session::get('backUrl') :   $this->redirectTo;
     }
 
 
