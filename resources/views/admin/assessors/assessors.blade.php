@@ -6,52 +6,49 @@
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
 @stop
 @section('content')
-
 <div class="container-fluid">
-        <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2><strong>All</strong> Verified Assessor </h2>
-                           
-                        </div>
-                        <div class="body">
-                            <div class="table-responsive">
-                                <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>AA ID</th>
-                                            <th>AS ID</th>
-                                            <th>Email</th>
-                                            <th>Mobile</th>
-                                            <th>Overall Status</th>
-                                            <th>View</th>
-                                            <th>Action</th>
-                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($data as $key=>$item)
-                                            <tr>
-                                                <td>{{$key+1}}</td>
-                                                <td>{{$item->agency->agency_name.' ('.$item->agency->aa_id.')'}}</td>
-                                                <td>{{$item->name.' ('.$item->as_id.')'}}</td>
-                                                <td>{{$item->as_id}}</td>
-                                                <td>{{$item->email}}</td>
-                                                <td>{{$item->mobile}}</td>
-                                                <td style="color:{{($item->status && $item->agency->status)?'green':'red'}}">{{($item->status && $item->agency->status)?'Active':'Inactive'}}</td>
-                                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.as.assessor.view',Crypt::encrypt($item->id))}}'" >View</button></td>
-                                                <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->as_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                </div>
-                        </div>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>All</strong> Verified Assessor </h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>AA ID</th>
+                                    <th>AS ID</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Overall Status</th>
+                                    <th>View</th>
+                                    <th>Action</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $key=>$item)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$item->agency->agency_name.' ('.$item->agency->aa_id.')'}}</td>
+                                        <td>{{$item->name.' ('.$item->as_id.')'}}</td>
+                                        <td>{{$item->email}}</td>
+                                        <td>{{$item->mobile}}</td>
+                                        <td style="color:{{($item->status && $item->agency->status)?'green':'red'}}">{{($item->status && $item->agency->status)?'Active':'Inactive'}}</td>
+                                        <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.as.assessor.view',Crypt::encrypt($item->id))}}'" >View</button></td>
+                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->as_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 @stop
 @section('page-script')
