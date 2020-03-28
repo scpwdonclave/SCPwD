@@ -9,7 +9,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row clearfix">
-       <div class="col-lg-3 col-sm-6">
+       <div class="col-lg-4 col-sm-6">
             <a href="{{route('admin.mis.old-document-part',['data' => 'freezed' ])}}">
 
             <div class="card text-center">
@@ -22,7 +22,7 @@
             </div>
             </a>
         </div>
-       <div class="col-lg-3 col-sm-6">
+       <div class="col-lg-4 col-sm-6">
             <a href="{{route('admin.mis.old-document-part',['data' => 'flowing' ])}}">
 
             <div class="card text-center">
@@ -35,7 +35,7 @@
             </div>
             </a>
         </div>
-       <div class="col-lg-3 col-sm-6">
+       <div class="col-lg-4 col-sm-6">
             <a href="{{route('admin.mis.old-document-block',['data' => 'formats' ])}}">
 
             <div class="card text-center">
