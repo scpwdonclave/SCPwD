@@ -45,6 +45,7 @@ class FileController extends Controller
             try {
                 return Storage::disk('myDisk')->download($document);
             } catch (Exception $e) {
+                
                 return abort(404);
             }
         } else {

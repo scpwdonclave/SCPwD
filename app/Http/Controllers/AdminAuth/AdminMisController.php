@@ -184,7 +184,24 @@ class AdminMisController extends Controller
     }
     
     public function oldDocument(){
-        return view('admin.mis.old-document');
+        
+
+        return view('admin.mis.old-mis-block');
+        // return view('admin.mis.old-document');
+    }
+    public function oldDocumentPart($data){
+       if($data==='freezed'){
+           return view('admin.mis.old-document-freezed');
+           
+        }else if($data==='flowing'){
+            return view('admin.mis.old-document-flowing');
+
+       }else if($data==='formats'){
+        return view('admin.mis.old-document-formats');
+
+        }else{
+         return abort(404);
+            }
     }
 
 
