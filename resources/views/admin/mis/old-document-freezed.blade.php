@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Documents')
+@section('title', 'Freezed Documents')
 @section('parentPageTitle', 'MIS')
 @section('content')
 <div class="container-fluid file_manager">
