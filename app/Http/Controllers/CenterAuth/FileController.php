@@ -38,19 +38,10 @@ class FileController extends Controller
     }
 
     protected function downloadThisPlacement($file, $id){
-        if ($file === 'zip') {
-            // $placement = Placement::find($id);
-            // $download1 = Storage::disk('myDisk')->download("{$placement->payslip1}");
-            // $download2 = Storage::disk('myDisk')->download("{$placement->payslip2}");
-            // $download3 = Storage::disk('myDisk')->download("{$placement->payslip3}");
-            return 'Woking on It';
-
-        } else {
-            try {
-                return Storage::disk('myDisk')->download("placement/{$file}");
-            } catch (Exception $e) {
-                return abort(404);
-            }
+        try {
+            return Storage::disk('myDisk')->download("placement/{$file}");
+        } catch (Exception $e) {
+            return abort(404);
         }
     }
 

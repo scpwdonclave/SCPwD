@@ -252,7 +252,7 @@ class PartnerHomeController extends Controller
     
             $partner->save();
             
-            AppHelper::instance()->writeNotification(NULL,'New TP Registration',"<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted a TP Registration Form. Pending Trining Partner Account Verification. Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('admin.tp.partner.view', Crypt::encrypt($partner->id)));
+            AppHelper::instance()->writeNotification(NULL,'admin','New TP Registration',"<span style='color:blue;'>".$partner->spoc_name."</span> has Submitted a TP Registration Form. Pending Trining Partner Account Verification. Kindly <span style='color:blue;'>Approve</span> or <span style='color:red;'>Reject</span>", route('admin.tp.partner.view', Crypt::encrypt($partner->id)));
     
             alert()->success("Your Application has been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
             return redirect(route('partner.dashboard.dashboard'));

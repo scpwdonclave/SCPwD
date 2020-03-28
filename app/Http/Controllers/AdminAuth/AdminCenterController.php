@@ -67,7 +67,7 @@ class AdminCenterController extends Controller
 
     public function centerAction(Request $request)
     {
-        if ($idAppHelper::instance()->decryptThis($request->id)) {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
             $center = Center::findOrFail($id);
             if ($center->verified) {
                 alert()->info('Training Center Already has been Approved', 'Attention')->autoclose(3000);

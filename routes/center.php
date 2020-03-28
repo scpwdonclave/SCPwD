@@ -38,6 +38,7 @@ Route::get('placements/view/{id}', 'CenterAuth\CenterHomeController@viewPlacemen
 Route::get('placements/files/{id}/{file}', 'CenterAuth\FileController@placementFile')->name('placement.file');
 Route::get('placements/add-placement', 'CenterAuth\CenterHomeController@addPlacement')->name('placement.add');
 Route::post('placements/add-placement', 'CenterAuth\CenterHomeController@submitPlacement')->name('placement.submit');
+Route::post('placements/update-placement', 'CenterAuth\CenterHomeController@updatePlacement')->name('placement.update');
 
 
 Route::get('support/complain', 'CenterAuth\CenterSupportController@registerComplain')->name('support.complain'); 

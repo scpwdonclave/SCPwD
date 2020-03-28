@@ -39,8 +39,11 @@
                 <div class="body">
                     <form id="form_placement" method="POST" action="{{ route('center.placement.submit') }}" enctype="multipart/form-data">
                         @csrf
-                        <div class="row">
-                            <div class="col-sm-4">
+                        <div class="row d-flex justify-content-center">
+                            <span style="color:blue"><h6>Cadidate Details</h6></span>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-6">
                                 <label for="candidate">Choose Candidate <span style="color:red"> <strong>*</strong></span></label>
                                 <div class="form-group form-float">
                                     <select id="candidate" class="form-control show-tick" name="candidate" data-live-search="true" data-dropup-auto='false' required>
@@ -52,96 +55,127 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label id="org_name" for="org_name">Organization Name <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Organization Name" name="org_name" required>
+                        </div>
+                        <hr>
+                        <div class="row d-flex justify-content-center">
+                            <span style="color:blue"><h6>Organization & Employment Details</h6></span>
+                        </div>
+                        <div class="body">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-sm-4">
+                                    <label id="org_name" for="org_name">Organization Name <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <input type="text" class="form-control" placeholder="Organization Name" name="org_name" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-4">
+                                    <label id="employment_date" for="employment_date">Employment Date <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float employment_date">
+                                        <input type="text" class="form-control" placeholder="Employment Date" name="employment_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="emp_type">Employer Type</label>
+                                    <div class="form-group form-float">
+                                        <select class="form-control show-tick" data-live-search="true" name="emp_type" data-show-subtext="true" data-dropup-auto='false' required>
+                                            @foreach (Config::get('constants.organizations') as $organizations)
+                                                <option>{{$organizations}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label id="employment_date" for="employment_date">Employment Date <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float employment_date">
-                                    <input type="text" class="form-control" placeholder="Employment Date" name="employment_date" required>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="state_district">Organization State District <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
+                                            @foreach ($states as $state)
+                                                <option value="{{$state->id}}">{{ $state->district.' ('.$state->state.')' }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <label id="org_address" for="org_address">Organization Address <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <input type="text" class="form-control" placeholder="Organization Address" name="org_address" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label id="spoc_name" for="spoc_name">Employer SPOC Name</label>
+                                    <div class="form-group form-float">
+                                        <input type="text" class="form-control" placeholder="SPOC Name" name="spoc_name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label id="spoc_mobile" for="spoc_mobile">Employer SPOC Mobile</label>
+                                    <div class="form-group form-float">
+                                        <input type="text" class="form-control" placeholder="SPOC Mobile" name="spoc_mobile">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label id="spoc_email" for="spoc_email">Employer SPOC Email</label>
+                                    <div class="form-group form-float">
+                                        <input type="email" class="form-control" placeholder="SPOC Email" name="spoc_email">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label for="emp_type">Employer Type</label>
-                                <div class="form-group form-float">
-                                    <select class="form-control show-tick" data-live-search="true" name="emp_type" data-show-subtext="true" data-dropup-auto='false' required>
-                                        @foreach (Config::get('constants.organizations') as $organizations)
-                                            <option>{{$organizations}}</option>
-                                        @endforeach
-                                    </select>
+                        <hr>
+                        <div class="row d-flex justify-content-center">
+                            <span style="color:blue"><h6>Placement Documents</h6></span>
+                        </div>
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="offer_letter">Upload Offer Letter <span style="color:red"> <strong>*</strong></span></label>
+                                    <div class="form-group form-float">
+                                        <input type="file" id="offer_letter" class="form-control" name="offer_letter" required>
+                                        <span id="offer_letter_error" style="color:red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="appointment_letter">Upload Appointment Letter</label>
+                                    <div class="form-group form-float">
+                                        <input type="file" id="appointment_letter" class="form-control" name="appointment_letter">
+                                        <span id="appointment_letter_error" style="color:red"></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label id="org_address" for="org_address">Organization Address <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="Organization Address" name="org_address" required>
+                            
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="payslip">First Month's Salary Slip</label>
+                                    <div class="form-group form-float">
+                                        <input type="file" id="first_payslip" class="form-control" name="first_payslip" multiple>
+                                        <span id="first_payslip_error" style="color:red"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="state_district">Choose Organization State District <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float">
-                                    <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
-                                        @foreach ($states as $state)
-                                            <option value="{{$state->id}}">{{ $state->district.' ('.$state->state.')' }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-sm-4">
+                                    <label for="payslip">Second Month's Salary Slip</label>
+                                    <div class="form-group form-float">
+                                        <input type="file" id="second_payslip" class="form-control" name="second_payslip" multiple>
+                                        <span id="second_payslip_error" style="color:red"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="payslip">Third Month's Salary Slip</label>
+                                    <div class="form-group form-float">
+                                        <input type="file" id="third_payslip" class="form-control" name="third_payslip" multiple>
+                                        <span id="third_payslip_error" style="color:red"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label id="spoc_name" for="spoc_name">Employer SPOC Name</label>
-                                <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="SPOC Name" name="spoc_name">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label id="spoc_mobile" for="spoc_mobile">Employer SPOC Mobile</label>
-                                <div class="form-group form-float">
-                                    <input type="text" class="form-control" placeholder="SPOC Mobile" name="spoc_mobile">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label id="spoc_email" for="spoc_email">Employer SPOC Email</label>
-                                <div class="form-group form-float">
-                                    <input type="email" class="form-control" placeholder="SPOC Email" name="spoc_email">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label for="offer_letter">Upload Offer Letter <span style="color:red"> <strong>*</strong></span></label>
-                                <div class="form-group form-float">
-                                    <input type="file" id="offer_letter" class="form-control" name="offer_letter" required>
-                                    <span id="offer_letter_error" style="color:red"></span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="appointment_letter">Upload Appointment Letter</label>
-                                <div class="form-group form-float">
-                                    <input type="file" id="appointment_letter" class="form-control" name="appointment_letter">
-                                    <span id="appointment_letter_error" style="color:red"></span>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="payslip">Three Months Salary Slip</label>
-                                <div class="form-group form-float">
-                                    <input type="file" id="payslip" class="form-control" name="payslip[]" multiple>
-                                    <span id="payslip_error" style="color:red"></span>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="row justify-content-center">
                             <button type="submit" class="btn btn-primary btn-round">Add Placement</button>
                         </div>
-
                     </form>  
+                    <h6><span style="color:blue">Note</span>: You can also add these Salary Slips Later on</h6>
                 </div>
             </div>
         </div>
@@ -167,19 +201,11 @@
                             var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
                             if ($.inArray(fileType, ValidImageTypes) < 0) {
                                 $("#"+e.currentTarget.id).val('');
-                            
                                 $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
                             } else {
                                 $("#" + e.currentTarget.id + "_error").text('');
                             }
 
-                            if (e.currentTarget.id === 'payslip') {
-                                if (l !== 3) {
-                                    $("#"+e.currentTarget.id).val('');
-                                    $("#" + e.currentTarget.id + "_error").text('You have to choose exact 3 Files');
-                                }
-                            }
-                  
                             if (size > 5) {
                                 $("#"+e.currentTarget.id).val('');
                                 $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');

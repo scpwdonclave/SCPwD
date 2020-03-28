@@ -162,7 +162,7 @@ class PartnerTrainerController extends Controller
 
         if (Gate::allows('partner-has-jobrole', Auth::shouldUse('partner'))) {
 
-            // * Declaring Variables for Freash Trainer Entry
+            // * Declaring Variables for Fresh Trainer Entry
             $doc_file = '';
             $reassign = $status = 0;                
             $trainer_id = NULL;
@@ -247,14 +247,15 @@ class PartnerTrainerController extends Controller
 
                 $pid = $trainer->partner->tp_id;
 
-                /* Notification For Partner */
-                $notification = new Notification;
-                //$notification->rel_id = 1;
-                $notification->rel_with = 'admin';
-                $notification->title = 'New Trainer Registered';
-                $notification->message = "TP (ID <span style='color:blue;'>$pid</span>) has Registered a <span style='color:blue;'>Trainer</span>. Verification is <span style='color:blue;'>Pending</span>.";
-                $notification->save();
-                /* End Notification For Partner */
+                if ($reassign) {
+                    $title = "New Trainer Registered";
+                    $msg = "TP (ID <span style='color:blue;'>$pid</span>) has Registered a <span style='color:blue;'>Trainer</span>. Kindly <span style='color:blue;'>Accept</span> or <span style='color:red;'>Reject</span>.";
+                } else {                   
+                    $title = "Trainer Re-Assign RequestPending Trainer";
+                    $msg = "TP (ID <span style='color:blue;'>$pid</span>) has Request a Trainer for <span style='color:blue;'>Re-Assign</span>. Kindly <span style='color:blue;'>Accept</span> or <span style='color:red;'>Reject</span>.";
+                }
+
+                AppHelper::instance()->writeNotification(NULL,'admin',$title,$msg, route('admin.tc.trainer.view', Crypt::encrypt($trainer->id)));
 
                 alert()->success("Trainer Details has Been Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(8000);
             });

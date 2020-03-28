@@ -194,11 +194,11 @@ class AdminPartnerController extends Controller
     
     public function partnerAction(Request $request){
         if ($req=AppHelper::instance()->decryptThis($request->id)) {
-            $data = explode(',',$req);
-            $partner = Partner::findOrFail($data[0]);
+            $getdata = explode(',',$req);
+            $partner = Partner::findOrFail($getdata[0]);
             if ($partner->pending_verify) {
                 $dataMail = collect();
-                if ($data[1]) {
+                if ($getdata[1]) {
                     $data=DB::table('partners')->select(DB::raw('SUBSTRING(tp_id,3) as tp_id'))->where("tp_id", "LIKE", "TP%")->get();
                     $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
                     
@@ -288,8 +288,9 @@ class AdminPartnerController extends Controller
                 $dataMail->spoc_name = $partner->spoc_name;
                 $dataMail->email = $partner->email;
                 event(new TPMailEvent($dataMail));
-                $partner->delete();
-                
+                if (!$getdata[1]) {
+                    $partner->delete();
+                }                
                 return redirect(route('admin.tp.partners'));
             } else {
                 alert()->error("Training Partner Account already been <span style='color:blue;font-weight:bold'>Approved</span>", "Done")->html()->autoclose(3000);

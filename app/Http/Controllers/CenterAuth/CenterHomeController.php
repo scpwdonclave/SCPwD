@@ -581,8 +581,9 @@ class CenterHomeController extends Controller
             'spoc_email'=>'nullable',
             'offer_letter'=>'required|file',
             'appointment_letter'=>'nullable|file',
-            'payslip'=>'nullable|array|min:3|max:3',
-            'payslip.*' => 'distinct|file|mimes:jpeg,jpg,png,pdf'
+            'first_payslip' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+            'second_payslip' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+            'third_payslip' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
         ]);
 
         $placement = new Placement;
@@ -604,14 +605,62 @@ class CenterHomeController extends Controller
             $placement->appointment_letter = Storage::disk('myDisk')->put('/placement', $request->appointment_letter);
         }
 
-        if ($request->has('payslip')) {
-            $placement->payslip1 = Storage::disk('myDisk')->put('/placement', $request->payslip[0]);
-            $placement->payslip2 = Storage::disk('myDisk')->put('/placement', $request->payslip[1]);
-            $placement->payslip3 = Storage::disk('myDisk')->put('/placement', $request->payslip[2]);
+        if ($request->has('first_payslip')) {
+            $placement->payslip1 = Storage::disk('myDisk')->put('/placement', $request->first_payslip);
         }
+        if ($request->has('second_payslip')) {
+            $placement->payslip2 = Storage::disk('myDisk')->put('/placement', $request->second_payslip);
+        }
+        if ($request->has('third_payslip')) {
+            $placement->payslip3 = Storage::disk('myDisk')->put('/placement', $request->third_payslip);
+        }
+
         $placement->save();
         
         alert()->success("A New Placement Record has been <span style='color:blue;font-weight:bold'>Added</span>", 'Job Done')->html()->autoclose(4000);
         return redirect()->back();
+    }
+
+    public function updatePlacement(Request $request)
+    {
+        $request->validate([
+            'pid'=> 'required',
+            'payslip1' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+            'payslip2' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+            'payslip3' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:5120',
+        ]);
+
+        if (!$request->has('payslip1') && !$request->has('payslip2') && !$request->has('payslip3')) {
+            alert()->info("Choose atleast one Salaryslip to <span style='color:blue;font-weight:bold'>Upload</span>", 'Attention')->html()->autoclose(4000);
+            return redirect()->back(); 
+        }
+
+        if ($pid=AppHelper::instance()->decryptThis($request->pid)) {
+            $placement = Placement::findOrFail($pid);
+            if ($request->has('payslip1')) {
+                if (is_null($placement->payslip1)) {
+                    $placement->payslip1 = Storage::disk('myDisk')->put('/placement', $request->payslip1);
+                }
+            }
+            if ($request->has('payslip2')) {
+                if (is_null($placement->payslip2)) {
+                    $placement->payslip2 = Storage::disk('myDisk')->put('/placement', $request->payslip2);
+                }
+            }
+            if ($request->has('payslip3')) {
+                if (is_null($placement->payslip3)) {
+                    $placement->payslip3 = Storage::disk('myDisk')->put('/placement', $request->payslip3);
+                }
+            }
+
+            $placement->save();
+
+            $tcid = $this->guard()->user()->tc_id;
+            $ccid = $placement->centercandidate->candidate->cd_id;
+            AppHelper::instance()->writeNotification(NULL,'admin','TC Updated Salaryslip(s)',"TC (ID: <span style='color:blue;'>".$tcid."</span>) has uploaded new salarslip of a candidate (ID: <span style='color:blue;'>".$ccid."</span>).", route('admin.placement.view', Crypt::encrypt($placement->id)));
+
+            alert()->success("Placement Salaryslip(s) Record has been <span style='color:blue;font-weight:bold'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+            return redirect()->back();
+        }
     }
 }
