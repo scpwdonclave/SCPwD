@@ -174,6 +174,13 @@ class AdminAssessmentController extends Controller
                 $tag='Re-Assessment';
                 $adminroute = route('admin.reassessment.reassessment-status.view', Crypt::encrypt($id[0]));
             }
+
+            if ($request->action == 'release-request') {
+                if (is_null($assessment->batch->scheme->cert_name) || $assessment->batch->scheme->cert_name == '') {
+                    alert()->info("Certificate Layout is Missing, cannot proceed further.<br>Kindly Contact <span style='color:blue'>Onclave Systems</span>", 'Attention')->html()->autoclose(8000);
+                    return redirect()->back();
+                }
+            }
             
 
             if($assessment->aa_verified==1 && $assessment->admin_verified==1 && $assessment->sup_admin_verified==1 && (($assessment->admin_cert_rel==0 && $assessment->supadmin_cert_rel==0) ||($assessment->admin_cert_rel==1 && $assessment->supadmin_cert_rel==0) || ($assessment->admin_cert_rel==1 && $assessment->supadmin_cert_rel==2))){

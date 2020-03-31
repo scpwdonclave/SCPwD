@@ -19,7 +19,7 @@
                                 <p class="m-b-0">{{Auth::guard('center')->user()->tc_id}}</p>
                                 @break
                              @case('agency')
-                                <h4>{{Auth::guard('agency')->user()->name}}</h4>
+                                <h4>{{Auth::guard('agency')->user()->agency_name}}</h4>
                                 <p class="m-b-0">{{Auth::guard('agency')->user()->aa_id}}</p>
                                 @break
                              @case('assessor')

@@ -103,10 +103,11 @@
                         
                         
                             <div class="col-sm-4">
-                                <label for="logo">Scheme Logo <span style="color:red"> <strong>*</strong></span></label>
+                                <label for="dummy">Choose a dummy format of Certificate</label>
                                 <div class="form-group form-float">
-                                    <input type="file" id="logo" class="form-control" name="logo" required>
-                                    <span id="logo_error"  style="color:red;"></span>
+                                    <input type="file" id="dummy" class="form-control" name="dummy">
+                                    <span id="dummy_error"  style="color:red;"></span>
+                                    <span style="color:blue">We will use this to design certificate format</span>
                                 </div>
                             </div>
                         
@@ -129,10 +130,9 @@
                                 <tr>
                                     <th>Department</th>
                                     <th>Scheme</th>
-                                    <th>Invoice on Total</th>
-                                    <th>Disability Type</th>
+                                    <th>Invoice on Total & Disability</th>
                                     <th>Certificate Format</th>
-                                    <th>Logo</th>
+                                    <th>Certificate Layout</th>
                                     <th>Action</th>
                                     <th>Status Action</th>
                                 </tr>
@@ -142,13 +142,34 @@
                                     <tr style="height:5px !important">
                                         <td>{{$scheme->department->dept_name}}</td>
                                         <td>{{$scheme->scheme}}</td>
-                                        <td>{{$scheme->disability?'Assigned':'Appeared'}}</td>
-                                        <td>{{$scheme->invoice_on?'Multy Type':'Single Type'}}</td>
+                                        <td>{{($scheme->disability?'Assigned':'Appeared').' | '.($scheme->invoice_on?'Multy Type':'Single Type')}}</td>
                                         <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.substr($scheme->year, 2):null)!!}</td>
-                                        <td> <img src="{{route('admin.scheme',basename($scheme->logo))}}" width="50" alt="No Image"> </td>
+                                        @if (is_null($scheme->cert_name))
+                                            <td style="color:red">Not Verified By <br> Onclave Systems</td>
+                                        @else
+                                            <td style="color:blue">Verified By <br> Onclave Systems</td>
+                                            {{-- <td><a href="#largeModal{{$scheme->id}}"class="badge bg-green margin-0" data-toggle="modal" data-target="#largeModal{{$scheme->id}}">view</a></td> --}}
+                                        @endif
                                         <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
                                         <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                     </tr>
+                                    
+                                    {{-- @if (!is_null($scheme->cert_name)) --}}
+                                        {{-- <div class="modal fade" id="largeModal{{$scheme->id}}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-body embed-responsive embed-responsive-16by9">
+                                                        <iframe class="embed-responsive-item" src="{{asset('assets/images/certificate/'.$scheme->cert_name)}}" allowfullscreen runat="server">
+                                                        </iframe>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" onclick="window.open('{{asset('assets/images/certificate/'.$scheme->cert_name)}}')" class="btn btn-default btn-round waves-effect">Download</button>
+                                                        <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> --}}
+                                    {{-- @endif --}}
                                 @endforeach
                             </tbody>
                         </table>
@@ -296,11 +317,11 @@
 
                     image = new Image();
                     var fileType = file["type"];
-                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
                     if ($.inArray(fileType, ValidImageTypes) < 0) {
                         $("#"+e.currentTarget.id).val('');
                         
-                        $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg or png Format');
+                        $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
                     } else {
                         $("#" + e.currentTarget.id + "_error").text('');
                     }

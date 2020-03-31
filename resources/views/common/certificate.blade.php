@@ -56,9 +56,9 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                   
                 @endif
                 <div style="position:absolute;left:138px;top:125px;height:30px"  class="cls_002"><span class="cls_002">Certificate No: </span><span class="cls_003">{{isset($assessment)?$item->centerCandidate->certi_no:$item->centercandidate->certi_no}}</span></div>
-                <div style="position:absolute;left:138px;top:160px;height:100px;">    
+                {{-- <div style="position:absolute;left:138px;top:160px;height:100px;">     --}}
                     {{-- <img src="{{asset('storage/'.(isset($assessment)?$assessment->batch->scheme->logo:$batch->scheme->logo))}}" style="width:180px;"> --}}
-                </div>
+                {{-- </div> --}}
 
                 @if ($assessment->batch->scheme->scheme === 'SIPDA')
                 <div style="position:absolute;left:385px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>

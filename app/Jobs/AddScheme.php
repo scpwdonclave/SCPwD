@@ -34,7 +34,7 @@ class AddScheme implements ShouldQueue
     {
         $request->validate([
             'scheme' => 'required|unique:schemes',
-            'logo' => 'required|mimes:jpeg,jpg,png',
+            'dummy' => 'nullable|mimes:jpeg,jpg,png,pdf|max:5120',
             'year' => 'required',
             'disability' => 'required',
             'invoice_on' => 'required',
@@ -42,18 +42,18 @@ class AddScheme implements ShouldQueue
             'cert_format' => 'required',
         ]);
 
-        // dd($request);
-        Storage::disk('myDisk')->put('/adminscheme', $request->logo);
-
+        
         $scheme = new Scheme;
         $scheme->scheme = $request->scheme;
-        $scheme->logo = Storage::disk('public')->put('/adminscheme', $request->logo);
-        $scheme->year = $request->year;
+        if ($request->has('dummy')) {
+            $scheme->dummy = Storage::disk('myDisk')->put('/adminscheme', $request->dummy);
+        }
         $scheme->dept_id = $request->dept;
         $scheme->invoice_on = $request->invoice_on;
         $scheme->disability = $request->disability;
         $scheme->cert_format = $request->cert_format.'/';
         $scheme->fin_yr = $request->finyear;
+        $scheme->year = $request->year;
         $scheme->save();
 
         alert()->success('Scheme <span style="color:blue">'.$request->scheme.'</span> has been Added Successfully','New Entry')->html()->autoclose('4000');

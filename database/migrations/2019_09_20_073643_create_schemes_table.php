@@ -17,7 +17,8 @@ class CreateSchemesTable extends Migration
             $table->bigIncrements('id');
             $table->string('scheme');
             $table->unsignedBigInteger('dept_id');
-            $table->string('logo');
+            $table->string('dummy')->nullable()->comment='Dummy Certificate Format';
+            $table->string('cert_name')->nullable()->comment='NULL: not verified yet by onclave';
             $table->string('cert_format');
             $table->boolean('fin_yr')->default(0);
             $table->string('year');
