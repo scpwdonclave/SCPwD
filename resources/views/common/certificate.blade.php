@@ -38,7 +38,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
         @if($flag)
 
             <div style="height:1000px;width:1500px;position:relative">
-                @if ($assessment->batch->scheme->scheme === 'SIPDA')
+                @if ($assessment->batch->scheme->scheme === 'DEPwD-SIPDA 19-20')
                 <img src="{{asset('assets/images/certificate/SIPDA.jpg')}}" style="height:1000px;width:1500px;">
                     
                 @elseif($assessment->batch->scheme->scheme === 'NHFDC_CSR' || $assessment->batch->scheme->scheme === 'TOT')
@@ -60,7 +60,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                     {{-- <img src="{{asset('storage/'.(isset($assessment)?$assessment->batch->scheme->logo:$batch->scheme->logo))}}" style="width:180px;"> --}}
                 {{-- </div> --}}
 
-                @if ($assessment->batch->scheme->scheme === 'SIPDA')
+                @if ($assessment->batch->scheme->scheme === 'DEPwD-SIPDA 19-20')
                 <div style="position:absolute;left:385px;top:330px" class="cls_004"><span class="cls_004">Department of Empowerment of Persons with Disabilities (Divyangjan)</span></div>
                 <div style="position:absolute;left:510px;top:360px" class="cls_004"><span class="cls_004">Ministry of Social Justice and Empowerment</span></div>
                 <div style="position:absolute;left:625px;top:390px" class="cls_005"><span class="cls_005">Certificate</span></div>
