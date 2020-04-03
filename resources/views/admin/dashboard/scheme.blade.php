@@ -142,7 +142,7 @@
                                     <tr style="height:5px !important">
                                         <td>{{$scheme->department->dept_name}}</td>
                                         <td>{{$scheme->scheme}}</td>
-                                        <td>{{($scheme->disability?'Assigned':'Appeared').' | '.($scheme->invoice_on?'Multy Type':'Single Type')}}</td>
+                                        <td>{{($scheme->disability?'Assigned':'Appeared').' | '.($scheme->invoice_on?'Multi Type':'Single Type')}}</td>
                                         <td>{!!$scheme->cert_format."<span style='color:red;'>UniqueDigit</span>".($scheme->fin_yr?'/'.substr($scheme->year, 2):null)!!}</td>
                                         @if (is_null($scheme->cert_name))
                                             <td style="color:red">Not Verified By <br> Onclave Systems</td>

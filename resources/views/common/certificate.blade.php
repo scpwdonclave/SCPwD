@@ -45,7 +45,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                 <img src="{{asset('assets/images/certificate/NHFDC-CSR.jpg')}}" style="height:1000px;width:1500px;">
                 @elseif($assessment->batch->scheme->scheme === 'AYJNISHD-SIPDA')
                 <img src="{{asset('assets/images/certificate/AYJNISHD.jpg')}}" style="height:1000px;width:1500px;">
-                @elseif($assessment->batch->scheme->scheme === 'NHFDC_SIPDA')
+                @elseif($assessment->batch->scheme->scheme === 'NHFDC-SIPDA 18-19')
                 <img src="{{asset('assets/images/certificate/NHFDC.jpg')}}" style="height:1000px;width:1500px;">
                 @elseif($assessment->batch->scheme->scheme === 'NIEPMD-SIPDA')
                 <img src="{{asset('assets/images/certificate/NIEPMD.jpg')}}" style="height:1000px;width:1500px;">
@@ -76,7 +76,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                     <span style="font-size:24px;font-weight:bold">Department of Empowerment of Persons with Disabilities (Divyangjan), Ministry of Social Justice and Empowerment  </span></div><br>
                 
                 <div style="position:absolute;left:625px;top:420px;padding:13px" class="cls_005"><span class="cls_005">Certificate</span></div>   
-                @elseif($assessment->batch->scheme->scheme === 'NHFDC_SIPDA')
+                @elseif($assessment->batch->scheme->scheme === 'NHFDC-SIPDA 18-19')
                 <div style="position:absolute;left:385px;top:330px;width:800px;text-align:center;">
                 <span style="font-size:24px;font-weight:bold">National Handicapped Finance & Development Corporation</span><br>
                 <span style="font-size:24px;font-weight:bold">Department of Empowerment of Persons with Disabilities (Divyangjan), Ministry of Social Justice and Empowerment </span></div><br>
