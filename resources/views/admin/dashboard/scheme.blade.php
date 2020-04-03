@@ -133,7 +133,7 @@
                                     <th>Invoice on Total & Disability</th>
                                     <th>Certificate Format</th>
                                     <th>Certificate Layout</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                     <th>Status Action</th>
                                 </tr>
                             </thead>
@@ -150,7 +150,7 @@
                                             <td style="color:blue">Verified By <br> Onclave Systems</td>
                                             {{-- <td><a href="#largeModal{{$scheme->id}}"class="badge bg-green margin-0" data-toggle="modal" data-target="#largeModal{{$scheme->id}}">view</a></td> --}}
                                         @endif
-                                        <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td>
+                                        {{-- <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td> --}}
                                         <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
                                     </tr>
                                     
@@ -190,55 +190,57 @@
     /* End Onload Function */
 
 
-    $('form[id^=editform_]').submit(function(e){
-        e.preventDefault();
-        var data = e.currentTarget.data.value.split(',');
-        var _token = e.currentTarget._token.value;
-        swal({
-            text: "Please Provide Updated Scheme Name",
-            content: {
-                element: "input",
-                attributes: {
-                    value: data[1],
-                    type: "text",
-                },
-            },
-            icon: "info",
-            buttons: true,
-            buttons: {
-                    cancel: "Cancel",
-                    confirm: {
-                        text: "Confirm Update",
-                        closeModal: false
-                    }
-                },
-            closeModal: false,
-            closeOnEsc: false,
-        }).then(function(val){
-            var dataString = {_token:_token, id:data[0], name:data[1], value:val};
-            if (val) {
-                $.ajax({
-                    url: "{{ route('admin.dashboard.scheme_action') }}",
-                    method: "POST",
-                    data: dataString,
-                    success: function(data){
-                        var SuccessResponseText = document.createElement("div");
-                        SuccessResponseText.innerHTML = data['message'];
-                        swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
-                    },
-                    error:function(data){
-                        var errors = JSON.parse(data.responseText);
-                        setTimeout(function () {
-                            swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                        }, 2000);
-                    }
-                });
-            } else if (val!=null) {
-                swal('Attention', 'You Have not Changed anything yet', 'info');
-            }
-        });
+    /* Update Scheme Name */
+    // $('form[id^=editform_]').submit(function(e){
+    //     e.preventDefault();
+    //     var data = e.currentTarget.data.value.split(',');
+    //     var _token = e.currentTarget._token.value;
+    //     swal({
+    //         text: "Please Provide Updated Scheme Name",
+    //         content: {
+    //             element: "input",
+    //             attributes: {
+    //                 value: data[1],
+    //                 type: "text",
+    //             },
+    //         },
+    //         icon: "info",
+    //         buttons: true,
+    //         buttons: {
+    //                 cancel: "Cancel",
+    //                 confirm: {
+    //                     text: "Confirm Update",
+    //                     closeModal: false
+    //                 }
+    //             },
+    //         closeModal: false,
+    //         closeOnEsc: false,
+    //     }).then(function(val){
+    //         var dataString = {_token:_token, id:data[0], name:data[1], value:val};
+    //         if (val) {
+    //             $.ajax({
+    //                 url: "{{ route('admin.dashboard.scheme_action') }}",
+    //                 method: "POST",
+    //                 data: dataString,
+    //                 success: function(data){
+    //                     var SuccessResponseText = document.createElement("div");
+    //                     SuccessResponseText.innerHTML = data['message'];
+    //                     swal({title: "Job Done", content: SuccessResponseText, icon: data['type'], closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+    //                 },
+    //                 error:function(data){
+    //                     var errors = JSON.parse(data.responseText);
+    //                     setTimeout(function () {
+    //                         swal("Sorry", "Something Went Wrong, Please Try Again", "error");
+    //                     }, 2000);
+    //                 }
+    //             });
+    //         } else if (val!=null) {
+    //             swal('Attention', 'You Have not Changed anything yet', 'info');
+    //         }
+    //     });
         
-    });
+    // });
+    /* End Update Scheme Name */
 
     function popup(v){
         var data = v.split(',');
