@@ -11,6 +11,7 @@ use App\Candidate;
 use App\Placement;
 use Carbon\Carbon;
 use App\Notification;
+use App\OldCandidate;
 use App\CenterJobRole;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
@@ -324,8 +325,23 @@ class CenterHomeController extends Controller
 
     public function candidate_api(Request $request){
         if ($request->has('doc_no')) {
+
+
         /* Checking If There is Any Other Candidate Present with Same Document */
 
+        $oldCandidate = OldCandidate::where('doc_no', $request->doc_no)->first();
+
+        if ($oldCandidate) {
+            // * Old Candidate Found with This Document
+            $cert = Carbon::parse($oldCandidate->batch_end)->addYear(2); // * Adding 2 years to Batch End Date
+                                    
+            if (Carbon::now() > $cert) {
+                return response()->json(['success' => true,'candidate'=> null], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Candidate with this Doc No has already Received a Valid Certificate from SCPwD', 'timer' => 6000], 200);
+            }
+        } else {
+            // * Old Candidate isn't Found with This Document
             $data = AppHelper::instance()->checkDoc($request->doc_no);
             if ($data['status']) {
                 return response()->json(['success' => true, 'candidate' => null], 200);
@@ -383,6 +399,7 @@ class CenterHomeController extends Controller
                     return response()->json(['success' => false, 'message' => 'We have This Doc No Registered with Someone else'], 200);
                 }
             }
+        }            
 
         /* End Checking If There is Any Other Candidate Present with Same Document */    
         } elseif ($request->has('email')) {
