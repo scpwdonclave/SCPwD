@@ -21,7 +21,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Invoice ID</th>
                                         <th>Partner ID</th>
                                         <th>Scheme</th>

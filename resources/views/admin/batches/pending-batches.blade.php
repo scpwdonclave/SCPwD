@@ -25,7 +25,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th> 
+                                    <th>Sl. No.</th> 
                                     <th>Training Partner</th>
                                     <th>Training Center</th>
                                     <th>Start Date</th>

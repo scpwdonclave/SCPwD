@@ -3,7 +3,7 @@
         <ul class="list">
             <li>
                 <div class="user-info">
-                    <div class="image"><a href="{{route(Request::segment(1).'.profile')}}"><img src="{{asset('assets/images/avater.png')}}" alt="User"></a></div>
+                    <div class="image"><a href="{{route(Request::segment(1).'.profile')}}"><img src="{{asset('assets/images/scpwd-logo-without-text.png')}}" alt="User"></a></div>
                     <div class="detail">
                         @switch(Request::segment(1))
                             @case('admin')
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </li>
-            <li class="header">MAIN</li>
+            <li class="header">WELCOME TO PMS-SCPWD</li>
             <li class="{{ Request::segment(2) === 'dashboard' ? 'active open' : null }}">
                 <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a>
                 <ul class="ml-menu">

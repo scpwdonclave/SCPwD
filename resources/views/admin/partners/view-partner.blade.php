@@ -355,7 +355,7 @@
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Scheme Name</th>
                                     <th>Year</th>
                                     <th>Action</th>
@@ -391,7 +391,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Center</th>
                                     <th>Spoc Name</th>
                                     <th>Spoc Email</th>

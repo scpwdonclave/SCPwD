@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-3 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{count($center->candidatesmap)}}" data-speed="2000" data-fresh-interval="700">{{count($center->candidatesmap)}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total No of Candidate Registration</span></p></strong>
                 </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{count($center->batches)}}" data-speed="2000" data-fresh-interval="700">{{count($center->batches)}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total No of Batches</span></p></strong>
                 </div>
@@ -21,7 +21,7 @@
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$placed}}" data-speed="2000" data-fresh-interval="700">{{$placed}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total No of Placements</span></p></strong>
                 </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessment}}" data-speed="2000" data-fresh-interval="700">{{$assessment}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total No of (Re)Assessmets Taken</span></p></strong>
                 </div>

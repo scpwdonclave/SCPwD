@@ -97,7 +97,7 @@
                                         <table class="table m-b-0">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>Sl. No.</th>
                                                     <th>File</th>
                                                 </tr>
                                             </thead>

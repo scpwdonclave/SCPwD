@@ -88,7 +88,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
                                         <th>Assessment status</th>
@@ -103,7 +103,7 @@
                                     @foreach ($pay_order->paymentorder as $payorder)
                                         
                                     <tr>
-                                        <td>#</td>
+                                        <td>Sl. No.</td>
                                         @if ($payorder->agencyBatch->reass_id===null)
                                             
                                         <td>{{$payorder->agencyBatch->batch->batch_id}}</td>

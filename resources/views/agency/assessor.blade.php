@@ -21,7 +21,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Assessor ID</th>
                                     <th>Name</th>
                                     <th>Email</th>

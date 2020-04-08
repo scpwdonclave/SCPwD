@@ -124,7 +124,7 @@
                                             <table class="table m-b-0">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
+                                                        <th>Sl. No.</th>
                                                         
                                                         <th>Sector</th>
                                                         
@@ -303,7 +303,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Batch ID</th>
                                     <th>Training Partner</th>
                                     <th>Training Center</th>

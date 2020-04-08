@@ -105,6 +105,102 @@ class PartnerCenterController extends Controller
     }
 
 
+    public function centerTargetView($id)
+    {
+        if ($id=AppHelper::instance()->decryptThis($id)) {
+            $center = Center::findOrFail($id);
+            $partner = $this->guard()->user();
+            if ($center->partner->id == $partner->id) {
+                $data = [
+                    'partner' => $partner,
+                    'center' => $center,
+                ];            
+                // return view('admin.partners.partner-target')->with($data);
+                return view('common.target-page')->with($data);
+            } else {
+                return abort(403, 'You are not Authorized for this action');
+            }
+        }
+    }
+
+    public function fetchData(Request $request){
+        if (is_null($request->data)) {      
+            $partner = $this->guard()->user();
+            $schemedata = collect(); $id = collect();
+            foreach ($partner->partner_jobroles as $partnerJob) {
+                $id->push($partnerJob->id.','.($partnerJob->target-$partnerJob->assigned));
+                $schemedata->push($partner->schemedata = $partnerJob->scheme->scheme.'|'.$partnerJob->sector->sector.'|'.$partnerJob->jobrole->job_role);
+            }   
+            $data = [
+                'id' => $id,
+                'schemedata' => $schemedata,
+                'max' => $schemedata,
+            ];
+        } else {
+            $centerJob = CenterJobRole::findOrFail($request->data);
+            $centerJob->partnerjobrole;
+            $centerJob->jobdata = $centerJob->partnerjobrole->scheme->scheme.'|'.$centerJob->partnerjobrole->sector->sector.'|'.$centerJob->partnerjobrole->jobrole->job_role;
+            // $center->jobid = 
+            $data = [
+                'data' => $centerJob,
+            ];
+        }
+        return response()->json($data,200); 
+    }
+
+
+    
+    // * Training Center JobRole Target Section
+    
+    public function centerTargetAction(Request $request)
+    {
+        if (is_null($request->jobid)) {
+            
+            $data = explode(',',$request->jobrole);
+            $centerJob=CenterJobRole::where([['tp_id', $this->guard()->user()->id],['tc_id',$request->userid],['tp_job_id',$data[0]]])->first();
+            if ($centerJob) {
+                alert()->error("Jobrole with these details already <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Center", 'Abort')->html()->autoclose(5000);
+                return redirect()->back();
+            } else {
+                $centerjob = new CenterJobRole;
+                $centerjob->tp_id=$this->guard()->user()->id;
+                $centerjob->tc_id=$request->userid;
+                $centerjob->tp_job_id=$data[0];
+                $centerjob->target=$request->target;
+                $centerjob->save();
+
+                PartnerJobrole::find($this->guard()->user()->id)->update(['assigned'=> ($centerjob->partnerjobrole->assigned+$request->target)]);
+                AppHelper::instance()->writeNotification($request->userid,'center','New Job Target',"New Jobrole with Target has been <span style='color:blue;'>Assigned</span> to you.", route('center.dashboard.jobroles'));        
+                alert()->success("New Job with Target has been <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Center", 'Job Done')->html()->autoclose(4000);
+                return redirect()->back(); 
+            }
+        } else {
+            $centerJob=CenterJobRole::findOrFail($request->jobid);
+            if ($centerJob && ($centerJob->tp_id==$this->guard()->user()->id)) {
+
+                if($centerJob->enrolled <= $request->target && ($centerJob->partnerjobrole->target-($centerJob->partnerjobrole->assigned-$centerJob->target) >= $request->target)){
+                    $old_target = $centerJob->target;
+                    $centerJob->target=$request->target;
+                    $centerJob->save();
+    
+                    PartnerJobrole::find($this->guard()->user()->id)->update(['assigned'=> (($centerJob->partnerjobrole->assigned-$old_target)+$request->target)]);
+                    AppHelper::instance()->writeNotification($request->userid,'center','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.", route('center.dashboard.jobroles'));        
+                    alert()->success("Jobrole of This Training Center has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
+                    return redirect()->back(); 
+                } else {
+                    return abort(403,'You are not Authorized for this action');
+                }
+                
+            } else {
+                alert()->error("Could not find the Record you have <span style='font-weight:bold;color:blue'>Requested</span>", 'Attention')->html()->autoclose(2000);
+                return redirect()->back();
+            }            
+        }
+    }
+
+    // * End Training Center JobRole Target Section
+
+
 
     public function view_addcenter_form(){
 

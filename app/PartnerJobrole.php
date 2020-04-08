@@ -8,6 +8,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 class PartnerJobrole extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+
+    protected $fillable = ['assigned'];
     
     public function partner(){
         return $this->belongsTo('App\Partner', 'tp_id');

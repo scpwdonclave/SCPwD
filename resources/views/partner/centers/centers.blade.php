@@ -23,11 +23,14 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
                                     <th>SPOC Mobile</th>
                                     <th>Overall Status</th>
+                                    @if (Request::segment(1)==='partner')
+                                        <th>Target</th>
+                                    @endif
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -43,6 +46,9 @@
                                     <td style="color:{{($center->status && $center->partner->status)?'green':'red'}}">{{($center->status && $center->partner->status)?'Active':'Inactive'}}</td>
                                 @else
                                     <td style="color:red">Not Verified</td>
+                                @endif
+                                @if (Request::segment(1)==='partner')
+                                    <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('partner.tc.target.view',Crypt::encrypt($center->id))}}'" >Target</button></td>
                                 @endif
                                 <td><a class="badge bg-green margin-0" href="{{route('partner.tc.center.view',Crypt::encrypt($center->id))}}" >View</a></td>
                                 </tr>

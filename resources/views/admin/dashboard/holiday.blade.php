@@ -32,7 +32,7 @@
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Holiday Name</th>
                                     <th>Date</th>
                                     <th>Action</th>

@@ -73,7 +73,7 @@
                         <table id="scheme_table" class="table nobtn table-bordered table-striped table-hover dataTable">
                             <thead>
                                 <tr>
-                                    <th>#</th>							
+                                    <th>Sl. No.</th>							
                                     <th>Job Role</th>							
                                     <th>Sector</th>							
                                     <th>QP Code</th>							
@@ -89,7 +89,7 @@
                                 @foreach ($stack as $key=>$item)
                                     
                                 <tr>
-                                    <td>#</td>
+                                    <td>Sl. No.</td>
                                     <td>{{$key}}</td>
                                     <td>{{$item[0]}}</td>
                                     <td>{{$item[1]}}</td>

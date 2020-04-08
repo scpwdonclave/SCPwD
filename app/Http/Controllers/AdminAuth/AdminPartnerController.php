@@ -394,7 +394,7 @@ class AdminPartnerController extends Controller
                 'sectors' => Sector::all(),
                 'schemes' => Scheme::all(),
             ];            
-            return view('admin.partners.partner-target')->with($data);
+            return view('common.target-page')->with($data);
         }
     }
     

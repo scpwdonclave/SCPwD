@@ -10,7 +10,7 @@
     <div class="row clearfix">
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$partners_cnt}}" data-speed="2000" data-fresh-interval="700">{{$partners_cnt}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Training Partners</span></p></strong>                  
                 </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$centers_cnt}}" data-speed="2000" data-fresh-interval="700">{{$centers_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Training Centers</span></p></strong>
                 </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$trainer_cnt}}" data-speed="2000" data-fresh-interval="700">{{$trainer_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Trainers</span></p></strong>
                 </div>
@@ -34,7 +34,7 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidates_cnt}}" data-speed="2000" data-fresh-interval="700">{{$candidates_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Candidates</span></p></strong>
                 </div>
@@ -42,7 +42,7 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$agency_cnt}}" data-speed="2000" data-fresh-interval="700">{{$agency_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Agencies</span></p></strong>
                 </div>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessor_cnt}}" data-speed="2000" data-fresh-interval="700">{{$assessor_cnt}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total Registered Assessors</span></p></strong>
                 </div>

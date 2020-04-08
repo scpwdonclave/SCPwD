@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessment}}" data-speed="2000" data-fresh-interval="700">{{$assessment}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Assessment(s)</span></p></strong>
                 </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$reassessment}}" data-speed="2000" data-fresh-interval="700">{{$reassessment}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Re-Assessment(s)</span></p></strong>
                 </div>
@@ -21,7 +21,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessed}}" data-speed="2000" data-fresh-interval="700">{{$assessed}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Candidate Assessed</span></p></strong>
                 </div>

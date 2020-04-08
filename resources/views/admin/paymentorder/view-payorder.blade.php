@@ -167,7 +167,7 @@
                                         @if (!$pay_order->verified)
                                         <th><input type="checkbox" class="checks" onchange="checkAll(this)" /></th>
                                         @else
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         @endif
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
@@ -183,11 +183,11 @@
                                     @foreach ($pay_order->paymentorder as $payorder)
                                         
                                     <tr>
-                                        {{-- <td>#</td> --}}
+                                        {{-- <td>Sl. No.</td> --}}
                                         @if (!$pay_order->verified)
                                         <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$payorder->agencyBatch->id}}"></td>
                                         @else
-                                         <td>#</td>   
+                                         <td>Sl. No.</td>   
                                         @endif
                                         @if ($payorder->agencyBatch->reass_id===null)
                                         <td>{{$payorder->agencyBatch->batch->batch_id}}</td>

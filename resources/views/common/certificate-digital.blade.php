@@ -42,7 +42,7 @@
         <div style="position:relative">
         <table id="customers">
             <tr>
-              <th>#</th>
+              <th>Sl. No.</th>
               <th>Details</th>
             </tr>
         @if ($centerCandidate->candidate->gender=='Male')

@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{count($partner->centers)}}" data-speed="2000" data-fresh-interval="700">{{count($partner->centers)}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Centers<span></p></strong>
                 </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$candidate}}" data-speed="2000" data-fresh-interval="700">{{$candidate}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Candidates<span></p></strong>
                 </div>
@@ -21,7 +21,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{count($partner->trainers)}}" data-speed="2000" data-fresh-interval="700">{{count($partner->trainers)}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Trainers<span></p></strong>
                 </div>
@@ -31,7 +31,7 @@
     <div class="row clearfix">
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{count($partner->batches)}}" data-speed="2000" data-fresh-interval="700">{{count($partner->batches)}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Batches<span></p></strong>
                 </div>
@@ -39,7 +39,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$placed}}" data-speed="2000" data-fresh-interval="700">{{count($partner->centers)}}<i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of Placements<span></p></strong>
                 </div>
@@ -47,7 +47,7 @@
         </div>
         <div class="col-lg-4 col-sm-4">
             <div class="card">
-                <div class="body">
+                <div class="body text-center">
                     <h3 class="m-b-0 number count-to" data-from="0" data-to="{{$assessment}}" data-speed="2000" data-fresh-interval="700">{{$assessment}} <i class="zmdi zmdi-trending-up float-right"></i></h3>
                     <strong><p class="text-muted"><span style="color:blue">Total no of (Re)Assessmets Taken<span></p></strong>
                 </div>

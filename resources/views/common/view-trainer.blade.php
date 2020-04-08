@@ -111,7 +111,7 @@
                                     <table class="table m-b-0">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>Sl. No.</th>
                                                 <th>Scheme</th>
                                                 <th>Sector</th>
                                                 <th>Job</th>
@@ -254,7 +254,7 @@
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Scheme</th>
                                         <th>Sector</th>
                                         <th>Job Role</th>

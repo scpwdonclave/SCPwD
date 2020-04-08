@@ -31,7 +31,7 @@
                                     <table class="table m-b-0">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>Sl. No.</th>
                                                 <th>Candidate Name</th>
                                                 <th>DOB</th>
                                                 <th>Gender</th>

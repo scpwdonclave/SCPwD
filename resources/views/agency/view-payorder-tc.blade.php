@@ -151,7 +151,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
                                         <th>Assessment status</th>
@@ -166,7 +166,7 @@
                                     @foreach ($aa_batch as $aa_batch)
                                         
                                     <tr>
-                                        <td>#</td>
+                                        <td>Sl. No.</td>
                                         @if ($aa_batch->reass_id===null && !is_null($aa_batch->batch->batchassessment))
                                             
                                         <td>{{$aa_batch->batch->batch_id}}</td>

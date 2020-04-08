@@ -23,7 +23,7 @@
                         <table id="scheme_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Department Name</th>
                                     <th>Address</th>
                                     <th>Action</th>

@@ -21,7 +21,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Batch ID</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
@@ -97,7 +97,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Batch ID</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>

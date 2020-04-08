@@ -23,7 +23,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Assessment Agency</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>
@@ -67,7 +67,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Assessment Agency</th>
                                     <th>SPOC Name</th>
                                     <th>SPOC Email</th>

@@ -378,7 +378,7 @@
                                             <table class="table m-b-0">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
+                                                        <th>Sl. No.</th>
                                                         <th>Job Role</th>
                                                     </tr>
                                                 </thead>
@@ -435,7 +435,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Batch ID</th>
                                     <th>Partner ID</th>
                                     <th>Center ID</th>

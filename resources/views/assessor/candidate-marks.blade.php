@@ -27,7 +27,7 @@
                             <table class="table nobtn table-bordered ">
                                 <thead>
                                         <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Candidate Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>

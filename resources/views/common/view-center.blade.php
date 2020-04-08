@@ -313,7 +313,7 @@
     </div>
 </div>
 
-<div class="container-fluid">
+{{-- <div class="container-fluid">
     <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card">
@@ -325,7 +325,7 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Scheme</th>
                                         <th>Sector</th>
                                         <th>Job Role</th>
@@ -344,7 +344,15 @@
                                         <td>{{$target->partnerjobrole->jobrole->job_role}}</td>
                                         <td>{{$target->target}}</td>
                                         <td>{{$target->enrolled}}</td>
-                                        <td>0</td>
+                                        @php
+                                            $passed=0;
+                                            foreach ($target->candidates as $ccd) {
+                                                if ($ccd->passed == 1) {
+                                                    $passed+=1;  
+                                                }
+                                            }
+                                        @endphp
+                                        <td>{{$passed}}</td>
                                         <td class="text-{{($target->partnerjobrole->status)?'success':'danger'}}"><strong>Scheme is {{($target->partnerjobrole->status)?'Active':'Inactive'}}</strong></td>
                                     </tr>
                                     @endforeach
@@ -355,7 +363,7 @@
                 </div>
             </div>
         </div>
-</div>
+</div> --}}
 <div class="container-fluid">
     <div class="row clearfix">
             <div class="col-lg-12">

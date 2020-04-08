@@ -64,7 +64,7 @@
                             <table id="sector_table" class="table table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Sectors</th>
                                         <th>Action</th>
                                     </tr>
@@ -122,7 +122,7 @@
                             <table id="exository_table" class="table table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>Sl. No.</th>
                                         <th>Initials</th>
                                         <th>Expositories</th>
                                         <th>Action</th>

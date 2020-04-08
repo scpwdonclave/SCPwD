@@ -21,7 +21,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>Payment Order ID</th>
                                     <th>Assessment Agency</th>
                                     <th>Payment Order Date</th>

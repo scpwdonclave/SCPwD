@@ -19,6 +19,10 @@ Route::get('training_centers', function () { return redirect(route('partner.tc.c
 Route::get('training_centers/centers', 'PartnerAuth\PartnerCenterController@centers')->name('tc.centers');
 Route::post('training_centers/centers', 'PartnerAuth\PartnerCenterController@updatecenter')->name('tc.center.update');
 Route::get('training_centers/centers/{id}', 'PartnerAuth\PartnerCenterController@viewcenter')->name('tc.center.view');
+Route::get('training_centers/center-target/{id}', 'PartnerAuth\PartnerCenterController@centerTargetView')->name('tc.target.view');
+Route::post('training_centers/center-target/', 'PartnerAuth\PartnerCenterController@centerTargetAction')->name('tc.target.action');
+Route::post('training_centers/fetch-prvdata', 'PartnerAuth\PartnerCenterController@fetchData')->name('tp.fetch-data');
+
 Route::get('training_centers/add-center', 'PartnerAuth\PartnerCenterController@view_addcenter_form')->name('tc.addcenter');
 Route::post('training_centers/add-center', 'PartnerAuth\PartnerCenterController@submit_addcenter_form')->name('tc.addcenter');
 Route::post('training_centers/add-center-api', 'PartnerAuth\PartnerCenterController@addcenter_api')->name('tc.addcenter.api');

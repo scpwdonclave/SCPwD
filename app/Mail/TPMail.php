@@ -184,7 +184,7 @@ class TPMail extends Mailable
                     $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Update for Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Approved by SCPwD. For More Details on This Kindly login to your Account</p>";
                     $subject = "Batch Update Requested Approved | SCPwD";
                 } else {
-                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Update for Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can equest again whenever you want.</p>";
+                    $messagedata = "<p>Welcome to Skill Council for Persons with Disability (SCPwD). Your Requested Update for Batch (ID: <span style='color:#0000CD'>".$this->data->bt_id."</span>) has been Rejected by SCPwD for Following Reason.</p><br><p><strong><span style='color:#0000CD;'>Reason:</span><br><i>".$this->data->reason."</i> </span></strong></p><br><p>You can request again whenever you want.</p>";
                     $subject = "Batch Update Request Rejected | SCPwD";
                 }
                 $dataToSend = [

@@ -18,7 +18,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>TP ID</th>
                                     <th>Trainer Name</th>
                                     <th>Email</th>
@@ -58,7 +58,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Sl. No.</th>
                                     <th>TP ID</th>
                                     <th>Trainer Name</th>
                                     <th>Email</th>
