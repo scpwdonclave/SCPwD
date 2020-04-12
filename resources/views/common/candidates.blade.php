@@ -34,6 +34,7 @@ tr.shown td.details-control {
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th>CD ID</th>
                                     <th>Name</th>
                                     <th>Contact</th>
                                     <th>Aadhaar/Voter</th>
@@ -272,6 +273,7 @@ $(document).ready(function() {
                 orderable:      false,
                 data:           null,
                 defaultContent: '' },
+            { data:'cd_id'},
             { data:'name'},
             { data:'contact'}, 
             { data:'doc_no'}, 

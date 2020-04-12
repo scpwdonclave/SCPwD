@@ -112,22 +112,20 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
+                                    <th>CD ID</th>
                                     <th>Candidate Name</th>
-                                   
-                                        <th>Category</th>
-                                        <th>Education</th>
-                                        <th>DOB</th> 
-                                        <th>Aadhaar/Voter</th>
-                                    
-                                   
+                                    <th>Category</th>
+                                    <th>Education</th>
+                                    <th>DOB</th> 
+                                    <th>Aadhaar/Voter</th>
                                     <th>Final Result</th>
-                                   
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($reassessment->candidates as $key=>$item)
                             
                                 <tr>
+                                    <td>{{$item->centercandidate->candidate->cd_id}}</td>
                                     <td>{{$item->centercandidate->candidate->name}}</td>
                                     <td>{{$item->centercandidate->candidate->category}}</td>
                                     <td>{{$item->centercandidate->education}}</td>

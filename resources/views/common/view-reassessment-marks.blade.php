@@ -32,6 +32,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Sl. No.</th>
+                                                <th>CD ID</th>
                                                 <th>Candidate Name</th>
                                                 <th>DOB</th>
                                                 <th>Gender</th>
@@ -50,6 +51,7 @@
                                                     $i++;
                                                 @endphp
                                                 <td>{{$i}}</td>
+                                                <td>{{$item->centerCandidate->candidate->cd_id}}</td>
                                                 <td>{{$item->centerCandidate->candidate->name}}</td>
                                                 <td>{{$item->centerCandidate->candidate->dob}}</td>
                                                 <td>{{$item->centerCandidate->candidate->gender}}</td>
