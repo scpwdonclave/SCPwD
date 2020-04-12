@@ -43,6 +43,12 @@ Route::post('mis/summary/job-disability-wise', 'AdminAuth\AdminMisController@job
 Route::post('mis/summary/agency-wise', 'AdminAuth\AdminMisController@agencyWiseSummary')->name('mis.agency_wise_enrolled');
 Route::post('mis/summary/candidate-wise-placement', 'AdminAuth\AdminMisController@candidateWisePlacementSummary')->name('mis.candidate_wise_placement');
 
+/** TOT-TOA Section */
+Route::get('tot-toa/trainers', 'AdminAuth\TotToaController@trainers')->name('tot-toa.trainers');
+Route::get('tot-toa/assessors', 'AdminAuth\TotToaController@assessors')->name('tot-toa.assessors');
+Route::get('tot-toa/add-tot', 'AdminAuth\TotToaController@addTrainerCert')->name('tot-toa.addtrainercert');
+Route::get('tot-toa/add-toa', 'AdminAuth\TotToaController@addAssessorCert')->name('tot-toa.addassessorcert');
+/** End TOT-TOA Section */
 
 /* Admin Verify Partner */
 Route::get('training_partners', function () { return redirect(route('admin.tp.partners')); });
