@@ -137,6 +137,21 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                             <span class="cls_006"> Niece of</span>
                             <span class="cls_007"> Mr. {{isset($assessment)?$item->centerCandidate->g_name:$item->centercandidate->g_name}}</span>
                         @endif
+                    @elseif((isset($assessment)?$item->centerCandidate->candidate->gender:$item->centercandidate->candidate->gender)=='Transgender') 
+                        <span class="cls_007">{{isset($assessment)?$item->centerCandidate->candidate->name:$item->centercandidate->candidate->name}}</span>
+                        @if ((isset($assessment)?$item->centerCandidate->g_type:$item->centercandidate->g_type)=='Father')
+                            <span class="cls_006"> C/O of</span>
+                            <span class="cls_007"> Mr. {{isset($assessment)?$item->centerCandidate->g_name:$item->centercandidate->g_name}}</span>
+                        @elseif((isset($assessment)?$item->centerCandidate->g_type:$item->centercandidate->g_type)=='Mother')
+                            <span class="cls_006"> C/O of</span>
+                            <span class="cls_007"> Ms. {{isset($assessment)?$item->centerCandidate->g_name:$item->centercandidate->g_name}}</span>
+                        @elseif((isset($assessment)?$item->centerCandidate->g_type:$item->centercandidate->g_type)=='Husband')
+                            <span class="cls_006"> C/O of</span>
+                            <span class="cls_007"> Mr. {{isset($assessment)?$item->centerCandidate->g_name:$item->centercandidate->g_name}}</span>
+                        @elseif((isset($assessment)?$item->centerCandidate->g_type:$item->centercandidate->g_type)=='Uncle')
+                            <span class="cls_006"> C/O of</span>
+                            <span class="cls_007"> Mr. {{isset($assessment)?$item->centerCandidate->g_name:$item->centercandidate->g_name}}</span>
+                        @endif
                     @endif
                     @if (strlen((isset($assessment)?$item->centerCandidate->candidate->doc_no:$item->centercandidate->candidate->doc_no))==12)
                         <span class="cls_006">Aadhaar No. </span>

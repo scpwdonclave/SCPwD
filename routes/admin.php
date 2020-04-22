@@ -45,6 +45,7 @@ Route::post('mis/summary/candidate-wise-placement', 'AdminAuth\AdminMisControlle
 
 /** TOT-TOA Section */
 Route::get('tot-toa/trainers', 'AdminAuth\TotToaController@trainers')->name('tot-toa.trainers');
+Route::get('tot-toa/trainers/{id}', 'AdminAuth\TotToaController@viewTrainer')->name('tot-toa.trainer.view');
 Route::get('tot-toa/assessors', 'AdminAuth\TotToaController@assessors')->name('tot-toa.assessors');
 Route::get('tot-toa/add-tot', 'AdminAuth\TotToaController@addTrainerCert')->name('tot-toa.addtrainercert');
 Route::get('tot-toa/add-toa', 'AdminAuth\TotToaController@addAssessorCert')->name('tot-toa.addassessorcert');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
+use App\AssessmentTrainer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,16 @@ class TotToaController extends Controller
 
     public function trainers()
     {
-        return view('admin.tot-toa.trainers');
+        $tots = AssessmentTrainer::all();
+        return view('admin.tot-toa.trainers')->with(compact('tots'));
+    }
+
+    public function viewTrainer(Request $request)
+    {
+        if ($id=AppHelper::instance()->decryptThis($request->id)) {
+            $tot = AssessmentTrainer::findOrFail($id);
+            return view('admin.tot-toa.view-trainer')->with(compact('tot'));
+        }
     }
     
     public function addTrainerCert()
