@@ -55,13 +55,14 @@ class CreateAssessorsTable extends Migration
             $table->string('exp_doc')->nullable(); 
             $table->string('resume')->nullable();
 
-            $table->string('domain_doc')->nullable(); 
+            $table->string('domain_doc'); 
+            $table->string('domain_certi_end_date'); 
             $table->unsignedBigInteger('sector_id'); 
 
-            $table->string('scpwd_certi_no')->nullable(); 
-            $table->string('certi_date')->nullable(); 
-            $table->string('scpwd_doc')->nullable(); 
-            $table->string('certi_end_date')->nullable();
+            $table->string('scpwd_certi_no'); 
+            $table->string('certi_date'); 
+            $table->string('scpwd_doc'); 
+            $table->string('certi_end_date');
 
             /* Financial Year and Month */
             $table->string('f_month')->nullable();

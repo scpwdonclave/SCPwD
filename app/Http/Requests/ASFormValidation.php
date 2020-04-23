@@ -100,17 +100,17 @@ class ASFormValidation extends FormRequest
             
             'exp_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
             'resume' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            'domain_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
-            
+            'domain_doc' => 'required|mimes:jpeg,jpg,png,pdf',
+            'domain_certi_end_date' => 'required',
+
             'sector' => 'required|numeric',
             'job_role' => 'required|array|min:1',
             'job_role.*' => 'required|distinct',
             
-            
-            'scpwd_certi_no' => 'nullable',
-            'certi_date' => 'nullable',
-            'certi_end_date' => 'nullable',
-            'scpwd_doc' => 'nullable|mimes:jpeg,jpg,png,pdf',
+            'scpwd_certi_no' => 'required',
+            'certi_date' => 'required',
+            'certi_end_date' => 'required',
+            'scpwd_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             
         ];
 
