@@ -288,6 +288,7 @@ $(document).ready(function() {
                 orderable:      false,
                 data:           null,
                 defaultContent: '' },
+            { data:'cd_id'},
             { data:'name'},
             { data:'contact'}, 
             { data:'doc_no'}, 
