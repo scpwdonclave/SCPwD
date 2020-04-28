@@ -33,7 +33,7 @@ class CreateAgenciesTable extends Migration
             $table->string('sla_end_date');
 
             $table->string('ceo_name');
-            $table->string('ceo_aadhaar');
+            $table->string('ceo_aadhaar')->nullable();
             $table->string('ceo_email');
             $table->string('ceo_mobile');
             $table->string('ceo_gender');
