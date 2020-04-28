@@ -15,21 +15,22 @@ class CreateAssessmentAssessorsTable extends Migration
     {
         Schema::create('assessment_assessors', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('aa_id');
+            $table->string('reg_id');
             $table->string('name');
+            $table->string('doc_no');
+            $table->string('contact');
+            $table->string('email');
             $table->string('gender');
             $table->string('dob');
             $table->boolean('is_pwd');
             $table->string('d_type')->nullable();
-            $table->string('doc_no');
             $table->string('education');
             $table->string('industry_exp');
             $table->string('assessing_exp');
-            $table->string('contact');
             $table->string('landline');
-            $table->string('email');
             $table->string('g_type');
             $table->string('g_name');
-            $table->string('aa_name');
             $table->string('job_type');
             $table->string('doa_curr_aa');
             $table->string('state_loc_employment');
@@ -41,8 +42,7 @@ class CreateAssessmentAssessorsTable extends Migration
             $table->string('address');
             $table->string('pin');
             $table->string('city');
-            $table->string('state');
-            $table->string('district');
+            $table->string('state_district');
             $table->boolean('domain_approved');
             $table->string('domain_ssc_doc')->nullable();
             $table->string('domain_cert_no')->nullable();

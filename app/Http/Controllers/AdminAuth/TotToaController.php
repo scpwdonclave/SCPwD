@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
+use App\Expository;
 use App\AssessmentTrainer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +19,24 @@ class TotToaController extends Controller
     protected function guard()
     {
         return Auth::guard('admin');
+    }
+
+    public function totBatches()
+    {
+        $data = [
+            'tag' => 'tot',
+            'records' => collect() 
+        ];
+        return view('admin.tot-toa.batches')->with($data);
+    }
+
+    public function toaBatches()
+    {
+        $data = [
+            'tag' => 'toa',
+            'records' => collect()
+        ];
+        return view('admin.tot-toa.batches')->with($data);
     }
 
     public function trainers()
@@ -35,7 +55,11 @@ class TotToaController extends Controller
     
     public function addTrainerCert()
     {
-        return view('admin.tot-toa.add-tot-cert');
+        $data = [
+            'states' => DB::table('state_district')->get(),
+            'disabilities' => Expository::all(),
+        ];
+        return view('admin.tot-toa.add-tot-cert')->with($data);
     }
 
     public function assessors()

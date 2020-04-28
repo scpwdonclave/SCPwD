@@ -44,6 +44,8 @@ Route::post('mis/summary/agency-wise', 'AdminAuth\AdminMisController@agencyWiseS
 Route::post('mis/summary/candidate-wise-placement', 'AdminAuth\AdminMisController@candidateWisePlacementSummary')->name('mis.candidate_wise_placement');
 
 /** TOT-TOA Section */
+Route::get('tot-toa/tot-batches', 'AdminAuth\TotToaController@totBatches')->name('tot-toa.tot-batches');
+Route::get('tot-toa/toa-batches', 'AdminAuth\TotToaController@toaBatches')->name('tot-toa.toa-batches');
 Route::get('tot-toa/trainers', 'AdminAuth\TotToaController@trainers')->name('tot-toa.trainers');
 Route::get('tot-toa/trainers/{id}', 'AdminAuth\TotToaController@viewTrainer')->name('tot-toa.trainer.view');
 Route::get('tot-toa/assessors', 'AdminAuth\TotToaController@assessors')->name('tot-toa.assessors');
