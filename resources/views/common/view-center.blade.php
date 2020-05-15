@@ -376,7 +376,8 @@
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                     <tr>
-                                        <th>Candidate Name</th>
+                                        <th>CD ID</th>
+                                        <th>Name</th>
                                         <th>Contact</th>
                                         <th>Category</th>
                                         <th>Date of Birth</th>
@@ -388,6 +389,7 @@
                                 <tbody>
                                     @foreach ($candidates as $key => $centercandidatemap)
                                     <tr>
+                                        <td>{{$centercandidatemap->candidate->cd_id}}</td>
                                         <td>{{$centercandidatemap->candidate->name}}</td>
                                         <td>{{$centercandidatemap->candidate->contact}}</td>
                                         <td>{{$centercandidatemap->candidate->category}}</td>

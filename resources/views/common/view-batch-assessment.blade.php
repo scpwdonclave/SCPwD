@@ -67,6 +67,7 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
+                                    <th>CD ID</th>
                                     <th>Candidate Name</th>
                                     @if (Request::segment(1)==='agency' || Request::segment(1)==='assessor')
                                         <th>Category</th>
@@ -88,6 +89,7 @@
                                 @foreach ($center_candidates as $center_candidate)
                             
                                 <tr>
+                                    <td>{{$center_candidate->candidate->cd_id}}</td>
                                     <td>{{$center_candidate->candidate->name}}</td>
                                     @if (Request::segment(1)==='agency' || Request::segment(1)==='assessor')
                                         <td>{{$center_candidate->candidate->category}}</td>

@@ -28,6 +28,7 @@
                             <table class="table nobtn table-bordered ">
                                 <thead>
                                     <tr>
+                                        <th>CD ID</th>
                                         <th>Candidate Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>
@@ -46,6 +47,7 @@
                                         $i++;    
                                         @endphp    
                                         <tr>
+                                            <td>{{$reass_candidate->centercandidate->candidate->cd_id}}</td>
                                                 <td>
                                                     {{$reass_candidate->centercandidate->candidate->name}}
                                                     <input type="hidden" name="candidate_id[]" value="{{$reass_candidate->centercandidate->id}}"> 

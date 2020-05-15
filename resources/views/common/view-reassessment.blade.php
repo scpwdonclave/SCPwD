@@ -99,6 +99,7 @@ table.dataTable thead th:first-child {
                                     <table class="table m-b-0">
                                         <thead>
                                             <tr>
+                                                <th>CD ID</th>
                                                 <th>Candidate Name</th>
                                                 <th>DOB</th>
                                                 <th>Gender</th>
@@ -109,6 +110,7 @@ table.dataTable thead th:first-child {
                                         <tbody>
                                             @foreach ($reassessment->candidates as $candidate) 
                                                 <tr>
+                                                    <td>{{$candidate->centercandidate->candidate->cd_id}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->name}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->dob}}</td>
                                                     <td>{{$candidate->centercandidate->candidate->gender}}</td>

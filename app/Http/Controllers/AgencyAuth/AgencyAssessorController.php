@@ -114,21 +114,23 @@ class AgencyAssessorController extends Controller
         $assessor->exp_year	=$request->exp_year;
         $assessor->exp_month=$request->exp_month;	
         $assessor->exp_dtl=$request->exp_dtl;	
-        $assessor->industry_dtl	=$request->industry_dtl;
+        $assessor->industry_dtl=$request->industry_dtl;
+        $assessor->domain_certi_end_date=$request->domain_certi_end_date;
         
         if($request->hasFile('exp_doc')){
             $assessor->exp_doc = Storage::disk('myDisk')->put('/assessor', $request['exp_doc']);
-             }	
+        }	
         if($request->hasFile('resume')){
             $assessor->resume = Storage::disk('myDisk')->put('/assessor', $request['resume']);
-             }	
-       if($request->hasFile('domain_doc')){
-            $assessor->domain_doc = Storage::disk('myDisk')->put('/assessor', $request['domain_doc']);
-             }	
+        }
+        
+        $assessor->domain_doc = Storage::disk('myDisk')->put('/assessor', $request['domain_doc']);
+        	
         $assessor->sector_id=$request->sector;	
         $assessor->scpwd_certi_no=$request->scpwd_certi_no;	
         $assessor->certi_date=$request->certi_date;	
         $assessor->scpwd_doc=$request->scpwd_doc;	
+        $assessor->scpwd_doc = Storage::disk('myDisk')->put('/assessor', $request['scpwd_doc']);
         $assessor->certi_end_date=$request->certi_end_date;
         $assessor->save();
 

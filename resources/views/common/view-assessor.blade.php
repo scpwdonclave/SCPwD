@@ -317,7 +317,7 @@
                             <div class="cbp_tmicon bg-violet"> <i class="zmdi zmdi-8tracks"></i></div>
                             <div class="cbp_tmlabel">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">Domain Certificate</small>
                                         @if (!is_null($assessorData->domain_doc))
                                             <p>
@@ -329,19 +329,26 @@
                                         @endif
                                         <hr>
                                     </div>
-                                
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Domain Certificate Valid Upto</small>
+                                        <p>{{$assessorData->domain_certi_end_date}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">Sector</small>
                                         <p>{{$assessorData->sectors->sector}}</p>
                                         <hr>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <small class="text-muted">SCPwD Certificate No</small>
                                         <p>{{$assessorData->scpwd_certi_no}}</p>
                                         <hr>
                                     </div>
-                                  
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <small class="text-muted">SCPwD Certificate</small>

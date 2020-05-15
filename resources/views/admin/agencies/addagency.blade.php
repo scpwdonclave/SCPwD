@@ -176,9 +176,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="ceo_aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="ceo_aadhaar">Aadhaar </label>
                                                     <div class="form-group form-float">
-                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="ceo_aadhaar" required>
+                                                        <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="ceo_aadhaar">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">

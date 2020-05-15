@@ -386,10 +386,16 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-3">
-                                                <label>Domain Certificate</label>
+                                                <label>Domain Certificate <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input id="domain_doc" type="file" class="form-control" name="domain_doc">
+                                                    <input id="domain_doc" type="file" class="form-control" name="domain_doc" required>
                                                     <span id="domain_doc_error" style="color:red;"></span>                                                            
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="domain_certi_end_date">Domain Certificate Valid Upto <span style="color:red"> <strong>*</strong></span></label>
+                                                <div class="form-group form-float date_picker">
+                                                    <input type="text" class="form-control date_datepicker" placeholder="Certificate Valid Upto" name="domain_certi_end_date" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
@@ -411,18 +417,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <label for="scpwd">SCPwD Certified</label>
-                                                <div class="form-group form-float">
-                                                    <select class="form-control show-tick"  name="scpwd" onchange="scpwdSection()" data-dropup-auto='false' >
-                                                        <option value="yes">Yes</option>
-                                                        <option value="no">No</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="row d-flex justify-content-around">
-                                            <div class="vld row">
+                                            <div class="row">
                                                 <div class="col-sm-3">
                                                     <label for="scpwd_certi_no">SCPwD Certificate No <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
@@ -430,20 +427,20 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="certi_date">Date of Certification <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="certi_date">Date of SCPwD Certification <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Date of Certification" id="certi_date"  onchange="startchangescpwd('new')" name="certi_date" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label>Upload Certificate <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label>Upload SCPwD Certificate <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input id="scpwd_doc" type="file" class="form-control" name="scpwd_doc" required>
                                                         <span id="scpwd_doc_error" style="color:red;"></span>                                                            
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="certi_end_date">Certification valid Upto <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="certi_end_date">SCPwD Certification valid Upto <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float date_picker">
                                                         <input type="text" class="form-control date_datepicker" placeholder="Certification valid Upto" id="certi_end_date" name="certi_end_date" required>
                                                     </div>
@@ -494,16 +491,6 @@
 
 @section('page-script')
 <script>
-
-    function scpwdSection(){
-       var scpwd= $('[name=scpwd]').val();
-                if(scpwd=='no'){
-                 $('.vld').slideUp();
-                }else{
-                 $('.vld').slideDown();
-
-                }
-            }
 
     function disabilityview(){
        var disability= $('[name=disability]').val();

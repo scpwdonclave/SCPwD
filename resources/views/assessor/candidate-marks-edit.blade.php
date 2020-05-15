@@ -30,6 +30,7 @@
                                 <thead>
                                         <tr>
                                         <th>Sl. No.</th>
+                                        <th>CD ID</th>
                                         <th>candidate Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>
@@ -44,6 +45,7 @@
                                     <tr>
                                     <td>{{$key+1}}</td>
                                     <td>
+                                        {{$item->centerCandidate->candidate->cd_id}}
                                         {{$item->centerCandidate->candidate->name}}
                                     <input type="hidden" name="candidate_id[]" value="{{$item->centerCandidate->id}}">
 
