@@ -115,6 +115,7 @@ Route::get('assessor/complain-files/{id}/{action}/{column}', 'FileController@sup
 
 /* QR Data For Assessment */
 Route::get('assessment/digital-certificate/{id}', 'QrController@qrData')->name('assessment-qrdata');
+Route::get('tot/digital-certificate/{id}', 'QrController@qrDataTot')->name('tot-qrdata');
 
 
 

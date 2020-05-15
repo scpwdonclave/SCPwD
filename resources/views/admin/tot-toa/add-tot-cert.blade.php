@@ -5,8 +5,6 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
-
-<link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/animate-css/animate.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
@@ -30,7 +28,7 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>Add</strong> Trainer</h2>
-                   <a class="btn btn-primary btn-round waves-effect" href="{{route('partner.trainers')}}">My Trainers</a>                      
+                   <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.tot-toa.trainers')}}">Registered Trainers</a>                      
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -42,10 +40,8 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_trainer" method="POST" action="{{ route('partner.submittrainer') }}" enctype="multipart/form-data">
+                    <form id="form_trainer" method="POST" action="{{ route('admin.tot-toa.addtrainercert.submit') }}" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="prsnt" value="0">
-                        <input type="hidden" name="id" value="0">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
                                 <div class="panel-heading" role="tab" id="headingOne">
@@ -54,8 +50,8 @@
                                 <div id="collapseOne" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                <label for="state_district">Choose State District of Trainer <span style="color:red"> <strong>*</strong></span></label>
+                                            <div class="col-sm-3">
+                                                <label for="state_district">State District of Trainer <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
                                                         @foreach ($states as $state)
@@ -64,18 +60,27 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label id="doc_label" for="doc_no">Aadhaar Number <span style="color:red"> <strong>*</strong></span></label>
+                                            <div class="col-sm-3" id="doc_type_div" style="display: none;">
+                                                <label for="doc_type">Document Type <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar Number" name="doc_no" required>
+                                                    <select class="form-control show-tick" name="doc_type" data-dropup-auto='false' required>
+                                                        <option value="1">Aadhaar</option>
+                                                        <option value="0">Voter</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
+                                                <label id="doc_label" for="doc_no">Aadhaar No <span style="color:red"> <strong>*</strong></span></label>
+                                                <div class="form-group form-float">
+                                                    <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Trainer's Aadhaar Number" name="doc_no" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
                                                 <label for="trainer_category">Choose Trainer Category <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <select id="trainer_category" class="form-control show-tick" name="trainer_category" data-dropup-auto='false' required>
-                                                        <option>Trainer</option>
-                                                        <option>Master Trainer</option>
+                                                    <select class="form-control show-tick" name="trainer_category" data-dropup-auto='false' required>
+                                                        <option value="0">Trainer</option>
+                                                        <option value="1">Master Trainer</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -98,18 +103,37 @@
                                         <div class="card body field-group">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
+                                                    <label for="salutation">Salutation <span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <select id="salutation" class="form-control show-tick" name="salutation" data-dropup-auto='false' required>
+                                                            <option value="Mr.">Mr</option>
+                                                            <option value="Miss.">Miss</option>
+                                                            <option value="Mrs.">Mrs</option>
+                                                            <option value="Dr.">Dr</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
                                                     <label for="name">Trainer Name <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Trainer Name" value="{{ old('name') }}" name="name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
+                                                    <label for="sip_tr_id">SIP Trainer ID<span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="SIP Trainer ID" value="{{ old('sip_tr_id') }}" name="sip_tr_id" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=" row d-flex ustifycontent-center">
+                                                <div class="col-sm-6">
                                                     <label for="mobile">Trainer Mobile <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Trainer Mobile" value="{{ old('mobile') }}" name="mobile" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-6">
                                                     <label for="email">Trainer Email <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="email" class="form-control" placeholder="Trainer Email" value="{{ old('email') }}" name="email" required>
@@ -119,23 +143,23 @@
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
                                                     <label for="dob">Date of Birth<span style="color:red"> <strong>*</strong></span></label>
-                                                    <div class="form-group form-float">
+                                                    <div class="form-group form-float datepicker">
                                                         <input type="text" class="form-control" placeholder="Date of Birth" value="{{ old('dob') }}" name="dob" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="has_disability">Has Disability <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="has_disability" class="form-control show-tick" name="has_disability" data-dropup-auto='false' required>
-                                                            <option>No</option>
+                                                        <select id="has_disability" class="form-control show-tick" name="has_disability" onchange="toggleThis('disability')" data-dropup-auto='false' required>
                                                             <option>Yes</option>
+                                                            <option>No</option>
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-4" id="disability">
                                                     <label for="disability">Type of Disability <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="disability" class="form-control show-tick" name="disability" data-dropup-auto='false' required>
+                                                        <select class="form-control show-tick" name="disability" data-dropup-auto='false' required>
                                                             @foreach ($disabilities as $disability)
                                                                 <option>{{$disability->expository}}</option>
                                                             @endforeach
@@ -152,7 +176,7 @@
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="payment_date">Date of Payment <span style="color:red"> <strong>*</strong></span></label>
-                                                    <div class="form-group form-float">
+                                                    <div class="form-group form-float datepicker">
                                                         <input type="text" class="form-control" placeholder="Payment Date" value="{{ old('payment_date') }}" name="payment_date" required>
                                                     </div>
                                                 </div>
@@ -203,15 +227,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-8">
-                                                    <label for="address">Address <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="address">Trainer Address <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <input type="text" class="form-control" placeholder="Full Address" value="{{ old('address') }}" name="address" required>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row d-flex justify-content-end">
-                                            <div class="col-sm-6 d-flex justify-content-end">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <button type="button" onclick="validatedata('collapseTwo,collapseOne');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
                                                 <button type="button" id="btnTwo" onclick="validatedata('collapseTwo,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
                                             </div>
                                         </div>
@@ -223,166 +250,131 @@
                                 <div class="panel-heading" role="tab" id="headingThree">
                                     <h4 class="panel-title"> <a role="button" href="#collapseThree" onclick="return false" aria-expanded="true" aria-controls="collapseThree">Domain, Certification, Qualification Section</a> </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="card body field-group">
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="sector">Domain/Sector/SSC <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="tp_name">TP Name<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="sector" class="form-control show-tick" data-live-search="true" name="sector" onchange="updatejob()" data-dropup-auto='false' required>
-                                                            {{-- @foreach ($partner->partner_jobroles->unique("sector_id") as $job)
-                                                                @if ($job->status)
-                                                                    <option value="{{$job->sector_id}}">{{$job->sector->sector}}</option>
-                                                                @endif
-                                                            @endforeach --}}
-                                                        </select>
+                                                        <input type="text" class="form-control" placeholder="TP Name" value="{{ old('tp_name') }}" name="tp_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="jobrole">Job Roles <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="tc_name">TC Name<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="jobrole" class="form-control show-tick" data-live-search="true" name="jobrole" onchange="updatequali()" data-dropup-auto='false' required>
-                                                        </select>
+                                                        <input type="text" class="form-control" placeholder="TC Name" value="{{ old('tc_name') }}" name="tc_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <label for="scheme[]">Schemes <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="scheme">Scheme <span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="scheme" class="form-control show-tick" name="scheme[]" multiple data-dropup-auto='false' required>
+                                                        <select class="form-control show-tick" name="scheme" data-dropup-auto='false' required>
+                                                            <option value="">None</option>
+                                                            @foreach ($schemes as $scheme)
+                                                                <option>{{$scheme->scheme}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                                
                                             <div class="row d-flex justify-content-around">
                                                 <div class="col-sm-4">
-                                                    <label for="qualification">Relavent Qualification <span style="color:red"> <strong>*</strong></span></label>
+                                                    <label for="sip_tc_id">SIP TC ID<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <select id="qualification" class="form-control show-tick" data-live-search="true" name="qualification" onchange="updateminvalues(this.value)" data-dropup-auto='false' required>
-                                                        </select>
+                                                        <input type="text" class="form-control" placeholder="SIP TC ID" value="{{ old('sip_tc_id') }}" name="sip_tc_id" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="sector_exp">Sector Experience in Years <span style="color:red"> <strong>*</strong></span></label>
+                                                
+                                                <div class="col-sm-8">
+                                                    <label for="tc_address">TC Location<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
-                                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('sector_exp') }}" name="sector_exp" required>
+                                                        <input type="text" class="form-control" placeholder="Complete TC Address" value="{{ old('tc_address') }}" name="tc_address" required>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="teaching_exp">Teaching Experience in Years <span style="color:red"> <strong>*</strong></span></label>
-                                                    <div class="form-group form-float">
-                                                        <input type="number" min="0" step=".5" class="form-control" placeholder="Years" value="{{ old('teaching_exp') }}" name="teaching_exp" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
-                                                    <label for="qualification_doc">Qualification Certificate Upload <span style="color:red"> <strong>*</strong></span></label>
-                                                    <div class="form-group form-float">
-                                                        <input type="file" id="qualification_doc" class="form-control" name="qualification_doc" required>
-                                                        <span id="qualification_doc_error"  style="color:red;"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="ssc_doc_no">SSC Certificate No</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="text" class="form-control" placeholder="SSC Document Number" value="{{ old('ssc_doc_no') }}" name="ssc_doc_no">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row d-flex justify-content-around">
-                                                <div class="col-sm-4">
-                                                    <label for="ssc_doc">SSC Certificate Upload</label>
-                                                    <div class="form-group form-float">
-                                                        <input type="file" id="ssc_doc" class="form-control" name="ssc_doc">
-                                                        <span id="ssc_doc_error"  style="color:red;"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="ssc_start">SSC Certificate Issued On</label>
-                                                    <div class="form-group form-float month_range_picker_start">
-                                                        <input type="text" id="ssc_start" onchange="startchange()" class="form-control" name="ssc_start">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label for="ssc_end">SSC Certificate Valid Upto</label>
-                                                    <div class="form-group form-float month_range_picker_end">
-                                                        <input type="text" id="ssc_end" class="form-control" name="ssc_end">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12 text-right">
-                                                <button type="button" onclick="validatedata('collapseThree,collapseFour');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="panel panel-primary">
-                                <div class="panel-heading" role="tab" id="headingFour">
-                                    <h4 class="panel-title"> <a role="button" href="#collapseFour" onclick="return false" aria-expanded="true" aria-controls="collapseFour">SCPwD / Other Documents</a> </h4>
-                                </div>
-                                <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
-                                    <div class="panel-body">
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                <label for="resume">Resume</label>
-                                                <div class="form-group form-float">
-                                                    <input type="file" id="resume" class="form-control" name="resume">
-                                                    <span id="resume_error"  style="color:red;"></span>
+                                            </div>
+                                                
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-6">
+                                                    <div class="row d-flex justify-content-center">
+                                                        <div class="col-sm-6">
+                                                            <label for="has_domain_cert">Certified from Domain SSC <span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
+                                                            <div class="form-group form-float">
+                                                                <select id="has_domain_cert" class="form-control show-tick" name="has_domain_cert" onchange="toggleThis('domain_cert')" data-dropup-auto='false' required>
+                                                                    <option value="1">Yes</option>
+                                                                    <option value="0">No</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6" id="domain_cert">
+                                                            <label for="domain_cert">Domain Certification no. <span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
+                                                            <div class="form-group form-float">
+                                                                <input type="text" class="form-control" placeholder="Domain Cert No" value="{{ old('domain_cert') }}" name="domain_cert" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="other_doc">Other Document</label>
-                                                <div class="form-group form-float">
-                                                    <input type="file" id="other_doc" class="form-control" name="other_doc">
-                                                    <span id="other_doc_error"  style="color:red;"></span>
+                                                <div class="col-sm-6">
+                                                    <label for="has_inspected">Details Provided during Center Physical Inspection<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <select id="has_inspected" class="form-control show-tick" name="has_inspected" data-dropup-auto='false' required>
+                                                            <option>Yes</option>
+                                                            <option>No</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="scpwd_doc_no">SCPwD Certificate No</label>
-                                                <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="SCPwD Document Number" value="{{ old('scpwd_doc_no') }}" name="scpwd_doc_no">
+                                            </div>    
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-4">
+                                                    <label for="qualification">Highest Qualification <span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <select class="form-control show-tick form-group" id="qualification" name="qualification" data-live-search="true" required >
+                                                            @foreach (Config::get('constants.qualifications') as $qualification)
+                                                                <option>{{$qualification}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                <label for="scpwd_doc">SCPwD Certificate Upload</label>
-                                                <div class="form-group form-float">
-                                                    <input type="file" id="scpwd_doc" class="form-control" name="scpwd_doc">
-                                                    <span id="scpwd_doc_error"  style="color:red;"></span>
+                                                <div class="col-sm-4">
+                                                    <label for="industry_exp">Industry Experience<span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="Industry Experience" value="{{ old('industry_exp') }}" name="industry_exp" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <label for="scpwd_start">SCPwD Certificate Issued On</label>
-                                                <div class="form-group form-float month_range_picker_start">
-                                                    <input type="text" id="scpwd_start" onchange="startchangescpwd('new')" class="form-control" name="scpwd_start">
+                                                <div class="col-sm-4">
+                                                    <label for="training_exp">Training Experience<span style="color:red"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="Training Experience" value="{{ old('training_exp') }}" name="training_exp" required>
+                                                    </div>
                                                 </div>
+
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label for="scpwd_end">SCPwD Certificate Valid Upto</label>
-                                                <div class="form-group form-float month_range_picker_end">
-                                                    <input type="text" id="scpwd_end" class="form-control" name="scpwd_end">
+                                                
+                                            <div class="row d-flex justify-content-around">
+                                                
+
+                                                <div class="col-sm-5">
+                                                    <label for="domain_job">Domain Job Role<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="Domain Job Role" value="{{ old('domain_job') }}" name="domain_job" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <button id="last_prev_btn" type="button" onclick="validatedata('collapseFour,collapseThree');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group text-center">
-                                                    <div class="checkbox">
-                                                        <input id="terms" name="terms" type="checkbox">
-                                                        <label for="terms">I Accept All the <a href="#TermsModal" data-toggle="modal" data-target="#TermsModal">Terms & Conditions </a></label>
+                                                <div class="col-sm-5">
+                                                    <label for="domain_job_code">Domain Job Role Code<span style="color:red" class="toggle_category"> <strong>*</strong></span></label>
+                                                    <div class="form-group form-float">
+                                                        <input type="text" class="form-control" placeholder="Domain Job Role Code" value="{{ old('domain_job_code') }}" name="domain_job_code" required>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <button id="last_prev_btn" type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
                                                 <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> SUBMIT</button>
                                             </div>
                                         </div>
@@ -397,37 +389,9 @@
     </div>
 </div>
 @endsection
-@section('modal')
-    <div class="modal fade" id="TermsModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="title" id="TermsModalLabel">Company Terms & Conditions</h4>
-                </div>
-                <div class="modal-body">
-                    {{Config::get('constants.declaration')}}
-                </div>
-            </div>
-        </div>
-    </div>
-@stop
 @section('page-script')
 <script>
-
-    /* Onload Function */
-    $(() => {
-        updatejob();
-        filevalidate();
-    });
-    /* End Onload Function */
-
-
     /* Validation of Each Sections */
-
-    function checkIfDuplicateExists(w){
-        return new Set(w).size !== w.length 
-    }
 
     function validatedata(divs){
         div = divs.split(',');
@@ -441,6 +405,7 @@
         });
 
         if (tag) {
+            var swalText = document.createElement("div");
             switch (div[0]) {
                 case 'collapseOne':
                     var ajaxresponse = true;
@@ -449,136 +414,66 @@
                     $("#btnOne").html("Please Wait...");
                     var _token = $('[name=_token]').val();
                     var dataValidate = { _token, doc_no };
-                    var swalText = document.createElement("div");
 
                     $.ajax({
-                        url: "{{ route('partner.addtrainer.api') }}",
+                        url: "{{ route('admin.tot.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
-                            if (!data.success) {
+                            
+                            if (data.success) {
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
+                            } else {
                                 swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registered</span> with Someone Else'; 
                                 swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
 
                                 $("#btnOne").prop("disabled", false);
                                 $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                ajaxresponse = false;
-                                return false;
-                            } else {                                
-                                if (data.present) {
-                                    $('[name=prsnt]').val('1');
-                                    if (data.attached) {
-                                    
-                                        swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Present</span> in our Record';
-                                        swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
-                                        $("#btnOne").prop("disabled", false);
-                                        $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                        ajaxresponse = false;
-                                        return false;
-                                    } else {                                        
-                                        if (data.trainer_status) {
-                                            $('#doc_message').text('Note: Trainer with This Aadhaar/Voter Number is Registred in our Database');
-                                            $('#doc_file_div').remove();
-                                            $('[name=name]').val(data.trainerData.name);
-                                            $('[name=email]').val(data.trainerData.email);
-                                            $('[name=mobile]').val(data.trainerData.mobile);
-                                            $('[name=id]').val(data.trainerData.id);
-                                            $("#btnOne").prop("disabled", false);
-                                            $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                            ajaxresponse = true;
-                                            return true;
-                                        } else {
-                                            swalText.innerHTML = 'Trainer with this Aadhaar/Voter Number is <span style="color:red">Black Listed</span> in our Record, Please Contact SCPwD';
-                                            swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 5000, buttons: false});
-                                            $("#btnOne").prop("disabled", false);
-                                            $("#btnOne").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                            ajaxresponse = false;
-                                            return false;
-                                        }
-                                    }
-                                
-                                }
-                                
-                                $('[name=prsnt]').val('0');
-                                ajaxresponse = true;
-                                return true;
                             }
                         },
                         error: function(){
                             swalText.innerHTML = 'Something went Wrong, Please Try Again';
                             swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>location.reload());
                         }
-                    }).done(function(){
-                        if (ajaxresponse) {
-                            $('#'+div[0]).collapse('hide');
-                            $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                $('#'+div[1]).collapse('show');
-                            });
-                        }
-
                     });
                     break;
                 case 'collapseTwo':
                     var ajaxresponse = true;
                     var mobile = $('[name=mobile]').val();
                     var email = $('[name=email]').val();
-                    var doc_no = $('[name=doc_no]').val();
                     $("#btnTwo").prop("disabled", true);
                     $("#btnTwo").html("Please Wait...");
                     var _token = $('[name=_token]').val();
-                    var dataValidate = { _token, mobile, email, doc_no };
+                    var dataValidate = { _token, mobile, email };
                     var SwalResponse = document.createElement("div");
                     $.ajax({
-                        url: "{{ route('partner.addtrainer.api') }}",
+                        url: "{{ route('admin.tot.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
-                            if (!data.success) {
-                                SwalResponse.innerHTML = data['message'];
-                                swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false});
-                                $("#btnTwo").prop("disabled", false);
-                                $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                ajaxresponse = false;
-                                return false;
+                            if (data.success) {
+                                $('#'+div[0]).collapse('hide');
+                                $('#'+div[0]).on('hidden.bs.collapse', function () {
+                                    $('#'+div[1]).collapse('show');
+                                });
                             } else {
+                                swalText.innerHTML = data.message; 
+                                swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
+
                                 $("#btnTwo").prop("disabled", false);
                                 $("#btnTwo").html('<span class="glyphicon glyphicon-arrow-right"></span> Next');
-                                ajaxresponse = true;
-                                return true;
                             }
                         },
-                        error: function(data){
-                            SwalResponse.innerHTML = 'Something went Wrong, Please Try Again';
-                            swal({title: "Attention", content: SwalResponse, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(()=>{location.reload()});
+                        error: function(){
+                            swalText.innerHTML = 'Something went Wrong, Please Try Again';
+                            swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 3000, buttons: false}).then(()=>location.reload());
                         }
-                    }).done(function(){
-                        if (ajaxresponse) {
-                            $('#'+div[0]).collapse('hide');
-                            $('#'+div[0]).on('hidden.bs.collapse', function () {
-                                $('#'+div[1]).collapse('show');
-                            });
-                        }
-
-                    });
-                    break;
-                case 'collapseThree':
-                    var array = [];
-                    $('select[id^=jobrole_]').each(function (){
-                        array.push(this.value);
-                    });
-                    if (checkIfDuplicateExists(array)) {
-                        var swalText = document.createElement("div");
-                        swalText.innerHTML = 'Please Select Unique <span style="color:blue">Domain/Sector/SSC</span>'; 
-                        swal({title: "", content: swalText, icon: "info", closeOnEsc: true});
-                        return false;
-                    }
-                    $('#'+div[0]).collapse('hide');
-                    $('#'+div[0]).on('hidden.bs.collapse', function () {
-                        $('#'+div[1]).collapse('show');
                     });
                     break;
 
-                case 'collapseFour':
                     $('#'+div[0]).collapse('hide');
                     $('#'+div[0]).on('hidden.bs.collapse', function () {
                         $('#'+div[1]).collapse('show');
@@ -588,161 +483,28 @@
                 default:
                     break;
                 }
-            }
         }
+    }
 
     /* End Validation of Each Sections */
 
-    /* Making Sure That the Terms & Condition is Accepted */
+    /* Form Submit Function */
     
         $('#form_trainer').submit(function(e){
             e.preventDefault();
-            if ($('#form_trainer').valid()) {
-                if ($('input:checkbox', this).length == $('input:checked', this).length) {
-                    
-                    /* Disabling Prev & Submit Button and Proceed to Submit */
-                    
-                        $("#submit_form").prop("disabled", true);
-                        $("#last_prev_btn").prop("disabled", true);
-                        $("#submit_form").html("Please Wait...");
-                        $(this).unbind().submit();
-                    
-                    /* End Disabling Prev & Submit Button and Proceed to Submit */
+            if ($('#form_trainer').valid()) {    
+                /* Disabling Prev & Submit Button and Proceed to Submit */
                 
-
-                } else {
-                    showNotification('danger','Please Accept the Terms & Conditions','top','center','wobble','zoomOut',0,250);
-                }
+                    $("#submit_form").prop("disabled", true);
+                    $("#last_prev_btn").prop("disabled", true);
+                    $("#submit_form").html("Please Wait...");
+                    $(this).unbind().submit();
+                
+                /* End Disabling Prev & Submit Button and Proceed to Submit */
             }
         });
         
-    /* End Making Sure That the Terms & Condition is Accepted */
-
-
-        function updatescheme() {
-            var _token = $('[name=_token]').val();
-            var sid = $("#sector :selected").val(); 
-            var jid = $("#jobrole :selected").val();
-            $.ajax({
-                url: "{{ route('partner.addtrainer.api') }}",
-                method: "POST",
-                data: { _token, sid, jid },
-                success: function(data){
-                    $('#scheme').empty();
-                    data.jobs.forEach(value => {
-                        /* Setting partner_job_id Instead of set jobid as value of selection  */
-                        $('#scheme').append('<option value='+value.id+'>'+value.scheme.scheme+'</option>');
-                    });
-                    $('#scheme').selectpicker('refresh');
-                } 
-            });
-        }
-
-
-
-    /* Fetch SelectPicker Data */
-
-        function updatejob(){
-            var _token = $('[name=_token]').val();
-            var sectorid = $("#sector :selected").val();
-            $.ajax({
-                url: "{{ route('partner.addtrainer.api') }}",
-                method: "POST",
-                data: { _token, sectorid },
-                success: function(data){
-                    $('#jobrole').empty();
-                    data.jobs.forEach(value => {
-                        $('#jobrole').append('<option value='+value.jobrole_id+'>'+value.jobrole.job_role+'</option>');
-                    });
-                    $('#jobrole').selectpicker('refresh');
-                    updatescheme();
-                    updatequali();
-                } 
-            });
-        }
-
-    /* End Fetch SelectPicker Data */
-
-
-    /* Update Min Values of Experience Depending on Selected Job Role Qualifications */
-    
-    function updateminvalues(v) {
-        var data = localStorage.getItem(v).split(',');
-        $('[name=sector_exp]').attr('min', data[0]);
-        $('[name=teaching_exp]').attr('min', data[1]);
-    }
-    
-    /* End Update Min Values of Experience Depending on Selected Job Role Qualifications */
-
-
-    /* Qualification DropDown Item Section */
-        function updatequali() {
-            var jobroleid = ($("#jobrole :selected").val()).split(',')[0];
-            var _token= $('[name=_token]').val();
-            $.ajax({
-                method: 'POST',
-                url: "{{ route('partner.addtrainer.api') }}",
-                data: {_token, jobroleid},
-                success: function (response) {
-                    $('#qualification').empty();
-                    localStorage.clear();
-                    if (response.qualifications.length == 0) {
-                        $('[name=sector_exp]').attr('min', 0);
-                        $('[name=teaching_exp]').attr('min', 0);
-                    } else {
-                        $('[name=sector_exp]').attr('min', response.qualifications[0].sector_exp);
-                        $('[name=teaching_exp]').attr('min', response.qualifications[0].teaching_exp);
-                    }
-                    
-                    response.qualifications.forEach(function(v){
-                        localStorage.setItem(v.qualification, v.sector_exp+','+v.teaching_exp);
-                        $('#qualification').append('<option>'+v.qualification+'</option>');
-                    });
-
-                    $('#qualification').selectpicker('refresh');
-                    updatescheme();
-                },
-                error: function (data) {
-                    setTimeout(function () {
-                        swal("Sorry", "Something Went Wrong, Please Try Again", "error");
-                    }, 1500);   
-                }
-            });
-        }
-    /* End Qualification DropDown Item Section */
-
-
-    /* File Type Validation */
-        function filevalidate(){
-            var _URL = window.URL || window.webkitURL;
-            $("[type='file']").change(function(e) {
-            var image, file;
-            for (var i = this.files.length - 1; i >= 0; i--) {
-                if ((file = this.files[i])) {
-                    size = Math.round((file.size/1024/1024) * 100) / 100; // Size in MB
-                    image = new Image();
-                    var fileType = file["type"];
-                    var ValidImageTypes = ["image/jpg", "image/jpeg", "image/png", "application/pdf"];
-                    if ($.inArray(fileType, ValidImageTypes) < 0) {
-                        $("#"+e.currentTarget.id).val('');
-                        $("#" + e.currentTarget.id + "_error").text('File must be in jpg, jpeg, png or pdf Format');
-                    } else {
-                        $("#" + e.currentTarget.id + "_error").text('');
-                    }
-                    
-                    if (size > 5) {
-                        $("#"+e.currentTarget.id).val('');
-                        $("#" + e.currentTarget.id + "_error").text('File Size is Exceeding the limit of 5 MB');
-                    } else {
-                        $("#" + e.currentTarget.id + "_error").text('');
-                    }
-
-                    image.src = _URL.createObjectURL(file);
-                }
-            }
-            });
-        }
-    /* End File Type Validation */
+    /* End Form Submit Function */
 
 </script>
 
@@ -757,57 +519,9 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-<script src="{{asset('assets/js/pages/common/notifications.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
 <script>
-$(function () {
-    
-    /* Intializing Bootstrap DatePicker */
-    
-        $('.month_range_picker_start .form-control').datepicker({
-            autoclose: true,
-            format: 'dd MM yyyy',
-            endDate: new Date()
-        });
-
-        $('.month_range_picker_end .form-control').datepicker({
-            autoclose: true,
-            format: 'dd MM yyyy',
-            startDate: new Date()
-        });
-
-        $('#ssc_start_new')
-        .datepicker()
-        .on('changeDate', function(selected){
-            startDate = new Date(selected.date.valueOf());
-            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-            $('#ssc_end_new').datepicker('setStartDate', startDate);
-        });
-
-        $('#scpwd_start')
-        .datepicker()
-        .on('changeDate', function(selected){
-            startDate = new Date(selected.date.valueOf());
-            startDate.setDate(startDate.getDate(new Date(selected.date.valueOf()))); 
-            $('#scpwd_end').datepicker('setStartDate', startDate);
-        });
-    
-    /* End Bootstrap DatePicker */
-    
-});
-
-    /* Date Range Picker Operations */
-        function startchange(id){
-            $('#ssc_end_'+id).val('');
-        }
-        function startchangescpwd(){
-            $('#scpwd_end').val('');
-        }
-    /* End Date Range Picker Operations */
-
-
 
     /* Custom Valiadtions */    
     
@@ -815,28 +529,57 @@ $(function () {
             rules: {
             mobile: { mobile: true },
             doc_no: { aadhaar: true },
+            pin: { pin: true },
             "[type=email]": { email: true }
             }
         });
     
     /* End Custom Valiadtions */
 
-    /* State District Checks */
+    /* On Load Functions */
     $(function(){
+
+        $('.datepicker .form-control').datepicker({
+            autoclose: true,
+            format: 'dd MM yyyy',
+        });
+
+
         $('#state_district').on('change', function(){
         val = "{{Config::get('constants.statedistricts')}}";
         
         if ($.parseJSON(val).find(v => v == $('#state_district').val()) === undefined) {
-            $('#doc_label').html('Aadhaar Number <span style="color:red"> <strong>*</strong></span>');
+            $('#doc_label').html('Aadhaar No <span style="color:red"> <strong>*</strong></span>');
             $('[name=doc_no]').rules('add', {aadhaar: true});  
-            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar Number");
+            $('[name=doc_no]').attr("placeholder", "Enter Trainer's Aadhaar Number");
+            $('#doc_type_div').hide();
         } else {
-            $('#doc_label').html('Aadhaar Number or Voter Number <span style="color:red"> <strong>*</strong></span>');
+            $('#doc_label').html('Aadhaar or Voter No <span style="color:red"> <strong>*</strong></span>');
             $('[name=doc_no]').rules('remove', 'aadhaar');
-            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar or Voter Number");            
+            $('[name=doc_no]').attr("placeholder", "Enter Trainer's Aadhaar or Voter Number");            
+            $('#doc_type_div').show();
         }
         });
+    });
+/* End On Load Functions */
+
+    function toggleThis(t){
+        $('#'+t).toggle('slide');
+    }
+
+    $('[name=trainer_category]').on('change', (e)=>{
+        $('[name=scheme]')[0].toggleAttribute('required');
+        $('[name=sip_tc_id]')[0].toggleAttribute('required');
+        $('[name=tc_name]')[0].toggleAttribute('required');
+        $('[name=tc_address]')[0].toggleAttribute('required');
+        $('[name=has_domain_cert]')[0].toggleAttribute('required');
+        $('[name=domain_cert]')[0].toggleAttribute('required');
+        $('[name=has_inspected]')[0].toggleAttribute('required');
+        $('[name=domain_job]')[0].toggleAttribute('required');
+        $('[name=domain_job_code]')[0].toggleAttribute('required');
+        $('[name=tp_name]')[0].toggleAttribute('required');
+        $('.toggle_category').toggle();
     })
-/* End State District Checks */
+
 </script>
 @endsection
