@@ -48,7 +48,7 @@
                                                 <td><span style="color:{{($login->event)?'blue':'red'}};font-weight:bold;">{{($login->event)?'Logged in':'Logged out'}}</span> from {{$login->ip_address}}</td>
                                                 <td>
                                                     <span style="display:none;">{{ \Carbon\Carbon::parse($login->created_at)->getTimestamp()}}</span>
-                                                    {{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y H:i:s')}}
+                                                    {{\Carbon\Carbon::parse($login->created_at)->format('Y-m-d H:i:s')}}
                                                 </td>
                                             </tr>
                                             @php
