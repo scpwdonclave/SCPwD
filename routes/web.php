@@ -113,9 +113,11 @@ Route::get('agency/complain-files/{id}/{action}/{column}', 'FileController@suppo
 Route::get('assessor/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('assessor.support.complain-file');
 
 
+Route::get('admin/files/{filename}', 'AdminAuth\FileController@toaFiles')->name('admin.files.toa-file');
+
 /* QR Data For Assessment */
 Route::get('assessment/digital-certificate/{id}', 'QrController@qrData')->name('assessment-qrdata');
-Route::get('tot/digital-certificate/{id}', 'QrController@qrDataTot')->name('tot-qrdata');
+Route::get('tot-toa/digital-certificate/{id}', 'QrController@qrDataTotToa')->name('tot-toa-qrdata');
 
 
 

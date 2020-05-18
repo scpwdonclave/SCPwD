@@ -23,9 +23,15 @@
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th>Trainer ID</th>
-                                    <th>Trainer Name</th>
-                                    <th>TP Name</th>
+                                    @if ($tag==='tot')
+                                        <th>Trainer ID</th>
+                                        <th>Trainer Name</th>
+                                        <th>TP Name</th>
+                                    @else
+                                        <th>Assessor ID</th>
+                                        <th>Assessor Name</th>
+                                        <th>Agency Name</th>
+                                    @endif
                                     <th>Doc No</th>
                                     <th>Percentage</th>
                                     <th>Grade</th>
@@ -36,26 +42,46 @@
                                 @php
                                     $cert_tag = false;
                                 @endphp
-                                @foreach ($batchData->trainers as $key=>$item)
-                                    @php
-                                        if (!is_null($item->percentage)) {
-                                            $cert_tag = true;
-                                        }
-                                    @endphp
-                                    <tr>
-                                        <td>{{is_null($item->bt_tot_id)?'NA':$item->bt_tot_id}}</td>
-                                        <td>{{$item->trainer->name}}</td>
-                                        <td>{{$item->trainer->tp_name}}</td>
-                                        <td>{{$item->trainer->doc_no}}</td>
-                                        <td>{{is_null($item->percentage)?'NA':$item->percentage.'%'}}</td>
-                                        <td>{{is_null($item->grade)?'NA':$item->grade}}</td>
-                                        <td>{{is_null($item->validity)?'NA':Carbon\Carbon::parse($item->validity)->format('d-m-Y')}}</td>
-                                    </tr>
-                                @endforeach
+                                @if ($tag==='tot')
+                                    @foreach ($batchData->trainers as $key=>$item)
+                                        @php
+                                            if (!is_null($item->percentage)) {
+                                                $cert_tag = true;
+                                            }
+                                        @endphp
+                                        <tr>
+                                            <td>{{is_null($item->bt_tot_id)?'NA':$item->bt_tot_id}}</td>
+                                            <td>{{$item->trainer->name}}</td>
+                                            <td>{{$item->trainer->tp_name}}</td>
+                                            <td>{{$item->trainer->doc_no}}</td>
+                                            <td>{{is_null($item->percentage)?'NA':$item->percentage.'%'}}</td>
+                                            <td>{{is_null($item->grade)?'NA':$item->grade}}</td>
+                                            <td>{{is_null($item->validity)?'NA':Carbon\Carbon::parse($item->validity)->format('d-m-Y')}}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    @foreach ($batchData->assessors as $key=>$item)
+                                        @php
+                                            if (!is_null($item->percentage)) {
+                                                $cert_tag = true;
+                                            }
+                                        @endphp
+                                        <tr>
+                                            <td>{{is_null($item->bt_toa_id)?'NA':$item->bt_toa_id}}</td>
+                                            <td>{{$item->assessor->name}}</td>
+                                            <td>{{$item->assessor->agency->agency_name}}</td>
+                                            <td>{{$item->assessor->doc_no}}</td>
+                                            <td>{{is_null($item->percentage)?'NA':$item->percentage.'%'}}</td>
+                                            <td>{{is_null($item->grade)?'NA':$item->grade}}</td>
+                                            <td>{{is_null($item->validity)?'NA':Carbon\Carbon::parse($item->validity)->format('d-m-Y')}}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
 
+                    {{-- Need to Check User Type (Trainer or Assessor) and pass argument as 1 for TR 0 for AS --}}
                     {{-- <div class="row d-flex justify-content-center">
                         @if ($cert_tag)
                             <button class="btn btn-primary" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($batchData->id.',1'))}}');"><i class="zmdi zmdi-print" formtarget="_blank"></i>  &nbsp;&nbsp;Print Certificate</button>

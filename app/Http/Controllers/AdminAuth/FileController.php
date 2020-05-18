@@ -26,6 +26,15 @@ class FileController extends Controller
         }
     }
 
+    public function toaFiles($file)
+    {
+        try {
+            return Storage::disk('myDisk')->download("toa/{$file}");
+        } catch (Exception $e) {
+            return abort(404);
+        }
+    }
+
 
     public function placementFile($id, $file)
     {

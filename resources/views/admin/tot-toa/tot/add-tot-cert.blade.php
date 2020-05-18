@@ -40,7 +40,7 @@
                     </div>
                 @endif
                 <div class="body">
-                    <form id="form_trainer" method="POST" action="{{ route('admin.tot-toa.addtrainercert.submit') }}" enctype="multipart/form-data">
+                    <form id="form_trainer" method="POST" action="{{ route('admin.tot-toa.addtrainercert.submit') }}">
                         @csrf
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             <div class="panel panel-primary">
@@ -151,8 +151,8 @@
                                                     <label for="has_disability">Has Disability <span style="color:red"> <strong>*</strong></span></label>
                                                     <div class="form-group form-float">
                                                         <select id="has_disability" class="form-control show-tick" name="has_disability" onchange="toggleThis('disability')" data-dropup-auto='false' required>
-                                                            <option>Yes</option>
-                                                            <option>No</option>
+                                                            <option value="1">Yes</option>
+                                                            <option value="0">No</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -416,7 +416,7 @@
                     var dataValidate = { _token, doc_no };
 
                     $.ajax({
-                        url: "{{ route('admin.tot.api') }}",
+                        url: "{{ route('admin.tot-toa.redundant.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){
@@ -450,7 +450,7 @@
                     var dataValidate = { _token, mobile, email };
                     var SwalResponse = document.createElement("div");
                     $.ajax({
-                        url: "{{ route('admin.tot.api') }}",
+                        url: "{{ route('admin.tot-toa.redundant.api') }}",
                         method: "POST",
                         data: dataValidate,
                         success: function(data){

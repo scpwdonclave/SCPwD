@@ -48,7 +48,7 @@
                                         <td>{{$tot->batchlatest?(is_null($tot->batchlatest->validity)?'NA':Carbon\Carbon::parse($tot->batchlatest->validity)->format('d-m-Y')):'NA'}}</td>
                                         <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.trainer.view',Crypt::encrypt($tot->id))}}'" >View</button></td>
                                         @if ($tot->batchlatest && !is_null($tot->batchlatest->grade))
-                                            <td><button type="button" class="badge bg-green margin-0" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($tot->batchlatest->id.',0'))}}');" formtarget="_blank">Print</button></td>
+                                            <td><button type="button" class="badge bg-green margin-0" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($tot->batchlatest->id.',0,1'))}}');" formtarget="_blank">Print</button></td>
                                         @else
                                             <td>NA</td>
                                         @endif

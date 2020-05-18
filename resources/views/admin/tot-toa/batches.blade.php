@@ -42,20 +42,39 @@
                                         <td>{{$record->batch_id}}</td>
                                         <td>{{Carbon\Carbon::parse($record->batch_start)->format('d-m-Y')}}</td>
                                         <td>{{Carbon\Carbon::parse($record->batch_end)->format('d-m-Y')}}</td>
-                                        <td>{{$record->trainers->count()}}</td>
-                                        @if ($record->trainers->count() && Carbon\Carbon::parse($record->batch_end) < Carbon\Carbon::now())
-                                            @if (is_null($record->trainers[0]->percentage))
-                                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.tot-batches.marks.add',Crypt::encrypt($record->id))}}'" >Enter Marks</button></td>
+                                        @if ($tag==='tot')
+                                            <td>{{$record->trainers->count()}}</td>
+                                            @if ($record->trainers->count() && Carbon\Carbon::parse($record->batch_end) < Carbon\Carbon::now())
+                                                @if (is_null($record->trainers[0]->percentage))
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.tot-batches.marks.add',Crypt::encrypt($record->id))}}'" >Enter Marks</button></td>
+                                                @else
+                                                    <td><button type="button" class="badge bg-grey margin-0" >Marks Taken</button></td>
+                                                @endif
                                             @else
-                                                <td><button type="button" class="badge bg-grey margin-0" >Marks Taken</button></td>
+                                                <td><button type="button" class="badge bg-grey margin-0">Enter Marks</button></td>
+                                            @endif
+                                            @if ($record->trainers->count())
+                                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.tot-batches.view',Crypt::encrypt($record->id))}}'" >View</button></td>
+                                            @else
+                                                <td><button type="button" class="badge bg-grey margin-0">View</button></td>
                                             @endif
                                         @else
-                                            <td><button type="button" class="badge bg-grey margin-0">Enter Marks</button></td>
-                                        @endif
-                                        @if ($record->trainers->count())
-                                            <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.tot-batches.view',Crypt::encrypt($record->id))}}'" >View</button></td>
-                                        @else
-                                            <td><button type="button" class="badge bg-grey margin-0">View</button></td>
+                                            <td>{{$record->assessors->count()}}</td>
+                                            @if ($record->assessors->count() && Carbon\Carbon::parse($record->batch_end) < Carbon\Carbon::now())
+                                                @if (is_null($record->assessors[0]->percentage))
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.toa-batches.marks.add',Crypt::encrypt($record->id))}}'" >Enter Marks</button></td>
+                                                @else
+                                                    <td><button type="button" class="badge bg-grey margin-0" >Marks Taken</button></td>
+                                                @endif
+                                            @else
+                                                <td><button type="button" class="badge bg-grey margin-0">Enter Marks</button></td>
+                                            @endif
+                                            @if ($record->assessors->count())
+                                                <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tot-toa.toa-batches.view',Crypt::encrypt($record->id))}}'" >View</button></td>
+                                            @else
+                                                <td><button type="button" class="badge bg-grey margin-0">View</button></td>
+                                            @endif
+                                            
                                         @endif
                                     </tr>
                                 @endforeach
@@ -78,7 +97,12 @@
                 </div>
                 <div class="modal-body">
                     @php
-                        $url = 'admin.tot-toa.tot-batches.submit';
+                        if ($tag === 'tot') {
+                            $url = 'admin.tot-toa.tot-batches.submit';
+                        } else {
+                            $url = 'admin.tot-toa.toa-batches.submit';
+                        }
+                        
                     @endphp
                     <form id="form_modal" method="POST" action="{{route($url)}}">
                         @csrf
@@ -126,7 +150,13 @@
     // Call Modal of Adding or Display Table
 
     function popupMenu(id){
-    let url = "{{route('admin.tot.batch.api')}}";
+    let tag = '{{$tag}}';
+    let url = '';
+    if (tag === 'tot') {
+        url = "{{route('admin.tot.batch.api')}}";
+    } else {
+        url = "{{route('admin.toa.batch.api')}}";
+    }
     let _token = $("[name=_token]").val();
     
     if (id === undefined) {
@@ -134,7 +164,11 @@
         $('#defaultModalLabel').html('Create New Batch');
         $('#btnConfirm').html('Add Batch');
     } else if(id != '') {
-        $('#defaultModalLabel').html('Trainers Under This Batch');
+        if (tag === 'tot') {
+            $('#defaultModalLabel').html('Trainers Under This Batch');
+        } else {
+            $('#defaultModalLabel').html('Assessors Under This Batch');
+        }
         $('#btnConfirm').html('Update JobRole');
         $('[name=jobid]').val(id);
         data = id;
@@ -151,12 +185,24 @@
                 
                 $.each (data.new_records, function (index) {
                     let record_id=data.new_records[index].id;
-                    let new_records=data.new_records[index].name+' | '+data.new_records[index].doc_no+' ('+data.new_records[index].tp_name+')';
+                    let new_records = '';
+                    
+                    if (tag === 'tot') {
+                        new_records=data.new_records[index].name+' | '+data.new_records[index].doc_no+' ('+data.new_records[index].tp_name+')';
+                    } else {
+                        new_records=data.new_records[index].name+' | '+data.new_records[index].doc_no+' ('+data.new_records[index].agency_name+')';
+                    }
                     $('#new_records').append('<option value="'+record_id+'">'+new_records+'</option>');
                 });
                 $.each (data.renewals, function (index) {
                     let record_id=data.renewals[index].id;
-                    let renewals=data.renewals[index].name+' | '+data.renewals[index].doc_no+' ('+data.renewals[index].tp_name+')';
+                    let renewals = '';
+                    
+                    if (tag === 'tot') {
+                        renewals=data.renewals[index].name+' | '+data.renewals[index].doc_no+' ('+data.renewals[index].tp_name+')';
+                    } else {
+                        renewals=data.renewals[index].name+' | '+data.renewals[index].doc_no+' ('+data.renewals[index].agency_name+')';
+                    }
                     $('#renewals').append('<option value="'+record_id+'">'+renewals+'</option>');
                 });
                 

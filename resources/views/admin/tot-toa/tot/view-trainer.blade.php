@@ -44,7 +44,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <small class="text-muted">Trainer Name</small>
-                                        <p>{{$tot->name}}</p>
+                                        <p>{{$tot->salutation.' '.$tot->name}}</p>
                                         <hr>
                                     </div>
                                     <div class="col-sm-6">
@@ -237,7 +237,7 @@
                                             <td>{{is_null($totbatchmap->percentage)?'NA':(is_null($totbatchmap->grade)?'Failed':$totbatchmap->grade)}}</td>
                                             <td>{{is_null($totbatchmap->validity)?'NA':Carbon\Carbon::parse($totbatchmap->validity)->format('d-m-Y')}}</td>
                                             @if (!is_null($totbatchmap->digital_key))
-                                                <td><button type="button" class="badge bg-green margin-0" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($totbatchmap->id.',0'))}}');" formtarget="_blank">Print</button></td>
+                                                <td><button type="button" class="badge bg-green margin-0" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($totbatchmap->id.',0,1'))}}');" formtarget="_blank">Print</button></td>
                                             @else
                                                 <td>NA</td>
                                             @endif

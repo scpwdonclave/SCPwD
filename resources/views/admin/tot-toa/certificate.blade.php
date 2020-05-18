@@ -1,5 +1,5 @@
 <html>
-<title>{{$trainer->bt_tot_id}}</title>
+<title>{{($tag)?$data->bt_tot_id:$data->bt_toa_id}}</title>
 <head><meta http-equiv=Content-Type content="text/html; charset=UTF-8">        
     <style type="text/css">
         html { 
@@ -11,7 +11,6 @@
             height:1000px;
             width:1500px;
         }
-
         div.text {
             padding-top: 395px;    
             text-align: center;
@@ -24,10 +23,10 @@
             line-height: 1.6;
         }
         div.dates_tr {
-            padding-top: 212px;
+            padding-top: 166px;
         } 
         div.dates_mtr {
-            padding-top: 166px;
+            padding-top: 212px;
         } 
         div.dates{
             /* 166 / 212 */
@@ -51,7 +50,6 @@
             margin-top: -373px;
             vertical-align:top;
         }
-
         span.qrid {
             margin-left: 50px;
             margin-top: -30px;
@@ -67,23 +65,41 @@
     <div class="text">
         This is to certify that
         <br>
-        <strong class="exclude">{{$trainer->trainer->salutation.' '.$trainer->trainer->name}} </strong>({{$trainer->trainer->doc_type?'Aadhaar':'Voter'}} No. - <strong class="exclude">{{str_repeat('*', strlen($trainer->doc_no) - 4) . substr($trainer->doc_no, -4)}}</strong>) with Trainer ID - <strong class="exclude">{{$trainer->bt_tot_id}}</strong>
-        <br>
-        @if ($trainer->trainer->trainer_category)
-            has successfully cleared the assessment as
-            <br>
-            <strong class="exclude"> Master Trainer</strong> in the
-            <br>
-            Disability Orientation & Sensitization Training
+        @if ($tag)
+            <strong class="exclude">{{$data->trainer->salutation.' '.$data->trainer->name}} </strong>({{$data->trainer->doc_type?'Aadhaar':'Voter'}} No. - <strong class="exclude">{{str_repeat('*', strlen($data->doc_no) - 4) . substr($data->doc_no, -4)}}</strong>) with Trainer ID - <strong class="exclude">{{$data->bt_tot_id}}</strong>
         @else
-            @if ($trainer->grade == 'Provisionally Pass')
-                has provisionally cleared the assessment as Trainer
+            <strong class="exclude">{{$data->assessor->salutation.' '.$data->assessor->name}} </strong>({{$data->assessor->doc_type?'Aadhaar':'Voter'}} No. - <strong class="exclude">{{str_repeat('*', strlen($data->doc_no) - 4) . substr($data->doc_no, -4)}}</strong>) with Assessor ID - <strong class="exclude">{{$data->bt_toa_id}}</strong>
+        @endif
+        <br>
+        @if ($tag)
+            @if ($data->trainer->trainer_category)
+                has successfully cleared the assessment as
+                <br>
+                <strong class="exclude"> Master Trainer</strong> in the
+                <br>
+                Disability Orientation & Sensitization Training
+            @else
+                @if ($data->grade == 'Provisionally Pass')
+                    has provisionally cleared the assessment as Trainer
+                    <br>
+                    in the Disability Orientation & Sensitization Module
+                @else
+                    has successfully cleared the assessment as
+                    <br>
+                    Trainer with Grade <strong>'{{$data->grade}}'</strong>
+                    <br>
+                    in the Disability Orientation & Sensitization Module
+                @endif
+            @endif
+        @else
+            @if ($data->grade == 'Provisionally Pass')
+                has provisionally cleared the assessment as Assessor
                 <br>
                 in the Disability Orientation & Sensitization Module
             @else
                 has successfully cleared the assessment as
                 <br>
-                Trainer with Grade <strong>'{{$trainer->grade}}'</strong>
+                Assessor with Grade <strong>'{{$data->grade}}'</strong>
                 <br>
                 in the Disability Orientation & Sensitization Module
             @endif
@@ -91,18 +107,28 @@
         <br>
         covering Hearing Impairment, Blindness, Low Vision and Locomotor Disabilities.
     </div>
-    <div class="dates {{$trainer->trainer->trainer_category?'dates_mtr':'dates_tr'}}">
-        {{Carbon\Carbon::parse($trainer->batch->batch_end)->format('d-m-Y')}}
-        <br>
-        <span class="valid">
-            {{Carbon\Carbon::parse($trainer->validity)->format('d-m-Y')}}
-        </span>
-    </div>
+    @if ($tag)
+        <div class="dates {{$data->trainer->trainer_category?'dates_tr':(($data->grade=='Provisionally Pass')?'dates_mtr':'dates_tr')}}">
+            {{Carbon\Carbon::parse($data->batch->batch_end)->format('d-m-Y')}}
+            <br>
+            <span class="valid">
+                {{Carbon\Carbon::parse($data->validity)->format('d-m-Y')}}
+            </span>
+        </div>
+    @else
+        <div class="dates {{($data->grade=='Provisionally Pass')?'dates_mtr':'dates_tr'}}">
+            {{Carbon\Carbon::parse($data->batch->batch_end)->format('d-m-Y')}}
+            <br>
+            <span class="valid">
+                {{Carbon\Carbon::parse($data->validity)->format('d-m-Y')}}
+            </span>
+        </div>
+    @endif
     <div class="qr_section">
-        {!! QrCode::size(200)->generate(route('tot-qrdata',$trainer->digital_key)); !!}
+        {!! QrCode::size(200)->generate(route('tot-toa-qrdata',$data->digital_key)); !!}
             <br>
         <span class="qrid">
-            {{$trainer->qr_id}}
+            {{$data->qr_id}}
         </span>
     </div>
 

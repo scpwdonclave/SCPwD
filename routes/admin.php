@@ -45,23 +45,31 @@ Route::post('mis/summary/candidate-wise-placement', 'AdminAuth\AdminMisControlle
 
 /** TOT-TOA Section */
 Route::get('tot-toa/tot-batches', 'AdminAuth\TotToaController@totBatches')->name('tot-toa.tot-batches');
-Route::post('tot-toa/tot-batches/add', 'AdminAuth\TotToaController@submitTotBatches')->name('tot-toa.tot-batches.submit');
-Route::get('tot-toa/tot-batches/marks/{id}', 'AdminAuth\TotToaController@addTotMarks')->name('tot-toa.tot-batches.marks.add');
+Route::post('tot-toa/tot-batches/add', 'AdminAuth\TotToaController@submitTotBatches')->name('tot-toa.tot-batches.submit');//
+Route::post('tot-toa/toa-batches/add', 'AdminAuth\TotToaController@submitToaBatches')->name('tot-toa.toa-batches.submit');//
+Route::get('tot-toa/tot-batches/marks/{id}', 'AdminAuth\TotToaController@addTotMarks')->name('tot-toa.tot-batches.marks.add');//
+Route::get('tot-toa/toa-batches/marks/{id}', 'AdminAuth\TotToaController@addToaMarks')->name('tot-toa.toa-batches.marks.add');
 Route::post('tot-toa/tot-batches/marks/submit', 'AdminAuth\TotToaController@submitTotMarks')->name('tot-toa.tot-batches.marks.submit');
-Route::get('tot-toa/tot-batches/view/{id}', 'AdminAuth\TotToaController@viewTotBatch')->name('tot-toa.tot-batches.view');
+Route::post('tot-toa/toa-batches/marks/submit', 'AdminAuth\TotToaController@submitToaMarks')->name('tot-toa.toa-batches.marks.submit');
+Route::get('tot-toa/tot-batches/view/{id}', 'AdminAuth\TotToaController@viewTotBatch')->name('tot-toa.tot-batches.view');//
+Route::get('tot-toa/toa-batches/view/{id}', 'AdminAuth\TotToaController@viewToaBatch')->name('tot-toa.toa-batches.view');//
 
 Route::get('tot-toa/toa-batches', 'AdminAuth\TotToaController@toaBatches')->name('tot-toa.toa-batches');
 Route::get('tot-toa/trainers', 'AdminAuth\TotToaController@trainers')->name('tot-toa.trainers');
 // Route::post('tot-toa/trainers', 'AdminAuth\TotToaController@linkingTrainerAPI')->name('tot-toa.trainers.linking');
 Route::post('tot-toa/trainers/linking', 'AdminAuth\TotToaController@submitLinkingTrainer')->name('tot-toa.trainers.linking.submit');
+Route::post('tot-toa/assessors/linking', 'AdminAuth\TotToaController@submitLinkingAssessor')->name('tot-toa.assessors.linking.submit');
 Route::get('tot-toa/trainers/{id}', 'AdminAuth\TotToaController@viewTrainer')->name('tot-toa.trainer.view');
 Route::get('tot-toa/certificate/{data}', 'AdminAuth\TotToaCertController@printCertificate')->name('tot-toa.certificate.print');
 Route::get('tot-toa/assessors', 'AdminAuth\TotToaController@assessors')->name('tot-toa.assessors');
+Route::get('tot-toa/assessors/{id}', 'AdminAuth\TotToaController@viewAssessor')->name('tot-toa.assessor.view');
 Route::get('tot-toa/add-tot', 'AdminAuth\TotToaController@addTrainerCert')->name('tot-toa.addtrainercert');
 Route::post('tot-toa/add-tot', 'AdminAuth\TotToaController@submitAddTrainerCert')->name('tot-toa.addtrainercert.submit');
-Route::post('tot-toa/add-tot/api', 'AdminAuth\TotToaController@totApi')->name('tot.api');
+Route::post('tot-toa/add-tot/api', 'AdminAuth\TotToaController@redundantCheckApi')->name('tot-toa.redundant.api');
 Route::post('tot-toa/add-tot/batches/api', 'AdminAuth\TotToaController@totBatchApi')->name('tot.batch.api');
+Route::post('tot-toa/add-toa/batches/api', 'AdminAuth\TotToaController@toaBatchApi')->name('toa.batch.api');
 Route::get('tot-toa/add-toa', 'AdminAuth\TotToaController@addAssessorCert')->name('tot-toa.addassessorcert');
+Route::post('tot-toa/add-toa', 'AdminAuth\TotToaController@submitAddAssessorCert')->name('tot-toa.addassessorcert.submit');
 /** End TOT-TOA Section */
 
 /* Admin Verify Partner */

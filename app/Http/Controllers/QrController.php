@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CenterCandidateMap;
 use Illuminate\Http\Request;
 use App\TotBatchAssessmentTrainerMap;
+use App\ToaBatchAssessmentAssessorMap;
 
 
 class QrController extends Controller
@@ -21,14 +22,25 @@ class QrController extends Controller
 
     }
 
-    public function qrDataTot($id)
+    public function qrDataTotToa($id)
     {
-        $tot=TotBatchAssessmentTrainerMap::where('digital_key',$id)->first();
-        if ($tot) {
-            if (!is_null($tot->grade)) {
-                return view('admin.tot-toa.certificate-digital')->with(compact('tot'));
-            }    
+        $batchMapData=TotBatchAssessmentTrainerMap::where('digital_key',$id)->first();
+        if (substr($id, -1)) {
+            $tag = 'tot';
+            if ($batchMapData) {
+                if (!is_null($batchMapData->grade)) {
+                    return view('admin.tot-toa.certificate-digital')->with(compact('batchMapData','tag'));
+                }    
+            }
+        } else {
+            $tag = 'toa';
+            if ($batchMapData) {
+                if (!is_null($batchMapData->grade)) {
+                    return view('admin.tot-toa.certificate-digital')->with(compact('batchMapData','tag'));
+                }    
+            }
         }
+        return abort(404);
     }
    
 }

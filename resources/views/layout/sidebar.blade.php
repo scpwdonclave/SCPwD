@@ -62,10 +62,10 @@
                 <li class="{{ Request::segment(2) === 'tot-toa' ? 'active open' : null }}">
                     <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment-account"></i><span>TOT-TOA</span></a>
                     <ul class="ml-menu">
-                        <li class="{{ Request::is('admin/tot-toa/trainers') ? 'active' : null }}"><a href="{{route('admin.tot-toa.trainers')}}"> Trainers</a></li>
-                        <li class="{{ Request::is('admin/tot-toa/tot-batches') ? 'active' : null }}"><a href="{{route('admin.tot-toa.tot-batches')}}"> TOT Batches</a></li>
-                        <li class="{{ Request::is('admin/tot-toa/toa-batches') ? 'active' : null }}"><a href="{{route('admin.tot-toa.toa-batches')}}"> TOA Batches</a></li>
-                        <li class="{{ Request::is('admin/tot-toa/assessors') ? 'active' : null }}"><a href="{{route('admin.tot-toa.assessors')}}"> Assessors</a></li>
+                        <li class="{{ in_array(Request::segment(3), ['trainers','add-tot'])? 'active' :  null }}"><a href="{{route('admin.tot-toa.trainers')}}"> Trainers</a></li>
+                        <li class="{{ in_array(Request::segment(3), ['tot-batches'])? 'active' :  null }}"><a href="{{route('admin.tot-toa.tot-batches')}}"> TOT Batches</a></li>
+                        <li class="{{ in_array(Request::segment(3), ['assessors','add-toa'])? 'active' :  null }}"><a href="{{route('admin.tot-toa.assessors')}}"> Assessors</a></li>
+                        <li class="{{ in_array(Request::segment(3), ['toa-batches'])? 'active' :  null }}"><a href="{{route('admin.tot-toa.toa-batches')}}"> TOA Batches</a></li>
                     </ul>
                 </li> 
                 <li class="{{ Request::segment(2) === 'training_partners' ? 'active open' : null }}">

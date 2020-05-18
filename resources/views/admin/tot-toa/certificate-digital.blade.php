@@ -28,7 +28,7 @@
               color: white;
             }
         </style>
-        <title>{{$tot->bt_tot_id}}</title>
+        <title>{{($tag == 'tot')?$batchMapData->bt_tot_id:$batchMapData->bt_toa_id}}</title>
         <style>
             table {
             table-layout: fixed ;
@@ -47,23 +47,44 @@
     </head>
 
     @php
-        if($tot->trainer->gender=='Male'){
-            if ($tot->trainer->g_type==='Father' || $tot->trainer->g_type==='Mother') {
-                $guardian_of = 'Son of';
-            } else {
-                $guardian_of = 'C/O of';
-            }
-        } elseif ($tot->trainer->gender=='Female') {
-            if ($tot->trainer->g_type==='Father' || $tot->trainer->g_type==='Mother') {
-                $guardian_of = 'Daughter of';
-            } elseif ($tot->trainer->g_type==='Husband') {
-                $guardian_of = 'Wife of';
+        if ($tag == 'tot') {
+            if($batchMapData->trainer->gender=='Male'){
+                if ($batchMapData->trainer->g_type==='Father' || $batchMapData->trainer->g_type==='Mother') {
+                    $guardian_of = 'Son of';
+                } else {
+                    $guardian_of = 'C/O of';
+                }
+            } elseif ($batchMapData->trainer->gender=='Female') {
+                if ($batchMapData->trainer->g_type==='Father' || $batchMapData->trainer->g_type==='Mother') {
+                    $guardian_of = 'Daughter of';
+                } elseif ($batchMapData->trainer->g_type==='Husband') {
+                    $guardian_of = 'Wife of';
+                } else {
+                    $guardian_of = 'C/O of';
+                }
             } else {
                 $guardian_of = 'C/O of';
             }
         } else {
-            $guardian_of = 'C/O of';
+            if($batchMapData->assessor->gender=='Male'){
+                if ($batchMapData->assessor->g_type==='Father' || $batchMapData->assessor->g_type==='Mother') {
+                    $guardian_of = 'Son of';
+                } else {
+                    $guardian_of = 'C/O of';
+                }
+            } elseif ($batchMapData->assessor->gender=='Female') {
+                if ($batchMapData->assessor->g_type==='Father' || $batchMapData->assessor->g_type==='Mother') {
+                    $guardian_of = 'Daughter of';
+                } elseif ($batchMapData->assessor->g_type==='Husband') {
+                    $guardian_of = 'Wife of';
+                } else {
+                    $guardian_of = 'C/O of';
+                }
+            } else {
+                $guardian_of = 'C/O of';
+            }
         }
+        
     @endphp
 
     <body>
@@ -71,7 +92,7 @@
                 <img src="{{asset('assets/images/scpwd-logo.png')}}" alt="SCPwD" style="height:120px;width:300px;">
         </div>
         <div class="text-center">
-            {!! QrCode::size(300)->generate(route('tot-qrdata',$tot->digital_key)); !!}
+            {!! QrCode::size(300)->generate(route('tot-toa-qrdata',$batchMapData->digital_key)); !!}
         </div>
         <div style="position:relative">
             <table id="customers">
@@ -83,25 +104,25 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="title">Trainer ID</td>
-                        <td>{{$tot->bt_tot_id}}</td>
+                        <td class="title">{{($tag == 'tot')?'Trainer':'Assessor'}} ID</td>
+                        <td>{{($tag == 'tot')?$batchMapData->bt_tot_id:$batchMapData->bt_toa_id}}</td>
                     </tr>
                     <tr>
-                        <td class="title">Trainer Name</td>
-                        <td>{{$tot->trainer->salutation.' '.$tot->trainer->name}}</td>
+                        <td class="title">{{($tag == 'tot')?'Trainer':'Assessor'}} Name</td>
+                        <td>{{($tag == 'tot')?$batchMapData->trainer->salutation.' '.$batchMapData->trainer->name:$batchMapData->assessor->salutation.' '.$batchMapData->assessor->name}}</td>
                     </tr>
                     <tr>
                         <td class="title">Guardian Name</td>
-                        <td>{{$guardian_of.' '.$tot->trainer->g_name}}</td>
+                        <td>{{$guardian_of.' '.(($tag == 'tot')?$batchMapData->trainer->g_name:$batchMapData->assessor->g_name)}}</td>
                     </tr>
                     <tr>
-                        <td class="title">{{$tot->trainer->doc_type?'Aadhaar':'Voter'}} No</td>
-                        <td>{{str_repeat('*', strlen($tot->doc_no) - 4) . substr($tot->doc_no, -4)}}</td>
+                        <td class="title">{{(($tag == 'tot')?$batchMapData->trainer->doc_type:$batchMapData->assessor->doc_type)?'Aadhaar':'Voter'}} No</td>
+                        <td>{{str_repeat('*', strlen($batchMapData->doc_no) - 4) . substr($batchMapData->doc_no, -4)}}</td>
                     </tr>
-                    @if (!$tot->trainer->trainer_category)
+                    @if ($tag == 'tot' && !$batchMapData->trainer->trainer_category)
                         <tr>
                             <td class="title">Grade</td>
-                            <td>{{$tot->grade}}</td>
+                            <td>{{$batchMapData->grade}}</td>
                         </tr>
                     @endif
                     <tr>
@@ -112,23 +133,29 @@
                         <td class="title">Covering Disability</td>
                         <td>Hearing Impairment, Blindness, Low Vision and Locomotor Disabilities</td>
                     </tr>
-                    @if (!$tot->trainer->trainer_category)
+                    @if ($tag == 'tot' && !$batchMapData->trainer->trainer_category)
                         <tr>
                             <td class="title">TP Name</td>
-                            <td>{{$tot->tp_name}}</td>
+                            <td>{{$batchMapData->tp_name}}</td>
+                        </tr>
+                    @endif
+                    @if ($tag == 'toa')
+                        <tr>
+                            <td class="title">Agency Name</td>
+                            <td>{{$batchMapData->assessor->agency->agency_name}}</td>
                         </tr>
                     @endif
                     <tr>
                         <td class="title">Certificate Issue Date</td>
-                        <td>{{Carbon\Carbon::parse($tot->batch->batch_end)->format('d-m-Y')}}</td>
+                        <td>{{Carbon\Carbon::parse($batchMapData->batch->batch_end)->format('d-m-Y')}}</td>
                     </tr>
                     <tr>
                         <td class="title">Certificate Valid Till</td>
-                        <td>{{Carbon\Carbon::parse($tot->validity)->format('d-m-Y')}}</td>
+                        <td>{{Carbon\Carbon::parse($batchMapData->validity)->format('d-m-Y')}}</td>
                     </tr>
                     <tr>
                         <td class="title">Certificate No</td>
-                        <td>{{$tot->qr_id}}</td>
+                        <td>{{$batchMapData->qr_id}}</td>
                     </tr>
                     <tr>
                         <td class="title">Certifying Agency</td>
