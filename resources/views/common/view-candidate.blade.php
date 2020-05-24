@@ -4,7 +4,8 @@
 @section('page-style')
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/timeline.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
+<link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
+
 @stop
 @section('content')
 <div class="container-fluid">
@@ -14,7 +15,7 @@
                 <div class="body">
                         <div class="text-center">
                             <h6>
-                               CD ID: <span style="color:blue">{{$center_candidate->candidate->cd_id}}</span>
+                               CD ID: <span style="color:blue">{{$center_candidate->candidate->cd_id}}</span>&nbsp;&nbsp;&nbsp; {!!$center_candidate->cd_verified?'<i class="zmdi zmdi-shield-check" style="color:green"></i> Verified':NULL!!}
                             </h6>
                             <h6>
                                 <span style='color:{{($center_candidate->candidate->status)?"green":"red"}}'>{{($center_candidate->candidate->status)?"Active":"Inactive"}}</span>
@@ -34,6 +35,9 @@
                                     @break
                             @default
                             @endswitch
+                            @if (Request::segment(1)==='admin')
+                                {!!$center_candidate->cd_verified?NULL:($center_candidate->candidate->doc_type?'<button type="button" id="verify_btn" onclick="request_verify()" class="badge bg-green">Verify Record</button>':NULL)!!}
+                            @endif
                         </div>
                         <br>
                     <ul class="cbp_tmtimeline">
@@ -282,7 +286,6 @@
         </script>
     @endif
 @endauth
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
@@ -290,4 +293,38 @@
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
+
+@if ($center_candidate->candidate->doc_type)
+<script>
+    function request_verify(){
+        let swalText = document.createElement("div");
+        let _token = $('[name=_token]').val();
+        let aadhaar = '{{$center_candidate->candidate->doc_no}}';
+        let dob = '{{$center_candidate->candidate->dob}}';
+        let gender = '{{$center_candidate->candidate->gender}}';
+        let ccid = '{{$center_candidate->id}}';
+        $('#verify_btn').prop("disabled", true).html("Verifing, Please wait ...");
+        $.ajax({
+            url: "{{ route('admin.docno.verification.api') }}",
+            method: "POST",
+            data: { _token, aadhaar, dob, gender, ccid },
+            success: function(data){
+                if (data.success) {
+                    swalText.innerHTML = data.message;
+                    swal({title: "Attention", content: swalText, icon: 'success', closeModal: true,timer: 5000, buttons: false}).then(()=>location.reload());
+                } else {
+                    swalText.innerHTML = data.message;
+                    swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 5000, buttons: false});
+                    $('#verify_btn').prop("disabled", false).html("Verify record");
+                }
+            },
+            error: function(data){
+                swalText.innerHTML = 'Something Went Wrong, Please Try Again';
+                swal({title: "Attention", content: swalText, icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+            }
+        })
+    }
+</script>    
+@endif
+
 @stop

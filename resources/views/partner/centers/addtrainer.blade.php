@@ -715,7 +715,7 @@ $(function () {
         jQuery("#form_trainer").validate({
             rules: {
             mobile: { mobile: true },
-            doc_no: { aadhaarvoter: true },
+            doc_no: { aadhaar: true },
             "[type=email]": { email: true }
             }
         });

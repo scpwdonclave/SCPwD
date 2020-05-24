@@ -53,7 +53,7 @@
                                     <div class="panel-body">
                                         
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-5">
+                                            <div class="col-sm-4">
                                                 <label for="state_district">Choose State District of Candidate <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <select id="state_district" class="form-control show-tick" name="state_district" data-live-search="true" data-dropup-auto='false' required>
@@ -63,7 +63,16 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-5">
+                                            <div class="col-sm-4" id="doc_type_div" style="display: none;">
+                                                <label for="doc_type">Document Type <span style="color:red"> <strong>*</strong></span></label>
+                                                <div class="form-group form-float">
+                                                    <select class="form-control show-tick" name="doc_type" data-dropup-auto='false' required>
+                                                        <option value="1">Aadhaar</option>
+                                                        <option value="0">Voter</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
                                                 <label id="doc_label" for="doc_no">Aadhaar Number <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Candidate's Aadhaar Number" name="doc_no" required>
@@ -250,6 +259,16 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row d-flex justify-content-around">
+                                                <div class="col-sm-6" id="aadhaar_verify_div">
+                                                    <div class="form-group text-center">
+                                                        <div class="checkbox">
+                                                            <input id="aadhaar_verify" name="aadhaar_verify" type="checkbox">
+                                                            <label for="aadhaar_verify">Verify the Records with Aadhaar Database </label>
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                            </div>
                                             
                                         </div>
                                         <div class="repeatable-container"></div>
@@ -428,27 +447,30 @@
         $('#form_candidate').submit(function(e){
             e.preventDefault();
             if ($('#form_candidate').valid()) {
-                if ($('input:checkbox', this).length == $('input:checked', this).length) {
+                if ($('#terms').is(":checked")) {
                     
                     /* Disabling Prev & Submit Button and Proceed to Submit */
                     
                         $("#submit_form").prop("disabled", true);
                         $("#last_prev_btn").prop("disabled", true);
                         $("#submit_form").html("Please Wait...");
-                        var id = $('[name=id]').val();
-                        var job = $('[name=job]').val();
-                        var _token = $('[name=_token]').val();
+                        let id = $('[name=id]').val();
+                        let job = $('[name=job]').val();
+                        let _token = $('[name=_token]').val();
+                        let aadhaar = $('[name=doc_no]').val();
+                        let gender = $('[name=gender]').val();
+                        let dob = $('[name=dob]').val();
                         let swalText = document.createElement("div");
-                        var dataString = {_token,id,job}
+                        let aadhaar_flag = $('#aadhaar_verify').is(":checked");
+                        let dataString = {_token,id,job,aadhaar_flag,aadhaar, dob, gender}
                         form = this;
                         $.ajax({
                             data:dataString,
                             method: "POST",
                             url: "{{ route('center.addcandidate.api') }}",
                             success: function (data) {
+                                
                                 if (data.success) {
-                                    // console.log('Submit');
-                                    
                                     $(form).unbind().submit();
                                 } else {
                                     swalText.innerHTML = data.message;
@@ -571,7 +593,7 @@ $(function () {
     jQuery("#form_candidate").validate({
         rules: {
         contact: { mobile: true },
-        doc_no: { aadhaarvoter: true },
+        doc_no: { aadhaar: true },
         "[type=email]": { email: true }
         }
     });
@@ -583,17 +605,35 @@ $(function () {
         $('#state_district').on('change', function(){
         val = "{{Config::get('constants.statedistricts')}}";
         
-        if ($.parseJSON(val).find(v => v == $('#state_district').val()) === undefined) {
-            $('#doc_label').html('Aadhaar Number <span style="color:red"> <strong>*</strong></span>');
-            $('[name=doc_no]').rules('remove', 'aadhaarvoter');  
-            $('[name=doc_no]').rules('add', {aadhaar: true});  
-            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar Number");
-        } else {
-            $('#doc_label').html('Aadhaar Number or Voter Number <span style="color:red"> <strong>*</strong></span>');
-            $('[name=doc_no]').rules('remove', 'aadhaar');  
-            $('[name=doc_no]').rules('add', {aadhaarvoter: true});  
-            $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar or Voter Number");            
-        }
+            if ($.parseJSON(val).find(v => v == $('#state_district').val()) === undefined) {
+                $('#doc_label').html('Aadhaar Number <span style="color:red"> <strong>*</strong></span>');
+                // $('[name=doc_no]').rules('remove', 'aadhaarvoter');  
+                $('[name=doc_no]').rules('add', {aadhaar: true});  
+                $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar Number");
+                $('#doc_type_div').hide();
+                $('#aadhaar_verify_div').show();
+
+            } else {
+                $('#doc_label').html('Aadhaar Number or Voter Number <span style="color:red"> <strong>*</strong></span>');
+                $('[name=doc_no]').rules('remove', 'aadhaar');  
+                // $('[name=doc_no]').rules('add', {aadhaarvoter: true});  
+                $('[name=doc_no]').attr("placeholder", "Enter Candidate's Aadhaar or Voter Number");  
+                $('#doc_type_div').show();
+                if ($('[name=doc_type]').val() == '1') {
+                    $('#aadhaar_verify_div').show();
+                } else {
+                    $('#aadhaar_verify_div').hide();            
+                }
+
+            }
+        });
+
+        $('[name=doc_type]').on('change', (v)=>{           
+            if (v.currentTarget.value == '1') {
+                $('#aadhaar_verify_div').show();
+            } else {
+                $('#aadhaar_verify_div').hide();            
+            }
         });
     })
 /* End State District Checks */

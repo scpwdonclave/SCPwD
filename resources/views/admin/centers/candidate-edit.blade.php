@@ -237,7 +237,7 @@ $(function () {
     
         $('.date_picker .form-control').datepicker({
             autoclose: true,
-            format: 'dd MM yyyy',
+            format: 'dd-mm-yyyy',
             endDate: new Date()
         });
     

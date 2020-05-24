@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\CenterAuth;
 
-use DB;
 use Auth;
 use Crypt;
+use Throwable;
 use App\Center;
 use App\Reason;
 use App\Candidate;
@@ -16,6 +16,7 @@ use App\CenterJobRole;
 use App\Helpers\AppHelper;
 use App\CenterCandidateMap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -274,6 +275,7 @@ class CenterHomeController extends Controller
             $candidate->email = $request->email; 
             
             $candidate->dob = $request->dob;
+            $candidate->doc_type = $request->doc_type;
             $candidate->doc_no = $request->doc_no;
             $candidate->doc_file = Storage::disk('myDisk')->put('/candidates', $request['doc_file']);
             $candidate->category = $request->category;
@@ -289,6 +291,9 @@ class CenterHomeController extends Controller
             $center_candidate->tc_id = $this->guard()->user()->id;
             $center_candidate->tc_job_id = $request->job;
             $center_candidate->cd_id = $candidate->id;
+            if ($request->has('aadhaar_verify') && $request->aadhaar_verify === 'on') {
+                $center_candidate->cd_verified = 1;
+            }
             $center_candidate->d_type = $request->d_type;
             if ($request->hasFile('d_cert')) {
                 $center_candidate->d_cert = Storage::disk('myDisk')->put('/candidates', $request['d_cert']);            
@@ -452,12 +457,20 @@ class CenterHomeController extends Controller
             }
             
         } elseif ($request->has('job')) {
-            
+
             $centerCandidate = CenterCandidateMap::where([['cd_id',$request->id],['tc_job_id',$request->job],['passed',1]])->first();
-            if ($centerCandidate) {
-                return response()->json(['success' => false, 'message' => 'This Candidate already <span style="color:blue;font-weight:bold">Received</span> a <span style="color:blue;font-weight:bold">Ceritificate</span> under this Job Role, Try Another Job Role'], 200);                
-            } else {
+            if (!$centerCandidate) {            
+                if ($request->aadhaar_flag === 'true') {
+                
+                    $stan = time();
+                    $doc_no = $request->aadhaar;
+                    $transmission_datetime = time().($this->guard()->user()->id);
+
+                    return AppHelper::instance()->aadhaarVerify($stan, $doc_no, $transmission_datetime,'center', $this->guard()->user()->id, $this->guard()->user()->center_name, $request->gender, $request->dob);
+                }
                 return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'This Candidate already <span style="color:blue;font-weight:bold">Received</> a <span style="color:blue;font-weight:bold">Ceritificate</span> under this Job Role, Try Another Job Role'], 200);
             }
         }
     }

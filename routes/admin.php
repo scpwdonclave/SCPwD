@@ -109,6 +109,7 @@ Route::post('training_centers/centers/', 'AdminAuth\AdminCenterController@center
 // Route::post('training_centers/center-deactive', 'AdminAuth\AdminCenterController@centerDeactive')->name('tc.center.deactive');
 // Route::get('training_centers/center-active/{id}', 'AdminAuth\AdminCenterController@centerActive')->name('tc.center.active');
 Route::post('training_centers/center-api', 'AdminAuth\AdminCenterController@centerApi')->name('tc.center.api');
+Route::post('training_centers/doc/verification', 'AdminAuth\AdminCenterController@requestVerification')->name('docno.verification.api');
 
 Route::get('training_centers/candidates', 'AdminAuth\AdminCenterController@candidates')->name('tc.candidates');
 Route::get('training_centers/candidates/{id}', 'AdminAuth\AdminCenterController@view_candidate')->name('tc.candidate.view');

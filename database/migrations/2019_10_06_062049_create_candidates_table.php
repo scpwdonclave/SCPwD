@@ -27,6 +27,7 @@ class CreateCandidatesTable extends Migration
             // $table->string('d_cert')->nullable()->comment = 'Disability Certificate';
             $table->string('dob');
             // $table->string('m_status')->default('Unmarried')->comment = 'Marital Status';
+            $table->boolean('doc_type')->default(1)->comment='1: Aadhaar, 0: Voter';
             $table->string('doc_no')->unique();
             $table->string('doc_file')->comment = 'File URL';
             $table->string('category');

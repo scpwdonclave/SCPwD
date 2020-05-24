@@ -19,6 +19,7 @@ class CreateCenterCandidateMapsTable extends Migration
             $table->unsignedBigInteger('tc_job_id');
             $table->unsignedBigInteger('cd_id');
 
+            $table->boolean('cd_verified')->default(0)->comment = '0: Not Verified, 1: Verified';
             $table->string('d_type')->comment = 'Disability Type';
             $table->string('d_cert')->comment = 'Disability Certificate';
             $table->string('m_status')->default('Unmarried')->comment = 'Marital Status';

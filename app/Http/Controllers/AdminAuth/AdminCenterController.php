@@ -382,6 +382,22 @@ class AdminCenterController extends Controller
         }
     }
 
+    public function requestVerification(Request $request)
+    {
+        $request->validate([
+            'aadhaar' => 'required',
+            'gender' => 'required',
+            'dob' => 'required',
+            'ccid' => 'required',
+        ]);
+
+        $stan = time();
+        $user = $this->guard()->user();
+        $transmission_datetime = time().($user->id);
+
+        return AppHelper::instance()->aadhaarVerify($stan, $request->aadhaar, $transmission_datetime,'admin', $user->id, $user->name, $request->gender, $request->dob, $request->ccid);
+    }
+
     public function candidateStatusAction(Request $request)
     {
         if ($request->has('data')) {
@@ -494,18 +510,19 @@ class AdminCenterController extends Controller
                     $candidate->education = $request->education;
                     $candidate->g_name = $request->g_name;
                     $candidate->g_type = $request->g_type;
+                    $candidate->cd_verified = 0;
                     $candidate->save();
     
                     $docno = $candidate->candidate->doc_no;
                     $tpid = $candidate->center->partner->id;
-                    AppHelper::instance()->writeNotification($candidate->tc_id,'center','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('center.candidate.view', Crypt::encrypt($candidate->candidate->id)));
-                    AppHelper::instance()->writeNotification($tpid,'partner','Candidate Details Modified',"Candidate's <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('partner.candidate.view', Crypt::encrypt($candidate->candidate->id)));
+                    AppHelper::instance()->writeNotification($candidate->tc_id,'center','Candidate Details Modified',"Candidate <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('center.candidate.view', Crypt::encrypt($candidate->candidate->id)));
+                    AppHelper::instance()->writeNotification($tpid,'partner','Candidate Details Modified',"Candidate <br>(Doc No: <span style='color:blue;'>$docno</span>) Details has been Updated by Admin", route('center.candidate.view', Crypt::encrypt($candidate->candidate->id)));
     
                     alert()->success('Candidate Details have been <span style="color:blue;">Updated</span>', 'Done')->html()->autoclose(3000);
                 } else {
                     alert()->error('Something went Wrong, Please Try Again', 'Attention')->autoclose(3000);
                 }
-                return redirect()->back();
+                return redirect(route('admin.tc.candidate.view', Crypt::encrypt($candidate->id)));
             }
             
         }

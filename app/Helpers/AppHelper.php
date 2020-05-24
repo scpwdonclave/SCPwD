@@ -2,14 +2,18 @@
 namespace App\Helpers;
 
 use App\Admin;
+use Throwable;
 use App\Agency;
 use App\Center;
 use App\Partner;
 use App\Trainer;
 use App\Assessor;
 use App\Candidate;
+use Carbon\Carbon;
 use App\Notification;
 use App\TrainerStatus;
+use App\CenterCandidateMap;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -110,8 +114,6 @@ class AppHelper
         }
     }
 
-
-
     public function checkDoc($docno, $status = 'create'){
 
         // * Status = true : Doc No is Vacent 
@@ -137,6 +139,75 @@ class AppHelper
                     }        
                 }
             }
+        }
+    }
+
+    public function aadhaarVerify($stan, $doc_no, $transmission_datetime, $user, $userid, $username, $gender, $dob, $ccid = NULL)
+    {
+        try {
+            $ab_url = "https://sandbox.aadhaarbridge.com/service/api/1.0/verifyUserIdDoc";
+            $client_code = 'ONCL7673';
+            $sub_client_code = 'ONCL7673';
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $ab_url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS =>"{\n    \"headers\": {\n        \"client_code\": \"$client_code\",\n        \"sub_client_code\": \"$sub_client_code\",\n        \"channel_code\": \"WEB_SDK\",\n        \"stan\": \"$stan\",\n        \"transmission_datetime\": \"$transmission_datetime\",\n        \"operation_mode\": \"DEFAULT\",\n        \"run_mode\": \"DEFAULT\",\n        \"actor_type\": \"DEFAULT\",\n        \"user_handle_type\": \"DEFAULT\",\n        \"user_handle_value\": \"DEFAULT\",\n        \"function_code\": \"VERIFY_AADHAAR\",\n        \"function_sub_code\": \"DATA\"\n    },\n    \"request\": {\n        \"aadhaar_details\": {\n            \"aadhaar_number\": \"$doc_no\"\n        }\n    }\n}",
+                CURLOPT_HTTPHEADER => array(
+                    "Content-Type: application/json"
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+            $data = json_decode($response, true);
+            
+            DB::table('aadhaar_requests')->insert(
+                ['guard' => $user, 'userid' => $userid, 'username' => $username, 'stan' => $stan, 'doc_no' => $doc_no, 'verification_code' => $data['verification_code'], 'created_at' => Carbon::now()]
+            );
+
+            if ($data['verification_code']==="000" && $data['verification_status']==="SUCCESS" && $data['response_status']['code']==="000" && $data['response_status']['status'] == "SUCCESS") {
+                
+                $aadhaar_response_data =  json_decode($data['verified_data'], true);
+
+                if (!($aadhaar_response_data['Gender'] == strtoupper($gender)) && !($gender == 'Transgender')) {
+                    return response()->json(['success' => false, 'message' => 'Candidate Gender Mismatch Found with Aadhaar Data'], 200);
+                }
+
+                $ageBand = explode('-', $aadhaar_response_data['Age Band']);
+                if (($ageBand[0] > Carbon::parse($dob)->age) || ($ageBand[1] < Carbon::parse($dob)->age)) {
+                    return response()->json(['success' => false, 'message' => 'Age Group Mismatch Found with Aadhaar Data'], 200);
+                }
+
+                if ($user === 'admin') {
+                    $ccm = CenterCandidateMap::find($ccid);
+                    $ccm->cd_verified = 1;
+                    $ccm->save();
+                }
+                
+                return response()->json(['success' => true, 'message' => 'Document No is Verified with Govt. Database'], 200);
+            } else {
+                if ($data['verified_data'] === "") {
+                    if ($data['response_status']['message'] === "") {
+                        return response()->json(['success' => false, 'message' => "Something Wrong with Aadhaar Verification Procees, Try Again Later"], 200);
+                    } else {
+                        return response()->json(['success' => false, 'message' => $data['response_status']['message']], 200);
+                    }
+                } else {
+                    return response()->json(['success' => false, 'message' => $data['verified_data']], 200);
+                }
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Something Wrong with Aadhaar Verification Procees, Try Again Later'], 200);
         }
     }
 }
