@@ -24,8 +24,8 @@ class QrController extends Controller
 
     public function qrDataTotToa($id)
     {
-        $batchMapData=TotBatchAssessmentTrainerMap::where('digital_key',$id)->first();
         if (substr($id, -1)) {
+            $batchMapData=TotBatchAssessmentTrainerMap::where('digital_key',$id)->first();
             $tag = 'tot';
             if ($batchMapData) {
                 if (!is_null($batchMapData->grade)) {
@@ -33,6 +33,7 @@ class QrController extends Controller
                 }    
             }
         } else {
+            $batchMapData=ToaBatchAssessmentAssessorMap::where('digital_key',$id)->first();
             $tag = 'toa';
             if ($batchMapData) {
                 if (!is_null($batchMapData->grade)) {
