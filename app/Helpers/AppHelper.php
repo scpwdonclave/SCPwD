@@ -145,9 +145,9 @@ class AppHelper
     public function aadhaarVerify($stan, $doc_no, $transmission_datetime, $user, $userid, $username, $gender, $dob, $ccid = NULL)
     {
         try {
-            $ab_url = "https://sandbox.aadhaarbridge.com/service/api/1.0/verifyUserIdDoc";
-            $client_code = 'ONCL7673';
-            $sub_client_code = 'ONCL7673';
+            $ab_url = config('app.klb_ep');
+            $client_code = config('app.klb_cc');
+            $sub_client_code = config('app.klb_scc');
 
             $curl = curl_init();
 

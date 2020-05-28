@@ -51,7 +51,7 @@
             vertical-align:top;
         }
         span.qrid {
-            margin-left: 50px;
+            margin-left: 0px;
             margin-top: -30px;
             font-size:20px;
             font-family: "Times New Roman", Times, serif;
@@ -128,7 +128,7 @@
         {!! QrCode::size(200)->generate(route('tot-toa-qrdata',$data->digital_key)); !!}
             <br>
         <span class="qrid">
-            {{$data->qr_id}}
+            {{($tag?'T':'A').'RC:  '.$data->qr_id}}
         </span>
     </div>
 

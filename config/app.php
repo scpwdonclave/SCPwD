@@ -135,6 +135,11 @@ return [
     |
     */
 
+    'klb_cc' => env('KLB_CLIENT_CODE', 'ONCL7673'),
+    'klb_scc' => env('KLB_SUB_CLIENT_CODE', 'ONCL7673'),
+    'klb_ep' => env('KLB_ENDPOINT', 'https://sandbox.aadhaarbridge.com/service/api/1.0/verifyUserIdDoc'),
+
+
     'providers' => [
 
         /*
