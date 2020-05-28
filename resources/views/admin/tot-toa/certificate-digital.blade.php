@@ -126,7 +126,7 @@
                         </tr>
                     @endif
                     <tr>
-                        <td class="title">ToT Module</td>
+                        <td class="title">{{$tag == 'tot'?'TOT ':'TOA '}}Module</td>
                         <td>Disability Orientation & Sensitisation</td>
                     </tr>
                     <tr>
