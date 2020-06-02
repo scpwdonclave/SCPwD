@@ -112,7 +112,7 @@ table.dataTable thead th:first-child {
                                 <div class="col-sm-4">
                                     <label for="batch_start">Batch Start Date <span style="color:red"> <strong>*</strong></span></label>
                                     <div class="form-group form-float batch_start_datepicker">
-                                        <input type="text" id="batch_start" class="form-control" onchange="calculate_enddate()" name="batch_start" required>
+                                        <input type="text" id="batch_start" class="form-control" onchange="calculate_enddate()" name="batch_start" autocomplete="off" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">

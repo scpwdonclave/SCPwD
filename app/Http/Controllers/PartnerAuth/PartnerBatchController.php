@@ -198,15 +198,31 @@ class PartnerBatchController extends Controller
                     if ($trainer->status && $this->partnerscheme($trainer,'trainer', $partnerJob)) {
                         foreach ($trainer->trainer_jobroles as $trainerJob) {
                             if ($trainerJob->tp_job_id == (int)$request->jobid) {
-                                $filteredTrainers->push($trainer);
+                                if (is_null($trainer->scpwd_valid)) {
+                                    if (is_null($trainer->ssc_valid)) {
+                                        $filteredTrainers->push($trainer);
+                                    } else {
+                                        if (Carbon::now() <= Carbon::parse($trainer->ssc_valid)) {
+                                            $filteredTrainers->push($trainer);
+                                        }
+                                    }
+                                } else {
+                                    if (Carbon::now() <= Carbon::parse($trainer->scpwd_valid)) {
+                                        if (is_null($trainer->ssc_valid)) {
+                                            $filteredTrainers->push($trainer);
+                                        } else {
+                                            if (Carbon::now() <= Carbon::parse($trainer->ssc_valid)) {
+                                                $filteredTrainers->push($trainer);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
             }
 
-            
             $centers = $partner->centers;
             foreach ($centers as $center) {
                 if ($center->verified && $center->status && $this->partnerscheme($center, 'center')) {

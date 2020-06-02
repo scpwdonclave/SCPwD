@@ -51,20 +51,20 @@
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="name">Name of the Applicant <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="name">Name of the Applicant </label>
                                                 <div class="form-group form-float">
                                                 <input type="text" class="form-control" placeholder="Applicant Name" name="name" value="{{$assessor->name}}" required>
                                                 <input type="hidden"  value="{{$assessor->id}}" name="as_id" >  
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="birth">Date of Birth <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="birth">Date of Birth </label>
                                                 <div class="form-group form-float date_picker">
                                                     <input type="text" class="form-control date_datepicker" placeholder="Date of Birth" value="{{$assessor->birth}}" id="birth" name="birth"  required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="gender">Gender <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="gender">Gender </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="gender" data-dropup-auto='false' required>
                                                         <option value="Male" {{($assessor->gender=='Male') ? 'selected' : '' }}>Male</option>
@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="language">Language known <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="language">Language known </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="language[]" multiple>
                                                         @foreach ($languages as $language)
@@ -151,14 +151,14 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="aadhaar">Aadhaar </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" onkeyup="this.value = this.value.toUpperCase();" placeholder="Enter Aadhaar No" name="aadhaar" value="{{$assessor->aadhaar}}" onchange="checkduplicacy('aadhaar')" required>
                                                     <span id="aadhaar_error" style="color:red;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label>Aadhaar Document <span style="color:red"> <strong>*</strong></span></label>
+                                                <label>Aadhaar Document </label>
                                                 <div class="form-group form-float">
                                                     <input id="aadhaar_doc" type="file" class="form-control" name="aadhaar_doc">
                                                     <span id="aadhaar_doc_error" style="color:red;"></span>                                                            
@@ -181,7 +181,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="mobile">Mobile Number <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="mobile">Mobile Number </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Mobile" onchange="checkduplicacy('mobile')" name="mobile" value="{{$assessor->mobile}}" required>
                                                     <span id="mobile_error" style="color:red"></span>
@@ -191,21 +191,21 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="email">Email Address <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="email">Email Address </label>
                                                 <div class="form-group form-float">
                                                     <input type="email" class="form-control" placeholder="Email" onchange="checkduplicacy('email')" name="email" value="{{$assessor->email}}" required>
                                                     <span id="email_error" style="color:red"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label>Upload Your Photo <span style="color:red"> <strong>*</strong></span></label>
+                                                <label>Upload Your Photo </label>
                                                 <div class="form-group form-float">
                                                     <input id="photo" type="file" class="form-control" name="photo" >
                                                     <span id="photo_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="applicant_cat">Select Applicant Category <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="applicant_cat">Select Applicant Category </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick"  name="applicant_cat" data-dropup-auto='false' >
                                                         <option value="Assessor" {{($assessor->category=='Assessor') ? 'selected' : '' }} >Assessor</option>
@@ -229,13 +229,13 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label for="address">Address Line <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="address">Address Line </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Full Address"  name="address" value="{{$assessor->address}}" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label for="post_office">Post Office <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="post_office">Post Office </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Post Office"  name="post_office" value="{{$assessor->post_office}}" required>
                                                 </div>
@@ -243,7 +243,7 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-4">
-                                                <label for="state_district">State - District <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="state_district">State - District </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="state_district" data-show-subtext="true" data-dropup-auto='false' required>
                                                         @foreach ($states as $state)
@@ -253,13 +253,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="sub_district">Sub-District <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="sub_district">Sub-District </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="Sub-District"  name="sub_district" value="{{$assessor->sub_district}}" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                <label for="parliament">Parliament Constituency <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="parliament">Parliament Constituency </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="parliament" data-show-subtext="true" data-dropup-auto='false' required>
                                                         @foreach ($parliaments as $parliament)
@@ -272,14 +272,14 @@
                                        
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="city">City/Town/Village <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="city">City/Town/Village </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="City/Town/Village"  name="city" value="{{$assessor->city}}" required>
                                                 </div>
                                             </div>
                                             
                                             <div class="col-sm-6">
-                                                <label for="pin">PIN code <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="pin">PIN code </label>
                                                 <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="PIN Code"  name="pin" value="{{$assessor->pin}}" required>
                                                 </div>
@@ -390,15 +390,21 @@
                                 <div id="collapseFive" class="panel-collapse collapse in show" role="tabpanel" aria-labelledby="headingFive" data-parent="#accordion">
                                     <div class="panel-body">
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <label>Domain Certificate</label>
                                                 <div class="form-group form-float">
                                                     <input id="domain_doc" type="file" class="form-control" name="domain_doc">
                                                     <span id="domain_doc_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label for="sector">Sector <span style="color:red"> <strong>*</strong></span></label>
+                                            <div class="col-sm-3">
+                                                <label for="domain_certi_end_date">Domain Certificate Valid Upto </label>
+                                                <div class="form-group form-float date_picker">
+                                                    <input type="text" class="form-control date_datepicker" placeholder="Certificate Valid Upto" name="domain_certi_end_date" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="sector">Sector </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="sector"  onchange="fetchJob(this.value)"  data-dropup-auto='false' required >
                                                         <option value="" >Select Sector</option>
@@ -408,8 +414,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <label for="job_role">Job Role <span style="color:red"> <strong>*</strong></span></label>
+                                            <div class="col-sm-3">
+                                                <label for="job_role">Job Role </label>
                                                 <div class="form-group form-float">
                                                     <select class="form-control show-tick" data-live-search="true" name="job_role[]" id="job_role" data-dropup-auto='false' multiple >
                                                         @foreach ($assessor->sectors->job_roles as $job)
@@ -419,47 +425,32 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <div class="row d-flex justify-content-around">
-                                            <div class="col-sm-4">
-                                                <label for="scpwd">SCPwD Certified</label>
+                                            <div class="col-sm-3">
+                                                <label for="scpwd_certi_no">SCPwD Certificate No</label>
                                                 <div class="form-group form-float">
-                                                    <select class="form-control show-tick"  name="scpwd" onchange="scpwdSection()" data-dropup-auto='false' >
-                                                        <option value="yes" {{($assessor->scpwd_certi_no != null) ? 'selected' : '' }}>Yes</option>
-                                                        <option value="no" {{($assessor->scpwd_certi_no == null) ? 'selected' : '' }}>No</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="scpwd_certi_no">SCPwD Certificate No</label>
-                                                    <div class="form-group form-float">
                                                     <input type="text" class="form-control" placeholder="SCPwD Certificate No"  name="scpwd_certi_no" value="{{$assessor->scpwd_certi_no}}" required>
-                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="certi_date">Date of Certification</label>
-                                                    <div class="form-group form-float date_picker">
-                                                        <input type="text" class="form-control date_datepicker" placeholder="Date of Certification" id="certi_date"  onchange="startchangescpwd('new')" value="{{$assessor->certi_date}}" name="certi_date" required >
-                                                    </div>
+                                            <div class="col-sm-3">
+                                                <label for="certi_date">Date of Certification</label>
+                                                <div class="form-group form-float date_picker">
+                                                    <input type="text" class="form-control date_datepicker" placeholder="Date of Certification" id="certi_date"  onchange="startchangescpwd('new')" value="{{$assessor->certi_date}}" name="certi_date" required >
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label>Upload Certificate</label>
-                                                    <div class="form-group form-float">
-                                                        <input id="scpwd_doc" type="file" class="form-control" name="scpwd_doc">
-                                                        <span id="scpwd_doc_error" style="color:red;"></span>                                                            
-                                                    </div>
+                                            <div class="col-sm-3">
+                                                <label>Upload Certificate</label>
+                                                <div class="form-group form-float">
+                                                    <input id="scpwd_doc" type="file" class="form-control" name="scpwd_doc">
+                                                    <span id="scpwd_doc_error" style="color:red;"></span>                                                            
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="vld">
-                                                    <label for="certi_end_date">Certification valid Upto</label>
-                                                    <div class="form-group form-float date_picker">
-                                                        <input type="text" class="form-control date_datepicker" placeholder="Certification valid Upto" id="certi_end_date" name="certi_end_date" value="{{$assessor->certi_end_date}}" required>
-                                                    </div>
+                                            <div class="col-sm-3">
+                                                <label for="certi_end_date">Certification valid Upto</label>
+                                                <div class="form-group form-float date_picker">
+                                                    <input type="text" class="form-control date_datepicker" placeholder="Certification valid Upto" id="certi_end_date" name="certi_end_date" value="{{$assessor->certi_end_date}}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -494,21 +485,8 @@
 <script>
 
     $(function(){
-
-        scpwdSection();
         disabilityview();
-
     });
-
-    function scpwdSection(){
-       var scpwd= $('[name=scpwd]').val();
-                if(scpwd=='no'){
-                 $('.vld').hide();
-                }else{
-                 $('.vld').show();
-
-                }
-            }
 
     function disabilityview(){
        var disability= $('[name=disability]').val();

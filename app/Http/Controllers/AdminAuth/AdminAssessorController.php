@@ -347,6 +347,7 @@ class AdminAssessorController extends Controller
         $assessor->certi_date=$request->certi_date;	
         $assessor->scpwd_doc=$request->scpwd_doc;	
         $assessor->certi_end_date=$request->certi_end_date;
+        $assessor->domain_certi_end_date=$request->domain_certi_end_date;
         $assessor->save();
 
         AssessorJobRole::where('as_id',$request->as_id)->delete();

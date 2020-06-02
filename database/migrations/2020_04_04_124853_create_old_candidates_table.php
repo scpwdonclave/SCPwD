@@ -17,7 +17,6 @@ class CreateOldCandidatesTable extends Migration
             $table->bigIncrements('id');
             $table->string('doc_no')->unique();
             $table->string('batch_end');
-            $table->string('year');
         });
     }
 

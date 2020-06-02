@@ -55,11 +55,12 @@ class AdminBatchController extends Controller
     }
 
     protected function trainer_availability($trainer_id, $starttime, $endtime){
+        
         $trainer_batches = Batch::where([['verified', 1],['tr_id', $trainer_id]])->get();
         if ($trainer_batches) {
             foreach ($trainer_batches as $trainer_batch) {
-                $start = Carbon::parse($trainer_batch->start_time); 
-                $end = Carbon::parse($trainer_batch->end_time); 
+                $start = Carbon::parse($trainer_batch->batch_start.' '.$trainer_batch->start_time); 
+                $end = Carbon::parse($trainer_batch->batch_end.' '.$trainer_batch->end_time); 
                 if ($starttime->lessThan($start)) {
                     if ($endtime->greaterThan($start)) {
                         return false;
@@ -124,7 +125,8 @@ class AdminBatchController extends Controller
 
                 if ($request->action === 'accept') {
 
-                    if ($this->trainer_availability($data->tr_id, Carbon::parse($data->start_time), Carbon::parse($data->end_time)) && $this->candidate_availability($data->id)) {
+                    if ($this->trainer_availability($data->tr_id, Carbon::parse($data->batch_start.' '.$data->start_time), Carbon::parse($data->batch_end.' '.$data->end_time)) && $this->candidate_availability($data->id)) {
+
                         $records=DB::table('batches')->select(DB::raw("SUBSTRING(batch_id,$sch_len) as batch_id"))->where("batch_id", "LIKE", "PwD_".$scheme."%")->get();
                         $year = date('Y');
                         if (count($records) > 0) {

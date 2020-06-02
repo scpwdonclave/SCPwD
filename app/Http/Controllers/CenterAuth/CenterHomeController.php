@@ -227,7 +227,7 @@ class CenterHomeController extends Controller
             $center_candidate = CenterCandidateMap::findOrFail($id);
             $state_dist = DB::table('state_district')->where('id',$center_candidate->state_district)->first();
             if ($center_candidate->tc_id == $this->guard()->user()->id) {
-                return view('common.view-candidate')->with(compact('center_candidate','state_dist','partner'));
+                return view('common.view-candidate')->with(compact('center_candidate','state_dist'));
             } else {
                 return abort(401);
             }

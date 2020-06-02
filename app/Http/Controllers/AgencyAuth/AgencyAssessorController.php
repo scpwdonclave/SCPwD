@@ -243,39 +243,47 @@ class AgencyAssessorController extends Controller
     }
 
     public function assessorBatchInsert(Request $request){
-        foreach ($request->batch as $batch) {
-           
-            $ex_bt=explode(',', $batch);
-            $assessorBatch=new AssessorBatch;
-            $assessorBatch->as_id=$request->as_id;
-            $assessorBatch->bt_id=$ex_bt[0];
-            $route_parameter = $ex_bt[0];
-            if($ex_bt[1] != 'null'){
-                
-                $assessorBatch->reass_id=$ex_bt[1];
-                $assessorBatch->reassessment->as_id =  $request->as_id;
-                $assessorBatch->reassessment->save();
-                $route_parameter = $ex_bt[1];
-
-            }
-            $assessorBatch->aa_bt_id=$ex_bt[2];
-
-            $assessorBatch->save();
-        }
-
         $assessor = Assessor::find($request->as_id);
-
-        $dataMail = collect();
-        $dataMail->tag = 'btassignremove';
-        $dataMail->status = 1;
-        $dataMail->name = $assessor->name;
-        $dataMail->email = $assessor->email;
-        event(new ASMailEvent($dataMail));
-
-        AppHelper::instance()->writeNotification($request->as_id,'assessor','New Batch(es) Assigned',"Batch(es) are <span style='color:blue;'>assigned</span> to you by your Assessment Agency.", route('assessor.batch'));
-
-        alert()->success("Batch(es) are <span style='color:blue;'>Assigned</span> to this Assessor", 'Job Done')->html()->autoclose(4000);
-        return redirect()->back();
+        
+        if (Carbon::now() <= Carbon::parse($assessor->domain_certi_end_date) && Carbon::now() <= Carbon::parse($assessor->certi_end_date)) {
+            
+            foreach ($request->batch as $batch) {
+                
+                $ex_bt=explode(',', $batch);
+                $assessorBatch=new AssessorBatch;
+                $assessorBatch->as_id=$request->as_id;
+                $assessorBatch->bt_id=$ex_bt[0];
+                $route_parameter = $ex_bt[0];
+                if($ex_bt[1] != 'null'){
+                    
+                    $assessorBatch->reass_id=$ex_bt[1];
+                    $assessorBatch->reassessment->as_id =  $request->as_id;
+                    $assessorBatch->reassessment->save();
+                    $route_parameter = $ex_bt[1];
+    
+                }
+                $assessorBatch->aa_bt_id=$ex_bt[2];
+    
+                $assessorBatch->save();
+            }
+    
+    
+            $dataMail = collect();
+            $dataMail->tag = 'btassignremove';
+            $dataMail->status = 1;
+            $dataMail->name = $assessor->name;
+            $dataMail->email = $assessor->email;
+            event(new ASMailEvent($dataMail));
+    
+            AppHelper::instance()->writeNotification($request->as_id,'assessor','New Batch(es) Assigned',"Batch(es) are <span style='color:blue;'>assigned</span> to you by your Assessment Agency.", route('assessor.batch'));
+    
+            alert()->success("Batch(es) are <span style='color:blue;'>Assigned</span> to this Assessor", 'Job Done')->html()->autoclose(4000);
+            return redirect()->back();
+            
+        } else {
+            alert()->error("Assessor Certificate(s) has <span style='color:red;'>Expired</span> Kindly <span style='color:blue;'>Renew</span> them first", 'Attention')->html()->autoclose(5000);
+            return redirect()->back();
+        }
 
     }
 

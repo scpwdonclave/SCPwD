@@ -1,29 +1,12 @@
 @extends('layout.master')
 @section('title', 'Agency Update')
 @section('page-style')
-<link href="{{asset('assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
-<link rel="stylesheet" href="{{asset('assets/plugins/animate-css/animate.css')}}">
-
-{{-- <link rel="stylesheet" href="{{asset('assets/css/monthpicker.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/spinner.css')}}"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/css/slider_button.css')}}"> --}}
-{{-- <link href="{{asset('vendor/bootstrap-datetimepicker.css')}}" rel="stylesheet"> --}}
-{{-- <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css')}}"> --}}
-<link rel="stylesheet" href="{{asset('assets/plugins/jquery-steps/jquery.steps.css')}}">
-
-
-{{-- <link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css"> --}}
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-
-
-
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 @stop
 @section('content')
 <div class="container-fluid home">
@@ -31,7 +14,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                    <h2><strong>Agency</strong> Registration</h2>
+                    <h2><strong>Agency</strong> Update</h2>
                 <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.agency.agencies')}}">My Agencies</a> 
                 </div>
                 @if ($errors->any())
@@ -344,15 +327,7 @@
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
-<script src="{{asset('assets/js/pages/partner/jquery.repeatable.js')}}"></script>
-{{-- <script src="{{asset('assets/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js')}}"></script> --}}
 <script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
-
-<script src="{{asset('assets/plugins/jquery-steps/jquery.steps.js')}}"></script>
-<script src="{{asset('assets/plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-
-<script src="{{asset('assets/js/pages/forms/form-wizard.js')}}"></script>
-<script src="{{asset('assets/js/pages/common/notifications.js')}}"></script>
 <script src="{{asset('assets/js/scpwd-common.js')}}"></script>
 
 
