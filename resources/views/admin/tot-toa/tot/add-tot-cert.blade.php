@@ -413,7 +413,8 @@
                     $("#btnOne").prop("disabled", true);
                     $("#btnOne").html("Please Wait...");
                     var _token = $('[name=_token]').val();
-                    var dataValidate = { _token, doc_no };
+                    let tag = 1;
+                    var dataValidate = { _token, doc_no, tag };
 
                     $.ajax({
                         url: "{{ route('admin.tot-toa.redundant.api') }}",
@@ -427,7 +428,8 @@
                                     $('#'+div[1]).collapse('show');
                                 });
                             } else {
-                                swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registered</span> with Someone Else'; 
+                                // swalText.innerHTML = 'This Aadhaar/Voter Number is Already <span style="color:blue">Registered</span> with Someone Else'; 
+                                swalText.innerHTML = data.message;
                                 swal({title: "Abort", content: swalText, icon: "error", closeModal: true,timer: 4000, buttons: false});
 
                                 $("#btnOne").prop("disabled", false);

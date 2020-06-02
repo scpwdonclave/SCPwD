@@ -331,7 +331,6 @@ class CenterHomeController extends Controller
     public function candidate_api(Request $request){
         if ($request->has('doc_no')) {
 
-
         /* Checking If There is Any Other Candidate Present with Same Document */
 
         $oldCandidate = OldCandidate::where('doc_no', $request->doc_no)->first();

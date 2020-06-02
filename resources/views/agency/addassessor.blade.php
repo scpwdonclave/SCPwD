@@ -146,14 +146,14 @@
                                         </div>
                                         <div class="row d-flex justify-content-around">
                                             <div class="col-sm-6">
-                                                <label for="aadhaar">Aadhaar <span style="color:red"> <strong>*</strong></span></label>
+                                                <label for="aadhaar">Aadhaar or Voter <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
-                                                    <input type="text" class="form-control" placeholder="Enter Aadhaar No" name="aadhaar" onchange="checkduplicacy('aadhaar')" required>
+                                                    <input type="text" class="form-control" placeholder="Enter Aadhaar or Voter No" name="aadhaar" onchange="checkduplicacy('aadhaar')" required>
                                                     <span id="aadhaar_error" style="color:red;"></span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
-                                                <label>Aadhaar Document <span style="color:red"> <strong>*</strong></span></label>
+                                                <label>Aadhaar Voter Document File <span style="color:red"> <strong>*</strong></span></label>
                                                 <div class="form-group form-float">
                                                     <input id="aadhaar_doc" type="file" class="form-control" name="aadhaar_doc" required>
                                                     <span id="aadhaar_doc_error" style="color:red;"></span>                                                            
@@ -546,7 +546,7 @@
               
                let dataString = { checkredundancy : value, section: val, _token: _token};
                $.ajax({
-                   url: "{{route('agency.as.assessor.api')}}",
+                   url: "{{route('agency.as.assessor.api')}}", 
                    method: "POST",
                    data: dataString,
                    success: function(data){
@@ -708,7 +708,7 @@ jQuery("#form_assessor").validate({
         rules: {
         pin: { pin: true },
         pan: { pan: true },
-        aadhaar: { aadhaar: true },
+        // aadhaar: { aadhaar: true },
         "[type=email]": { email: true }
         }
     });

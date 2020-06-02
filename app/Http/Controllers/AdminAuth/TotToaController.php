@@ -10,6 +10,8 @@ use App\ToaBatch;
 use App\TotBatch;
 use Carbon\Carbon;
 use App\Expository;
+use App\OldToaData;
+use App\OldTotData;
 use App\AssessmentTrainer;
 use App\Helpers\AppHelper;
 use App\AssessmentAssessor;
@@ -528,6 +530,9 @@ class TotToaController extends Controller
                 'unique:agencies,email',
                 'unique:assessors,email'
             ],
+            'tag' => [
+                'nullable'
+            ],
         ]);
 
         if ($validator->fails()) {
@@ -538,6 +543,31 @@ class TotToaController extends Controller
             }
             return response()->json(['success'=>false, 'message'=>$message]);
         }
+
+        if ($request->has('doc_no')) {
+            if ($request->tag == '1') {
+                $oldtots = OldTotData::where('doc_no', $request->doc_no)->get();
+                if ($oldtots) {
+                    foreach ($oldtots as $oldtot) {
+                        $validity = substr_count($oldtot->validity, '/')?(Carbon::createFromFormat('d/m/y', $oldtot->validity)):(Carbon::parse($oldtot->validity));
+                        if ($validity > Carbon::now()) {
+                            return response()->json(['success'=>false, 'message'=>'Trainer with this Doc No already having a Valid Certificate from SCPwD']);
+                        }
+                    }
+                }
+            } else {
+                $oldtoas = OldToaData::where('doc_no', $request->doc_no)->get();
+                if ($oldtoas) {
+                    foreach ($oldtoas as $oldtoa) {
+                        $validity = substr_count($oldtoa->validity, '/')?(Carbon::createFromFormat('d/m/y', $oldtoa->validity)):(Carbon::parse($oldtoa->validity));
+                        if ($validity > Carbon::now()) {
+                            return response()->json(['success'=>false, 'message'=>'Assessor with this Doc No already having a Valid Certificate from SCPwD']);
+                        }
+                    }
+                }
+            }
+        }
+
         return response()->json(['success'=>true]);
     }
 
