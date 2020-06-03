@@ -174,11 +174,10 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
+  background-image: url("../images/cover.jpg");
+  background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
-  position: relative;
-  z-index: 1;
 }
 
 .container-login100::before {
@@ -484,11 +483,11 @@ iframe {
   font-size: 14px;
 }
 
-.copylink{
+.copylink {
   color: black;
 }
 
-.login-logo{
+.login-logo {
   width: 100%;
   max-width: 300px;
   height: auto;

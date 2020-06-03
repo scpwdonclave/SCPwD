@@ -119,7 +119,5 @@ Route::get('admin/files/{filename}', 'AdminAuth\FileController@toaFiles')->name(
 Route::get('assessment/digital-certificate/{id}', 'QrController@qrData')->name('assessment-qrdata');
 Route::get('tot-toa/digital-certificate/{id}', 'QrController@qrDataTotToa')->name('tot-toa-qrdata');
 
-Route::get('test', 'Controller@test');
-
 
 

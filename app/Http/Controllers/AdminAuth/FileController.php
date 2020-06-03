@@ -45,16 +45,11 @@ class FileController extends Controller
         }
     }
 
-    public function oldDocumentDownload($document){
-        if (Auth::guard('admin')->check() ) {
-            try {
-                return Storage::disk('myDisk')->download($document);
-            } catch (Exception $e) {
-                
-                return abort(404);
-            }
-        } else {
-            return abort(401);
+    public function oldDocumentDownload($folder,$document){
+        try {
+            return Storage::disk('myDisk')->download("Old_MIS/{$folder}/{$document}");
+        } catch (Exception $e) {
+            return abort(404);
         }
     }
 }

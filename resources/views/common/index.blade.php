@@ -28,7 +28,7 @@
 				</div>
 				<div class="container-login100-form-btn" onclick="location.href='{{route('center.login')}}'">
 					<button class="login100-form-btn">
-						Traiing Center
+						Training Center
 					</button>
 				</div>
 				<div class="container-login100-form-btn" onclick="location.href='{{route('agency.login')}}'">

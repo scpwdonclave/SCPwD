@@ -45,7 +45,7 @@
 </head>
 
 <body>
-    <div class="container-login100" style="background-image: url('{{ asset('assets/images/cover.jpg') }}');">
+    <div class="container-login100">
         @yield('content')
     </div>
 
