@@ -1,19 +1,9 @@
 @extends('layout.master')
 @section('title', 'Job Roles')
 @section('page-style')
-<link rel="stylesheet" href="{{asset('assets/plugins/jvectormap/jquery-jvectormap-2.0.3.min.css')}}"/>
-<link rel="stylesheet" href="{{asset('assets/plugins/morrisjs/morris.min.css')}}"/>
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-select/css/bootstrap-select.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/scpwd-common.css')}}">
-<style>
-.table td {
-    padding: .10rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-    text-align: center;
-}
-</style>
 @stop
 @section('parentPageTitle', 'Dashboard')
 @section('content')
@@ -61,21 +51,25 @@
                         </form>
 
                         <div id="table_sector" class="table-responsive">
-                            <table id="sector_table" class="table table-bordered table-striped table-hover">
+                            <table id="sector_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>Sl. No.</th>
                                         <th>Sectors</th>
-                                        <th>Action</th>
+                                        @if (Auth::guard('admin')->user()->supadmin)
+                                            <th>Action</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($sectors as $key=>$sector)
-                                    <tr style="height:5px !important">
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$sector->sector}}</td>
-                                    <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
-                                    </tr>
+                                        <tr style="height:5px !important">
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$sector->sector}}</td>
+                                            @if (Auth::guard('admin')->user()->supadmin)
+                                                <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
+                                            @endif
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -119,13 +113,15 @@
                         </form>
 
                         <div id="table_expository" class="table-responsive">
-                            <table id="exository_table" class="table table-bordered table-striped table-hover">
+                            <table id="exository_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>Sl. No.</th>
                                         <th>Initials</th>
                                         <th>Expositories</th>
-                                        <th>Action</th>
+                                        @if (Auth::guard('admin')->user()->supadmin)
+                                            <th>Action</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,7 +130,9 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$expository->initials}}</td>
                                     <td>{{$expository->expository}}</td>
-                                    <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    @if (Auth::guard('admin')->user()->supadmin)
+                                        <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -268,7 +266,7 @@
                         </div>
                     </form>
                     <div id="table_roles" class="table-responsive">
-                        <table id="roles_table" class="table table-bordered table-striped table-hover">
+                        <table id="roles_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Sector</th>
@@ -277,7 +275,9 @@
                                     <th>Passing Marks</th>
                                     <th>Disabilities</th>
                                     <th>Qualification</th>
-                                    <th>Action</th>
+                                    @if (Auth::guard('admin')->user()->supadmin)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -303,7 +303,9 @@
                                     @endforeach
                                     <td>{{implode( ', ', $myArray )}}</td>
                                     <td><button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$btnData}},0')">ADD</button> <button type="button" class="badge bg-green margin-0" onclick="popupModal('{{$btnData}},1')">VIEW</button></td>
-                                    <td> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    @if (Auth::guard('admin')->user()->supadmin)
+                                        <td> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
+                                    @endif
                                 </tr>
                                 @php
                                     $item1='';
@@ -331,13 +333,15 @@
                 <h6 id="defaultModalSubLabel" style="color:blue" class="text-center"></h6>
                 <div class="modal-body d-flex justify-content-center">
                     <div id="modalTable" style="display:none;">
-                        <table id="qualification_table" class="qualificationtable table nobtn table-bordered table-striped table-hover">
+                        <table id="qualification_table" class="qualificationtable table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Qualification</th>
                                     <th>Min Sector Exp</th>
                                     <th>Min Teaching Exp</th>
-                                    <th>Action</th>
+                                    @if (Auth::guard('admin')->user()->supadmin)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>

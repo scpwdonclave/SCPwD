@@ -289,7 +289,9 @@ class AdminHomeController extends Controller
                 $qualificationRow[0] = $qualification->qualification;
                 $qualificationRow[1] = $qualification->sector_exp;
                 $qualificationRow[2] = $qualification->teaching_exp;
-                $qualificationRow[3] = '<form id="removeform_JobQualification_'.$qualification->id.'" action="#" method="post"> <input type="hidden" name="data" value="'.$qualification->id.','.$qualification->qualification.'"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form>';
+                if ($this->guard('admin')->user()->supadmin) {
+                    $qualificationRow[3] = '<form id="removeform_JobQualification_'.$qualification->id.'" action="#" method="post"> <input type="hidden" name="data" value="'.$qualification->id.','.$qualification->qualification.'"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form>';
+                }
                 // $qualificationRow[3] = '<button type="button" onclick="popup(\''.Crypt::encrypt($qualification->id).',job'.'\')" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button>';
                 array_push($qualificationArray, $qualificationRow);
             }
