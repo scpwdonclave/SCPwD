@@ -243,7 +243,7 @@ class PartnerBatchController extends Controller
                 if ($center->partner->id == $partner->id) {
                     // * Making Sure that this center belongs to current partner
                     
-                    $disabilityRow = [[]];
+                    $disabilityRow = [];
                     foreach ($center->candidatesmap as $centerCandidate) {
                         // * looping through all the centercandidate of that center 
                         

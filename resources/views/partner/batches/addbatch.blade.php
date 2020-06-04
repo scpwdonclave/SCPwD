@@ -279,6 +279,8 @@ table.dataTable thead th:first-child {
                         data: { _token, centerid, sid },
                         success: function(data){
                                 $('#disability').empty();
+                                console.log(data);
+                                
                                 if (data.disabilities !== undefined) {
                                     data.disabilities.forEach(value => {
                                         $('#disability').append('<option value="'+value[0]+'">'+ value[1]+'</option>');
