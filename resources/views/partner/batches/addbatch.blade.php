@@ -278,12 +278,12 @@ table.dataTable thead th:first-child {
                         method: "POST",
                         data: { _token, centerid, sid },
                         success: function(data){
-                                $('#disability').empty();
-                                console.log(data);
-                                
+                                $('#disability').empty();                                
                                 if (data.disabilities !== undefined) {
-                                    data.disabilities.forEach(value => {
-                                        $('#disability').append('<option value="'+value[0]+'">'+ value[1]+'</option>');
+                                    const entries = Object.entries(data.disabilities);
+
+                                    entries.forEach(value => {                                        
+                                        $('#disability').append('<option value="'+value[1][0]+'">'+ value[1][1]+'</option>');
                                     });
                                 }
                                 $('#disability').selectpicker('refresh');
