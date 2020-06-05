@@ -21,7 +21,7 @@ class RedirectIfNotCenter
 	{
 	    if (!Auth::guard($guard)->check()) {
 			Session::put('backUrl', URL::current());
-	        return redirect('center/login');
+			return redirect()->route( $guard.'.login' )->with('warning', 'Session has expired kindly re-login.');
 	    }
 
 	    return $next($request);

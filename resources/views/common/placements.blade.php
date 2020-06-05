@@ -33,7 +33,7 @@
                                     <tr>
                                         <td>{{$placement->centercandidate->center->partner->org_name.' ('.$placement->centercandidate->center->partner->tp_id.')'}}</td>
                                         <td>{{$placement->centercandidate->center->center_name.' ('.$placement->centercandidate->center->tc_id.')'}}</td>
-                                        <td>{{$placement->centercandidate->candidate->name.' ('.$placement->centercandidate->candidate->cd_id.')'</td>
+                                        <td>{{$placement->centercandidate->candidate->name.' ('.$placement->centercandidate->candidate->cd_id.')'}}</td>
                                         <td>{{$placement->centercandidate->jobrole->partnerjobrole->jobrole->job_role}}</td>
                                         <td>{{$placement->org_name}}</td>
                                         <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route(Request::segment(1).'.placement.view',Crypt::encrypt($placement->id))}}'" >View</button></td>
