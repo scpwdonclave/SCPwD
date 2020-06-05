@@ -24,6 +24,7 @@
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
+                                    <th>Batch Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Agency</th>
@@ -35,6 +36,7 @@
                                 @foreach ($agency->agencyBatch as $agbatch) 
                                     <tr style="height:5px !important">
                                         <td>{{$agbatch->batch->batch_id}}</td>
+                                        <td>{{is_null($agbatch->reass_id)?'Assessment':'Re-Assessment'}}</td>
                                         <td>{{\Carbon\Carbon::parse($agbatch->batch->batch_start)->format('d-m-Y')}}</td>
                                         <td>{{\Carbon\Carbon::parse($agbatch->batch->batch_end)->format('d-m-Y')}}</td>
                                         <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Approved':'Not Approved Yet'}}</strong></td>

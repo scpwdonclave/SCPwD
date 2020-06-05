@@ -1,5 +1,5 @@
 <html>
-<title>{{isset($assessment)?$batchdata->batch_id:$batch->batch_id}}</title>
+<title>{{isset($assessment)?$assessment->batch->batch_id:$batch->batch_id}}</title>
 <head><meta http-equiv=Content-Type content="text/html; charset=UTF-8">        
 <style type="text/css">
  
@@ -27,7 +27,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
 
     @php
         $data = isset($assessment)?$assessment->candidateMarks:$batch->candidatesmap;
-        $batchdata = isset($assessment)?$assessment->batch:$batch;
+        $batchdata = isset($assessment)?($assessment->batch):$batch;
     @endphp
 
     @foreach ($data as $item)
@@ -181,7 +181,7 @@ div.cls_009{font-family:Times,serif;font-size:11.1px;color:rgb(0,0,0);font-weigh
                 <div style="position:absolute;top:655px;left:1100px">
                     {!! QrCode::size(200)->generate(route('assessment-qrdata',isset($assessment)?$item->centerCandidate->digital_key:$item->centercandidate->digital_key)); !!}     
                 </div>
-                <div style="position:absolute;top:840px;left:1100px">
+                <div style="position:absolute;top:840px;left:1068px">
                     <span class="cls_008" style="font-weight:normal;">Month/Year of Issue - {{Carbon\Carbon::parse($ass_cert_date[1])->format('M/Y')}}</span>    
                 </div>
             </div>

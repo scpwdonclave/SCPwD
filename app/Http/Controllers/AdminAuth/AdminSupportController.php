@@ -10,6 +10,8 @@ use App\Helpers\AppHelper;
 use Illuminate\Http\Request;
 use App\Events\AdminMailEvent;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -53,44 +55,42 @@ class AdminSupportController extends Controller
         return Redirect()->back();
     }
 
-    public function stageDefine(Request $request){
+    public function stageProcess(Request $request){
 
-        // dd($request->data);
         if ($data = AppHelper::instance()->decryptThis($request->data)) {
-            $id = explode(',',$data);
-            $complain=Complain::findOrFail($id[0]);
-            if ($id[1]) {
-                if ($complain->stage==='Initiated') {
-                    $complain->process_at=Carbon::now(); 
-                }
-                $complain->stage='Closed';
-                $complain->closed_at=Carbon::now();
-            } else {
-                $complain->stage='Processing';
-                $complain->process_at=Carbon::now();
-            }
+            $complain=Complain::findOrFail($data);
+            $complain->stage='Processing';
+            $complain->process_at=Carbon::now();
             $complain->save();
-            alert()->success("Complain (ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span>) Changed <br>its stage as <span style='color:blue;font-weight:bold'>".$complain->stage." </span>", 'Job Done')->html()->autoclose(5000);
+            AppHelper::instance()->writeNotification($complain->rel_id,$complain->rel_with,'Support Status Updated',"Your Support Request (ID: <span style='color:blue;'>$complain->token_id</span>) is now under <span style='color:blue;'>Processing</span>.", route($complain->rel_with.'.support.complain-view', Crypt::encrypt($data)));
+            alert()->success("Complain (ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span>) Changed <br>its stage as <span style='color:blue;font-weight:bold'>Processing</span>", 'Job Done')->html()->autoclose(5000);
             return redirect()->back();
         }
+    }
 
-        // return $id[1];
-        // $complain=Complain::findOrFail($request->comp_id);
-        // $complain->stage=$request->stage;
-        // if($request->stage==='Processing'){
-        //     $complain->process_at=Carbon::now()->format('Y-m-d');
-        // }else if ($request->stage==='Closed') {
-        //     if($complain->process_at===null){
-        //         $complain->process_at=Carbon::now()->format('Y-m-d'); 
-        //         $complain->closed_at=Carbon::now()->format('Y-m-d'); 
-        //     }else{
-        //         $complain->closed_at=Carbon::now()->format('Y-m-d'); 
-
-        //     }
-        // }
-        // $complain->save();
-
-        // alert()->success("Complain ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span> has been changed to <span style='color:blue;font-weight:bold'>".$request->stage." </span> Stage", 'Job Done')->html()->autoclose(4000);
-        // return Redirect()->back();
+    public function stageClose(Request $request)
+    {
+        $request->validate([
+            'cid' => 'required',
+            'comment' => 'required',
+            'attachment' => 'nullable|file',
+        ]);
+        
+        if ($data = AppHelper::instance()->decryptThis($request->cid)) {
+            $complain=Complain::findOrFail($data);
+            if ($complain->stage==='Initiated') {
+                $complain->process_at=Carbon::now(); 
+            }
+            $complain->closure_comment = $request->comment;
+            if ($request->has('attachment')) {
+                $complain->attachment = Storage::disk('myDisk')->put('/complainfile', $request->attachment);
+            }
+            $complain->stage='Closed';
+            $complain->closed_at=Carbon::now();
+            $complain->save();
+            AppHelper::instance()->writeNotification($complain->rel_id,$complain->rel_with,'Support Status Updated',"Your Support Request (ID: <span style='color:blue;'>$complain->token_id</span>) is now marked as <span style='color:red;'>Closed</span>.", route($complain->rel_with.'.support.complain-view', Crypt::encrypt($data)));
+            alert()->success("Complain (ID: <span style='color:blue;font-weight:bold'>".$complain->token_id." </span>) Changed <br>its stage as <span style='color:blue;font-weight:bold'>Closed</span>", 'Job Done')->html()->autoclose(5000);
+            return redirect()->back();
+        }
     }
 }

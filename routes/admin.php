@@ -232,4 +232,5 @@ Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingR
 Route::get('support/pending-request/{id}', 'AdminAuth\AdminSupportController@assignRequestToOnclave')->name('support.assign-to-onclave');
 Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');
 Route::get('support/view-complain/{id}', 'AdminAuth\AdminSupportController@viewComplain')->name('support.complain-view');
-Route::get('support/stage-define/{data}', 'AdminAuth\AdminSupportController@stageDefine')->name('support.stage-define');
+Route::get('support/stage-define/{data}', 'AdminAuth\AdminSupportController@stageProcess')->name('support.stage-process');
+Route::post('support/stage-close', 'AdminAuth\AdminSupportController@stageClose')->name('support.stage-close');

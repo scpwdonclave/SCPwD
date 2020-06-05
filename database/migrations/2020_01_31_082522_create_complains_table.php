@@ -24,6 +24,8 @@ class CreateComplainsTable extends Migration
             $table->string('issue');
             $table->text('description');
             $table->string('stage');
+            $table->string('closure_comment')->nullable();
+            $table->string('attachment')->nullable();
             $table->date('process_at')->nullable();
             $table->date('closed_at')->nullable();
             $table->boolean('assign_onclave')->default(0);

@@ -22,6 +22,7 @@
                                 <tr>
                                     <th>Training Partner</th>
                                     <th>Training Center</th>
+                                    <th>Batch</th>
                                     <th>Candidate Name</th>
                                     <th>Job Role</th>
                                     <th>Organization</th>
@@ -33,6 +34,7 @@
                                     <tr>
                                         <td>{{$placement->centercandidate->center->partner->org_name.' ('.$placement->centercandidate->center->partner->tp_id.')'}}</td>
                                         <td>{{$placement->centercandidate->center->center_name.' ('.$placement->centercandidate->center->tc_id.')'}}</td>
+                                        <td>{{$placement->centercandidate->batchcandidate->batch->batch_id}}</td>
                                         <td>{{$placement->centercandidate->candidate->name.' ('.$placement->centercandidate->candidate->cd_id.')'}}</td>
                                         <td>{{$placement->centercandidate->jobrole->partnerjobrole->jobrole->job_role}}</td>
                                         <td>{{$placement->org_name}}</td>

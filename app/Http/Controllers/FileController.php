@@ -65,8 +65,12 @@ class FileController extends Controller
         }
     }
     protected function downloadThisSupport($id,$column){
-       
-        $fileurl = ComplainFile::where('id', $id)->select($column)->firstOrFail();
+
+        if ($column === 'attachment') {
+            $fileurl = Complain::where('id', $id)->select('attachment')->firstOrFail();
+        } else {
+            $fileurl = ComplainFile::where('id', $id)->select($column)->firstOrFail();
+        }
         try {
             return Storage::disk('myDisk')->download("{$fileurl->$column}");
         } catch (Exception $e) {

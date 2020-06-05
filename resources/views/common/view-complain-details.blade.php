@@ -78,11 +78,30 @@
                                         </div>
                                     </div>
                                 <div class="row">
-                                        <div class="col-sm-6">
-                                            <small class="text-muted">Description Of Issue</small>
-                                            <p>{{$complain->description}}</p>
-                                            <hr>
-                                        </div>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Description Of Issue</small>
+                                        <p>{{$complain->description}}</p>
+                                        <hr>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Closure Comment</small>
+                                        <p>{{$complain->closure_comment}}</p>
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <small class="text-muted">Closure Attachement</small>
+                                        @if (is_null($complain->attachment))
+                                            <p>No Document Provided</p>
+                                        @else
+                                            <p>Document
+                                                &nbsp;&nbsp;
+                                            <a class="btn-icon-mini" href="{{route(Request::segment(1).'.support.complain-file',['id'=>$complain->id,'action'=>'download','column'=>'attachment'])}}" ><i class="zmdi zmdi-download"></i></a>
+                                            </p>
+                                        @endif
+                                        <hr>
+                                    </div>
                                 </div>
                                 
                             </div>
@@ -122,25 +141,36 @@
                         @endif
                     </ul>
                     @auth('admin')
-                    @if ($complain->stage !='Closed')
-                        <div class="row d-flex justify-content-center m-t-20 m-b-20">
-                            <h6>
-                                @if ($complain->assign_onclave)
-                                    You have <span style="color:blue">Assigned</span> This Issue to <span style="color:blue"> Onclave Systems Support Team</span>
-                                @else
-                                    Assign this Issue to <button type="button" onclick="location.href='{{route('admin.support.assign-to-onclave',Crypt::encrypt($complain->id))}}'" class="badge margin-0" title="Click to Assign it to Onclave Systems" style="color:blue">Onclave Systems Support Team</button> 
-                                @endif
-                            </h6>
-                        </div>
-                        <div class="row d-flex justify-content-center">
-                            @if ($complain->stage === 'Processing')
-                                <button class="btn btn-danger m-l-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',1'))}}';this.disabled = true;">Mark as <strong>Closed</strong></button>
-                            @else
-                                <button class="btn btn-primary m-r-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',0'))}}';this.disabled = true;">Mark as <strong>Processing</strong></button>
-                                <button class="btn btn-danger m-l-10" onclick="location.href='{{route('admin.support.stage-define',Crypt::encrypt($complain->id.',1'))}}';this.disabled = true;">Mark as <strong>Closed</strong></button>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (Request::segment(1)==='admin')                        
+                            @if ($complain->stage !='Closed')
+                                <div class="row d-flex justify-content-center m-t-20 m-b-20">
+                                    <h6>
+                                        @if ($complain->assign_onclave)
+                                            You have <span style="color:blue">Assigned</span> This Issue to <span style="color:blue"> Onclave Systems Support Team</span>
+                                        @else
+                                            Assign this Issue to <button type="button" onclick="location.href='{{route('admin.support.assign-to-onclave',Crypt::encrypt($complain->id))}}'" class="badge margin-0" title="Click to Assign it to Onclave Systems" style="color:blue">Onclave Systems Support Team</button> 
+                                        @endif
+                                    </h6>
+                                </div>
+                                <div class="row d-flex justify-content-center">
+                                    @if ($complain->stage === 'Processing')
+                                        <button class="btn btn-danger m-l-10" data-toggle="modal" data-target="#defaultModal">Mark as <strong>Closed</strong></button>
+                                    @else
+                                        <button class="btn btn-primary m-r-10" onclick="location.href='{{route('admin.support.stage-process',Crypt::encrypt($complain->id))}}';this.disabled = true;">Mark as <strong>Processing</strong></button>
+                                        <button class="btn btn-danger m-l-10" data-toggle="modal" data-target="#defaultModal">Mark as <strong>Closed</strong></button>
+                                    @endif
+                                </div>
                             @endif
-                        </div>
-                    @endif
+                        @endif
                     @endauth
                 </div>
             </div>
@@ -148,9 +178,46 @@
     </div>
 </div>
 @stop
+@section('modal')
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog"> 
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="title" id="defaultModalLabel">Closure Comments</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="form_modal" method="POST" action="{{route('admin.support.stage-close')}}" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="cid" value="{{Crypt::encrypt($complain->id)}}">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="comment">Closure Comment <span style="color:red"> <strong>*</strong></span></label>    
+                                <div class="form-group form-float">
+                                    <input type="text" class="form-control" placeholder="Closure Comments" name="comment" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-12">
+                                <label for="attachment">Attachment</label>    
+                                <div class="form-group form-float">
+                                    <input type="file" class="form-control" name="attachment">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <button id="btnSubmit" class="btn btn-raised btn-primary btn-round waves-effect" type="submit" >Close This Issue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('page-script')
-
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js')}}"></script>
