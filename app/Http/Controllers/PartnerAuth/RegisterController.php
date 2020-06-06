@@ -60,6 +60,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'g-recaptcha-response' => 'required|captcha',
             'spoc_name' => 'required|max:255',
             'incorp_doc' => 'required|mimes:jpeg,jpg,png,pdf',
             'email' => [
@@ -91,8 +92,6 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-
-
 
         event(new Registered($user = $this->create($request->all())));
 

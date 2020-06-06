@@ -54,6 +54,8 @@
          </span>
          @endif
        </div>
+
+       @captcha('en')
  
          <div class="container-login100-form-btn">
            <button type="submit" class="login100-form-btn">Register</button>
