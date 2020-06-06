@@ -11,7 +11,7 @@
          @endif
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
-               <input type="text" class="input100" name="spoc_name" value="{{ old('spoc_name') }}" placeholder="SPOC Name" required>                                
+               <input type="text" class="input100" name="spoc_name" value="{{ old('spoc_name') }}" placeholder="SPOC Name">                                
            </div>
          @if ($errors->has('spoc_name'))
          <span class="invalid-feedback" style="display:block" role="alert">
@@ -22,7 +22,7 @@
        
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
-               <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="SPOC Email" required>                                
+               <input type="email" class="input100" name="email" value="{{ old('email') }}" placeholder="SPOC Email">                                
            </div>
          @if ($errors->has('email'))
          <span class="invalid-feedback" style="display:block" role="alert">
@@ -33,7 +33,7 @@
  
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
-               <input type="number" class="input100" name="spoc_mobile" value="{{ old('spoc_mobile') }}" placeholder="SPOC Mobile" required>                                
+               <input type="number" class="input100" name="spoc_mobile" value="{{ old('spoc_mobile') }}" placeholder="SPOC Mobile">                                
            </div>
          @if ($errors->has('spoc_mobile'))
          <span class="invalid-feedback" style="display:block" role="alert">
@@ -45,7 +45,7 @@
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
                <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certifiate</label>                                                            
-               <input id="incorp_doc" type="file" class="input100" name="incorp_doc" required>
+               <input id="incorp_doc" type="file" class="input100" name="incorp_doc">
                <span id="incorp_doc_error"  style="color:red;"></span>                                                            
            </div>
          @if ($errors->has('incorp_doc'))
