@@ -40,7 +40,7 @@
                                             <td>{{\Carbon\Carbon::parse($login->created_at)->format('d-m-Y H:i:s')}}</td>
                                         </tr>
                                     @else
-                                        @if ($login->user_type !== 'admin')
+                                        @if ($login->user_type !== 'admin' && $login->user_type !== 'super admin')
                                             <tr>
                                                 <td>{{$login->name}}</td>
                                                 <td>{{$login->display_id}}</td>
