@@ -47,7 +47,7 @@ class LogSuccessfulLogin
             LoginAudit::create([
                 'name' => $name,
                 'display_id' => $display_id,
-                'user_type' => $event->guard,
+                'user_type' => ($event->guard==='admin')?(($event->user->supadmin)?'Super Admin':'Admin'):$event->guard,
                 'user_id' => $event->user->id,
                 'event' => 1,
                 'ip_address' => Request::ip(),
