@@ -44,7 +44,7 @@ class AdminsTableSeeder extends Seeder
             2 => 
             array (
                 'id' => 3,
-                'name' => 'Surabhiraj Ekka',
+                'name' => 'Surabhi Raj Ekka',
                 'email' => 'surabhiraj.ekka@scpwd.in',
                 'password' => '$2y$10$DgGtw4XdrKkxikjPjir5w.4Y3bajhStHvTy/7ZSWwqG91O0cOPfTG', // Surabhi@123
                 'supadmin' => 1,
