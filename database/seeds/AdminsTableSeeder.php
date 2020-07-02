@@ -65,6 +65,42 @@ class AdminsTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ),
+            4 => 
+            array (
+                'id' => 5,
+                'name' => 'Bharti Gupta',
+                'email' => 'bharti.gupta@scpwd.in',
+                'password' => '$2y$10$HmohvcVe5JCM4hvdjLTv8OgAydbf/e14cLDPieSQFHybnUlkRCCQ2', // Bharti@123
+                'supadmin' => 0,
+                'status' => 1,
+                'remember_token' => NULL,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ),
+            5 => 
+            array (
+                'id' => 6,
+                'name' => 'Jitin Sukhnani',
+                'email' => 'jitin.sukhnani@scpwd.in',
+                'password' => '$2y$10$h81Amf.ln1W8GtCi280ZR.3AudAY1ka0oEFOgGHFh99s6xrBDlSm.', // Jitin@123
+                'supadmin' => 0,
+                'status' => 1,
+                'remember_token' => NULL,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ),
+            6 => 
+            array (
+                'id' => 7,
+                'name' => 'Himanshu Shekhar',
+                'email' => 'himanshu.shekhar@scpwd.in',
+                'password' => '$2y$10$7s62ue6ABztXDeJ/fXzL6OKkrmhZ4kT1r4f08NnoMCxGHSO05nCGO', // Himanshu@123
+                'supadmin' => 0,
+                'status' => 1,
+                'remember_token' => NULL,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ),
         ));
         
         
