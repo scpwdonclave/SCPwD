@@ -159,6 +159,7 @@ class AdminPartnerController extends Controller
             $partnerState=DB::table('partners')
             ->join('state_district','partners.state_district','=','state_district.id')
             ->join('parliament','partners.parliament','=','parliament.id')
+            ->where('partners.id',$id)
             ->first();
 
             $partner_scheme=PartnerJobrole::where('tp_id',$id)
