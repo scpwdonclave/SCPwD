@@ -527,11 +527,11 @@ $('#form_addbatch').on('submit', function(e){
 
 
         var count = $('input[name^="id"]', form).length;
-        // if (count < 10) {
-        //    swal('Attention','You need to choose atleast 10 Candidates', 'info');
-        // } else if (count > 30) {
-        //     swal('Attention','You can choose atmost 30 Candidates', 'info');
-        // } else {
+        if (count < 10) {
+           swal('Attention','You need to choose atleast 10 Candidates', 'info');
+        } else if (count > 30) {
+            swal('Attention','You can choose atmost 30 Candidates', 'info');
+        } else {
 
             var starttime = $('#batch_time').val();
             var hour = $('#batch_hour').val();
@@ -557,12 +557,12 @@ $('#form_addbatch').on('submit', function(e){
                     }
                 },
                 error: function (data) {
-                    console.log(data);
-                    // swal({title: "Oops!", content: 'Something went Wrong, Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
+                    // console.log(data);
+                    swal({title: "Oops!", content: 'Something went Wrong, Try Again', icon: 'error', closeModal: true,timer: 3000, buttons: false}).then(function(){location.reload();});
                 }
             });
 
-        // }
+        }
 
     }
     
