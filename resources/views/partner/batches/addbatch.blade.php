@@ -564,6 +564,8 @@ $('#form_addbatch').on('submit', function(e){
 
         }
 
+        $("input[name^='id']").remove();
+
     }
     
 
