@@ -43,7 +43,7 @@ class LogSuccessfulLogout
                 $display_id = NULL;
         }
 
-        if ($display_id!=='developer@gmail.com' || false) {
+        if ($display_id!=='developer@gmail.com' && false) {
             LoginAudit::create([
                 'name' => $name,
                 'display_id' => $display_id,
