@@ -459,48 +459,48 @@ class PartnerBatchController extends Controller
         $endtime = Carbon::parse($starttime_store)->add($request->batch_hour.' hours');
         $endtime_store = $endtime->format('h:i A');
 
-        dd($request);
+        // dd($request);
         
-        // if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
-        //     DB::transaction(function() use ($request,$starttime_store,$endtime_store){
+        if ($this->trainer_availability($request->trainer, $starttime, $endtime)) {
+            DB::transaction(function() use ($request,$starttime_store,$endtime_store){
 
-        //         $job = explode(',',$request->jobrole);
+                $job = explode(',',$request->jobrole);
 
-        //         $batch = new Batch;
-        //         $batch->tp_id = $this->guard()->user()->id;
-        //         $batch->tr_id = $request->trainer;
-        //         $batch->tc_id = $request->center;
-        //         $batch->scheme_id = $request->scheme;
-        //         $batch->jobrole_id = $job[1];
-        //         $batch->tp_job_id = $job[0];
-        //         $batch->start_time = $starttime_store;
-        //         $batch->end_time = $endtime_store;
-        //         $batch->batch_start = Carbon::parse($request->batch_start)->format('Y-m-d');
-        //         $batch->batch_end = Carbon::parse($request->batch_end)->format('Y-m-d');
-        //         $batch->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
-        //         $batch->save();
+                $batch = new Batch;
+                $batch->tp_id = $this->guard()->user()->id;
+                $batch->tr_id = $request->trainer;
+                $batch->tc_id = $request->center;
+                $batch->scheme_id = $request->scheme;
+                $batch->jobrole_id = $job[1];
+                $batch->tp_job_id = $job[0];
+                $batch->start_time = $starttime_store;
+                $batch->end_time = $endtime_store;
+                $batch->batch_start = Carbon::parse($request->batch_start)->format('Y-m-d');
+                $batch->batch_end = Carbon::parse($request->batch_end)->format('Y-m-d');
+                $batch->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
+                $batch->save();
     
-        //         foreach ($request->id as $value) {
-        //             $batchCandidate = new BatchCenterCandidateMap;
-        //             $batchCandidate->bt_id = $batch->id; 
-        //             $batchCandidate->candidate_id = $value;
-        //             $batchCandidate->save();
-        //         }
+                foreach ($request->id as $value) {
+                    $batchCandidate = new BatchCenterCandidateMap;
+                    $batchCandidate->bt_id = $batch->id; 
+                    $batchCandidate->candidate_id = $value;
+                    $batchCandidate->save();
+                }
 
-        //         DB::table('trainer_batch_map')->insert(['tr_id'=> $batch->tr_id, 'bt_id'=> $batch->id, 'start'=> $batch->batch_start, 'end'=> $batch->batch_end]);
-        //         DB::table('batch_trainer_map')->insert(['bt_id'=> $batch->id, 'tr_id'=> $batch->tr_id, 'assign_date'=> $batch->batch_start]);
+                DB::table('trainer_batch_map')->insert(['tr_id'=> $batch->tr_id, 'bt_id'=> $batch->id, 'start'=> $batch->batch_start, 'end'=> $batch->batch_end]);
+                DB::table('batch_trainer_map')->insert(['bt_id'=> $batch->id, 'tr_id'=> $batch->tr_id, 'assign_date'=> $batch->batch_start]);
     
-        //         $partner = $this->guard()->user();
-        //         AppHelper::instance()->writeNotification(NULL,'admin','New Batch Registred',"TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.", route('admin.bt.batch.view', Crypt::encrypt($batch->id)));
+                $partner = $this->guard()->user();
+                AppHelper::instance()->writeNotification(NULL,'admin','New Batch Registred',"TP (ID $partner->tp_id) has Registered a Batch. Pending Batch <span style='color:blue;'>Verification</span>.", route('admin.bt.batch.view', Crypt::encrypt($batch->id)));
 
-        //     });
+            });
 
-        //     alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
-        //     return redirect()->back();
-        // } else {
-        //     alert()->error("The Selected Trainer isn't <span style='font-weight:bold;color:red'>Available</span> on Requested Time, Please Change Batch Time or choose another Trainer", 'Attention')->html()->autoclose(6000);
-        //     return redirect()->back();
-        // }
+            alert()->success("Batch has Been Created and Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified on your Email", 'Job Done')->html()->autoclose(6000);
+            return redirect()->back();
+        } else {
+            alert()->error("The Selected Trainer isn't <span style='font-weight:bold;color:red'>Available</span> on Requested Time, Please Change Batch Time or choose another Trainer", 'Attention')->html()->autoclose(6000);
+            return redirect()->back();
+        }
     }
 
     public function submitEditBatch(Request $request){
