@@ -446,7 +446,7 @@ class PartnerBatchController extends Controller
             'batch_end' => 'required',
             'assessment' => 'required',
             'trainer' => 'required|numeric',
-            // 'id' => 'required|array|min:10|max:30',
+            'id' => 'required|array|min:10|max:30',
         );
         $validator = Validator::make(Input::all(), $rules,$messsages);
         if ($validator->fails()) {
