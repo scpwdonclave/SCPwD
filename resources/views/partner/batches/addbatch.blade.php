@@ -240,8 +240,8 @@ table.dataTable thead th:first-child {
             
             case 'center':
                     var job = $('#jobrole :selected').val();
-                    job.split(',');
-                    var jobid = job[0];
+                    var jobarray = job.split(',');
+                    var jobid = jobarray[0];
                     if (jobid!='') {
                         $.ajax({
                             url: "{{ route('partner.addbatch.api') }}",
