@@ -23,6 +23,7 @@ return [
         '5' => 'One Person Company',
         '6' => 'LLP',
         '7' => 'LLC',
+        '8' => 'Government',
     ],
 
 
