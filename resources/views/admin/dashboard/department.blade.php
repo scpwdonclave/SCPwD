@@ -17,13 +17,13 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table id="scheme_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover dataTable js-exportable">
+                        <table id="scheme_table" class="table {{(Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)?null:'nobtn'}} table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
                                     <th>Sl. No.</th>
                                     <th>Department Name</th>
                                     <th>Address</th>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <th>Action</th>
                                     @endif
                                 </tr>
@@ -34,7 +34,7 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$department->dept_name}}</td>
                                     <td>{{$department->dept_address}}</td>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm({{$department->id}});"><i class="zmdi zmdi-delete"></button></td>
                                     @endif
                                 </tr>
@@ -74,7 +74,9 @@
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
-                            <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                            @if (!Auth::guard('admin')->user()->ministry)
+                                <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                            @endif
                         </div>
                     </form>
                 </div>

@@ -14,9 +14,6 @@
         width: 100%;
     }
     </style>
-
-
-
 @stop
 @section('content')
 <div class="container-fluid">
@@ -93,46 +90,40 @@
                             <div class="cbp_tmlabel">
                                 
                                 <div class="row">
-                                        <div class="col-sm-4">
-                                            <small class="text-muted">Agency name</small>
-                                            <p>{{$pay_order->agency->agency_name}}</p>
-                                            <hr>
-                                        </div>
-                                    
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">Organization Type</small>
-                                                <p>{{$pay_order->agency->org_type}}</p>
-                                                <hr>
-                                        </div>
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">Organization ID/Registration No.</small>
-                                                <p>{{$pay_order->agency->org_id}}</p>
-                                                <hr>
-                                        </div>
-                                    </div>
-                                <div class="row">
-                                        <div class="col-sm-4">
-                                            <small class="text-muted">SLA Start Date</small>
-                                            <p>{{$pay_order->agency->sla_date}}</p>
-                                            <hr>
-                                        </div>
-                                    
-                                        <div class="col-sm-4">
-                                                <small class="text-muted">SLA End date</small>
-                                                <p>{{$pay_order->agency->sla_end_date}}</p>
-                                                <hr>
-                                        </div>
-                                       
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">Agency name</small>
+                                        <p>{{$pay_order->agency->agency_name}}</p>
+                                        <hr>
                                     </div>
                                 
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">Organization Type</small>
+                                            <p>{{$pay_order->agency->org_type}}</p>
+                                            <hr>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">Organization ID/Registration No.</small>
+                                            <p>{{$pay_order->agency->org_id}}</p>
+                                            <hr>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <small class="text-muted">SLA Start Date</small>
+                                        <p>{{$pay_order->agency->sla_date}}</p>
+                                        <hr>
+                                    </div>
+                                
+                                    <div class="col-sm-4">
+                                            <small class="text-muted">SLA End date</small>
+                                            <p>{{$pay_order->agency->sla_end_date}}</p>
+                                            <hr>
+                                    </div>
+                                </div>
                             </div>
                         </li>
-                       
-                        </ul>
-                   
-                      <br><br> 
-                    
-                   
+                    </ul>
+                    <br><br> 
                 </div>
             </div>
         </div>
@@ -145,7 +136,6 @@
                 <div class="card">
                     <div class="header d-flex justify-content-between">
                         <h2><strong>All</strong> Assessed Batch</h2>
-                       
                     </div>
                     <div class="body">
                         <form id="form_payorder" action="{{route('admin.paymentorder.accept')}}" method="post" >
@@ -155,7 +145,6 @@
                             <h6>
                                 PAYMENT ORDER: <span style='color:blue'>{{$pay_order->payment_order_id}}</span> <br> <br>
                                 Ref No: <span style='color:blue'>{{$pay_order->ref_no}}</span> <br> <br>
-                                
                             </h6>
                         </div>
                         <br>
@@ -163,11 +152,11 @@
                         <div class="table-responsive">
                             <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
-                                        <tr>
+                                    <tr>
                                         @if (!$pay_order->verified)
-                                        <th><input type="checkbox" class="checks" onchange="checkAll(this)" /></th>
+                                            <th><input type="checkbox" class="checks" onchange="checkAll(this)" /></th>
                                         @else
-                                        <th>Sl. No.</th>
+                                            <th>Sl. No.</th>
                                         @endif
                                         <th>Batch ID</th>
                                         <th>Job Role</th>
@@ -177,61 +166,50 @@
                                         <th>Amount</th>
                                         <th>Order On</th>
                                         <th>View Candidate</th>
-                                        </tr>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($pay_order->paymentorder as $payorder)
                                         
                                     <tr>
-                                        {{-- <td>Sl. No.</td> --}}
                                         @if (!$pay_order->verified)
-                                        <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$payorder->agencyBatch->id}}"></td>
+                                            <td><input type="checkbox" class="checks" name="chkbox[]" value="{{$payorder->agencyBatch->id}}"></td>
                                         @else
-                                         <td>Sl. No.</td>   
+                                            <td>Sl. No.</td>   
                                         @endif
                                         @if ($payorder->agencyBatch->reass_id===null)
-                                        <td>{{$payorder->agencyBatch->batch->batch_id}}</td>
-                                        <td>{{$payorder->agencyBatch->batch->jobrole->job_role}}</td>
-                                        <td>Assessment</td>
-                                        <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->batch->assessment)->format('d-m-Y')}}</td>
-                                        <td>{{$payorder->total_candidate}}</td>
-                                        <td>{{$payorder->amount}}</td>
+                                            <td>{{$payorder->agencyBatch->batch->batch_id}}</td>
+                                            <td>{{$payorder->agencyBatch->batch->jobrole->job_role}}</td>
+                                            <td>Assessment</td>
+                                            <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->batch->assessment)->format('d-m-Y')}}</td>
+                                            <td>{{$payorder->total_candidate}}</td>
+                                            <td>{{$payorder->amount}}</td>
                                         @if ($payorder->po_on===1)
-                                        <td style="color:blue">Count Made on Assigned</td>
-                                            
+                                            <td style="color:blue">Count Made on Assigned</td>
                                         @else
-                                        <td style="color:blue">Count Made on Appeared</td>
-                                            
+                                            <td style="color:blue">Count Made on Appeared</td>
                                         @endif
-                                        
-                                        <td><a class="badge bg-green margin-0" href="{{route('admin.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
-
+                                            <td><a class="badge bg-green margin-0" href="{{route('admin.batch.bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->bt_id)])}}" >View Candidate</a></td>
                                         @else
-                                        
-                                        <td>{{$payorder->agencyBatch->reassessment->batch->batch_id}}</td>
-                                        <td>{{$payorder->agencyBatch->reassessment->batch->jobrole->job_role}}</td>
-                                        <td>Re-Assessment</td>
-                                        <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->reassessment->assessment)->format('d-m-Y')}}</td>   
-                                        <td>{{$payorder->total_candidate}}</td>
-                                        <td>{{$payorder->amount}}</td>
+                                            <td>{{$payorder->agencyBatch->reassessment->batch->batch_id}}</td>
+                                            <td>{{$payorder->agencyBatch->reassessment->batch->jobrole->job_role}}</td>
+                                            <td>Re-Assessment</td>
+                                            <td>{{\Carbon\Carbon::parse($payorder->agencyBatch->reassessment->assessment)->format('d-m-Y')}}</td>   
+                                            <td>{{$payorder->total_candidate}}</td>
+                                            <td>{{$payorder->amount}}</td>
                                         @if ($payorder->po_on===1)
-                                        <td style="color:blue">Count Made on Assigned</td>
-                                            
+                                            <td style="color:blue">Count Made on Assigned</td>
                                         @else
-                                        <td style="color:blue">Count Made on Appeared</td>
-                                            
+                                            <td style="color:blue">Count Made on Appeared</td>
                                         @endif
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.batch.reass-bt-candidate',['id'=>Crypt::encrypt($payorder->agencyBatch->reass_id)])}}" >View Candidate</a></td>
                                         @endif
                                     </tr>
                                     @endforeach
-                                   
-                                       
-                                    </tbody>
+                                </tbody>
                             </table>
                             </div>
                             <br><br>
-                            
                             @csrf
                             <input type="hidden" name="po_id" value="{{$pay_order->id}}">
                             <div class="row d-flex justify-content-around">
@@ -258,12 +236,14 @@
                             
                             {{-- @auth('admin') --}}
                             <div class="text-center" >
-                                @if ($pay_order->verified===0 )
-                                    <button class="btn btn-success" type="submit" id="save-btn" >Mark as Verified</button>
-                                    <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
-                                @elseif($pay_order->verified===1 && $pay_order->payment_done === 0)
-                                <button class="btn btn-success" type="submit" >Payment Done</button>
-                                 @endif
+                                @if (!auth()->guard('admin')->user()->ministry)
+                                    @if ($pay_order->verified===0 )
+                                        <button class="btn btn-success" type="submit" id="save-btn" >Mark as Verified</button>
+                                        <button class="btn btn-danger" type="button" onclick="popupReject('{{Crypt::encrypt($pay_order->id)}}');">Reject</button>
+                                    @elseif($pay_order->verified===1 && $pay_order->payment_done === 0)
+                                        <button class="btn btn-success" type="submit" >Payment Done</button>
+                                    @endif
+                                @endif
                             </div>
                         {{-- @endauth  --}}
                         

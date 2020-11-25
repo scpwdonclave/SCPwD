@@ -326,11 +326,13 @@
                     <div class="text-center" >
                         {{-- @can('partner-profile-verified', Auth::shouldUse('partner'))
                         @endcan --}}
-                    @if ($partnerData->pending_verify==1)
-                        <button class="btn btn-success" onclick="location.href='{{route('admin.tp.partner.action',Crypt::encrypt($partnerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
-                        <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($partnerData->id.','.'0')}}');">Reject</button>
-                    @elseif (!$partnerData->pending_verify && $partnerData->status)
-                        <button class="btn btn-primary" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
+                    @if (!auth()->guard('admin')->user()->ministry)
+                        @if ($partnerData->pending_verify==1)
+                            <button class="btn btn-success" onclick="location.href='{{route('admin.tp.partner.action',Crypt::encrypt($partnerData->id.','.'1'))}}';this.disabled = true;">Accept</button>
+                            <button class="btn btn-danger" onclick="popupRejectSwal('{{Crypt::encrypt($partnerData->id.','.'0')}}');">Reject</button>
+                        @elseif (!$partnerData->pending_verify && $partnerData->status)
+                            <button class="btn btn-primary" onclick="location.href='{{route('admin.training_partner.update.partner',['partner_id' => Crypt::encrypt($partnerData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
+                        @endif
                     @endif
                 </div>
                 </div>
@@ -352,13 +354,15 @@
                         <h6 class="m-b-20">{{$partnerData->tp_id}}</h6>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable {{(!auth()->guard('admin')->user()->ministry)?null:'nobtn'}}">
                             <thead>
                                 <tr>
                                     <th>Sl. No.</th>
                                     <th>Scheme Name</th>
                                     <th>Year</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -367,7 +371,9 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$scheme->scheme->scheme}}</td>
                                         <td>{{$scheme->scheme->year}}</td>
-                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($partnerData->id.','.$scheme->scheme_id).','.$scheme->status.','.$scheme->scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                        @if (!auth()->guard('admin')->user()->ministry)
+                                            <td><button type="button" onclick="popup('{{Crypt::encrypt($partnerData->id.','.$scheme->scheme_id).','.$scheme->status.','.$scheme->scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

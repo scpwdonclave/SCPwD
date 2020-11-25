@@ -85,7 +85,9 @@
                         <br><br>
                     </div>
                     <div class="row d-flex justify-content-center">
-                        <button type="submit" id="submit_form" class="btn btn-primary">SUBMIT</button>
+                        @if (!auth()->guard('admin')->user()->ministry)
+                            <button type="submit" id="submit_form" class="btn btn-primary">SUBMIT</button>
+                        @endif
                     </div>
                 </form>
                 </div>

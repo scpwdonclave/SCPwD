@@ -136,32 +136,16 @@
                                         <td>{{$item->centercandidate->candidate->doc_no}}</td>
                                     @endif
                                     @if (!is_null($item->centercandidate->candidateMark) && !$item->centercandidate->dropout)
-                                            
-                                    @if ($item->centercandidate->candidateMark->passed===1 && $item->centercandidate->candidateMark->attendence==='present')
-                                    <td style="color:green">Passed</td>
-                                    @elseif($item->centercandidate->candidateMark->passed===0 && $item->centercandidate->candidateMark->attendence==='present')
-                                    <td style="color:red">Failed</td>  
-                                    @elseif($item->centercandidate->candidateMark->attendence==='absent')
-                                    <td style="color:red">Absent</td>  
+                                        @if ($item->centercandidate->candidateMark->passed===1 && $item->centercandidate->candidateMark->attendence==='present')
+                                        <td style="color:green">Passed</td>
+                                        @elseif($item->centercandidate->candidateMark->passed===0 && $item->centercandidate->candidateMark->attendence==='present')
+                                        <td style="color:red">Failed</td>  
+                                        @elseif($item->centercandidate->candidateMark->attendence==='absent')
+                                        <td style="color:red">Absent</td>  
+                                        @endif
+                                    @else
+                                        <td>Not Applicable</td>
                                     @endif
-                                    {{-- @switch($item->candidateMark->passed)
-                                        @case('0')
-                                            <td style="color:red">Failed</td>
-                                            @break
-                                        @case('1')
-                                            <td style="color:green">Passed</td>
-                                            @break
-                                        @case('2')
-                                            <td style="color:red">Absent</td>
-                                            @break
-                                        @default
-                                            <td>Not Applicable</td>
-                                    @endswitch --}}
-                                @else
-                                <td>Not Applicable</td>
-                                @endif
-                                        
-                                    
                                 </tr>
                                 @endforeach     
                             </tbody>
@@ -217,7 +201,6 @@
     </script>
 @endauth
 
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

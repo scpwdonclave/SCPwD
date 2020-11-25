@@ -120,25 +120,27 @@
                                     @endif
                                 @break
                             @case('admin')
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        @if (Auth::guard('admin')->user()->supadmin )
 
-                                        @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && ($batchAssessment->sup_admin_verified==0 || ($batchAssessment->sup_admin_verified==2 && $batchAssessment->recheck==1) ) )
-                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
-                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
-                                        @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)
-                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Release Certificate</button>
-                                            <button class="btn btn-danger" onclick="showPromptMessage('certificate');">Reject Release</button>
+                                            @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && ($batchAssessment->sup_admin_verified==0 || ($batchAssessment->sup_admin_verified==2 && $batchAssessment->recheck==1) ) )
+                                                <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
+                                                <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                            @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==0)
+                                                <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Release Certificate</button>
+                                                <button class="btn btn-danger" onclick="showPromptMessage('certificate');">Reject Release</button>
+                                            @endif
+
+                                        @else
+
+                                            @if ($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) ) )
+                                                <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
+                                                <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
+                                            @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
+                                                <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
+                                            @endif
+
                                         @endif
-    
-                                    @else
-
-                                        @if ($batchAssessment->aa_verified==1 && ($batchAssessment->admin_verified==0 || ($batchAssessment->admin_verified==2 && $batchAssessment->recheck==1) ) )
-                                            <button class="btn btn-success" onclick="location.href='{{route('admin.assessment.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'accept'])}}';this.disabled = true;">Accept</button>
-                                            <button class="btn btn-danger" onclick="showPromptMessage('admin');">Reject</button>
-                                        @elseif($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && (($batchAssessment->admin_cert_rel==0 && $batchAssessment->supadmin_cert_rel==0) ||($batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==2)))
-                                            <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchAssessment->id.',1'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
-                                        @endif
-
                                     @endif
 
                                     @if ($batchAssessment->aa_verified==1 && $batchAssessment->admin_verified==1 && $batchAssessment->sup_admin_verified==1 && $batchAssessment->admin_cert_rel==1 && $batchAssessment->supadmin_cert_rel==1)

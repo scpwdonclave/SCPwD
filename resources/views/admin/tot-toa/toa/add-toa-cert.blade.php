@@ -358,7 +358,9 @@
                                                 <button id="last_prev_btn" type="button" onclick="validatedata('collapseThree,collapseTwo');" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
                                             </div>
                                             <div class="col-sm-6 text-right">
-                                                <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> SUBMIT</button>
+                                                @if (!auth()->guard('admin')->user()->ministry)
+                                                    <button type="submit" id="submit_form" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span> SUBMIT</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

@@ -122,6 +122,7 @@
                                     @endif
                                 @break
                             @case('admin')
+                                @if (!auth()->guard('admin')->user()->ministry)
                                     @if (Auth::guard('admin')->user()->supadmin)
 
                                         @if ($batchReAssessment->aa_verified==1 && $batchReAssessment->admin_verified==1 && ($batchReAssessment->sup_admin_verified==0 || ($batchReAssessment->sup_admin_verified==2 && $batchReAssessment->recheck==1) ) )
@@ -131,7 +132,7 @@
                                             <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'accept'])}}';this.disabled = true;">Release Certificate</button>
                                             <button class="btn btn-danger" onclick="showPromptMessage('certificate');">Reject Release</button>
                                         @endif
-    
+
                                     @else
 
                                         @if ($batchReAssessment->aa_verified==1 && ($batchReAssessment->admin_verified==0 || ($batchReAssessment->admin_verified==2 && $batchReAssessment->recheck==1) ) )
@@ -141,7 +142,8 @@
                                             <button class="btn btn-success" onclick="location.href='{{route('admin.certificate.release.approve.reject',[Crypt::encrypt($batchReAssessment->id.',0'),'release-request'])}}';this.disabled = true;">Request Certificate</button>
                                         @endif
 
-                                    @endif                                    
+                                    @endif
+                                @endif
                                     {{-- To Carry Forward request from admin to partner we have removed the break Statement --}}
 
                             @case('partner')

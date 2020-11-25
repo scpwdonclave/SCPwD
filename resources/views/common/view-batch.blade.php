@@ -100,8 +100,10 @@
                     <div class="text-center" >
                         @if (Request::segment(1)==='admin')
                             @if (!$batchData->verified)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.batch.action',['id' => Crypt::encrypt($batchData->id),'action'=>'accept' ])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($batchData->id)}}');">Reject</button>
+                                @if (!auth()->guard('admin')->user()->ministry)
+                                    <button class="btn btn-success" onclick="location.href='{{route('admin.batch.action',['id' => Crypt::encrypt($batchData->id),'action'=>'accept' ])}}';this.disabled = true;">Accept</button>
+                                    <button class="btn btn-danger" onclick="showPromptMessage('{{Crypt::encrypt($batchData->id)}}');">Reject</button>
+                                @endif
                             @endif
                         @endif
                         @if (Request::segment(1) ==='partner')

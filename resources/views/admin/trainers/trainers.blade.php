@@ -27,8 +27,10 @@
                                     <th>Mobile</th>
                                     <th>Overall Status</th>
                                     <th>View</th>
-                                    <th>DeLink</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>DeLink</th>
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,8 +43,10 @@
                                         <td>{{$item->mobile}}</td>
                                         <td style="color:{{$item->verified?($item->partner->status && $item->status?'green':'red'):'red'}}">{{$item->verified?($item->partner->status && $item->status?'Active':'Inactive'):"Not Verified"}}</td>
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.tc.trainer.view',Crypt::encrypt($item->id))}}">View</a></td>
-                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'1,0'}}')" class="badge bg-blue margin-0">DeLink</button></td>
-                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'1,1'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                        @if (!auth()->guard('admin')->user()->ministry)
+                                            <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'1,0'}}')" class="badge bg-blue margin-0">DeLink</button></td>
+                                            <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'1,1'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -71,7 +75,9 @@
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>View</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +89,9 @@
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->mobile}}</td>
                                             <td><a class="badge bg-green margin-0" href="{{route('admin.tc.dlink.trainer.view',Crypt::encrypt($item->id))}}" >View</a></td>
-                                            <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'0,1'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                            @if (!auth()->guard('admin')->user()->ministry)
+                                                <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->trainer_id.'),'.'0,1'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                            @endif
                                         </tr>
                                     @endif
                                 @endforeach

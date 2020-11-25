@@ -28,7 +28,9 @@
                 <div class="card">
                     <div class="header d-flex justify-content-between">
                         <h2><strong>Manage</strong> Sector</h2>
+                        @if (!Auth::guard('admin')->user()->ministry)
                         <button id="btn_sector" onclick="showform(0)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Sector</button>                       
+                        @endif
                     </div>
                     <div class="body">
                         <form style="display:none" id="form_sector" action="{{route('admin.dashboard.jobroles')}}" method="post">
@@ -51,12 +53,12 @@
                         </form>
 
                         <div id="table_sector" class="table-responsive">
-                            <table id="sector_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
+                            <table id="sector_table" class="table {{(Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)?null:'nobtn'}} table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>Sl. No.</th>
                                         <th>Sectors</th>
-                                        @if (Auth::guard('admin')->user()->supadmin)
+                                        @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                             <th>Action</th>
                                         @endif
                                     </tr>
@@ -66,7 +68,7 @@
                                         <tr style="height:5px !important">
                                             <td>{{$key+1}}</td>
                                             <td>{{$sector->sector}}</td>
-                                            @if (Auth::guard('admin')->user()->supadmin)
+                                            @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                                 <td class="text-center"> <form id="removeform_Sector_{{$sector->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$sector->id.','.$sector->sector}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></i></button></form></td>
                                             @endif
                                         </tr>
@@ -81,7 +83,9 @@
                 <div class="card">
                     <div class="header d-flex justify-content-between">
                         <h2><strong>Manage</strong> Expository</h2>
+                        @if (!Auth::guard('admin')->user()->ministry)
                         <button id="btn_expository" onclick="showform(1)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Expository</button>                       
+                        @endif
                     </div>
                     <div class="body">
                         <form style="display:none" id="form_expository" action="{{route('admin.dashboard.jobroles')}}" method="post">
@@ -113,13 +117,13 @@
                         </form>
 
                         <div id="table_expository" class="table-responsive">
-                            <table id="exository_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
+                            <table id="exository_table" class="table {{(Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)?null:'nobtn'}} table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>Sl. No.</th>
                                         <th>Initials</th>
                                         <th>Expositories</th>
-                                        @if (Auth::guard('admin')->user()->supadmin)
+                                        @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                             <th>Action</th>
                                         @endif
                                     </tr>
@@ -130,7 +134,7 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{$expository->initials}}</td>
                                     <td>{{$expository->expository}}</td>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <td class="text-center"> <form id="removeform_Expository_{{$expository->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$expository->id.','.$expository->expository}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                     @endif
                                     </tr>
@@ -146,8 +150,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="header d-flex justify-content-between">
-                        <h2><strong>Manage</strong> Job Roles</h2>                        
+                    <h2><strong>Manage</strong> Job Roles</h2>
+                    @if (!Auth::guard('admin')->user()->ministry)
                         <button id="btn_roles" onclick="showform(2)" class="btn btn-primary btn-sm btn-round waves-effect">Add New Job Role</button>                       
+                    @endif
                 </div>
                 <div class="body">
                     <form style="display:none" id="form_roles" action="{{route('admin.dashboard.jobroles')}}" method="post">
@@ -266,7 +272,7 @@
                         </div>
                     </form>
                     <div id="table_roles" class="table-responsive">
-                        <table id="roles_table" class="table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
+                        <table id="roles_table" class="table {{(Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)?null:'nobtn'}} table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Sector</th>
@@ -275,7 +281,7 @@
                                     <th>Passing Marks</th>
                                     <th>Disabilities</th>
                                     <th>Qualification</th>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <th>Action</th>
                                     @endif
                                 </tr>
@@ -302,8 +308,13 @@
                                         @endphp
                                     @endforeach
                                     <td>{{implode( ', ', $myArray )}}</td>
-                                    <td><button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$btnData}},0')">ADD</button> <button type="button" class="badge bg-green margin-0" onclick="popupModal('{{$btnData}},1')">VIEW</button></td>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    <td>
+                                        @if (!Auth::guard('admin')->user()->ministry)
+                                            <button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$btnData}},0')">ADD</button>
+                                        @endif
+                                            <button type="button" class="badge bg-green margin-0" onclick="popupModal('{{$btnData}},1')">VIEW</button>
+                                    </td>
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <td> <form id="removeform_JobRole_{{$jobrole->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$jobrole->id.','.$jobrole->job_role}}"><button type="submit" class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-delete"></button></form></td>
                                     @endif
                                 </tr>
@@ -333,13 +344,13 @@
                 <h6 id="defaultModalSubLabel" style="color:blue" class="text-center"></h6>
                 <div class="modal-body d-flex justify-content-center">
                     <div id="modalTable" style="display:none;">
-                        <table id="qualification_table" class="qualificationtable table {{Auth::guard('admin')->user()->supadmin?null:'nobtn'}} table-bordered table-striped table-hover">
+                        <table id="qualification_table" class="qualificationtable table {{(Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)?null:'nobtn'}} table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Qualification</th>
                                     <th>Min Sector Exp</th>
                                     <th>Min Teaching Exp</th>
-                                    @if (Auth::guard('admin')->user()->supadmin)
+                                    @if (Auth::guard('admin')->user()->supadmin && !Auth::guard('admin')->user()->ministry)
                                         <th>Action</th>
                                     @endif
                                 </tr>

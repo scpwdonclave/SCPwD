@@ -27,7 +27,9 @@
                                     <th>SPOC Mobile</th>
                                     <th>Overall Status</th>
                                     <th>View</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,7 +43,9 @@
                                     <td>{{$item->mobile}}</td>
                                     <td style="color:{{($item->status && $item->partner->status)?'green':'red'}}">{{($item->status && $item->partner->status)?'Active':'Inactive'}}</td>
                                     <td><button type="button" class="badge bg-green margin-0" onclick="location.href='{{route('admin.tc.center.view',Crypt::encrypt($item->id))}}'" >View</button></td>
-                                    <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->spoc_name.' ('.$item->tc_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <td><button type="button" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->spoc_name.' ('.$item->tc_id.')'}}')" class="badge bg-{{($item->status)?'red':'green'}} margin-0">{{($item->status)?'Deactivate':'Activate'}}</button></td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

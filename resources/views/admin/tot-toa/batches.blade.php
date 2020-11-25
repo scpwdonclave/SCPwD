@@ -21,7 +21,9 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>{{$tag==='tot'?'TOT':'TOA'}}</strong> Batches </h2>
+                    @if (!auth()->guard('admin')->user()->ministry)
                     <a class="btn btn-primary btn-round waves-effect" href="javascript:void(0);" onclick="popupMenu()">Add New Batch</a>
+                    @endif
                 </div>
                 <div class="body">
                     <div class="table-responsive">

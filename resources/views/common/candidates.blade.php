@@ -42,7 +42,9 @@ tr.shown td.details-control {
                                     <th>Date of Birth</th>
                                     <th>Candidate Status</th>
                                     @if (Request::segment(1)==='admin')
-                                        <th>Action</th>
+                                        @if (!auth()->guard('admin')->user()->ministry)
+                                            <th>Action</th>
+                                        @endif
                                     @endif
                                 </tr>
                             </thead>
@@ -268,20 +270,36 @@ $(document).ready(function() {
 	TableHtml = $('#opiniondt').html();
 
     if ('{{Request::segment(1)}}'==='admin') {
-        var columns = [ 
-            {   className:      'details-control',
-                orderable:      false,
-                data:           null,
-                defaultContent: '' },
-            { data:'cd_id'},
-            { data:'name'},
-            { data:'contact'}, 
-            { data:'doc_no'}, 
-            { data:'category'},
-            { data:'dob'},
-            { data:'candidate_status'},
-            { data:'action'},
-        ];
+        if ("{{isset(auth()->guard('admin')->user()->ministry) && !auth()->guard('admin')->user()->ministry}}") {
+            var columns = [ 
+                {   className:      'details-control',
+                    orderable:      false,
+                    data:           null,
+                    defaultContent: '' },
+                { data:'cd_id'},
+                { data:'name'},
+                { data:'contact'}, 
+                { data:'doc_no'}, 
+                { data:'category'},
+                { data:'dob'},
+                { data:'candidate_status'},
+                { data:'action'},
+            ];
+        } else {
+            var columns = [ 
+                {   className:      'details-control',
+                    orderable:      false,
+                    data:           null,
+                    defaultContent: '' },
+                { data:'cd_id'},
+                { data:'name'},
+                { data:'contact'}, 
+                { data:'doc_no'}, 
+                { data:'category'},
+                { data:'dob'},
+                { data:'candidate_status'},
+            ];
+        }
     } else {
         var columns = [ 
             {   className:      'details-control',

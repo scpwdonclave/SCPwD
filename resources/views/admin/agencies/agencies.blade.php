@@ -30,7 +30,9 @@
                                     <th>SPOC Mobile</th>
                                     <th>View</th>
                                     <th>Batch</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +45,9 @@
                                         <td>{{$item->mobile}}</td>
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.view',Crypt::encrypt($item->id))}}">View</a></td>
                                         <td><a class="badge bg-green margin-0" href="{{route('admin.aa.agency.batch',Crypt::encrypt($item->id))}}">Batch</a></td>
-                                        <td><button type="button" class="badge bg-red margin-0" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->aa_id.')'}}')">Deactivate</button></td>
+                                        @if (!auth()->guard('admin')->user()->ministry)
+                                            <td><button type="button" class="badge bg-red margin-0" onclick="popup('{{Crypt::encrypt($item->id).','.$item->status.','.$item->name.' ('.$item->aa_id.')'}}')">Deactivate</button></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -112,9 +112,11 @@
                                     <small><strong>End Date: </strong>{{\Carbon\Carbon::parse($item->end_date)->format('d-m-Y')}}</small><br>
                                     <small><strong>Assessment: </strong>{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}}</small><br>
                                     
-                                    <button  class="btn btn-sm" style="align:right;" onclick="location.href='#smallModal{{$item->id}}'" data-toggle="modal" data-target="#smallModal{{$item->id}}" >show</button>    
-                                    <button  class="btn btn-success btn-sm" style="align:right;" onclick="location.href='{{route('admin.batch.bu.submit',['id' =>Crypt::encrypt($item->id),'action'=>'accept'])}}'" >Accept</button>    
-                                    <button  class="btn btn-danger btn-sm" style="align:right;"  onclick="showPromptMessage('{{Crypt::encrypt($item->id)}}')" >Reject</button>    
+                                    <button  class="btn btn-sm" style="align:right;" onclick="location.href='#smallModal{{$item->id}}'" data-toggle="modal" data-target="#smallModal{{$item->id}}" >show</button>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <button  class="btn btn-success btn-sm" style="align:right;" onclick="location.href='{{route('admin.batch.bu.submit',['id' =>Crypt::encrypt($item->id),'action'=>'accept'])}}'" >Accept</button>    
+                                        <button  class="btn btn-danger btn-sm" style="align:right;"  onclick="showPromptMessage('{{Crypt::encrypt($item->id)}}')" >Reject</button>    
+                                    @endif
                                 </div>
                             </a>
                         </li>

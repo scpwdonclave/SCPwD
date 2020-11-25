@@ -16,8 +16,10 @@
                 <div class="header d-flex justify-content-between">
                     <h2><strong>All</strong> TOT Records </h2>
                     <span>
+                        @if (!auth()->guard('admin')->user()->ministry)
                         <button type="button" class="btn btn-primary btn-round waves-effect" data-toggle="modal" data-target="#defaultModal">Link Trainer To TP</button>
                         <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.tot-toa.addtrainercert')}}">Add New TOT</a>
+                        @endif
                     </span>
                 </div>
                 <div class="body">

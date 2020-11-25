@@ -15,8 +15,10 @@
                 <div class="header d-flex justify-content-between">
                     <h2><strong>All</strong> TOA Records </h2>
                     <div>
+                        @if (!auth()->guard('admin')->user()->ministry)
                         <button type="button" class="btn btn-primary btn-round waves-effect" data-toggle="modal" data-target="#defaultModal">Link Assessor To AA</button>
                         <a class="btn btn-primary btn-round waves-effect" href="{{route('admin.tot-toa.addassessorcert')}}">Add New TOA</a>
+                        @endif
                     </div>
                 </div>
                 <div class="body">

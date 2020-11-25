@@ -196,8 +196,10 @@ table.dataTable thead th:first-child {
                                     @endif
                                 </div>
                                 <div class="row d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-success">Accept</button>
-                                    <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <button type="submit" class="btn btn-success">Accept</button>
+                                        <button type="button" class="btn btn-danger" onclick="showPromptMessage();">Reject</button>
+                                    @endif
                                 </div>
                             </form>
                         @endif

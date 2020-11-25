@@ -19,7 +19,7 @@ Route::get('assessors/assessor-view/{id}', 'AgencyAuth\AgencyAssessorController@
 Route::get('assessors/assessor-batch/{id}', 'AgencyAuth\AgencyAssessorController@assessorBatch')->name('as.assessor.batch'); 
 Route::post('assessors/assessor-fetch-batch', 'AgencyAuth\AgencyAssessorController@assessorFetchBatch')->name('as.fetch-batch'); 
 Route::post('assessors/assessor-batch-insert', 'AgencyAuth\AgencyAssessorController@assessorBatchInsert')->name('assessor.batch-insert'); 
-Route::get('assessors/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('bt.batch.view'); 
+// Route::get('assessors/view-batch/{id}', 'AgencyAuth\AgencyAssessorController@viewBatch')->name('bt.batch.view'); 
 Route::post('assessors/assessor-batch-remove', 'AgencyAuth\AgencyAssessorController@removeBatch')->name('as.batch-remove'); 
 Route::post('assessors/assessor-api', 'AgencyAuth\AgencyAssessorController@assessorApi')->name('as.assessor.api'); 
 

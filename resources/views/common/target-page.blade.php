@@ -20,7 +20,9 @@
                         <h4 class="margin-0">{{(Request::segment(1)==='admin')?$partner->spoc_name:$center->spoc_name}}</h4>
                         <h6 class="m-b-20" style="color:blue">{{(Request::segment(1)==='admin')?$partner->tp_id:$center->tc_id}}</h6>
                     </div>
-                    <button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="popupMenu()">Add Job Role</button>
+                    @if (!auth()->guard('admin')->user()->ministry)
+                        <button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="popupMenu()">Add Job Role</button>
+                    @endif
                     <div class="table-responsive">
                         <table class="table nobtn table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
@@ -33,7 +35,9 @@
                                     <th>Enrolled</th>
                                     <th>Achieved</th>
                                     <th>Scheme Status</th>
-                                    <th>Edit</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Edit</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,10 +63,12 @@
                                             <td>{{$count}}</td>
                                             <td>{{$passed}}</td>
                                             <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
-                                            @if($job->status)
-                                                <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
-                                            @else
-                                                <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                            @if (!auth()->guard('admin')->user()->ministry)
+                                                @if($job->status)
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
+                                                @else
+                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                                @endif
                                             @endif
                                         </tr>
                                     @endforeach
@@ -82,10 +88,12 @@
                                             @endphp
                                             <td>{{$passed}}</td>
                                             <td class="text-{{($job->status)?'success':'danger'}}"><strong>{{($job->status)?'Active':'Inactive'}}</strong></td>
-                                            @if($job->status)
-                                                <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
-                                            @else
-                                                <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                            @if (!auth()->guard('admin')->user()->ministry)
+                                                @if($job->status)
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
+                                                @else
+                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                                @endif
                                             @endif
                                         </tr>
                                     @endforeach

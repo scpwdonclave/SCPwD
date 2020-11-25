@@ -102,9 +102,11 @@ class AdminHomeController extends Controller
                     } else {
                         $route = redirect($notification->url);
                     }
-                    $notification->read_by = $this->guard()->user()->name;
-                    $notification->read = 1;
-                    $notification->save();
+                    if (!$this->guard()->user()->ministry) {
+                        $notification->read_by = $this->guard()->user()->name;
+                        $notification->read = 1;
+                        $notification->save();
+                    }
                     return $route;
                 }
                 return redirect()->back();

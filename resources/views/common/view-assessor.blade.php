@@ -410,7 +410,7 @@
                     </ul>
                     @auth('admin')
                         <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
+                            @if (Request::segment(1)==='admin' && !auth()->guard('admin')->user()->ministry)
                                 @if (is_null($assessorData->attached))
                                     @if ($assessorData->verified)
                                         <button class="btn btn-primary" onclick="location.href='{{route('admin.as.edit.assessor',['as_id' => Crypt::encrypt($assessorData->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
@@ -458,8 +458,16 @@
                                         <td>{{$item->batch->partner->tp_id}}</td>
                                         <td>{{$item->batch->center->tc_id}}</td>
                                         <td>{{\Carbon\Carbon::parse($item->batch->batch_start)->format('d-m-Y')}}</td>
-                                        <td>Working on it</td>
-                                        {{-- <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td> --}}
+                                        {{-- <td>Working on it</td> --}}
+                                        @if (request()->segment(1)==='agency')
+                                            @if (is_null($item->reass_id))
+                                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',['id'=>Crypt::encrypt($item->batch->id.',1')])}}">View</a></td>
+                                            @else
+                                                <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.batch.view',['id'=>Crypt::encrypt($item->batch->id.',0')])}}">View</a></td>
+                                            @endif
+                                        @else
+                                            <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',['id'=>Crypt::encrypt($item->batch->id)])}}">View</a></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

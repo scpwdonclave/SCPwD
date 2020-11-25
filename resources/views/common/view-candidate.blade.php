@@ -220,7 +220,7 @@
                         </li>
                     </ul>
                   
-                    @if (Request::segment(1)==='admin')
+                    @if (Request::segment(1)==='admin' && !auth()->guard('admin')->user()->ministry)
                         <div class="text-center" >
                             <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.candidate',['id' => Crypt::encrypt($center_candidate->id) ])}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp; Edit</button>                         
                         </div>

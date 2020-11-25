@@ -44,7 +44,9 @@
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
-                            <button class="btn btn-round btn-primary" type="submit">Search</button>
+                            @if (!auth()->guard('admin')->user()->ministry)
+                                <button class="btn btn-round btn-primary" type="submit">Search</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -62,10 +64,8 @@
                 </div>
                 <div class="text-center">
                     @if (isset($scheme_sel) )
-                    <p><h6><strong>Selected Scheme: <span style="color:blue">{{$scheme_sel->scheme}}</span></strong></h6></p>
-                    <p><h6><strong>Selected Partner: <span style="color:blue">{{$partner->tp_id}}</span></strong></h6></p>
-                    {{-- <p><h6><strong>Selected DATE: <span style="color:blue">{{\Carbon\Carbon::parse($from)->format('d-m-Y')}} <span style="color:black">to</span> {{\Carbon\Carbon::parse($to)->format('d-m-Y')}}</span></strong></h6></p> --}}
-
+                        <p><h6><strong>Selected Scheme: <span style="color:blue">{{$scheme_sel->scheme}}</span></strong></h6></p>
+                        <p><h6><strong>Selected Partner: <span style="color:blue">{{$partner->tp_id}}</span></strong></h6></p>
                     @endif
                 </div>
                 <div class="body">
@@ -133,7 +133,9 @@
                        
                     </div>
                     <div class="text-center" >
-                        <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Invoice</button>
+                        @if (!auth()->guard('admin')->user()->ministry)
+                            <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Invoice</button>
+                        @endif
                     </div>
                     </form>
                     @endif

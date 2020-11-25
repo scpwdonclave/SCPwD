@@ -29,7 +29,9 @@
                                     <th>End Date</th>
                                     <th>Agency</th>
                                     <th>View</th>
-                                    <th>Action</th>
+                                    @if (!auth()->guard('admin')->user()->ministry)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,7 +43,9 @@
                                         <td>{{\Carbon\Carbon::parse($agbatch->batch->batch_end)->format('d-m-Y')}}</td>
                                         <td class="text-{{($agbatch->aa_verified) ?'success':'danger'}}"><strong>{{($agbatch->aa_verified)?'Approved':'Not Approved Yet'}}</strong></td>
                                         <td class="text-center"><button class="btn btn-simple btn-success btn-icon btn-icon-mini btn-round" onclick="location.href='{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($agbatch->batch->id))}}'"><i class="zmdi zmdi-eye"></button></td>
-                                        <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm('{{$agbatch->batch->batch_id.','.$agbatch->id}}');"><i class="zmdi zmdi-delete"></button></td>
+                                        @if (!auth()->guard('admin')->user()->ministry)
+                                            <td class="text-center"><button class="btn btn-simple btn-danger btn-icon btn-icon-mini btn-round" onclick="deleteConfirm('{{$agbatch->batch->batch_id.','.$agbatch->id}}');"><i class="zmdi zmdi-delete"></button></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -83,7 +87,9 @@
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
-                            <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                            @if (!auth()->guard('admin')->user()->ministry)
+                                <button class="btn btn-round btn-primary" type="submit">ADD</button>
+                            @endif
                         </div>
                     </form>
                 </div>

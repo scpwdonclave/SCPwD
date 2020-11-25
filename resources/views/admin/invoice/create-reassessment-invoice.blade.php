@@ -49,7 +49,9 @@
                             
                         </div>
                         <div class="row d-flex justify-content-center">
-                            <button class="btn btn-round btn-primary" type="submit">Search</button>
+                            @if (!auth()->guard('admin')->user()->ministry)
+                                <button class="btn btn-round btn-primary" type="submit">Search</button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -139,7 +141,9 @@
                        
                     </div>
                     <div class="text-center" >
-                        <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Invoice</button>
+                        @if (!auth()->guard('admin')->user()->ministry)
+                            <button class="btn btn-round btn-primary" type="submit" id="save-btn"> Submit Invoice</button>
+                        @endif
                     </div>
                     </form>
                     @endif

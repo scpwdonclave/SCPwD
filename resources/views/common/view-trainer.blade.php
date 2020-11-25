@@ -222,7 +222,7 @@
                     </ul>
                     @auth('admin')
                         <div class="text-center" >
-                            @if (Request::segment(1)==='admin')
+                            @if (Request::segment(1)==='admin' && !auth()->guard('admin')->user()->ministry)
                                 @if (is_null($trainerData->attached))
                                     @if (!$trainerData->verified)
                                         <button class="btn btn-success" onclick="location.href='{{route('admin.tp.trainer.action',Crypt::encrypt($trainerData->id.','.'1'))}}';this.disabled = true;">Accept</button>

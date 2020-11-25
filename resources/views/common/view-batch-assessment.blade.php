@@ -118,7 +118,6 @@
                                                 <td>Not Applicable</td>
                                         @endswitch
                                     @endif
-                                        {{-- <td style="color:{{($center_candidate->jobrole->partnerjobrole->status && $center_candidate->center->partner->status && $center_candidate->center->status && $center_candidate->candidate->status)?'green':'red'}}">{{($center_candidate->jobrole->partnerjobrole->status && $center_candidate->center->partner->status && $center_candidate->center->status && $center_candidate->candidate->status)?'Active':'Inactive'}}</td> --}}
                                     @if (Request::segment(1)==='center')
                                         <td><a class="badge bg-green margin-0" href="{{route('center.candidate.view',Crypt::encrypt($center_candidate->candidate->id))}}" >View</a></<td>                                                                                
                                     @elseif(Request::segment(1) !='agency' && Request::segment(1) !='assessor')
@@ -136,50 +135,6 @@
 </div>
 @stop
 @section('page-script')
-@auth('admin')
-    <script>
-
-    function showPromptMessage(id) {
-        swal({
-            text: "Please Provide the Reason for Rejection",
-            content: {
-                element: "input",
-                attributes: {
-                    type: "text",
-                },
-            },
-            icon: "info",
-            buttons: true,
-            buttons: {
-                cancel: {
-                    text: "Cancel",
-                    visible: true,
-                    value: null,
-                    closeModal: true,
-                },
-                confirm: {
-                    text: "Confirm Reject",
-                    value: true,
-                    closeModal: false
-                }
-                },
-            closeModal: false,
-            closeOnEsc: false,
-        }).then(function(note){
-            if (note!='' && note!=null) {
-                let route = '{{route("admin.batch.action", [":id", "reject", ":reason"])}}';
-                route = route.replace(':id',id);
-                route = route.replace(':reason',note);
-                location.href=route;
-            } else if(note != null) {
-                swal('Attention', 'Write Something Before you Submit','info');
-            }
-        });
-    }
-    </script>
-@endauth
-
-{{-- <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>

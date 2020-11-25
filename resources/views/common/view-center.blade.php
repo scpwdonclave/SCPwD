@@ -298,12 +298,14 @@
                         
                     </ul> 
                     @auth('admin')
-                        <div class="text-center" >
-                            @if ($centerData->status==0 && $centerData->verified==0)
-                                <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',[Crypt::encrypt($centerData->id),'accept'])}}';this.disabled = true;">Accept</button>
-                                <button class="btn btn-danger" onclick="popupReject('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
-                            @elseif ( $centerData->verified==1)
-                                <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
+                        <div class="text-center">
+                            @if (!auth()->guard('admin')->user()->ministry)
+                                @if ($centerData->status==0 && $centerData->verified==0)
+                                    <button class="btn btn-success" onclick="location.href='{{route('admin.tc.center.action',[Crypt::encrypt($centerData->id),'accept'])}}';this.disabled = true;">Accept</button>
+                                    <button class="btn btn-danger" onclick="popupReject('{{Crypt::encrypt($centerData->id)}}');">Reject</button>
+                                @elseif ( $centerData->verified==1)
+                                    <button class="btn btn-primary" onclick="location.href='{{route('admin.tc.edit.center',Crypt::encrypt($centerData->id))}}'"><i class="zmdi zmdi-edit"></i> &nbsp;&nbsp;Edit</button>                         
+                                @endif
                             @endif
                         </div>
                     @endauth 

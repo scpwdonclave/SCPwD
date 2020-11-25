@@ -50,9 +50,17 @@
             <ul id="notification_ul" class="dropdown-menu pullDown">
                 <li id="notification_header" class="header d-flex justify-content-between">Notifications
                     @if (count($notifications))
-                        <span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">
-                            DISMISS ALL
-                        </span>
+                        @if (request()->segment(1)=='admin')
+                            @if (!auth()->guard('admin')->user()->ministry)
+                                <span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">
+                                    DISMISS ALL
+                                </span>
+                            @endif
+                        @else
+                            <span style="cursor: pointer;color:red;" onclick="dismiss('{{Auth::guard(Request::segment(1))->user()->id}},{{Request::segment(1)}}');">
+                                DISMISS ALL
+                            </span>
+                        @endif
                     @endif
                 </li>
 

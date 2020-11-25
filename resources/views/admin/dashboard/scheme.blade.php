@@ -23,7 +23,9 @@
             <div class="card">
                 <div class="header d-flex justify-content-between">
                     <h2><strong>Scheme</strong> Section</h2>
-                    <button id="btn_scheme" onclick="toggleit()" class="btn btn-primary btn-sm btn-round waves-effect">Add New Scheme</button>
+                    @if (!Auth::guard('admin')->user()->ministry)
+                        <button id="btn_scheme" onclick="toggleit()" class="btn btn-primary btn-sm btn-round waves-effect">Add New Scheme</button>
+                    @endif
                 </div>
                 <div class="body">
                     <form style="display:none" id="form_scheme" action="{{route('admin.dashboard.scheme_action')}}" method="post" enctype="multipart/form-data">
@@ -134,7 +136,9 @@
                                     <th>Certificate Format</th>
                                     <th>Certificate Layout</th>
                                     {{-- <th>Action</th> --}}
-                                    <th>Status Action</th>
+                                    @if (!Auth::guard('admin')->user()->ministry)
+                                        <th>Status Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,28 +152,11 @@
                                             <td style="color:red">Not Verified By <br> Onclave Systems</td>
                                         @else
                                             <td style="color:blue">Verified By <br> Onclave Systems</td>
-                                            {{-- <td><a href="#largeModal{{$scheme->id}}"class="badge bg-green margin-0" data-toggle="modal" data-target="#largeModal{{$scheme->id}}">view</a></td> --}}
                                         @endif
-                                        {{-- <td class="text-center"> <form id="editform_{{$scheme->id}}" action="#" method="post">@csrf <input type="hidden" name="data" value="{{$scheme->id.','.$scheme->scheme}}"><button type="submit" class="btn btn-primary btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-edit"></i></button></form></td> --}}
-                                        <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                        @if (!Auth::guard('admin')->user()->ministry)
+                                            <td class="text-center"><button type="button" onclick="popup('{{Crypt::encrypt($scheme->id).','.$scheme->status.','.$scheme->scheme}}')" style="background:{{($scheme->status)?'#f72329':'#33a334'}}" class="btn btn-icon btn-icon-mini btn-round"><i class="zmdi zmdi-swap-vertical"></i></button></td>
+                                        @endif
                                     </tr>
-                                    
-                                    {{-- @if (!is_null($scheme->cert_name)) --}}
-                                        {{-- <div class="modal fade" id="largeModal{{$scheme->id}}" tabindex="-1" role="dialog">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-body embed-responsive embed-responsive-16by9">
-                                                        <iframe class="embed-responsive-item" src="{{asset('assets/images/certificate/'.$scheme->cert_name)}}" allowfullscreen runat="server">
-                                                        </iframe>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" onclick="window.open('{{asset('assets/images/certificate/'.$scheme->cert_name)}}')" class="btn btn-default btn-round waves-effect">Download</button>
-                                                        <button type="button" class="btn btn-danger btn-simple btn-round waves-effect" data-dismiss="modal">CLOSE</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> --}}
-                                    {{-- @endif --}}
                                 @endforeach
                             </tbody>
                         </table>

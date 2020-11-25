@@ -11,11 +11,11 @@ Route::get('dashboard/holiday', 'AdminAuth\AdminHomeController@holiday')->name('
 Route::post('dashboard/holiday-insert', 'AdminAuth\AdminHomeController@holidayInsert')->name('dashboard.holiday-insert');
 Route::post('dashboard/holiday-delete', 'AdminAuth\AdminHomeController@holidayDelete')->name('dashboard.holiday-delete');
 Route::post('dashboard/scheme', 'AdminAuth\AdminHomeController@scheme_action')->name('dashboard.scheme_action');
-
 Route::get('dashboard/department', 'AdminAuth\AdminHomeController@department')->name('dashboard.department');
 Route::get('dashboard/logins', 'AdminAuth\AdminHomeController@logins')->name('dashboard.logins');
 Route::post('dashboard/department-insert', 'AdminAuth\AdminHomeController@departmentInsert')->name('dashboard.department-insert');
 Route::post('dashboard/department-delete', 'AdminAuth\AdminHomeController@departmentDelete')->name('dashboard.department-delete');
+
 
 Route::get('profile', 'AdminAuth\AdminHomeController@profile')->name('profile');
 Route::post('profile', 'AdminAuth\AdminHomeController@profile_update')->name('profile');
@@ -140,9 +140,9 @@ Route::post('trainer/trainer-api', 'AdminAuth\AdminTrainerController@trainerApi'
 Route::get('batches/batches', 'AdminAuth\AdminBatchController@batches')->name('batch.batches');
 Route::get('batches/pending-batches', 'AdminAuth\AdminBatchController@pendingBatches')->name('batch.pb');
 Route::get('batches/batch-updates', 'AdminAuth\AdminBatchController@batchUpdates')->name('batch.bu');
-Route::get('batches/batch-updates/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchController@batchUpdateAction')->where('action', 'accept|reject')->name('batch.bu.submit');
+Route::get('batches/batch-updates-action/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchController@batchUpdateAction')->where('action', 'accept|reject')->name('batch.bu.submit');
 Route::get('batches/batch-view/{id}', 'AdminAuth\AdminBatchController@viewBatch')->name('bt.batch.view');
-Route::get('batches/batch-view/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchController@batchAction')->where('action', 'accept|reject')->name('batch.action');
+Route::get('batches/batch-action/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchController@batchAction')->where('action', 'accept|reject')->name('batch.action');
 
 /* Agencies */
 Route::get('agency/agencies', 'AdminAuth\AdminAgencyController@agencies')->name('agency.agencies');
@@ -229,7 +229,7 @@ Route::post('invoice/fetch-center', 'AdminAuth\AdminInvoiceController@fetchCente
 
 //Support
 Route::get('support/pending-request', 'AdminAuth\AdminSupportController@pendingRequest')->name('support.pending-request');
-Route::get('support/pending-request/{id}', 'AdminAuth\AdminSupportController@assignRequestToOnclave')->name('support.assign-to-onclave');
+Route::get('support/pending-request-assign/{id}', 'AdminAuth\AdminSupportController@assignRequestToOnclave')->name('support.assign-to-onclave');
 Route::get('support/closed-request', 'AdminAuth\AdminSupportController@closedRequest')->name('support.closed-request');
 Route::get('support/view-complain/{id}', 'AdminAuth\AdminSupportController@viewComplain')->name('support.complain-view');
 Route::get('support/stage-define/{data}', 'AdminAuth\AdminSupportController@stageProcess')->name('support.stage-process');

@@ -80,13 +80,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    {{-- Need to Check User Type (Trainer or Assessor) and pass argument as 1 for TR 0 for AS --}}
-                    {{-- <div class="row d-flex justify-content-center">
-                        @if ($cert_tag)
-                            <button class="btn btn-primary" onclick="window.open('{{route('admin.tot-toa.certificate.print',Crypt::encrypt($batchData->id.',1'))}}');"><i class="zmdi zmdi-print" formtarget="_blank"></i>  &nbsp;&nbsp;Print Certificate</button>
-                        @endif
-                    </div> --}}
                 </div>
             </div>
         </div>
