@@ -22,7 +22,7 @@ class CheckMinistry
 
             if ($request->method()=='POST') {
                 $whitelisted = array("mis");
-                $whitelistedlinks = array("admin/candidates/candidate-api","admin/profile");
+                $whitelistedlinks = array("admin/candidates/candidate-api","admin/profile","admin/dashboard/job_roles/qualification");
                 if (!in_array($request->segment(2), $whitelisted)) {
                     if (!in_array($request->path(), $whitelistedlinks)) {
                         return abort(403, "You are not Authorized for This Action" );
