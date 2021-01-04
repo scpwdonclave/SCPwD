@@ -177,43 +177,48 @@ class TotToaController extends Controller
     {
         $totBatch = TotBatch::findOrFail($request->bt_id);
 
-        foreach ($totBatch->trainers as $batchMap) {
+        DB::transaction(function () use($totBatch, $request){
 
-            $percentage = $request->mark[$batchMap->tr_id][0];
+            foreach ($totBatch->trainers as $batchMap) {
 
-            if ((int)$percentage >= 90) {
-                $grade = $batchMap->trainer->trainer_category?'Pass':'A';
-                $validity = Carbon::parse($totBatch->batch_end)->addYear(2)->format('Y-m-d');
-            } elseif ((int)$percentage < 90 && (int)$percentage >= 80) {
-                $grade = 'B';
-                $validity = Carbon::parse($totBatch->batch_end)->addYear(1)->format('Y-m-d');
-            } elseif ((int)$percentage < 80 && (int)$percentage >= 70 && !$batchMap->trainer->trainer_category) {
-                $grade = 'Provisionally Pass';
-                $validity = Carbon::parse($totBatch->batch_end)->addMonth(6)->format('Y-m-d');
-            } else {
-                $grade = NULL;
-                $validity = NULL;
-            }
+                $percentage = $request->mark[$batchMap->tr_id][0];
 
-            if (is_null($grade)) {
-                $q_id = NULL;
-                $digital_key = NULL;
-            } else {
-                if ($batchMap->trainer->trainer_category) {
-                    //Master Trainer
-                    $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,12)) AS q_id FROM `tot_batch_assessment_trainer_maps` WHERE qr_id LIKE '%/ToMT/%'");
-                    $q_id = 'SCPwD/ToMT/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:1);
-                    $digital_key = rand(10,99).$batchMap->id.time().'1';
+                if ((int)$percentage >= 90) {
+                    $grade = $batchMap->trainer->trainer_category?'Pass':'A';
+                    $validity = Carbon::parse($totBatch->batch_end)->addYear(2)->format('Y-m-d');
+                } elseif ((int)$percentage < 90 && (int)$percentage >= 80) {
+                    $grade = 'B';
+                    $validity = Carbon::parse($totBatch->batch_end)->addYear(1)->format('Y-m-d');
+                } elseif ((int)$percentage < 80 && (int)$percentage >= 70 && !$batchMap->trainer->trainer_category) {
+                    $grade = 'Provisionally Pass';
+                    $validity = Carbon::parse($totBatch->batch_end)->addMonth(6)->format('Y-m-d');
                 } else {
-                    //Trainer
-                    $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,9)) AS q_id FROM `tot_batch_assessment_trainer_maps` WHERE qr_id LIKE '%/T/%'");
-                    $q_id = 'SCPwD/T/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:771);
-                    $digital_key = rand(10,99).$batchMap->id.time().'1';
+                    $grade = NULL;
+                    $validity = NULL;
                 }
+
+                if (is_null($grade)) {
+                    $q_id = NULL;
+                    $digital_key = NULL;
+                } else {
+                    if ($batchMap->trainer->trainer_category) {
+                        //Master Trainer
+                        $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,12)) AS q_id FROM `tot_batch_assessment_trainer_maps` WHERE qr_id LIKE '%/ToMT/%'");
+                        $q_id = 'SCPwD/ToMT/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:1);
+                        $digital_key = rand(10,99).$batchMap->id.time().'1';
+                    } else {
+                        //Trainer
+                        $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,9)) AS q_id FROM `tot_batch_assessment_trainer_maps` WHERE qr_id LIKE '%/T/%'");
+                        $q_id = 'SCPwD/T/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:771);
+                        $digital_key = rand(10,99).$batchMap->id.time().'1';
+                    }
+                }
+                $batchMap->update(['qr_id'=>$q_id,'digital_key'=>$digital_key,'percentage'=>$percentage,'grade'=>$grade, 'validity'=>$validity]);
+
             }
-        }
-            
-        $batchMap->update(['qr_id'=>$q_id,'digital_key'=>$digital_key,'percentage'=>$percentage,'grade'=>$grade, 'validity'=>$validity]);
+        });  
+
+        
 
         alert()->success('Batch Marks has been <span style="color:blue">Updated</span>','Job Done')->html()->autoclose(5000);
         return redirect()->route('admin.tot-toa.tot-batches');
@@ -222,35 +227,37 @@ class TotToaController extends Controller
     {
         $toaBatch = ToaBatch::findOrFail($request->bt_id);
 
-        foreach ($toaBatch->assessors as $batchMap) {
-
-            $percentage = $request->mark[$batchMap->as_id][0];
-
-            if ((int)$percentage >= 90) {
-                $grade = 'A';
-                $validity = Carbon::parse($toaBatch->batch_end)->addYear(2)->format('Y-m-d');
-            } elseif ((int)$percentage < 90 && (int)$percentage >= 80) {
-                $grade = 'B';
-                $validity = Carbon::parse($toaBatch->batch_end)->addYear(1)->format('Y-m-d');
-            } elseif ((int)$percentage < 80 && (int)$percentage >= 70) {
-                $grade = 'Provisionally Pass';
-                $validity = Carbon::parse($toaBatch->batch_end)->addMonth(6)->format('Y-m-d');
-            } else {
-                $grade = NULL;
-                $validity = NULL;
-            }
-
-            if (is_null($grade)) {
-                $q_id = NULL;
-                $digital_key = NULL;
-            } else {
-                $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,9)) AS q_id FROM `toa_batch_assessment_assessor_maps`");
-                $q_id = 'SCPwD/A/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:689);
-                $digital_key = rand(10,99).$batchMap->id.time().'0';
-            }
-        }
+        DB::transaction(function () use($toaBatch, $request){
+            foreach ($toaBatch->assessors as $batchMap) {
+    
+                $percentage = $request->mark[$batchMap->as_id][0];
+    
+                if ((int)$percentage >= 90) {
+                    $grade = 'A';
+                    $validity = Carbon::parse($toaBatch->batch_end)->addYear(2)->format('Y-m-d');
+                } elseif ((int)$percentage < 90 && (int)$percentage >= 80) {
+                    $grade = 'B';
+                    $validity = Carbon::parse($toaBatch->batch_end)->addYear(1)->format('Y-m-d');
+                } elseif ((int)$percentage < 80 && (int)$percentage >= 70) {
+                    $grade = 'Provisionally Pass';
+                    $validity = Carbon::parse($toaBatch->batch_end)->addMonth(6)->format('Y-m-d');
+                } else {
+                    $grade = NULL;
+                    $validity = NULL;
+                }
+    
+                if (is_null($grade)) {
+                    $q_id = NULL;
+                    $digital_key = NULL;
+                } else {
+                    $last_qid=DB::select("SELECT MAX(SUBSTRING(qr_id,9)) AS q_id FROM `toa_batch_assessment_assessor_maps`");
+                    $q_id = 'SCPwD/A/'.($last_qid[0]->q_id?$last_qid[0]->q_id+1:689);
+                    $digital_key = rand(10,99).$batchMap->id.time().'0';
+                }
+                $batchMap->update(['qr_id'=>$q_id,'digital_key'=>$digital_key,'percentage'=>$percentage,'grade'=>$grade, 'validity'=>$validity]);
             
-        $batchMap->update(['qr_id'=>$q_id,'digital_key'=>$digital_key,'percentage'=>$percentage,'grade'=>$grade, 'validity'=>$validity]);
+            }
+        });  
 
         alert()->success('Batch Marks has been <span style="color:blue">Updated</span>','Job Done')->html()->autoclose(5000);
         return redirect()->route('admin.tot-toa.toa-batches');

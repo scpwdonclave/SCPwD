@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div class="row d-flex justify-content-center">
-                            @if (!auth()->guard('admin')->user()->ministry)
+                            @if (Request::segment(1)==='admin' && !auth()->guard('admin')->user()->ministry)
                                 <button id="btnSubmit" class="btn btn-raised btn-primary btn-round waves-effect" type="submit" >Close This Issue</button>
                             @endif
                         </div>
