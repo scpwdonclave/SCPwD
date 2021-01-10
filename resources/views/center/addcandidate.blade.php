@@ -178,7 +178,7 @@
                                                     <div class="form-group form-float">
                                                         <select id="job" class="form-control show-tick" data-live-search="true" name="job" onchange="updatejob()" data-dropup-auto='false' required>
                                                             @foreach ($center->center_jobroles as $centerjob)
-                                                                @if ($centerjob->partnerjobrole->status)
+                                                                @if ($centerjob->partnerjobrole->status && $centerjob->target>$centerjob->enrolled)
                                                                     <option value="{{$centerjob->id}}">{{$centerjob->partnerjobrole->sector->sector .' | '. $centerjob->partnerjobrole->jobrole->job_role .' | '. $centerjob->partnerjobrole->jobrole->nsqf_level .' | '. $centerjob->partnerjobrole->jobrole->qp_code}}</option>
                                                                 @endif
                                                             @endforeach

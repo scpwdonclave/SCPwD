@@ -342,8 +342,8 @@
                 error: function(){
                     swal('Attention', 'Something went Wrong, Try Again', 'error').then(function(){location.reload()});
                 }
-                });
-         $("#defaultModal").modal('show');
+            });
+        $("#defaultModal").modal('show');
     }
 
     // End Call Modal of Adding or Updating Job roles

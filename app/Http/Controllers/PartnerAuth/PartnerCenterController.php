@@ -154,6 +154,7 @@ class PartnerCenterController extends Controller
     
     public function centerTargetAction(Request $request)
     {
+        // dd($request);
         if (is_null($request->jobid)) {
             
             $data = explode(',',$request->jobrole);
@@ -169,7 +170,8 @@ class PartnerCenterController extends Controller
                 $centerjob->target=$request->target;
                 $centerjob->save();
 
-                PartnerJobrole::find($this->guard()->user()->id)->update(['assigned'=> ($centerjob->partnerjobrole->assigned+$request->target)]);
+                PartnerJobrole::find($data[0])->update(['assigned'=> ($centerjob->partnerjobrole->assigned+$request->target)]);
+                
                 AppHelper::instance()->writeNotification($request->userid,'center','New Job Target',"New Jobrole with Target has been <span style='color:blue;'>Assigned</span> to you.", route('center.dashboard.jobroles'));        
                 alert()->success("New Job with Target has been <span style='font-weight:bold;color:blue'>Assigned</span> to This Training Center", 'Job Done')->html()->autoclose(4000);
                 return redirect()->back(); 
@@ -183,7 +185,7 @@ class PartnerCenterController extends Controller
                     $centerJob->target=$request->target;
                     $centerJob->save();
     
-                    PartnerJobrole::find($this->guard()->user()->id)->update(['assigned'=> (($centerJob->partnerjobrole->assigned-$old_target)+$request->target)]);
+                    PartnerJobrole::find($centerJob->tp_job_id)->update(['assigned'=> (($centerJob->partnerjobrole->assigned-$old_target)+$request->target)]);
                     AppHelper::instance()->writeNotification($request->userid,'center','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.", route('center.dashboard.jobroles'));        
                     alert()->success("Jobrole of This Training Center has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
                     return redirect()->back(); 

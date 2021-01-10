@@ -245,86 +245,93 @@ class CenterHomeController extends Controller
 
     public function submit_candidate(CDFormValidation $request){
 
-        DB::transaction(function() use ($request){ 
+        $centerjob = CenterJobRole::find($request->job);
 
-            $candidate = Candidate::where('doc_no', $request->doc_no)->first();
-            if (!$candidate) {
-                $data=DB::table('candidates')
-                ->select(\DB::raw('SUBSTRING(cd_id,3) as cd_id'))
-                ->where("cd_id", "LIKE", "CD%")->get();
-                $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
-
-                if (count($data) > 0) {
-                    $priceprod = array();
-                        foreach ($data as $key=>$data) {
-                            $priceprod[$key]=$data->cd_id;
-                        }
-                        $lastid= max($priceprod);
-                    
-                        $new_cdid = (substr($lastid, 0, 4)== $year) ? 'CD'.($lastid + 1) : 'CD'.$year.'000001' ;
-                } else {
-                    $new_cdid = 'CD'.$year.'000001';
+        if ($centerjob->target>$centerjob->enrolled) {
+            DB::transaction(function() use ($request, $centerjob){ 
+    
+                $candidate = Candidate::where('doc_no', $request->doc_no)->first();
+                if (!$candidate) {
+                    $data=DB::table('candidates')
+                    ->select(\DB::raw('SUBSTRING(cd_id,3) as cd_id'))
+                    ->where("cd_id", "LIKE", "CD%")->get();
+                    $year =( date('m') > 3) ? date('y').(date('y') + 1) : (date('y')-1).date('y');
+    
+                    if (count($data) > 0) {
+                        $priceprod = array();
+                            foreach ($data as $key=>$data) {
+                                $priceprod[$key]=$data->cd_id;
+                            }
+                            $lastid= max($priceprod);
+                        
+                            $new_cdid = (substr($lastid, 0, 4)== $year) ? 'CD'.($lastid + 1) : 'CD'.$year.'000001' ;
+                    } else {
+                        $new_cdid = 'CD'.$year.'000001';
+                    }
+                    $candidate = new Candidate;
+                    $candidate->cd_id = $new_cdid;
                 }
-                $candidate = new Candidate;
-                $candidate->cd_id = $new_cdid;
-            }
-               
-            $candidate->name = $request->name;
-            $candidate->gender = $request->gender;
-            $candidate->contact = $request->contact;
-            $candidate->email = $request->email; 
-            
-            $candidate->dob = $request->dob;
-            $candidate->doc_type = $request->doc_type;
-            $candidate->doc_no = $request->doc_no;
-            $candidate->doc_file = Storage::disk('myDisk')->put('/candidates', $request['doc_file']);
-            $candidate->category = $request->category;
-            
+                   
+                $candidate->name = $request->name;
+                $candidate->gender = $request->gender;
+                $candidate->contact = $request->contact;
+                $candidate->email = $request->email; 
+                
+                $candidate->dob = $request->dob;
+                $candidate->doc_type = $request->doc_type;
+                $candidate->doc_no = $request->doc_no;
+                $candidate->doc_file = Storage::disk('myDisk')->put('/candidates', $request['doc_file']);
+                $candidate->category = $request->category;
+                
+    
+                $candidate->save();
+    
+                $fmonth=date('F');
+                $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
+    
+    
+                $center_candidate = new CenterCandidateMap;
+                $center_candidate->tc_id = $this->guard()->user()->id;
+                $center_candidate->tc_job_id = $request->job;
+                $center_candidate->cd_id = $candidate->id;
+                if ($request->has('aadhaar_verify') && $request->aadhaar_verify === 'on') {
+                    $center_candidate->cd_verified = 1;
+                }
+                $center_candidate->d_type = $request->d_type;
+                if ($request->hasFile('d_cert')) {
+                    $center_candidate->d_cert = Storage::disk('myDisk')->put('/candidates', $request['d_cert']);            
+                }
+                $center_candidate->m_status = $request->m_status;
+                $center_candidate->service = $request->service;
+                $center_candidate->education = $request->education;
+                $center_candidate->g_name = $request->g_name;
+                $center_candidate->g_type = $request->g_type;
+    
+                $center_candidate->f_month = $fmonth;
+                $center_candidate->f_year = $fyear;
+    
+    
+    
+                $center_candidate->address = $request->address;
+                $center_candidate->state_district = $request->state_district;
+    
+                $center_candidate->save();
+    
+    
+                
+                $centerjob->enrolled += 1;
+                $centerjob->save();
+    
+                /* For Admin */
+                $center = $this->guard()->user(); 
+                AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.", route('partner.tc.candidate.view', Crypt::encrypt($center_candidate->id)));
+    
+            });
+            alert()->success("Candidate has been <span style='font-weight:bold;color:blue'>Registered</span> Successfully", 'Job Done')->html()->autoclose(6000);
+        } else {
+            alert()->error("No more Candidates can be registered under this Job Role, Kindly Contact your Training Partner", 'Abort')->html()->autoclose(8000);
+        }
 
-            $candidate->save();
-
-            $fmonth=date('F');
-            $fyear =( date('m') > 3) ? date('y')."-".(date('y') + 1) : (date('y')-1)."-".date('y');
-
-
-            $center_candidate = new CenterCandidateMap;
-            $center_candidate->tc_id = $this->guard()->user()->id;
-            $center_candidate->tc_job_id = $request->job;
-            $center_candidate->cd_id = $candidate->id;
-            if ($request->has('aadhaar_verify') && $request->aadhaar_verify === 'on') {
-                $center_candidate->cd_verified = 1;
-            }
-            $center_candidate->d_type = $request->d_type;
-            if ($request->hasFile('d_cert')) {
-                $center_candidate->d_cert = Storage::disk('myDisk')->put('/candidates', $request['d_cert']);            
-            }
-            $center_candidate->m_status = $request->m_status;
-            $center_candidate->service = $request->service;
-            $center_candidate->education = $request->education;
-            $center_candidate->g_name = $request->g_name;
-            $center_candidate->g_type = $request->g_type;
-
-            $center_candidate->f_month = $fmonth;
-            $center_candidate->f_year = $fyear;
-
-
-
-            $center_candidate->address = $request->address;
-            $center_candidate->state_district = $request->state_district;
-
-            $center_candidate->save();
-
-
-            $centerjob = CenterJobRole::find($request->job);
-            $centerjob->enrolled += 1;
-            $centerjob->save();
-
-            /* For Admin */
-            $center = $this->guard()->user(); 
-            AppHelper::instance()->writeNotification($center->partner->id,'partner','New Candidate has Registered',"TC <span style='color:blue;'>".$center->tc_id."</span> has Registered a new Candidate.", route('partner.tc.candidate.view', Crypt::encrypt($center_candidate->id)));
-
-        });
-        alert()->success("Candidate has been <span style='font-weight:bold;color:blue'>Registered</span> Successfully", 'Job Done')->html()->autoclose(6000);
         return redirect()->back();
     }
 
