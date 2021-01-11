@@ -44,7 +44,7 @@
        
        <div class="wrap-input100 m-b-5">
            <div class="form-group">
-               <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certifiate</label>                                                            
+               <label class="d-flex justify-content-center" style="color:#4b2354;font-weight:bold">Incorporation certificate</label>                                                            
                <input id="incorp_doc" type="file" class="input100" name="incorp_doc">
                <span id="incorp_doc_error"  style="color:red;"></span>                                                            
            </div>

@@ -226,6 +226,7 @@ tr.shown td.details-control {
 
 <script>
 var candidates = JSON.parse('{!!$candidates!!}');
+
     candidates.forEach(candidate => {
         if (candidate.action !== undefined) {
             candidate.action = candidate.action.replace(/####/gi, "'");
@@ -326,7 +327,7 @@ $(document).ready(function() {
         searching: true, 
         info:      true, 
         rowId: 'id', 
-        data: candidates, 
+        data: candidates,
         columns: columns,
         order: [[1, 'asc']]
         } );

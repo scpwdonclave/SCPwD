@@ -28,53 +28,53 @@
                         <div class="table-responsive">
                             <table class="table nobtn table-bordered ">
                                 <thead>
-                                        <tr>
+                                    <tr>
                                         <th>Sl. No.</th>
                                         <th>CD ID</th>
-                                        <th>candidate Name</th>
+                                        <th>Candidate Name</th>
                                         <th>DOB</th>
                                         <th>Gender</th>
                                         <th>Attendence</th> 
                                         <th>Mark</th>
                                         <th>Remarks</th>
-                                        </tr>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($assessment->candidateMarks as $key=>$item)
-                                   
                                     <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>
-                                        {{$item->centerCandidate->candidate->cd_id}}
-                                        {{$item->centerCandidate->candidate->name}}
-                                    <input type="hidden" name="candidate_id[]" value="{{$item->centerCandidate->id}}">
+                                        <td>{{$key+1}}</td>
+                                        <td>
+                                            {{$item->centerCandidate->candidate->cd_id}}
+                                            <input type="hidden" name="candidate_id[]" value="{{$item->centerCandidate->id}}">
+                                        </td>
+                                        <td>
+                                            {{$item->centerCandidate->candidate->name}}
+                                        </td>
+                                        <td>{{$item->centerCandidate->candidate->dob}}</td>
+                                        <td>{{$item->centerCandidate->candidate->gender}}</td>
+                                        <td>
+                                            <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$key+1}})">
+                                                <option value="present" {{($item->attendence=='present')?'selected':''}} >Present</option>
+                                                <option value="absent" {{($item->attendence=='absent')?'selected':''}}>Absent</option>
+                                            </select>
+                                        </td>
+                                        <td style="width:10px;"><input class="text-center" type="number" size='30' style="height:30px;border:none" value="{{$item->mark}}" name="mark[]" id="mark{{$key+1}}" onchange="passFail(this.value,{{$key+1}})" /></td>
+                                        <td>
+                                            <strong>
+                                                @if($item->attendence==='present' && $item->passed)
+                                            <p id="remark{{$key+1}}" class="text-success">Passed</p>
+                                            <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
 
-                                    </td>
-                                    <td>{{$item->centerCandidate->candidate->dob}}</td>
-                                    <td>{{$item->centerCandidate->candidate->gender}}</td>
-                                    <td>
-                                        <select class="col-sm-12 form-control show-tick" name="attendence[]" onchange="markDisable(this.value,{{$key+1}})">
-                                            <option value="present" {{($item->attendence=='present')?'selected':''}} >Present</option>
-                                            <option value="absent" {{($item->attendence=='absent')?'selected':''}}>Absent</option>
-                                        </select>
-                                    </td>
-                                <td style="width:10px;"><input class="text-center" type="number" size='30' style="height:30px;border:none" value="{{$item->mark}}" name="mark[]" id="mark{{$key+1}}" onchange="passFail(this.value,{{$key+1}})" /></td>
-                                   <td>
-                                    <strong>
-                                        @if($item->attendence==='present' && $item->passed)
-                                       <p id="remark{{$key+1}}" class="text-success">Passed</p>
-                                    <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
+                                            @elseif($item->attendence==='absent' && !$item->passed)
+                                            <p id="remark{{$key+1}}" class="text-danger">Absent</p>
+                                            <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
 
-                                       @elseif($item->attendence==='absent' && !$item->passed)
-                                       <p id="remark{{$key+1}}" class="text-danger">Absent</p>
-                                       <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
-
-                                       @elseif($item->attendence==='present' && !$item->passed)
-                                       <p id="remark{{$key+1}}" class="text-danger">Failed</p>
-                                       <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
-                                       @endif
-                                    </strong>
-                                   </td>
+                                            @elseif($item->attendence==='present' && !$item->passed)
+                                            <p id="remark{{$key+1}}" class="text-danger">Failed</p>
+                                            <input type="hidden" name="remark{{$key+1}}" value="{{$item->passed}}">
+                                            @endif
+                                            </strong>
+                                        </td>
                                    </tr>
                                    @endforeach
                                 </tbody>

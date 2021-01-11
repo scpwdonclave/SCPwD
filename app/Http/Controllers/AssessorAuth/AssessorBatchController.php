@@ -252,9 +252,7 @@ class AssessorBatchController extends Controller
         }
 
         alert()->success("Marks are Submitted for Review, Once <span style='font-weight:bold;color:blue'>Approved</span> or <span style='font-weight:bold;color:red'>Rejected</span> you will get Notified", 'Job Done')->html()->autoclose(8000);
-        return redirect()->route('assessor.batch');            
-        
-
+        return redirect()->route('assessor.batch');
     }
 
     // * End Update Candidate Assessment & Re-Assessment Marks
