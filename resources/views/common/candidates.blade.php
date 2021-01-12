@@ -225,7 +225,7 @@ tr.shown td.details-control {
 {{-- <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script> --}}
 
 <script>
-var candidates = JSON.parse('{!!$candidates!!}');
+var candidates = Object.values(JSON.parse('{!!$candidates!!}'));
 
     candidates.forEach(candidate => {
         if (candidate.action !== undefined) {
@@ -327,7 +327,7 @@ $(document).ready(function() {
         searching: true, 
         info:      true, 
         rowId: 'id', 
-        data: candidates,
+        data: Object.values(candidates),
         columns: columns,
         order: [[1, 'asc']]
         } );
