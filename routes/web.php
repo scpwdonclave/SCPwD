@@ -105,7 +105,7 @@ Route::get('trainer/files/{id}/{action}/{filename}', 'PartnerAuth\FileController
 Route::get('center/files/{action}/{id}/{filename}', 'CenterAuth\FileController@centerFiles')->where('action', 'view|download')->name('center.files.center-file');
 Route::get('candidate/files/{action}/{id}/{file}', 'FileController@candidateFiles')->where('action', 'view|download')->where('file', 'doc|cert')->name('center.files.candidate-file');
 Route::get('assessor/files/{id}/{action}/{column}', 'FileController@assessorFiles')->where('action', 'view|download')->name('agency.files.assessor-file');
-Route::get('assessor/assessment-files/{id}/{action}/{column}', 'FileController@assessmentFiles')->where('action', 'view|download')->name('agency.files.assessment-file');
+Route::get('assessment-files/{id}/{action}/{column}/{type}', 'FileController@assessmentFiles')->where('action', 'view|download')->where('type', '1|0')->name('files.assessment-file');
 Route::get('admin/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('admin.support.complain-file');
 Route::get('partner/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('partner.support.complain-file');
 Route::get('center/complain-files/{id}/{action}/{column}', 'FileController@supportFiles')->where('action', 'view|download')->name('center.support.complain-file');

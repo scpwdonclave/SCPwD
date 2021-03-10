@@ -81,7 +81,7 @@
                                         @if (!is_null($batchAssessment->attendence_sheet))
                                             <p>
                                                 Attendence Sheet &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('agency.files.assessment-file',['id'=>$batchAssessment->id,'action'=>'download','column'=>'attendence_sheet'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
+                                                <a class="btn-icon-mini" href="{{route('files.assessment-file',['id'=>$batchAssessment->id,'action'=>'download','column'=>'attendence_sheet','type'=>'0'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
                                             </p>
                                         @else
                                             <p>No Sheet Provided</p>
@@ -93,7 +93,7 @@
                                         @if (!is_null($batchAssessment->mark_sheet))
                                             <p>
                                                 Marks Sheet &nbsp;&nbsp;
-                                                <a class="btn-icon-mini" href="{{route('agency.files.assessment-file',['id'=>$batchAssessment->id,'action'=>'download','column'=>'mark_sheet'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
+                                                <a class="btn-icon-mini" href="{{route('files.assessment-file',['id'=>$batchAssessment->id,'action'=>'download','column'=>'mark_sheet','type'=>'0'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
                                             </p>
                                         @else
                                             <p>No Marksheet Provided</p>

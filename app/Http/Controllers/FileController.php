@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Auth;
 use Exception;
 use App\Assessor;
-use App\Candidate;
-use App\BatchAssessment;
-use App\ComplainFile;
 use App\Complain;
+use App\Candidate;
+use App\ComplainFile;
+use App\BatchAssessment;
+use App\BatchReAssessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,12 +41,10 @@ class FileController extends Controller
             return abort(404);
         }
     }
-    protected function downloadThisAssessment($id,$column){
+    protected function downloadThisAssessment($id,$column,$type){
 
+        $fileurl = $type ? BatchReAssessment::where('id', $id)->select($column)->firstOrFail():BatchAssessment::where('id', $id)->select($column)->firstOrFail();
        
-        $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
-       
-
         $headers = array(
             'Content-Type' => 'text/csv',
         );
@@ -54,10 +53,8 @@ class FileController extends Controller
        
         try {
             if($ext==='txt'){
-            return Storage::disk('myDisk')->download($fileurl->$column,$or_f_name.'.csv' , $headers);
-
+                return Storage::disk('myDisk')->download($fileurl->$column,$or_f_name.'.csv' , $headers);
             }else{
-
                 return Storage::disk('myDisk')->download("{$fileurl->$column}");
             }
         } catch (Exception $e) {
@@ -96,9 +93,9 @@ class FileController extends Controller
             return abort(404);
         }
     }
-    protected function viewThisAssessment($id,$column){
+    protected function viewThisAssessment($id,$column,$type){
         //$column = ($file === 'doc')?'doc_file':'d_cert';
-        $fileurl = BatchAssessment::where('id', $id)->select($column)->firstOrFail();
+        $fileurl = $type ? BatchReAssessment::where('id', $id)->select($column)->firstOrFail():BatchAssessment::where('id', $id)->select($column)->firstOrFail();
         try {
             return Storage::disk('myDisk')->response("{$fileurl->$column}");
         } catch (Exception $e) {
@@ -189,41 +186,39 @@ class FileController extends Controller
     }
 
 
-    public function assessmentFiles( $id, $action,$column){
+    public function assessmentFiles($id,$action,$column,$type){
         // dd($action);
 
         if (Auth::guard('admin')->check() || Auth::guard('agency')->check() || Auth::guard('assessor')->check()) {
+            $batch_ass_reass = $type ? BatchReAssessment::findOrFail($id):BatchAssessment::findOrFail($id);
+            
             if (Auth::guard('agency')->check()) {
-                $batch_assessment = BatchAssessment::findOrFail($id);
-                if ($batch_assessment->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                if ($batch_ass_reass->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
                     return abort(401);
                 } else {
                     if ($action === 'view') {
-                        return $this->viewThisAssessment($id,$column);
+                        return $this->viewThisAssessment($id,$column,$type);
                     } elseif ($action === 'download') {
-                        return $this->downloadThisAssessment($id,$column);
+                        return $this->downloadThisAssessment($id,$column,$type);
                     }
                 }
             }
             if (Auth::guard('assessor')->check()) {
-                $batch_assessment = BatchAssessment::findOrFail($id);
-                if ($batch_assessment->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
+                if ($batch_ass_reass->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
                     return abort(401);
                 } else {
                     if ($action === 'view') {
-                        return $this->viewThisAssessment($id,$column);
+                        return $this->viewThisAssessment($id,$column,$type);
                     } elseif ($action === 'download') {
-                        return $this->downloadThisAssessment($id,$column);
+                        return $this->downloadThisAssessment($id,$column,$type);
                     }
                 }
             }
-           
-
             if (Auth::guard('admin')->check()) {
                 if ($action === 'view') {
-                    return $this->viewThisAssessment($id,$column);
+                    return $this->viewThisAssessment($id,$column,$type);
                 } elseif ($action === 'download') {
-                    return $this->downloadThisAssessment($id,$column);
+                    return $this->downloadThisAssessment($id,$column,$type);
                 }
             }
         } else {

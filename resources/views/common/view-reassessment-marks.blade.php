@@ -83,7 +83,7 @@
                                             @if (!is_null($batchReAssessment->attendence_sheet))
                                                 <p>
                                                     Attendence Sheet &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('agency.files.assessment-file',['id'=>$batchReAssessment->id,'action'=>'download','column'=>'attendence_sheet'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
+                                                    <a class="btn-icon-mini" href="{{route('files.reassessment-file',['id'=>$batchReAssessment->id,'action'=>'download','column'=>'attendence_sheet','type'=>'1'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
                                                 </p>
                                             @else
                                                 <p>No Sheet Provided</p>
@@ -95,7 +95,7 @@
                                             @if (!is_null($batchReAssessment->mark_sheet))
                                                 <p>
                                                     Marks Sheet &nbsp;&nbsp;
-                                                    <a class="btn-icon-mini" href="{{route('agency.files.assessment-file',['id'=>$batchReAssessment->id,'action'=>'download','column'=>'mark_sheet'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
+                                                    <a class="btn-icon-mini" href="{{route('files.reassessment-file',['id'=>$batchReAssessment->id,'action'=>'download','column'=>'mark_sheet','type'=>'1'])}}" ><i class="zmdi zmdi-download"></i></a>                                                    
                                                 </p>
                                             @else
                                                 <p>No Marksheet Provided</p>
