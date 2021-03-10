@@ -193,26 +193,52 @@ class FileController extends Controller
             $batch_ass_reass = $type ? BatchReAssessment::findOrFail($id):BatchAssessment::findOrFail($id);
             
             if (Auth::guard('agency')->check()) {
-                if ($batch_ass_reass->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
-                    return abort(401);
+                if ($type) {
+                    if ($batch_ass_reass->reassessment->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                        return abort(401);
+                    } else {
+                        if ($action === 'view') {
+                            return $this->viewThisAssessment($id,$column,$type);
+                        } elseif ($action === 'download') {
+                            return $this->downloadThisAssessment($id,$column,$type);
+                        }
+                    }
                 } else {
-                    if ($action === 'view') {
-                        return $this->viewThisAssessment($id,$column,$type);
-                    } elseif ($action === 'download') {
-                        return $this->downloadThisAssessment($id,$column,$type);
+                    if ($batch_ass_reass->batch->agencybatch->aa_id != Auth::guard('agency')->user()->id) {
+                        return abort(401);
+                    } else {
+                        if ($action === 'view') {
+                            return $this->viewThisAssessment($id,$column,$type);
+                        } elseif ($action === 'download') {
+                            return $this->downloadThisAssessment($id,$column,$type);
+                        }
                     }
                 }
+                
             }
             if (Auth::guard('assessor')->check()) {
-                if ($batch_ass_reass->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
-                    return abort(401);
+                if ($type) {
+                    if ($batch_ass_reass->reassessment->assessor != Auth::guard('assessor')->user()->id) {
+                        return abort(401);
+                    } else {
+                        if ($action === 'view') {
+                            return $this->viewThisAssessment($id,$column,$type);
+                        } elseif ($action === 'download') {
+                            return $this->downloadThisAssessment($id,$column,$type);
+                        }
+                    }
                 } else {
-                    if ($action === 'view') {
-                        return $this->viewThisAssessment($id,$column,$type);
-                    } elseif ($action === 'download') {
-                        return $this->downloadThisAssessment($id,$column,$type);
+                    if ($batch_ass_reass->batch->assessorbatch->as_id != Auth::guard('assessor')->user()->id) {
+                        return abort(401);
+                    } else {
+                        if ($action === 'view') {
+                            return $this->viewThisAssessment($id,$column,$type);
+                        } elseif ($action === 'download') {
+                            return $this->downloadThisAssessment($id,$column,$type);
+                        }
                     }
                 }
+                
             }
             if (Auth::guard('admin')->check()) {
                 if ($action === 'view') {
