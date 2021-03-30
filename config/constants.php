@@ -56,6 +56,10 @@ return [
             'val' => 4,
             'text' => '4 hours'
         ],
+        '7' => [
+            'val' => 8,
+            'text' => '8 hours'
+        ]
     ],
 
     'nullidtext' => "Not Verified By Admin Yet",
