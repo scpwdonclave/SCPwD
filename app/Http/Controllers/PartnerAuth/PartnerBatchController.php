@@ -441,7 +441,7 @@ class PartnerBatchController extends Controller
             'jobrole' => 'required',
             'center' => 'required|numeric',
             'batch_time' => ['required','regex:/(1[0-2]|0?[1-9]):([0-5][05]) ?([AP][M])/'],
-            'batch_hour' => ['required','regex:/^(?!4.5)[1-4]{1}([\.5]+)?$/'],
+            'batch_hour' => ['required','regex:/^(?!4.5)[1-8]{1}([\.5]+)?$/'],
             'batch_start' => 'required',
             'batch_end' => 'required',
             'assessment' => 'required',
