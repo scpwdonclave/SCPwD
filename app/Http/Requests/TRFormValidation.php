@@ -25,17 +25,20 @@ class TRFormValidation extends FormRequest
      */
     public function rules()
     {
-        // $request = $this->attributes->all();
+        $request = $this->attributes->all();
         $rules = [
 
+            // 'unique:trainer_statuses,doc_no',
             /* TR Basic Details */
             'doc_no' => [
                 'required',
                 'regex:/^([A-Z]){3}([0-9]){7}|^(\d){12}$/',
                 'unique:candidates,doc_no',
-                'unique:trainer_statuses,doc_no',
                 'unique:agencies,aadhaar',
                 'unique:assessors,aadhaar',
+                Rule::unique('trainer_statuses')->where(function ($query) use ($request) {
+                    return $query->where('attached', '1');
+                })
             ],
             'name' => 'required',
             /* End TR Basic Details */
