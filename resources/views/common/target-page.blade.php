@@ -44,7 +44,7 @@
                                             <th>Edit</th>
                                         @endif
                                     @else
-                                        <th>Edit</th>
+                                        <th>Target</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -81,9 +81,9 @@
                                                 @endif
                                             @else
                                                 @if($job->status)
-                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Increase</button></td>
                                                 @else
-                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Increase</button></td>
                                                 @endif
                                             @endif
                                         </tr>
@@ -114,9 +114,9 @@
                                                 @endif
                                             @else
                                                 @if($job->status)
-                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Edit</button></td>
+                                                    <td><button type="button" class="badge bg-green margin-0" onclick="popupMenu({{$job->id}})">Increase</button></td>
                                                 @else
-                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Edit</button></td>
+                                                    <td><button type="button" class="badge bg-grey margin-0" onclick="return false">Increase</button></td>
                                                 @endif
                                             @endif
                                         </tr>
@@ -247,10 +247,13 @@
     function popupMenu(id){
         var user = '{{Request::segment(1)}}';
         var url = '';
+        var text = '';
         if (user==='admin') {
             url = "{{route('admin.tp.fetch-data')}}";
+            text = "Update";
         } else {
             url = "{{route('partner.tp.fetch-data')}}";
+            text = "Increase";
         }
         let _token = $("[name=_token]").val();
         if (id === undefined) {
@@ -259,7 +262,8 @@
             $('#btnConfirm').html('Add JobRole');
         } else if(id != '') {
             $('#defaultModalLabel').html('Update Job Role & Target');
-            $('#btnConfirm').html('Update JobRole');
+
+            $('#btnConfirm').html(text+' JobRole');
             $('[name=jobid]').val(id);
             data = id;
         }
@@ -310,11 +314,13 @@
                             // let jobdata = job.split(',');
                             $('[name=jobrole]').append('<option value="'+data.data.id+'">'+data.data.jobdata+'</option>');
                             $("[name=target]").attr("max", Number(data.data.partnerjobrole.target)-Number(data.data.partnerjobrole.assigned));
-                            if (data.data.enrolled == 0) {
-                                $("[name=target]").attr("min", 1);
-                            } else {
-                                $("[name=target]").attr("min", data.data.enrolled);
-                            }
+                            $("[name=target]").attr("min", 1);
+
+                            // if (data.data.enrolled == 0) {
+                            //     $("[name=target]").attr("min", 1);
+                            // } else {
+                            //     $("[name=target]").attr("min", data.data.enrolled);
+                            // }
                         }
                     }
                     
