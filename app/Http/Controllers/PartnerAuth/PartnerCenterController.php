@@ -179,13 +179,14 @@ class PartnerCenterController extends Controller
         } else {
             $centerJob=CenterJobRole::findOrFail($request->jobid);
             if ($centerJob && ($centerJob->tp_id==$this->guard()->user()->id)) {
-
-                if($centerJob->enrolled <= $request->target && ($centerJob->partnerjobrole->target-($centerJob->partnerjobrole->assigned-$centerJob->target) >= $request->target)){
+                // $centerJob->enrolled <= $request->target && ($centerJob->partnerjobrole->target-($centerJob->partnerjobrole->assigned-$centerJob->target) >= $request->target)   This logic has been removed
+                if((($centerJob->partnerjobrole->target-$centerJob->partnerjobrole->assigned) >= $request->target)){
                     $old_target = $centerJob->target;
-                    $centerJob->target=$request->target;
+                    $centerJob->target=$old_target+$request->target;
                     $centerJob->save();
     
-                    PartnerJobrole::find($centerJob->tp_job_id)->update(['assigned'=> (($centerJob->partnerjobrole->assigned-$old_target)+$request->target)]);
+                    // PartnerJobrole::find($centerJob->tp_job_id)->update(['assigned'=> (($centerJob->partnerjobrole->assigned-$old_target)+$request->target)]);
+                    PartnerJobrole::find($centerJob->tp_job_id)->update(['assigned'=> ($centerJob->partnerjobrole->assigned+$request->target)]);
                     AppHelper::instance()->writeNotification($request->userid,'center','Jobrole Updated',"Your Jobrole has been <span style='color:blue;'>Updated</span> Kindly Check.", route('center.dashboard.jobroles'));        
                     alert()->success("Jobrole of This Training Center has been <span style='font-weight:bold;color:blue'>Updated</span>", 'Job Done')->html()->autoclose(4000);
                     return redirect()->back(); 
