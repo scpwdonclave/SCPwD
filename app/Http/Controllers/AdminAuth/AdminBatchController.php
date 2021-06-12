@@ -15,6 +15,7 @@ use App\Events\TPMailEvent;
 use Illuminate\Http\Request;
 use App\BatchCenterCandidateMap;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Encryption\DecryptException;
 
 class AdminBatchController extends Controller
@@ -198,6 +199,32 @@ class AdminBatchController extends Controller
             'updaterequests' => BatchUpdate::where('action', 0)->get()
         ];
         return view('admin.batches.batch-updates')->with($data);
+    }
+
+    public function batchUpdateDates(Request $request)
+    {
+        $request->validate([
+            'batchid' => 'required',
+            'start' => 'required',
+            'end' => 'required',
+            'assessment' => 'required',
+        ]);
+    
+        $batch = Batch::findOrFail($request->batchid);
+        
+        if ($batch && $batch->modified < Config::get('constants.batch_editable_count')) {
+            $batch->batch_start = Carbon::parse($request->start)->format('Y-m-d');   
+            $batch->batch_end = Carbon::parse($request->end)->format('Y-m-d');
+            $batch->assessment = Carbon::parse($request->assessment)->format('Y-m-d');
+            $batch->modified=$batch->modified+1;
+            $batch->save();
+
+            alert()->success('Batch Dates has been <span style="color:blue;font-weight:bold">Updated</span> Successfully', 'Job Done')->html()->autoclose(3000);
+        } else {
+            alert()->error('Something went wrong, Kindly try again, Can not Proceed', 'Abort')->html()->autoclose(3000);
+        }
+
+        return redirect()->route('admin.batch.batches');
     }
 
     public function batchUpdateAction(Request $request){

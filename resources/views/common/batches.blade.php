@@ -4,6 +4,7 @@
 <!-- Custom Css -->
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/jquery-datatable/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}"/>
 
 <link rel="stylesheet" href="{{asset('assets/css/color_skins.css')}}">
@@ -43,7 +44,7 @@
                                     <th>Assessment Date</th>
                                     <th>Training Status</th>
                                     <th>Certificate</th>
-                                    <th>View</th>
+                                    <th>Action</th>
                                 </tr>
                                
                             </thead> 
@@ -85,7 +86,16 @@
                                         @else
                                             <td style="color:red">Not Released</td>   
                                         @endif
-                                        <td><a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->id))}}">View</a></td>
+                                        <td>
+                                            @if (Request::segment(1)==='admin')
+                                                @if ($item->modified < Config::get('constants.batch_editable_count'))
+                                                    <button type="button" class="badge bg-blue margin-0" onclick="popupModal('{{$item->id}},{{\Carbon\Carbon::parse($item->batch_start)->format('d-m-Y')}},{{\Carbon\Carbon::parse($item->batch_end)->format('d-m-Y')}},{{\Carbon\Carbon::parse($item->assessment)->format('d-m-Y')}},{{$item->batch_id}}')">Edit</button>
+                                                @else
+                                                    <button type="button" class="badge bg-grey margin-0" disabled>Edit</button>
+                                                @endif
+                                            @endif
+                                            <a class="badge bg-green margin-0" href="{{route(Request::segment(1).'.bt.batch.view',Crypt::encrypt($item->id))}}">View</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -110,15 +120,120 @@
 </div>
 @endsection
 
+@section('modal')
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="title" id="defaultModalLabel">Modify Batch Dates</h4>
+                </div>
+                <h6 id="defaultModalSubLabel" style="color:blue" class="text-center"></h6>
+                <div class="modal-body d-flex justify-content-center">
+                    
+                    <div id="modalForm">
+                        <form id="form_modal" method="POST" action="{{route('admin.batch.batches.up')}}">
+                            @csrf
+                            <input type="hidden" name="batchid">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="sector_exp">Batch Start Date<span style="color:red"> <strong>*</strong></span></label>    
+                                    <div class="form-group form-float start">
+                                        <input type="text" class="form-control" placeholder="Start Date" onchange="start_changed()" name="start" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="sector_exp">Batch End Date<span style="color:red"> <strong>*</strong></span></label>    
+                                    <div class="form-group form-float end">
+                                        <input type="text" class="form-control" placeholder="End Date" onchange="end_changed()" name="end" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="teaching_exp">Batch Assessment Date<span style="color:red"> <strong>*</strong></span></label>    
+                                    <div class="form-group form-float assessment">
+                                        <input type="text" class="form-control" placeholder="Assessment Date" name="assessment" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <button id="btnConfirm" class="btn btn-raised btn-primary btn-round waves-effect" type="submit" >Update Dates</button>
+                            </div>
+                        </form>
+                        <br>
+                        <span style="text-align:center;"> <h6>NOTE: You can update the Dates of a particular Batch only Once.</h6></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('page-script')
+<script>
+
+    function start_changed() {
+        $('[name=end]').val('');
+        $('[name=assessment]').val('');
+        if ($('[name=start]').val().trim()!='') {
+            $('.end .form-control').datepicker('destroy')
+            $('.end .form-control').datepicker({
+                autoclose: true,
+                startDate: new Date(moment($('[name=start]').val(), 'DD-MM-YYYY').format('MM-DD-YYYY')),
+                format: 'dd-mm-yyyy',
+            });
+        }
+    }
+
+    function end_changed() {
+        $('[name=assessment]').val('');
+        if ($('[name=end]').val().trim()!='') {
+            $('.assessment .form-control').datepicker('destroy')
+            $('.assessment .form-control').datepicker({
+                autoclose: true,
+                startDate: new Date(moment($('[name=end]').val(), 'DD-MM-YYYY').format('MM-DD-YYYY')),
+                format: 'dd-mm-yyyy',
+            });
+        }
+    }
+    
+    function popupModal(btnData){  
+        $("#form_modal").validate();
+        $('.start .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+        });
+        $('.end .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+        });
+        $('.assessment .form-control').datepicker({
+            autoclose: true,
+            format: 'dd-mm-yyyy',
+        });
+        if (btnData != undefined && btnData != '') {
+            data = btnData.split(',');
+            id = data[0];
+            $('#defaultModalSubLabel').html(data[4])
+            $('[name=batchid]').val(data[0]);
+            $('[name=start]').val(data[1]);
+            $('[name=end]').val(data[2]);
+            $('[name=assessment]').val(data[3]);
+            $("#defaultModal").modal('show');
+        }
+        
+    }
+
+</script>
 
 <script src="{{asset('assets/plugins/momentjs/moment.js')}}"></script>
 <script src="{{asset('assets/bundles/datatablescripts.bundle.js')}}"></script>
+<script src="{{asset('assets/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.bootstrap4.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.colVis.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.html5.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-datatable/buttons/buttons.print.min.js')}}"></script>
+<script src="{{asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{asset('assets/js/pages/tables/jquery-datatable.js')}}"></script>
 <script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 @endsection

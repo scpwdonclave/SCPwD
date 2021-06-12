@@ -26,6 +26,8 @@ return [
         '8' => 'Government',
     ],
 
+    // In case increse batch_editable_count change "Note" in batches.blade.php line 163
+    'batch_editable_count' => 1,
 
     'hours' => [
         '0' => [

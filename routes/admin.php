@@ -138,6 +138,7 @@ Route::post('trainer/trainer-api', 'AdminAuth\AdminTrainerController@trainerApi'
 
 /* Batches */
 Route::get('batches/batches', 'AdminAuth\AdminBatchController@batches')->name('batch.batches');
+Route::post('batches/batches', 'AdminAuth\AdminBatchController@batchUpdateDates')->name('batch.batches.up');
 Route::get('batches/pending-batches', 'AdminAuth\AdminBatchController@pendingBatches')->name('batch.pb');
 Route::get('batches/batch-updates', 'AdminAuth\AdminBatchController@batchUpdates')->name('batch.bu');
 Route::get('batches/batch-updates-action/{id}/{action}/{reason?}', 'AdminAuth\AdminBatchController@batchUpdateAction')->where('action', 'accept|reject')->name('batch.bu.submit');
